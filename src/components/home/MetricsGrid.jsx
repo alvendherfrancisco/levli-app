@@ -1,24 +1,56 @@
-import React from "react";
+import React, { useState } from "react";
 import MetricCard from "@/components/home/MetricCard";
 import { Scale, Flame, Beef, Leaf, Cookie, Droplets, Dumbbell, Camera } from "lucide-react";
+import { useAppState } from "@/lib/AppState";
+import AddNutritionModal from "@/components/modals/AddNutritionModal";
+import AddMetricModal from "@/components/modals/AddMetricModal";
 
-const metrics = [
-  { icon: <Scale size={16} className="text-yellow-600" />, label: "Weight", value: "–", unit: "lb", color: "bg-yellow-100" },
-  { icon: <Flame size={16} className="text-orange-500" />, label: "Calories", value: "0", unit: "kcal", color: "bg-orange-100" },
-  { icon: <Beef size={16} className="text-teal-500" />, label: "Protein", value: "0.0", unit: "g", color: "bg-teal-100" },
-  { icon: <Leaf size={16} className="text-green-500" />, label: "Fiber", value: "0.0", unit: "g", color: "bg-green-100" },
-  { icon: <Cookie size={16} className="text-amber-500" />, label: "Carbs", value: "0.0", unit: "g", color: "bg-amber-100" },
-  { icon: <Droplets size={16} className="text-blue-500" />, label: "Water", value: "0.0", unit: "oz", color: "bg-blue-100" },
-  { icon: <Dumbbell size={16} className="text-red-400" />, label: "Exercise", value: "0", unit: "min", color: "bg-red-100" },
-  { icon: <Camera size={16} className="text-purple-500" />, label: "Progress", value: "–", unit: "pic", color: "bg-purple-100" },
-];
+export default function MetricsGrid() {
+  const { nutrition, setNutrition } = useAppState();
+  const [showNutrition, setShowNutrition] = useState(false);
+  const [metricModal, setMetricModal] = useState(null); // { label, unit, key }
+  const [weight, setWeight] = useState("–");
+  const [exercise, setExercise] = useState("0");
+  const [progress, setProgress] = useState("–");
 
-export default function MetricsGrid({ onAddMetric }) {
+  const nutritionMetrics = [
+    { key: "calories", icon: <Flame size={16} className="text-orange-500" />, label: "Calories", unit: "kcal", color: "bg-orange-100", value: nutrition.calories },
+    { key: "protein", icon: <Beef size={16} className="text-teal-500" />, label: "Protein", unit: "g", color: "bg-teal-100", value: nutrition.protein },
+    { key: "fiber", icon: <Leaf size={16} className="text-green-500" />, label: "Fiber", unit: "g", color: "bg-green-100", value: nutrition.fiber },
+    { key: "carbs", icon: <Cookie size={16} className="text-amber-500" />, label: "Carbs", unit: "g", color: "bg-amber-100", value: nutrition.carbs },
+    { key: "water", icon: <Droplets size={16} className="text-blue-500" />, label: "Water", unit: "oz", color: "bg-blue-100", value: nutrition.water },
+  ];
+
+  const allMetrics = [
+    { icon: <Scale size={16} className="text-yellow-600" />, label: "Weight", value: weight, unit: "lb", color: "bg-yellow-100",
+      onAdd: () => setMetricModal({ label: "Weight", unit: "lb", current: weight, onSave: (v) => setWeight(v) }) },
+    ...nutritionMetrics.map((m) => ({
+      ...m, onAdd: () => setShowNutrition(true)
+    })),
+    { icon: <Dumbbell size={16} className="text-red-400" />, label: "Exercise", value: exercise, unit: "min", color: "bg-red-100",
+      onAdd: () => setMetricModal({ label: "Exercise", unit: "min", current: exercise, onSave: (v) => setExercise(v) }) },
+    { icon: <Camera size={16} className="text-purple-500" />, label: "Progress", value: progress, unit: "pic", color: "bg-purple-100",
+      onAdd: () => setMetricModal({ label: "Progress", unit: "pic", current: progress, onSave: (v) => setProgress(v) }) },
+  ];
+
   return (
-    <div className="grid grid-cols-3 gap-2 px-4 mb-4">
-      {metrics.map((m) => (
-        <MetricCard key={m.label} {...m} onAdd={() => onAddMetric?.(m.label)} />
-      ))}
-    </div>
+    <>
+      <div className="grid grid-cols-3 gap-2 px-4 mb-4">
+        {allMetrics.map((m) => (
+          <MetricCard key={m.label} {...m} onAdd={m.onAdd} />
+        ))}
+      </div>
+      <AddNutritionModal open={showNutrition} onClose={() => setShowNutrition(false)} />
+      {metricModal && (
+        <AddMetricModal
+          open={!!metricModal}
+          onClose={() => setMetricModal(null)}
+          label={metricModal.label}
+          unit={metricModal.unit}
+          value={metricModal.current}
+          onSave={metricModal.onSave}
+        />
+      )}
+    </>
   );
 }

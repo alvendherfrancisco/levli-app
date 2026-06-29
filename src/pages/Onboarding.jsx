@@ -25,7 +25,7 @@ export default function Onboarding() {
       {step === 4 && <HistoryCalendarStep />}
       {step === 5 && <JournalStep />}
       {step === 6 && <ReportsStep />}
-      {step === 7 && <NotificationStep />}
+      {step === 7 && <NotificationStep onContinue={next} />}
       {step === 8 && <PersonalizeStep />}
       {step === 9 && (
         <QuizScreen
@@ -193,7 +193,8 @@ function ReportsStep() {
   );
 }
 
-function NotificationStep() {
+function NotificationStep({ onContinue }) {
+  const [enabled, setEnabled] = React.useState(false);
   return (
     <div className="flex flex-col items-center text-center flex-1">
       <h1 className="text-3xl font-bold mb-3">Never Miss a Shot Again</h1>
@@ -209,9 +210,16 @@ function NotificationStep() {
           To make the most of GLP1 Tracker, please allow notifications so we can remind you when it's time to take your medications.
         </p>
       </div>
-      <button className="px-6 py-3 border border-blue-500 text-blue-400 rounded-xl text-sm font-medium flex items-center gap-2 mx-auto">
-        <Bell size={16} /> Enable Notifications
-      </button>
+      {enabled ? (
+        <div className="px-6 py-3 bg-green-500/20 text-green-400 rounded-xl text-sm font-medium flex items-center gap-2 mx-auto border border-green-500/40">
+          <Bell size={16} /> Notifications Enabled ✓
+        </div>
+      ) : (
+        <button onClick={() => { setEnabled(true); setTimeout(onContinue, 800); }}
+          className="px-6 py-3 border border-blue-500 text-blue-400 rounded-xl text-sm font-medium flex items-center gap-2 mx-auto">
+          <Bell size={16} /> Enable Notifications
+        </button>
+      )}
       <p className="text-gray-500 text-xs mt-4">You can adjust your notification preferences later in Settings.</p>
     </div>
   );

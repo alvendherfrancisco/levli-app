@@ -1,39 +1,45 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Settings, Syringe, Lock, User } from "lucide-react";
+import { Settings, Syringe, Lock, User, Check } from "lucide-react";
+import { useAppState } from "@/lib/AppState";
 
 export default function Profile() {
-  const [heightFt, setHeightFt] = useState("0");
-  const [heightIn, setHeightIn] = useState("0.0");
-  const [goalWeight, setGoalWeight] = useState("0.0");
-  const [daysBetween, setDaysBetween] = useState("7");
-  const [liquidUnit, setLiquidUnit] = useState("oz");
-  const [heightUnit, setHeightUnit] = useState("in");
-  const [weightUnit, setWeightUnit] = useState("lb");
+  const { profile, setProfile } = useAppState();
+  const [local, setLocal] = useState({ ...profile });
+  const [saved, setSaved] = useState({});
 
-  const UnitToggle = ({ label, opt1, opt2, value, onChange }) => (
+  const handleSave = (field) => {
+    setProfile((prev) => ({ ...prev, [field]: local[field] }));
+    setSaved((prev) => ({ ...prev, [field]: true }));
+    setTimeout(() => setSaved((prev) => ({ ...prev, [field]: false })), 1500);
+  };
+
+  const SaveBtn = ({ field }) => (
+    <button onClick={() => handleSave(field)}
+      className={`px-4 py-2.5 rounded-xl font-semibold text-sm transition-all ${
+        saved[field] ? "bg-green-500 text-white" : "bg-blue-600 text-white"
+      }`}>
+      {saved[field] ? <Check size={16} /> : "Save"}
+    </button>
+  );
+
+  const UnitToggle = ({ label, opt1, opt2, field }) => (
     <div className="flex items-center justify-between py-2">
       <span className="text-sm text-gray-700 font-medium">{label}</span>
       <div className="flex rounded-xl overflow-hidden border border-gray-200">
-        <button
-          onClick={() => onChange(opt1)}
-          className={`px-5 py-2 text-sm font-medium transition-colors ${value === opt1 ? "bg-blue-100 text-blue-700" : "bg-white text-gray-500"}`}
-        >
-          {opt1}
-        </button>
-        <button
-          onClick={() => onChange(opt2)}
-          className={`px-5 py-2 text-sm font-medium transition-colors ${value === opt2 ? "bg-blue-100 text-blue-700" : "bg-white text-gray-500"}`}
-        >
-          {opt2}
-        </button>
+        {[opt1, opt2].map((opt) => (
+          <button key={opt}
+            onClick={() => { setLocal((p) => ({ ...p, [field]: opt })); setProfile((p) => ({ ...p, [field]: opt })); }}
+            className={`px-5 py-2 text-sm font-medium transition-colors ${local[field] === opt ? "bg-blue-100 text-blue-700" : "bg-white text-gray-500"}`}>
+            {opt}
+          </button>
+        ))}
       </div>
     </div>
   );
 
   return (
     <div className="bg-gray-50 min-h-screen">
-      {/* Header */}
       <div className="flex items-center justify-between px-5 pt-6 pb-4">
         <h1 className="text-2xl font-bold text-gray-900">Profile</h1>
         <Link to="/settings"><Settings size={22} className="text-gray-600" /></Link>
@@ -49,28 +55,26 @@ export default function Profile() {
         </div>
         <div className="border-b-2 border-blue-500 w-10 mb-4" />
 
-        {/* Height */}
         <label className="text-sm text-gray-700 font-medium block mb-2">Height</label>
         <div className="flex items-center gap-2 mb-4">
           <div className="flex-1 border border-gray-200 rounded-xl px-3 py-2.5 flex items-center">
-            <input type="number" value={heightFt} onChange={(e) => setHeightFt(e.target.value)} className="w-full outline-none text-base" />
+            <input type="number" value={local.heightFt} onChange={(e) => setLocal({ ...local, heightFt: e.target.value })} className="w-full outline-none text-base" />
             <span className="text-gray-400 text-sm ml-1">ft</span>
           </div>
           <div className="flex-1 border border-gray-200 rounded-xl px-3 py-2.5 flex items-center">
-            <input type="number" value={heightIn} onChange={(e) => setHeightIn(e.target.value)} className="w-full outline-none text-base" />
+            <input type="number" value={local.heightIn} onChange={(e) => setLocal({ ...local, heightIn: e.target.value })} className="w-full outline-none text-base" />
             <span className="text-gray-400 text-sm ml-1">in</span>
           </div>
-          <button className="px-4 py-2.5 bg-blue-600 text-white rounded-xl font-semibold text-sm">Save</button>
+          <SaveBtn field="heightFt" />
         </div>
 
-        {/* Goal Weight */}
         <label className="text-sm text-gray-700 font-medium block mb-2">Goal Weight</label>
         <div className="flex items-center gap-2">
           <div className="flex-1 border border-gray-200 rounded-xl px-3 py-2.5 flex items-center">
-            <input type="number" value={goalWeight} onChange={(e) => setGoalWeight(e.target.value)} className="w-full outline-none text-base" />
+            <input type="number" value={local.goalWeight} onChange={(e) => setLocal({ ...local, goalWeight: e.target.value })} className="w-full outline-none text-base" />
             <span className="text-gray-400 text-sm ml-1">lb</span>
           </div>
-          <button className="px-4 py-2.5 bg-blue-600 text-white rounded-xl font-semibold text-sm">Save</button>
+          <SaveBtn field="goalWeight" />
         </div>
       </div>
 
@@ -87,10 +91,10 @@ export default function Profile() {
         <label className="text-sm text-gray-700 font-medium block mb-2">Days Between Shots</label>
         <div className="flex items-center gap-2 mb-2">
           <div className="flex-1 border border-gray-200 rounded-xl px-3 py-2.5 flex items-center">
-            <input type="number" value={daysBetween} onChange={(e) => setDaysBetween(e.target.value)} className="w-full outline-none text-base" />
+            <input type="number" value={local.daysBetween} onChange={(e) => setLocal({ ...local, daysBetween: e.target.value })} className="w-full outline-none text-base" />
             <span className="text-gray-400 text-sm ml-1">days</span>
           </div>
-          <button className="px-4 py-2.5 bg-blue-600 text-white rounded-xl font-semibold text-sm">Save</button>
+          <SaveBtn field="daysBetween" />
         </div>
         <p className="text-xs text-gray-400">This affects how your next shot date is calculated</p>
       </div>
@@ -104,17 +108,15 @@ export default function Profile() {
           <h3 className="font-bold text-gray-900 text-lg">Measurement Units</h3>
         </div>
         <div className="border-b-2 border-blue-500 w-10 mb-4" />
-
-        <UnitToggle label="Liquid Unit" opt1="mL" opt2="oz" value={liquidUnit} onChange={setLiquidUnit} />
-        <UnitToggle label="Height Unit" opt1="cm" opt2="in" value={heightUnit} onChange={setHeightUnit} />
-        <UnitToggle label="Weight Unit" opt1="kg" opt2="lb" value={weightUnit} onChange={setWeightUnit} />
+        <UnitToggle label="Liquid Unit" opt1="mL" opt2="oz" field="liquidUnit" />
+        <UnitToggle label="Height Unit" opt1="cm" opt2="in" field="heightUnit" />
+        <UnitToggle label="Weight Unit" opt1="kg" opt2="lb" field="weightUnit" />
       </div>
 
-      {/* Disclaimer */}
       <div className="mx-4 mb-8 bg-gray-100 rounded-2xl p-4 border border-gray-200">
         <h4 className="font-bold text-gray-700 mb-1">Important</h4>
         <p className="text-xs text-gray-500 leading-relaxed">
-          This application is not intended as a substitute for professional medical care. Only your doctor can diagnose and treat medical problems. For specific medical advice, diagnoses, and treatment, consult your doctor.
+          This application is not intended as a substitute for professional medical care. Only your doctor can diagnose and treat medical problems.
         </p>
       </div>
     </div>

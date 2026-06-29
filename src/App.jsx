@@ -8,6 +8,8 @@ import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import ScrollToTop from './components/ScrollToTop';
 import ProtectedRoute from '@/components/ProtectedRoute';
 
+import { AppStateProvider } from '@/lib/AppState';
+
 // Auth pages
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
@@ -23,6 +25,7 @@ import Insights from '@/pages/Insights';
 import Journal from '@/pages/Journal';
 import Profile from '@/pages/Profile';
 import SettingsPage from '@/pages/SettingsPage';
+import ReportPage from '@/pages/ReportPage';
 
 // Layout
 import AppLayout from '@/components/AppLayout';
@@ -64,6 +67,7 @@ const AuthenticatedApp = () => {
           <Route path="/profile" element={<Profile />} />
         </Route>
         <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/report" element={<ReportPage />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
@@ -74,11 +78,13 @@ function App() {
   return (
     <AuthProvider>
       <QueryClientProvider client={queryClientInstance}>
-        <Router>
-          <ScrollToTop />
-          <AuthenticatedApp />
-        </Router>
-        <Toaster />
+        <AppStateProvider>
+          <Router>
+            <ScrollToTop />
+            <AuthenticatedApp />
+          </Router>
+          <Toaster />
+        </AppStateProvider>
       </QueryClientProvider>
     </AuthProvider>
   )
