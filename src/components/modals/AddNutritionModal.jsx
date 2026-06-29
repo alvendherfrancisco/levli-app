@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { X, RotateCcw, Save } from "lucide-react";
+
 import { useAppState } from "@/lib/AppState";
 
 const EMPTY = { calories: "0.0", protein: "0.0", water: "0.0", fiber: "0.0", carbs: "0.0" };
@@ -27,7 +28,7 @@ export default function AddNutritionModal({ open, onClose }) {
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="relative bg-white rounded-t-3xl sm:rounded-3xl w-full sm:max-w-[480px] animate-in slide-in-from-bottom sm:mx-4">
+      <div className="relative bg-white rounded-t-3xl sm:rounded-3xl w-full sm:max-w-[480px] max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom sm:mx-4">
         <div className="flex justify-center pt-3 pb-1">
           <div className="w-10 h-1 bg-gray-300 rounded-full" />
         </div>

@@ -130,8 +130,7 @@ export default function History() {
 
       <button
         onClick={() => setShowShot(true)}
-        className="fixed bottom-20 left-1/2 -translate-x-1/2 lg:bottom-8 bg-blue-600 text-white rounded-2xl shadow-lg shadow-blue-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-blue-700 transition-colors text-sm px-5 py-3"
-        style={{ maxWidth: 160 }}
+        className="fixed bottom-24 right-5 lg:right-8 bg-blue-600 text-white rounded-2xl shadow-lg shadow-blue-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-blue-700 transition-colors text-sm px-5 py-3"
       >
         <Plus size={18} /> Add Shot
       </button>
