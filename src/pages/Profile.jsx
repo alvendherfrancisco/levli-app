@@ -39,12 +39,13 @@ export default function Profile() {
   );
 
   return (
-    <div className="bg-gray-50 min-h-screen">
-      <div className="sticky top-0 z-30 bg-gray-50 flex items-center justify-between px-5 pt-6 pb-4">
+    <div className="bg-gray-50 min-h-screen w-full">
+      <div className="sticky top-0 z-30 bg-gray-50 w-full flex items-center justify-between px-5 pt-6 pb-4">
         <h1 className="text-2xl font-bold text-gray-900">Profile</h1>
         <Link to="/settings"><Settings size={22} className="text-gray-600" /></Link>
       </div>
 
+      <div className="max-w-3xl mx-auto">
       {/* Profile Info */}
       <div className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
         <div className="flex items-center gap-2 mb-1">
@@ -118,6 +119,7 @@ export default function Profile() {
         <p className="text-xs text-gray-500 leading-relaxed">
           This application is not intended as a substitute for professional medical care. Only your doctor can diagnose and treat medical problems.
         </p>
+      </div>
       </div>
     </div>
   );

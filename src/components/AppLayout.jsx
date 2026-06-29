@@ -4,11 +4,13 @@ import BottomTabBar from "@/components/BottomTabBar";
 
 export default function AppLayout() {
   return (
-    <div className="min-h-screen bg-gray-50 w-full relative">
-      <div className="max-w-lg mx-auto pb-24">
+    <div className="min-h-screen bg-gray-50 w-full relative flex">
+      {/* Left nav rail on desktop */}
+      <BottomTabBar />
+      {/* Main content — on desktop, offset for the left rail */}
+      <div className="flex-1 lg:ml-56 pb-24 lg:pb-0 w-full min-w-0">
         <Outlet />
       </div>
-      <BottomTabBar />
     </div>
   );
 }

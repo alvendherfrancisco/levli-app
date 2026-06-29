@@ -48,8 +48,8 @@ export default function Journal() {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen">
-      <div className="sticky top-0 z-30 bg-gray-50 flex items-center justify-between px-5 pt-6 pb-4">
+    <div className="bg-gray-50 min-h-screen w-full">
+      <div className="sticky top-0 z-30 bg-gray-50 w-full flex items-center justify-between px-5 pt-6 pb-4">
         <h1 className="text-2xl font-bold text-gray-900">Journal</h1>
         <div className="flex items-center gap-3">
           <button onClick={openNew}><Plus size={22} className="text-gray-600" /></button>
@@ -57,6 +57,7 @@ export default function Journal() {
         </div>
       </div>
 
+      <div className="max-w-3xl mx-auto">
       {journalEntries.length === 0 ? (
         <div className="px-4">
           <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 text-center">
@@ -99,6 +100,7 @@ export default function Journal() {
         </div>
       )}
 
+      </div>
       <JournalEntryModal
         open={showModal}
         onClose={() => { setShowModal(false); setEditingEntry(null); }}

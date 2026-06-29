@@ -34,8 +34,8 @@ export default function Shots() {
   const nextDate = last ? addDays(last.date, 7) : null;
 
   return (
-    <div className="bg-gray-50 min-h-screen">
-      <div className="sticky top-0 z-30 bg-gray-50 flex items-center justify-between px-5 pt-6 pb-4">
+    <div className="bg-gray-50 min-h-screen w-full">
+      <div className="sticky top-0 z-30 bg-gray-50 w-full flex items-center justify-between px-5 pt-6 pb-4">
         <h1 className="text-2xl font-bold text-gray-900">Shots</h1>
         <div className="flex items-center gap-3">
           <button onClick={() => navigate("/report")}><FileText size={22} className="text-gray-500" /></button>
@@ -43,6 +43,7 @@ export default function Shots() {
         </div>
       </div>
 
+      <div className="max-w-3xl mx-auto">
       {/* Summary cards */}
       <div className="flex gap-2 px-4 mb-5 overflow-x-auto">
         <div className="bg-white rounded-xl p-3 shadow-sm border border-gray-100 min-w-[120px]">
@@ -99,11 +100,14 @@ export default function Shots() {
         )}
       </div>
 
+      </div>
+
       <button
         onClick={() => setShowShot(true)}
-        className="fixed bottom-24 right-5 bg-blue-600 text-white px-5 py-3.5 rounded-2xl shadow-lg shadow-blue-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-blue-700 transition-colors"
+        className="fixed bottom-20 left-1/2 -translate-x-1/2 lg:bottom-8 bg-blue-600 text-white rounded-2xl shadow-lg shadow-blue-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-blue-700 transition-colors text-sm px-5 py-3"
+        style={{ maxWidth: 160 }}
       >
-        <Plus size={20} /> Add Shot
+        <Plus size={18} /> Add Shot
       </button>
 
       <AddShotModal open={showShot} onClose={() => setShowShot(false)} />

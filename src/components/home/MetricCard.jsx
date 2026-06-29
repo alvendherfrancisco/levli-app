@@ -3,19 +3,19 @@ import { Plus } from "lucide-react";
 
 export default function MetricCard({ icon, label, value, unit, color, onAdd }) {
   return (
-    <div className="bg-white rounded-xl p-3 shadow-sm border border-gray-100 relative">
+    <div className="bg-white rounded-xl p-2.5 shadow-sm border border-gray-100 min-h-[90px] overflow-hidden flex flex-col">
       <div className="flex items-center justify-between mb-2">
-        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${color}`}>
+        <div className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 ${color}`}>
           {icon}
         </div>
-        <div className="flex items-center gap-1">
-          <span className="text-xs text-gray-500 font-medium">{label}</span>
-          <button onClick={onAdd} className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors">
-            <Plus size={12} className="text-gray-500" />
-          </button>
-        </div>
+        <button onClick={onAdd} className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors flex-shrink-0">
+          <Plus size={11} className="text-gray-500" />
+        </button>
       </div>
-      <p className="text-lg font-bold text-gray-800">{value} <span className="text-sm font-normal text-gray-400">{unit}</span></p>
+      <span className="text-[10px] text-gray-500 font-medium mb-1 leading-tight break-words">{label}</span>
+      <p className="text-base font-bold text-gray-800 leading-tight">
+        {value} <span className="text-xs font-normal text-gray-400">{unit}</span>
+      </p>
     </div>
   );
 }

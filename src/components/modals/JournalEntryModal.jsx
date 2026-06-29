@@ -44,9 +44,9 @@ export default function JournalEntryModal({ open, onClose, onSave, initialEntry 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="relative bg-white rounded-t-3xl w-full max-w-lg max-h-[92vh] overflow-y-auto animate-in slide-in-from-bottom">
+      <div className="relative bg-white rounded-t-3xl sm:rounded-3xl w-full sm:max-w-[480px] max-h-[92vh] overflow-y-auto animate-in slide-in-from-bottom sm:mx-4">
         <div className="flex justify-center pt-3 pb-1">
           <div className="w-10 h-1 bg-gray-300 rounded-full" />
         </div>
