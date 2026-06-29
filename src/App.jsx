@@ -59,7 +59,9 @@ const AuthenticatedApp = () => {
       <Route path="/onboarding" element={<Onboarding />} />
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
         <Route element={<AppLayout />}>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={
+            localStorage.getItem("onboarding_complete") ? <Home /> : <Navigate to="/onboarding" replace />
+          } />
           <Route path="/shots" element={<Shots />} />
           <Route path="/history" element={<History />} />
           <Route path="/insights" element={<Insights />} />

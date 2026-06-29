@@ -13,7 +13,10 @@ export default function Onboarding() {
 
   const next = () => {
     if (step < TOTAL_STEPS - 1) setStep(step + 1);
-    else navigate("/");
+    else {
+      localStorage.setItem("onboarding_complete", "true");
+      navigate("/");
+    }
   };
 
   return (

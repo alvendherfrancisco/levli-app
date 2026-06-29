@@ -80,10 +80,16 @@ export default function SettingsPage() {
         </div>
 
         {/* Feedback */}
-        <div className="px-4 mb-8">
+        <div className="px-4 mb-4">
           <div className="bg-white rounded-2xl px-4 shadow-sm border border-gray-100">
             <MenuItem icon={<MessageSquare size={18} className="text-gray-500" />} label="Leave feedback" />
           </div>
+        </div>
+
+        {/* App version */}
+        <div className="py-6 text-center">
+          <p className="text-xs text-gray-400">Version 1.0.0</p>
+          <p className="text-xs text-gray-400">© 2026 Dosely</p>
         </div>
       </div>
     </div>

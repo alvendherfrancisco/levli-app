@@ -35,7 +35,7 @@ export default function Insights() {
 
       <div className="max-w-3xl mx-auto">
       {/* Weight Change Panel */}
-      <div className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+      <div className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-sm border border-gray-100 overflow-hidden">
         <div className="flex items-center gap-2 mb-1">
           <TrendingDown size={18} className="text-blue-600" />
           <h3 className="font-bold text-gray-900 text-lg">Weight Change</h3>
@@ -43,21 +43,22 @@ export default function Insights() {
         <div className="border-b-2 border-blue-500 w-12 mb-3" />
 
         {/* Range tabs */}
-        <div className="flex items-center gap-2 mb-3">
+        <div className="flex items-center gap-1 mb-3 w-full box-border flex-nowrap">
           {["30 Days", "180 Days", "1 Year"].map((r) => (
             <button
               key={r}
               onClick={() => setWeightRange(r)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+              className={`px-2 py-1.5 rounded-lg text-xs font-medium transition-colors flex-shrink-0 ${
                 weightRange === r ? "bg-gray-100 text-gray-900 border border-gray-200" : "text-gray-400"
               }`}
             >
               {r}
             </button>
           ))}
+          <div className="flex-1" />
           <button
             onClick={() => setShowShotsToggle(!showShotsToggle)}
-            className={`ml-auto px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1 border ${
+            className={`px-2 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1 border flex-shrink-0 whitespace-nowrap ${
               showShotsToggle ? "bg-blue-50 border-blue-200 text-blue-600" : "border-gray-200 text-gray-400"
             }`}
           >
