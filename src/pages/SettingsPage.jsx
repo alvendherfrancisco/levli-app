@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, Moon, Lock, Mail, Bell, RotateCcw, Database, FileText, MessageSquare, ChevronRight } from "lucide-react";
+import { useAppState } from "@/lib/AppState";
 
 export default function SettingsPage() {
   const navigate = useNavigate();
-  const [darkMode, setDarkMode] = useState(false);
+  const { darkMode, setDarkMode } = useAppState();
   const [requireAuth, setRequireAuth] = useState(false);
 
   const Toggle = ({ value, onChange }) => (

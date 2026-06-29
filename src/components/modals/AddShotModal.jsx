@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { X, Save, MapPin, Star, ChevronDown } from "lucide-react";
 import { useAppState } from "@/lib/AppState";
 
-const medications = ["Ozempic®", "Wegovy®", "Mounjaro®", "Zepbound®"];
+const medications = ["Zepbound®", "Mounjaro®", "Tirzepatide", "Wegovy®", "Ozempic®", "Semaglutide", "Retatrutide", "Saxenda®", "Liraglutide"];
 const injectionSites = [
   "Stomach – Upper Left", "Stomach – Upper Right", "Stomach – Lower Left", "Stomach – Lower Right",
   "Thigh – Left", "Thigh – Right", "Upper Arm – Left", "Upper Arm – Right",

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 const SAMPLE_SHOTS = [
   { id: 1, medication: "Ozempic®", dose: 2.5, drugClass: "Semaglutide", date: "May 30, 2025", time: "6:00 AM", site: "Stomach – Upper Right", pain: 0, notes: "" },
@@ -25,6 +25,15 @@ export function AppStateProvider({ children }) {
   const [sideEffects, setSideEffects] = useState("");
   const [journalEntries, setJournalEntries] = useState(SAMPLE_JOURNAL);
   const [profile, setProfile] = useState({ heightFt: "5", heightIn: "8", goalWeight: "160", daysBetween: "7", liquidUnit: "oz", heightUnit: "in", weightUnit: "lb" });
+  const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [darkMode]);
 
   const addShot = (shot) => {
     const newShot = { ...shot, id: Date.now() };
@@ -52,6 +61,7 @@ export function AppStateProvider({ children }) {
       sideEffects, setSideEffects,
       journalEntries, addJournalEntry, updateJournalEntry,
       profile, setProfile,
+      darkMode, setDarkMode,
     }}>
       {children}
     </AppStateContext.Provider>
