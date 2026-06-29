@@ -51,7 +51,7 @@ export default function History() {
 
   return (
     <div className="bg-gray-50 min-h-screen">
-      <div className="flex items-center justify-between px-5 pt-6 pb-4">
+      <div className="sticky top-0 z-30 bg-gray-50 flex items-center justify-between px-5 pt-6 pb-4">
         <h1 className="text-2xl font-bold text-gray-900">History</h1>
         <Link to="/settings"><Settings size={22} className="text-gray-600" /></Link>
       </div>

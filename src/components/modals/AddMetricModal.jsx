@@ -52,7 +52,7 @@ function ProgressModal({ open, onClose, value, onSave, onDelete }) {
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="relative bg-white rounded-t-3xl w-full max-w-lg animate-in slide-in-from-bottom">
+      <div className="relative bg-white rounded-t-3xl w-full max-w-lg max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom">
         <div className="flex items-center justify-between px-5 pt-5 pb-4">
           <h2 className="text-xl font-bold text-gray-900">{isEdit ? "Edit Progress Picture" : "Add Progress Picture"}</h2>
           <button onClick={onClose}><X size={22} className="text-gray-400" /></button>

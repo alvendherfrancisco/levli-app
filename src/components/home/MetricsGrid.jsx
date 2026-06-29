@@ -29,7 +29,7 @@ export default function MetricsGrid() {
     })),
     { icon: <Dumbbell size={16} className="text-red-400" />, label: "Exercise", value: exercise, unit: "min", color: "bg-red-100",
       onAdd: () => setMetricModal({ label: "Exercise", unit: "min", current: exercise, onSave: (v) => setExercise(v) }) },
-    { icon: <Camera size={16} className="text-purple-500" />, label: "Progress", value: progress, unit: "pic", color: "bg-purple-100",
+    { icon: <Camera size={16} className="text-purple-500" />, label: "Progress", value: progress && progress !== "–" ? "✓" : "–", unit: "pic", color: "bg-purple-100",
       onAdd: () => setMetricModal({ label: "Progress", unit: "pic", current: progress, onSave: (v) => setProgress(v) }) },
   ];
 

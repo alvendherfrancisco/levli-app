@@ -15,7 +15,7 @@ export default function BottomTabBar() {
   const location = useLocation();
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 pb-safe z-50">
+    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 pb-safe z-40">
       <div className="flex items-center justify-around px-2 py-2 max-w-lg mx-auto">
         {tabs.map((tab) => {
           const isActive = location.pathname === tab.path;
