@@ -2,6 +2,7 @@ import React from "react";
 
 export default function OnboardingScreen({ step, totalSteps, children, onContinue }) {
   const progress = ((step + 1) / totalSteps) * 100;
+  const isLastStep = step === totalSteps - 1;
   return (
     <div className="min-h-screen bg-black text-white flex items-start sm:items-center justify-center">
       {/* Centered card */}
@@ -27,7 +28,7 @@ export default function OnboardingScreen({ step, totalSteps, children, onContinu
             onClick={onContinue}
             className="w-full py-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold text-lg rounded-2xl transition-colors"
           >
-            Continue
+            {isLastStep ? "Go to Dashboard →" : "Continue"}
           </button>
         </div>
       </div>
