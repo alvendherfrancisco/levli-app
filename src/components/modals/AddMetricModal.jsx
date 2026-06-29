@@ -35,24 +35,26 @@ function ExerciseModal({ open, onClose, value, onSave, onDelete }) {
 
 // Progress photo modal
 function ProgressModal({ open, onClose, value, onSave, onDelete }) {
-  const [imgUrl, setImgUrl] = useState(value && value !== "–" ? value : null);
-  const fileRef = React.useRef();
+  const hasExisting = value && value !== "–";
+  const [imgUrl, setImgUrl] = useState(hasExisting ? value : null);
+  const fileRef = useRef();
 
   if (!open) return null;
 
   const handleFile = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    const url = URL.createObjectURL(file);
-    setImgUrl(url);
+    setImgUrl(URL.createObjectURL(file));
   };
+
+  const isEdit = hasExisting;
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
       <div className="relative bg-white rounded-t-3xl w-full max-w-lg animate-in slide-in-from-bottom">
         <div className="flex items-center justify-between px-5 pt-5 pb-4">
-          <h2 className="text-xl font-bold text-gray-900">Edit Progress Picture</h2>
+          <h2 className="text-xl font-bold text-gray-900">{isEdit ? "Edit Progress Picture" : "Add Progress Picture"}</h2>
           <button onClick={onClose}><X size={22} className="text-gray-400" /></button>
         </div>
         <div className="px-5 pb-4">
@@ -61,8 +63,8 @@ function ProgressModal({ open, onClose, value, onSave, onDelete }) {
               <img src={imgUrl} alt="Progress" className="w-full object-cover max-h-64" />
             ) : (
               <div className="flex flex-col items-center gap-3 py-12 text-gray-300">
-                <Image size={48} />
-                <p className="text-sm">No photo selected</p>
+                <Camera size={48} />
+                <p className="text-sm text-gray-400">No image selected.</p>
               </div>
             )}
           </div>
@@ -78,16 +80,25 @@ function ProgressModal({ open, onClose, value, onSave, onDelete }) {
             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
           </div>
         </div>
-        <div className="flex gap-3 px-5 pb-8">
-          <button onClick={() => { onDelete(); onClose(); }}
-            className="flex-1 py-3 bg-red-500 text-white rounded-xl font-semibold flex items-center justify-center gap-2">
-            <Trash2 size={18} /> Delete
-          </button>
-          <button onClick={() => { onSave(imgUrl || "✓ pic"); onClose(); }}
-            className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2">
-            <Save size={18} /> Update
-          </button>
-        </div>
+        {isEdit ? (
+          <div className="flex gap-3 px-5 pb-8">
+            <button onClick={() => { onDelete(); onClose(); }}
+              className="flex-1 py-3 bg-red-500 text-white rounded-xl font-semibold flex items-center justify-center gap-2">
+              <Trash2 size={18} /> Delete
+            </button>
+            <button onClick={() => { onSave(imgUrl || "✓ pic"); onClose(); }}
+              className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2">
+              <Save size={18} /> Update
+            </button>
+          </div>
+        ) : (
+          <div className="px-5 pb-8">
+            <button onClick={() => { if (imgUrl) { onSave(imgUrl); onClose(); } }}
+              className={`w-full py-3.5 rounded-xl font-semibold flex items-center justify-center gap-2 ${imgUrl ? "bg-blue-600 text-white" : "bg-blue-600 text-white opacity-60"}`}>
+              <Save size={18} /> Save
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
