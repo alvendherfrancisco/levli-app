@@ -86,7 +86,7 @@ export default function Shots() {
         </div>
       </div>
 
-      <div className="px-4 mb-4">
+      <div className="px-4 pb-32">
         <h2 className="text-lg font-bold text-gray-900 mb-3">History</h2>
         {shots.length === 0 ? (
           <div className="bg-white rounded-xl p-6 text-center text-gray-400 border border-gray-100">

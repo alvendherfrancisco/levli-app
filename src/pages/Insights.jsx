@@ -66,31 +66,31 @@ export default function Insights() {
         </div>
 
         {/* Date range navigation */}
-        <div className="flex items-center gap-2 mb-3">
-          <button className="p-1 rounded bg-gray-100"><ChevronLeft size={16} className="text-gray-500" /></button>
-          <span className="flex-1 text-center text-xs text-gray-500 italic">Jan 20, 2025 - Jul 19, 2025</span>
-          <button className="p-1 rounded bg-gray-100"><ChevronRight size={16} className="text-gray-500" /></button>
-          <button className="px-2 py-1 rounded text-xs text-blue-600 font-medium flex items-center gap-1 border border-blue-200">
+        <div className="flex items-center justify-between gap-1 mb-3 flex-nowrap">
+          <button className="p-1 rounded bg-gray-100 flex-shrink-0"><ChevronLeft size={16} className="text-gray-500" /></button>
+          <span className="flex-1 text-center text-xs text-gray-500 italic whitespace-nowrap overflow-hidden text-ellipsis px-1">Jan 20, 2025 – Jul 19, 2025</span>
+          <button className="p-1 rounded bg-gray-100 flex-shrink-0"><ChevronRight size={16} className="text-gray-500" /></button>
+          <button className="px-2 py-1 rounded text-xs text-blue-600 font-medium flex items-center gap-1 border border-blue-200 flex-shrink-0 whitespace-nowrap">
             <RotateCcw size={12} /> Reset
           </button>
         </div>
 
         {/* Summary chips */}
-        <div className="grid grid-cols-3 gap-2 mb-4">
-          <div className="bg-green-50 rounded-xl p-2.5 text-center">
+        <div className="flex flex-row gap-2 mb-4">
+          <div className="bg-green-50 rounded-xl p-2.5 text-center flex-1 min-w-0 overflow-hidden">
             <TrendingDown size={14} className="text-green-500 mx-auto mb-1" />
-            <p className="text-[10px] text-gray-500">Weight Loss</p>
-            <p className="text-sm font-bold text-green-600">-38.0 lbs</p>
+            <p className="text-gray-500 truncate" style={{ fontSize: "clamp(9px, 2.5vw, 12px)" }}>Weight Loss</p>
+            <p className="font-bold text-green-600 truncate" style={{ fontSize: "clamp(11px, 2.5vw, 14px)" }}>-38.0 lbs</p>
           </div>
-          <div className="bg-blue-50 rounded-xl p-2.5 text-center">
+          <div className="bg-blue-50 rounded-xl p-2.5 text-center flex-1 min-w-0 overflow-hidden">
             <span className="text-blue-500 text-sm">⚡</span>
-            <p className="text-[10px] text-gray-500">Rate/Week</p>
-            <p className="text-sm font-bold text-blue-600">-3.1 lbs</p>
+            <p className="text-gray-500 truncate" style={{ fontSize: "clamp(9px, 2.5vw, 12px)" }}>Rate/Week</p>
+            <p className="font-bold text-blue-600 truncate" style={{ fontSize: "clamp(11px, 2.5vw, 14px)" }}>-3.1 lbs</p>
           </div>
-          <div className="bg-orange-50 rounded-xl p-2.5 text-center">
+          <div className="bg-orange-50 rounded-xl p-2.5 text-center flex-1 min-w-0 overflow-hidden">
             <span className="text-orange-500 text-sm">📊</span>
-            <p className="text-[10px] text-gray-500">Current BMI</p>
-            <p className="text-sm font-bold text-orange-600">25.4</p>
+            <p className="text-gray-500 truncate" style={{ fontSize: "clamp(9px, 2.5vw, 12px)" }}>Current BMI</p>
+            <p className="font-bold text-orange-600 truncate" style={{ fontSize: "clamp(11px, 2.5vw, 14px)" }}>25.4</p>
           </div>
         </div>
 

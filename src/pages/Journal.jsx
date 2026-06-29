@@ -72,26 +72,26 @@ export default function Journal() {
           </div>
         </div>
       ) : (
-        <div className="px-4 space-y-3">
+        <div className="px-4 space-y-3 pb-28">
           {journalEntries.map((entry) => (
-            <button key={entry.id} onClick={() => openEdit(entry)} className="w-full text-left bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-              <div className="flex items-start gap-3">
-                <div className={`w-10 h-10 rounded-xl ${CATEGORY_BG[entry.category] || "bg-gray-100"} flex items-center justify-center flex-shrink-0`}>
+            <button key={entry.id} onClick={() => openEdit(entry)} className="w-full text-left bg-white rounded-xl p-4 shadow-sm border border-gray-100 overflow-hidden box-border">
+              <div className="flex items-start gap-3 w-full min-w-0">
+                <div className={`w-10 h-10 rounded-xl ${CATEGORY_BG[entry.category] || "bg-gray-100"} flex items-center justify-center flex-shrink-0`} style={{ minWidth: 40 }}>
                   {CATEGORY_ICONS[entry.category] || <FileText size={20} className="text-gray-500" />}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="flex justify-between items-start">
-                    <p className="text-sm text-gray-700 line-clamp-2 pr-2">{entry.text}</p>
-                    <span className="text-xs text-gray-400 flex-shrink-0 whitespace-nowrap">{entry.date}</span>
+                  <div className="flex justify-between items-start gap-2">
+                    <p className="text-sm text-gray-700 overflow-hidden text-ellipsis whitespace-nowrap flex-1 min-w-0">{entry.text}</p>
+                    <span className="text-xs text-gray-400 flex-shrink-0 whitespace-nowrap text-right">{entry.date}</span>
                   </div>
                   <div className="flex items-center gap-1 mt-1 text-xs text-gray-400">
                     <span>🕐</span> <span>{entry.time}</span>
                   </div>
-                  <div className="flex items-center gap-2 mt-2">
-                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${entry.moodColor}`}>
+                  <div className="flex items-center gap-2 mt-2 flex-wrap">
+                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium whitespace-nowrap ${entry.moodColor}`}>
                       😊 {entry.mood}
                     </span>
-                    <span className="text-xs text-gray-400">• {entry.category}</span>
+                    <span className="text-xs text-gray-400 whitespace-nowrap">• {entry.category}</span>
                   </div>
                 </div>
               </div>
