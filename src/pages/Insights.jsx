@@ -123,11 +123,11 @@ export default function Insights() {
             <div className="h-48">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={weightData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                  <XAxis dataKey="date" tick={{ fontSize: 10 }} stroke="#ccc" interval="preserveStartEnd" />
-                  <YAxis tick={{ fontSize: 10 }} stroke="#ccc" domain={["auto", "auto"]} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--card))" />
+                  <XAxis dataKey="date" tick={{ fontSize: 10 }} stroke="hsl(var(--border))" interval="preserveStartEnd" />
+                  <YAxis tick={{ fontSize: 10 }} stroke="hsl(var(--border))" domain={["auto", "auto"]} />
                   <Tooltip formatter={(v) => [`${v} ${weightUnit}`, "Weight"]} />
-                  <Line type="monotone" dataKey="weight" stroke="#3B6FE0" strokeWidth={2} dot={{ fill: "#3B6FE0", r: 3 }} />
+                  <Line type="monotone" dataKey="weight" stroke="hsl(var(--accent-foreground))" strokeWidth={2} dot={{ fill: "hsl(var(--accent-foreground))", r: 3 }} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -165,11 +165,11 @@ export default function Insights() {
             <div className="h-48">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={medData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                  <XAxis dataKey="day" tick={{ fontSize: 10 }} stroke="#ccc" interval={Math.floor(medData.length / 5)} />
-                  <YAxis tick={{ fontSize: 10 }} stroke="#ccc" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--card))" />
+                  <XAxis dataKey="day" tick={{ fontSize: 10 }} stroke="hsl(var(--border))" interval={Math.floor(medData.length / 5)} />
+                  <YAxis tick={{ fontSize: 10 }} stroke="hsl(var(--border))" />
                   <Tooltip formatter={(v) => [`${v} mg`, "Concentration"]} />
-                  <Area type="monotone" dataKey="level" stroke="#3B6FE0" fill="#3B6FE0" fillOpacity={0.1} strokeWidth={2} />
+                  <Area type="monotone" dataKey="level" stroke="hsl(var(--accent-foreground))" fill="hsl(var(--accent-foreground))" fillOpacity={0.1} strokeWidth={2} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
