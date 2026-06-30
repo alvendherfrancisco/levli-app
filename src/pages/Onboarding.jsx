@@ -384,8 +384,8 @@ function MiniMedLevelsScreen() {
         </div>
         {/* Sawtooth representation */}
         <svg viewBox="0 0 120 40" className="w-full h-12">
-          <path d="M5 35 L15 10 L25 20 L35 8 L45 18 L55 6 L65 16 L75 8 L85 15 L95 10 L105 12 L115 14" fill="none" stroke="#3B6FE0" strokeWidth="1.5" />
-          <path d="M5 35 L15 10 L25 20 L35 8 L45 18 L55 6 L65 16 L75 8 L85 15 L95 10 L105 12 L115 14 L115 40 L5 40 Z" fill="#3B6FE0" fillOpacity="0.1" />
+          <path d="M5 35 L15 10 L25 20 L35 8 L45 18 L55 6 L65 16 L75 8 L85 15 L95 10 L105 12 L115 14" fill="none" stroke="hsl(var(--accent-foreground))" strokeWidth="1.5" />
+          <path d="M5 35 L15 10 L25 20 L35 8 L45 18 L55 6 L65 16 L75 8 L85 15 L95 10 L105 12 L115 14 L115 40 L5 40 Z" fill="hsl(var(--accent-foreground))" fillOpacity="0.1" />
         </svg>
         <div className="text-[6px] text-gray-400 text-center">Time vs Concentration (mg)</div>
         <div className="flex items-center justify-center gap-1 mt-0.5">
