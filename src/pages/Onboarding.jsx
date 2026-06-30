@@ -33,8 +33,7 @@ export default function Onboarding() {
       if (freqAnswers.some(a => a.includes("two weeks"))) daysBetween = "14";
       else if (freqAnswers.some(a => a.includes("monthly"))) daysBetween = "30";
 
-      await setProfile({ ...profile, default_medication: defaultMed, days_between: daysBetween });
-      localStorage.setItem("onboarding_complete", "true");
+      await setProfile({ ...profile, default_medication: defaultMed, days_between: daysBetween, onboarding_completed: true });
       navigate("/");
     }
   };

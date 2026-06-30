@@ -18,6 +18,7 @@ export function AppStateProvider({ children }) {
   const [profile, setProfileState] = useState(DEFAULT_PROFILE);
   const [profileId, setProfileId] = useState(null);
   const [darkMode, setDarkModeState] = useState(false);
+  const [onboardingCompleted, setOnboardingCompleted] = useState(null); // null = loading
 
   // ── Dark mode ──────────────────────────────────────────────────────────────
   useEffect(() => {
@@ -57,6 +58,9 @@ export function AppStateProvider({ children }) {
       const merged = { ...DEFAULT_PROFILE, ...p };
       setProfileState(merged);
       setDarkModeState(!!p.dark_mode);
+      setOnboardingCompleted(!!p.onboarding_completed);
+    } else {
+      setOnboardingCompleted(false);
     }
   };
 
@@ -177,6 +181,7 @@ export function AppStateProvider({ children }) {
     const next = typeof updater === "function" ? updater(profile) : { ...profile, ...updater };
     setProfileState(next);
     if (next.dark_mode !== undefined) setDarkModeState(!!next.dark_mode);
+    if (next.onboarding_completed !== undefined) setOnboardingCompleted(!!next.onboarding_completed);
     const payload = {
       height_ft: next.height_ft, height_in: next.height_in,
       goal_weight: next.goal_weight, days_between: next.days_between,
@@ -184,6 +189,7 @@ export function AppStateProvider({ children }) {
       weight_unit: next.weight_unit, default_medication: next.default_medication,
       notifications_enabled: !!next.notifications_enabled,
       dark_mode: !!next.dark_mode,
+      onboarding_completed: !!next.onboarding_completed,
     };
     if (profileId) {
       await base44.entities.UserProfile.update(profileId, payload);
@@ -194,6 +200,11 @@ export function AppStateProvider({ children }) {
   };
 
   const setDarkMode = (val) => setProfile({ ...profile, dark_mode: val });
+
+  const completeOnboarding = async () => {
+    setOnboardingCompleted(true);
+    await setProfile({ ...profile, onboarding_completed: true });
+  };
 
   // ── Computed helpers ───────────────────────────────────────────────────────
   /** Returns all weight entries sorted by date asc: [{date: "YYYY-MM-DD", weight}] */
@@ -236,6 +247,8 @@ export function AppStateProvider({ children }) {
       getRecommendedSite,
       // Dark mode
       darkMode, setDarkMode,
+      // Onboarding
+      onboardingCompleted, completeOnboarding,
     }}>
       {children}
     </AppStateContext.Provider>

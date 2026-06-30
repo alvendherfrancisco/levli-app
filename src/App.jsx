@@ -8,7 +8,7 @@ import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import ScrollToTop from './components/ScrollToTop';
 import ProtectedRoute from '@/components/ProtectedRoute';
 
-import { AppStateProvider } from '@/lib/AppState';
+import { AppStateProvider, useAppState } from '@/lib/AppState';
 
 // Auth pages
 import Login from '@/pages/Login';
@@ -29,6 +29,19 @@ import ReportPage from '@/pages/ReportPage';
 
 // Layout
 import AppLayout from '@/components/AppLayout';
+
+function HomeOrOnboarding() {
+  const { onboardingCompleted } = useAppState();
+  // null = still loading profile; show spinner until we know
+  if (onboardingCompleted === null) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin" />
+      </div>
+    );
+  }
+  return onboardingCompleted ? <Home /> : <Navigate to="/onboarding" replace />;
+}
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -59,9 +72,7 @@ const AuthenticatedApp = () => {
       <Route path="/onboarding" element={<Onboarding />} />
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
         <Route element={<AppLayout />}>
-          <Route path="/" element={
-            localStorage.getItem("onboarding_complete") ? <Home /> : <Navigate to="/onboarding" replace />
-          } />
+          <Route path="/" element={<HomeOrOnboarding />} />
           <Route path="/shots" element={<Shots />} />
           <Route path="/history" element={<History />} />
           <Route path="/insights" element={<Insights />} />

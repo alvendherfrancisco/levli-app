@@ -20,8 +20,8 @@ export default function Home() {
   const greeting = hour < 12 ? "Good Morning!" : hour < 18 ? "Good Afternoon!" : "Good Evening!";
 
   return (
-    <div className="bg-gray-50 dark:bg-background min-h-screen w-full">
-      <div className="sticky top-0 z-30 bg-gray-50 dark:bg-background w-full flex items-center justify-between px-5 pt-6 pb-2">
+    <div className="bg-gray-50 dark:bg-gray-950 min-h-screen w-full">
+      <div className="sticky top-0 z-30 bg-gray-50 dark:bg-gray-950 w-full flex items-center justify-between px-5 pt-6 pb-2">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{greeting}</h1>
         <Link to="/settings"><Settings size={24} className="text-gray-600 dark:text-gray-400" /></Link>
       </div>

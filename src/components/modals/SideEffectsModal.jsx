@@ -59,7 +59,7 @@ export default function SideEffectsModal({ open, onClose, dayKey }) {
         <div className="px-5 pb-4 space-y-4">
           {/* Dropdown */}
           <div>
-            <label className="text-sm font-semibold text-gray-700 mb-2 block">Select Side Effect</label>
+            <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">Select Side Effect</label>
             <div className="relative">
               <button onClick={() => setShowDropdown(!showDropdown)}
                 className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] rounded-xl px-4 py-3 flex items-center justify-between text-left">
@@ -81,7 +81,7 @@ export default function SideEffectsModal({ open, onClose, dayKey }) {
 
           {/* Severity */}
           <div>
-            <label className="text-sm font-semibold text-gray-700 mb-2 block">Severity</label>
+            <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">Severity</label>
             <div className="flex gap-2">
               {SEVERITIES.map((s) => (
                 <button key={s} onClick={() => setSeverity(s)}
@@ -93,23 +93,23 @@ export default function SideEffectsModal({ open, onClose, dayKey }) {
           </div>
 
           <button onClick={addChip}
-            className="w-full py-2.5 bg-blue-50 text-blue-600 border border-blue-200 rounded-xl font-semibold text-sm">
+            className="w-full py-2.5 bg-white/[0.07] dark:bg-white/[0.07] text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-500/30 rounded-xl font-semibold text-sm hover:bg-blue-500/10 transition-colors">
             + Add to List
           </button>
 
           {chips.length > 0 && (
             <div className="flex flex-wrap gap-2">
               {chips.map((c, i) => (
-                <span key={i} className="flex items-center gap-1 bg-teal-50 text-teal-700 border border-teal-200 rounded-full px-3 py-1 text-sm">
+                <span key={i} className="flex items-center gap-1 bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/25 rounded-full px-3 py-1 text-sm">
                   {c}
-                  <button onClick={() => setChips(chips.filter((_, j) => j !== i))} className="ml-1 text-teal-400 hover:text-teal-600">×</button>
+                  <button onClick={() => setChips(chips.filter((_, j) => j !== i))} className="ml-1 text-teal-400 hover:text-teal-300 dark:hover:text-teal-200">×</button>
                 </span>
               ))}
             </div>
           )}
 
           <div>
-            <label className="text-sm font-semibold text-gray-700 mb-2 block">Additional Notes</label>
+            <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">Additional Notes</label>
             <textarea value={notes} onChange={(e) => setNotes(e.target.value)}
               placeholder="Any other observations..."
               className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-sm resize-none h-20 outline-none focus:border-blue-300" />

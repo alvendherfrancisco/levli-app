@@ -30,7 +30,11 @@
     },
     "dark_mode": {
       "type": "boolean"
+    },
+    "onboarding_completed": {
+      "type": "boolean"
     }
   },
-  "name": "UserProfile"
+  "name": "UserProfile",
+  "required": []
 }
