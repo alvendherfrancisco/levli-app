@@ -73,7 +73,7 @@ export default function Journal() {
         {filtered.length === 0 ?
         <div className="px-4">
             <div className="bg-white dark:bg-card rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-white/[0.07] text-center">
-              <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 bg-[hsl(var(--sidebar-accent))]">
+              <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 bg-[hsl(var(--sidebar-primary))]">
                 <BookOpen size={36} className="text-blue-500" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">No Journal Entries</h3>
