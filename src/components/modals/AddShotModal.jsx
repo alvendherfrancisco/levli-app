@@ -183,13 +183,13 @@ export default function AddShotModal({ open, onClose, editingShot }) {
           {/* Injection Site */}
           <div>
             <label className="text-sm font-semibold text-gray-700 mb-2 block">Injection Site</label>
-            <div className="bg-blue-50 border border-blue-100 rounded-xl p-3 mb-2 flex items-start gap-2">
-              <MapPin size={16} className="text-blue-500 mt-0.5 flex-shrink-0" />
+            <div className="rounded-xl p-3 mb-2 flex items-start gap-2 bg-blue-50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-500/20">
+              <MapPin size={16} className="text-blue-500 dark:text-blue-400 mt-0.5 flex-shrink-0" />
               <div className="flex-1">
-                <p className="text-sm font-semibold text-blue-700">Recommended: {recommendedSite}</p>
-                <p className="text-xs text-blue-500">Based on your rotation history</p>
+                <p className="text-sm font-semibold text-blue-700 dark:text-blue-300">Recommended: {recommendedSite}</p>
+                <p className="text-xs text-blue-500 dark:text-blue-400/70">Based on your rotation history</p>
               </div>
-              <button onClick={() => setSite(recommendedSite)} className="text-blue-600 text-sm font-semibold">Use</button>
+              <button onClick={() => setSite(recommendedSite)} className="text-blue-600 dark:text-blue-400 text-sm font-semibold">Use</button>
             </div>
             <div className="relative">
               <button onClick={() => { setShowSiteDropdown(!showSiteDropdown); setShowMedDropdown(false); }}

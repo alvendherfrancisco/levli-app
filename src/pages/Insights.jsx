@@ -34,12 +34,17 @@ function buildWeightData(weightHistory, daysBack) {
   if (!weightHistory.length) return [];
   const now = new Date(); now.setHours(0,0,0,0);
   const cutoff = new Date(now); cutoff.setDate(cutoff.getDate() - daysBack);
+  const mNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  // weightHistory is already sorted asc by date (YYYY-MM-DD string sort)
   return weightHistory
-    .filter(({ date }) => new Date(date) >= cutoff)
+    .filter(({ date }) => {
+      // date is a YYYY-MM-DD day_key — compare directly
+      const d = new Date(date + "T00:00:00");
+      return d >= cutoff;
+    })
     .map(({ date, weight }) => {
-      const d = new Date(date);
-      const mNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-      return { date: `${mNames[d.getMonth()]} ${d.getDate()}`, weight };
+      const d = new Date(date + "T00:00:00");
+      return { date: `${mNames[d.getMonth()]} ${d.getDate()}`, weight, _date: date };
     });
 }
 
@@ -55,20 +60,35 @@ export default function Insights() {
   const medData = useMemo(() => buildMedLevelData(shots, MED_RANGES[medRange]), [shots, medRange]);
   const weightData = useMemo(() => buildWeightData(weightHistory, WEIGHT_RANGES[weightRange]), [weightHistory, weightRange]);
 
-  // Weight stats
-  const weightLoss = weightData.length >= 2 ? weightData[0].weight - weightData[weightData.length - 1].weight : null;
-  const weeksCovered = weightData.length >= 2
-    ? Math.max(1, WEIGHT_RANGES[weightRange] / 7)
+  // Weight stats — weightData is sorted oldest→newest by buildWeightData
+  // Loss = first entry weight minus last entry weight (positive = lost weight)
+  const weightLoss = weightData.length >= 2
+    ? weightData[0].weight - weightData[weightData.length - 1].weight
+    : null;
+  const actualWeeks = weightData.length >= 2
+    ? Math.max(1, (new Date(weightData[weightData.length - 1]._date) - new Date(weightData[0]._date)) / (7 * 86400000))
     : 1;
-  const ratePerWeek = weightLoss != null ? (weightLoss / weeksCovered).toFixed(1) : null;
+  const ratePerWeek = weightLoss != null ? (weightLoss / actualWeeks).toFixed(1) : null;
 
-  // BMI: weight in lbs, height in ft/in
+  // BMI — convert stored weight to kg, height to meters based on user's unit settings
   const latestWeight = weightHistory.length ? weightHistory[weightHistory.length - 1].weight : null;
-  const heightFt = parseFloat(profile?.height_ft || 5);
-  const heightIn = parseFloat(profile?.height_in || 8);
-  const totalInches = heightFt * 12 + heightIn;
-  const bmi = latestWeight && totalInches > 0
-    ? ((latestWeight / (totalInches * totalInches)) * 703).toFixed(1)
+  const heightFt = parseFloat(profile?.height_ft || 0);
+  const heightIn = parseFloat(profile?.height_in || 0);
+  const heightUnit = profile?.height_unit || "in";
+  // height in meters
+  let heightM = 0;
+  if (heightUnit === "cm") {
+    heightM = heightFt / 100; // height_ft stores cm when unit is cm
+  } else {
+    const totalInches = heightFt * 12 + heightIn;
+    heightM = totalInches * 0.0254;
+  }
+  // weight in kg
+  const weightKg = latestWeight
+    ? (weightUnit === "kg" ? latestWeight : latestWeight * 0.453592)
+    : null;
+  const bmi = weightKg && heightM > 0
+    ? (weightKg / (heightM * heightM)).toFixed(1)
     : null;
 
   return (
