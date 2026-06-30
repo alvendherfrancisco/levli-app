@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Settings, Plus, BookOpen, Smile, FileText, AlertTriangle, Zap, Star } from "lucide-react";
+import { Settings, Plus, BookOpen, Smile, FileText, AlertTriangle, Zap, Star, Clock, Heart } from "lucide-react";
 import JournalEntryModal from "@/components/modals/JournalEntryModal";
 import { useAppState } from "@/lib/AppState";
 
@@ -73,8 +73,8 @@ export default function Journal() {
         {filtered.length === 0 ?
         <div className="px-4">
             <div className="bg-white dark:bg-card rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-white/[0.07] text-center">
-              <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 bg-[hsl(var(--sidebar-primary))]">
-                <BookOpen size={36} className="text-blue-500" />
+              <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 bg-blue-100 dark:bg-blue-500/15" style={{boxShadow: "0 0 24px 4px rgba(59,130,246,0.18)"}}>
+                <BookOpen size={36} className="text-blue-500 dark:text-blue-400" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">No Journal Entries</h3>
               <p className="text-sm text-gray-400 mb-4">Record your thoughts, symptoms, and medication experiences.</p>
@@ -99,11 +99,11 @@ export default function Journal() {
                         <span className="text-xs text-gray-400 flex-shrink-0 whitespace-nowrap">{e.date}</span>
                       </div>
                       <div className="flex items-center gap-1 mt-1 text-xs text-gray-400">
-                        <span>🕐</span><span>{e.time}</span>
+                        <Clock size={11} className="flex-shrink-0" /><span>{e.time}</span>
                       </div>
                       <div className="flex items-center gap-2 mt-2 flex-wrap">
-                        <span className={`text-xs px-2 py-0.5 rounded-full font-medium whitespace-nowrap ${e.moodColor}`}>
-                          😊 {e.mood}
+                        <span className={`text-xs px-2 py-0.5 rounded-full font-medium whitespace-nowrap flex items-center gap-1 ${e.moodColor}`}>
+                          <Heart size={10} /> {e.mood}
                         </span>
                         <span className="text-xs text-gray-400 whitespace-nowrap">• {e.category}</span>
                       </div>

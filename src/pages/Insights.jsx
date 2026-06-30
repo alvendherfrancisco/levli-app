@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Settings, TrendingDown, Syringe, HelpCircle, ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
+import { Settings, TrendingDown, Syringe, HelpCircle, ChevronLeft, ChevronRight, RotateCcw, Zap, Gauge } from "lucide-react";
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { useAppState } from "@/lib/AppState";
 import { parseShotDate, fromDayKey } from "@/lib/dateUtils";
@@ -98,24 +98,24 @@ export default function Insights() {
 
           {/* Summary chips */}
           <div className="flex flex-row gap-2 mb-4">
-            <div className="bg-green-50 rounded-xl p-2.5 text-center flex-1 min-w-0">
-              <TrendingDown size={14} className="text-green-500 mx-auto mb-1" />
-              <p className="text-gray-500 text-[11px]">Weight Loss</p>
-              <p className="font-bold text-green-600 text-sm">
+            <div className="bg-green-50 dark:bg-green-500/10 rounded-xl p-2.5 text-center flex-1 min-w-0 border border-transparent dark:border-green-500/15" style={{boxShadow: "var(--x,none)"}}>
+              <TrendingDown size={14} className="text-green-500 dark:text-green-400 mx-auto mb-1" style={{filter:"drop-shadow(0 0 6px rgba(34,197,94,0.4))"}} />
+              <p className="text-gray-500 dark:text-[#9A9DAE] text-[11px]">Weight Loss</p>
+              <p className="font-bold text-green-600 dark:text-green-400 text-sm">
                 {weightLoss != null ? `${weightLoss >= 0 ? "-" : "+"}${Math.abs(weightLoss).toFixed(1)} ${weightUnit}` : "—"}
               </p>
             </div>
-            <div className="bg-blue-50 rounded-xl p-2.5 text-center flex-1 min-w-0">
-              <span className="text-blue-500 text-sm">⚡</span>
-              <p className="text-gray-500 text-[11px]">Rate/Week</p>
-              <p className="font-bold text-blue-600 text-sm">
+            <div className="bg-blue-50 dark:bg-blue-500/10 rounded-xl p-2.5 text-center flex-1 min-w-0 border border-transparent dark:border-blue-500/15">
+              <Zap size={14} className="text-blue-500 dark:text-blue-400 mx-auto mb-1" style={{filter:"drop-shadow(0 0 6px rgba(59,130,246,0.4))"}} />
+              <p className="text-gray-500 dark:text-[#9A9DAE] text-[11px]">Rate/Week</p>
+              <p className="font-bold text-blue-600 dark:text-blue-400 text-sm">
                 {ratePerWeek != null ? `${parseFloat(ratePerWeek) >= 0 ? "-" : "+"}${Math.abs(parseFloat(ratePerWeek)).toFixed(1)} ${weightUnit}` : "—"}
               </p>
             </div>
-            <div className="bg-orange-50 rounded-xl p-2.5 text-center flex-1 min-w-0">
-              <span className="text-orange-500 text-sm">📊</span>
-              <p className="text-gray-500 text-[11px]">Current BMI</p>
-              <p className="font-bold text-orange-600 text-sm">{bmi || "—"}</p>
+            <div className="bg-orange-50 dark:bg-orange-500/10 rounded-xl p-2.5 text-center flex-1 min-w-0 border border-transparent dark:border-orange-500/15">
+              <Gauge size={14} className="text-orange-500 dark:text-orange-400 mx-auto mb-1" style={{filter:"drop-shadow(0 0 6px rgba(249,115,22,0.4))"}} />
+              <p className="text-gray-500 dark:text-[#9A9DAE] text-[11px]">Current BMI</p>
+              <p className="font-bold text-orange-600 dark:text-orange-400 text-sm">{bmi || "—"}</p>
             </div>
           </div>
 
@@ -132,8 +132,8 @@ export default function Insights() {
               </ResponsiveContainer>
             </div>
           ) : (
-            <div className="h-48 flex items-center justify-center bg-gray-50 rounded-xl">
-              <p className="text-sm text-gray-400">Log your weight in the Home tab to see trends here.</p>
+            <div className="h-48 flex items-center justify-center bg-gray-50 dark:bg-white/[0.03] rounded-xl">
+              <p className="text-sm text-gray-400 dark:text-[#9A9DAE]">Log your weight in the Home tab to see trends here.</p>
             </div>
           )}
         </div>
@@ -174,8 +174,8 @@ export default function Insights() {
               </ResponsiveContainer>
             </div>
           ) : (
-            <div className="h-48 flex items-center justify-center bg-gray-50 rounded-xl">
-              <p className="text-sm text-gray-400">Log your first shot to see medication levels here.</p>
+            <div className="h-48 flex items-center justify-center bg-gray-50 dark:bg-white/[0.03] rounded-xl">
+              <p className="text-sm text-gray-400 dark:text-[#9A9DAE]">Log your first shot to see medication levels here.</p>
             </div>
           )}
           <p className="text-xs text-gray-400 text-center mt-2">Time vs Concentration (mg)</p>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Settings, Plus, Syringe, Info, HelpCircle, Wind } from "lucide-react";
+import { Settings, Plus, Syringe, Info, HelpCircle, Wind, ArrowRight } from "lucide-react";
 import DateStrip from "@/components/home/DateStrip";
 import NextShotCard from "@/components/home/NextShotCard";
 import MetricsGrid from "@/components/home/MetricsGrid";
@@ -37,17 +37,17 @@ export default function Home() {
           className="mx-3 mb-4 bg-white dark:bg-card rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-white/[0.07] w-[calc(100%-1.5rem)] text-left"
         >
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 rounded-lg bg-teal-100 dark:bg-teal-500/15 flex items-center justify-center" style={{boxShadow: "var(--dm, none)"}}>
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-teal-100 dark:bg-transparent" style={{background:"rgba(20,184,166,0.13)",boxShadow:"0 0 12px 2px rgba(20,184,166,0.18)"}}>
               <Wind size={16} className="text-teal-500" />
             </div>
             <span className="font-semibold text-gray-700 dark:text-gray-300">Side effects</span>
           </div>
           {sideEffects ? (
-            <p className="text-sm text-gray-700 bg-teal-50 rounded-xl p-3">{sideEffects}</p>
+            <p className="text-sm text-gray-700 dark:text-[#E8E9F0] bg-teal-50 dark:bg-teal-500/10 rounded-xl p-3 border border-transparent dark:border-teal-500/15">{sideEffects}</p>
           ) : (
-            <div className="bg-blue-50 rounded-xl p-3 flex items-center gap-2">
-              <Info size={16} className="text-blue-500 flex-shrink-0" />
-              <p className="text-sm text-blue-700">Tap to add side effects.</p>
+            <div className="bg-blue-50 dark:bg-blue-500/10 rounded-xl p-3 flex items-center gap-2 border border-transparent dark:border-blue-500/15">
+              <Info size={16} className="text-blue-500 dark:text-blue-400 flex-shrink-0" />
+              <p className="text-sm text-blue-700 dark:text-blue-300">Tap to add side effects.</p>
             </div>
           )}
         </button>
@@ -56,7 +56,7 @@ export default function Home() {
         <div className="mx-3 mb-4 bg-white dark:bg-card rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-white/[0.07]">
           <div className="flex items-start justify-between mb-2">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-500/15 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{background:"rgba(59,130,246,0.13)",boxShadow:"0 0 12px 2px rgba(59,130,246,0.18)"}}>
                 <Syringe size={16} className="text-blue-600" />
               </div>
               <div>
@@ -67,9 +67,9 @@ export default function Home() {
             <HelpCircle size={18} className="text-blue-400" />
           </div>
           <div className="border-b-2 border-blue-500 w-12 mb-3" />
-          <Link to="/insights" className="bg-blue-50 rounded-xl p-3 flex items-center gap-2 block">
-            <Info size={16} className="text-blue-500 flex-shrink-0" />
-            <p className="text-sm text-blue-700">View full medication level chart in Insights →</p>
+          <Link to="/insights" className="bg-blue-50 dark:bg-blue-500/10 rounded-xl p-3 flex items-center gap-2 block border border-transparent dark:border-blue-500/15">
+            <Info size={16} className="text-blue-500 dark:text-blue-400 flex-shrink-0" />
+            <p className="text-sm text-blue-700 dark:text-blue-300">View full medication level chart in Insights <ArrowRight size={12} className="inline" /></p>
           </Link>
         </div>
       </div>

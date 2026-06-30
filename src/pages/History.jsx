@@ -83,10 +83,10 @@ export default function History() {
               return (
               <button key={day} onClick={() => setSelectedDay(day)}
                 className={`py-1.5 rounded-lg text-sm font-medium relative flex flex-col items-center ${
-                  isSelected ? "border-2 border-blue-500 text-blue-600" : isToday ? "text-blue-600" : "text-gray-700 dark:text-gray-300"
+                  isSelected ? "border-2 border-blue-500 text-blue-600 dark:bg-blue-500/10" : isToday ? "text-blue-600" : "text-gray-700 dark:text-gray-300"
                 }`}>
                   {day}
-                  {hasShot && <div className="w-2 h-2 bg-green-500 rounded-full mt-0.5" />}
+                  {hasShot && <div className="w-2 h-2 bg-green-500 rounded-full mt-0.5" style={{boxShadow:"0 0 6px 2px rgba(74,222,128,0.5)"}} />}
                 </button>
               );
             })}
@@ -119,17 +119,17 @@ export default function History() {
           <button onClick={() => setShowSideEffects(true)}
             className="mx-4 mb-4 bg-white dark:bg-card rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-white/[0.07] w-[calc(100%-2rem)] text-left">
             <div className="flex items-center gap-2 mb-2">
-              <div className="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center">
-                <Wind size={16} className="text-teal-500" />
+              <div className="w-8 h-8 rounded-lg bg-teal-100 dark:bg-transparent flex items-center justify-center" style={{background:"rgba(20,184,166,0.13)",boxShadow:"0 0 12px 2px rgba(20,184,166,0.18)"}}>
+                <Wind size={16} className="text-teal-500 dark:text-teal-400" />
               </div>
               <span className="font-semibold text-gray-700 dark:text-gray-300">Side effects</span>
             </div>
             {sideEffects ? (
-              <p className="text-sm text-gray-700 bg-teal-50 rounded-xl p-3">{sideEffects}</p>
+              <p className="text-sm text-gray-700 dark:text-[#E8E9F0] bg-teal-50 dark:bg-teal-500/10 rounded-xl p-3 border border-transparent dark:border-teal-500/15">{sideEffects}</p>
             ) : (
-              <div className="bg-blue-50 rounded-xl p-3 flex items-center gap-2">
-                <Info size={16} className="text-blue-500 flex-shrink-0" />
-                <p className="text-sm text-blue-700">Tap to add side effects for this day.</p>
+              <div className="bg-blue-50 dark:bg-blue-500/10 rounded-xl p-3 flex items-center gap-2 border border-transparent dark:border-blue-500/15">
+                <Info size={16} className="text-blue-500 dark:text-blue-400 flex-shrink-0" />
+                <p className="text-sm text-blue-700 dark:text-blue-300">Tap to add side effects for this day.</p>
               </div>
             )}
           </button>
