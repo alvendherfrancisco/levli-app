@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { ChevronLeft, Moon, Lock, Mail, Bell, Database, FileText, MessageSquare, ChevronRight, Download, Upload, Loader2 } from "lucide-react";
 import { useAppState } from "@/lib/AppState";
 
@@ -17,7 +17,7 @@ export default function SettingsPage() {
     </button>
   );
 
-  const MenuItem = ({ icon, label, onPress, href }) => {
+  const MenuItem = ({ icon, label, onPress, href, to }) => {
     const inner = (
       <div className="flex items-center justify-between py-3.5 w-full">
         <div className="flex items-center gap-3">
@@ -27,6 +27,7 @@ export default function SettingsPage() {
         <ChevronRight size={16} className="text-gray-300 dark:text-gray-600" />
       </div>
     );
+    if (to) return <Link to={to}>{inner}</Link>;
     if (href) return <a href={href} target="_blank" rel="noopener noreferrer">{inner}</a>;
     if (onPress) return <button onClick={onPress} className="w-full text-left">{inner}</button>;
     return inner;
@@ -115,8 +116,8 @@ export default function SettingsPage() {
         <div className="px-4 mb-4">
           <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase mb-2 px-1">Policy and application terms</p>
           <div className="bg-white dark:bg-gray-900 rounded-2xl px-4 shadow-sm border border-gray-100 dark:border-gray-800 divide-y divide-gray-100 dark:divide-white/[0.07]">
-            <MenuItem icon={<FileText size={18} className="text-gray-500 dark:text-gray-400" />} label="Privacy policy" href="https://dosely.app/privacy" />
-            <MenuItem icon={<FileText size={18} className="text-gray-500 dark:text-gray-400" />} label="Terms and conditions" href="https://dosely.app/terms" />
+            <MenuItem icon={<FileText size={18} className="text-gray-500 dark:text-gray-400" />} label="Privacy Policy" to="/privacy" />
+            <MenuItem icon={<FileText size={18} className="text-gray-500 dark:text-gray-400" />} label="Terms and Conditions" to="/terms" />
           </div>
         </div>
 

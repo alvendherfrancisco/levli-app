@@ -26,6 +26,8 @@ import Journal from '@/pages/Journal';
 import Profile from '@/pages/Profile';
 import SettingsPage from '@/pages/SettingsPage';
 import ReportPage from '@/pages/ReportPage';
+import PrivacyPolicyPage from '@/pages/PrivacyPolicyPage';
+import TermsPage from '@/pages/TermsPage';
 
 // Layout
 import AppLayout from '@/components/AppLayout';
@@ -81,6 +83,8 @@ const AuthenticatedApp = () => {
         </Route>
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/report" element={<ReportPage />} />
+        <Route path="/privacy" element={<PrivacyPolicyPage />} />
+        <Route path="/terms" element={<TermsPage />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
