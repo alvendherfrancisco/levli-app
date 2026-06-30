@@ -37,7 +37,7 @@ export default function Home() {
           className="mx-3 mb-4 bg-white dark:bg-card rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-white/[0.07] w-[calc(100%-1.5rem)] text-left"
         >
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-teal-100 dark:bg-transparent" style={{background:"rgba(20,184,166,0.13)",boxShadow:"0 0 12px 2px rgba(20,184,166,0.18)"}}>
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{background:"rgba(20,184,166,0.13)"}}>
               <Wind size={16} className="text-teal-500" />
             </div>
             <span className="font-semibold text-gray-700 dark:text-gray-300">Side effects</span>
@@ -56,7 +56,7 @@ export default function Home() {
         <div className="mx-3 mb-4 bg-white dark:bg-card rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-white/[0.07]">
           <div className="flex items-start justify-between mb-2">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{background:"rgba(59,130,246,0.13)",boxShadow:"0 0 12px 2px rgba(59,130,246,0.18)"}}>
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{background:"rgba(59,130,246,0.13)"}}>
                 <Syringe size={16} className="text-blue-600" />
               </div>
               <div>

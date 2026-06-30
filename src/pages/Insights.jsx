@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Settings, TrendingDown, Syringe, HelpCircle, Zap, Gauge } from "lucide-react";
+import { Settings, TrendingDown, Syringe, HelpCircle, Zap, Gauge, Camera, Image, Clock } from "lucide-react";
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { useAppState } from "@/lib/AppState";
 import { parseShotDate } from "@/lib/dateUtils";
@@ -58,13 +58,35 @@ const WEIGHT_RANGES = { "30 Days": 30, "180 Days": 180, "1 Year": 365 };
 const MED_RANGES = { "7 Days": 7, "30 Days": 30, "90 Days": 90 };
 
 export default function Insights() {
-  const { shots, weightHistory, profile } = useAppState();
+  const { shots, weightHistory, profile, dayMetrics } = useAppState();
   const [weightRange, setWeightRange] = useState("180 Days");
   const [medRange, setMedRange] = useState("30 Days");
   const weightUnit = profile?.weight_unit || "lb";
 
   const medData = useMemo(() => buildMedLevelData(shots, MED_RANGES[medRange]), [shots, medRange]);
   const weightData = useMemo(() => buildWeightData(weightHistory, WEIGHT_RANGES[weightRange]), [weightHistory, weightRange]);
+
+  // Progress pictures: all days with a photo, sorted newest first
+  const progressPhotos = useMemo(() =>
+    Object.entries(dayMetrics)
+      .filter(([, m]) => m.progress_photo)
+      .map(([key, m]) => ({ isoDate: key, url: m.progress_photo }))
+      .sort((a, b) => b.isoDate.localeCompare(a.isoDate)),
+    [dayMetrics]
+  );
+
+  const formatPhotoDate = (isoDate) => {
+    const [y, m, d] = isoDate.split("-").map(Number);
+    const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    return { month: `${months[m-1]} ${d}`, year: String(y) };
+  };
+
+  // Journey days = days between first and latest photo
+  const journeyDays = progressPhotos.length >= 2
+    ? Math.round((new Date(progressPhotos[0].isoDate) - new Date(progressPhotos[progressPhotos.length-1].isoDate)) / 86400000)
+    : 0;
+
+  const latestPhotoDate = progressPhotos.length ? formatPhotoDate(progressPhotos[0].isoDate) : null;
 
   // ── Weight stats ────────────────────────────────────────────────────────────
   // weightData is oldest→newest; loss = first weight minus last weight
@@ -190,6 +212,62 @@ export default function Insights() {
                   ? "Log your weight in the Home tab to see trends here."
                   : "Log at least 2 weight entries in this time range to see a chart."}
               </p>
+            </div>
+          )}
+        </div>
+
+        {/* Progress Pictures Panel */}
+        <div className="mx-4 mb-4 bg-white dark:bg-card rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-white/[0.07]">
+          <div className="flex items-center gap-2 mb-1">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "rgba(59,130,246,0.13)" }}>
+              <Camera size={16} className="text-blue-500" />
+            </div>
+            <h3 className="font-bold text-gray-900 dark:text-white text-lg">Progress Pictures</h3>
+          </div>
+          <div className="border-b-2 border-blue-500 w-12 mb-3" />
+
+          {/* Stats row */}
+          <div className="grid grid-cols-3 gap-2 mb-4">
+            <div className="rounded-xl p-2.5 text-center" style={{ background: "rgba(59,130,246,0.1)", border: "1px solid rgba(59,130,246,0.15)" }}>
+              <Image size={14} className="text-blue-400 mx-auto mb-1" />
+              <p className="text-[11px] text-gray-500 dark:text-[#9A9DAE]">Total Photos</p>
+              <p className="font-bold text-blue-500 dark:text-blue-400 text-sm">{progressPhotos.length}</p>
+            </div>
+            <div className="rounded-xl p-2.5 text-center" style={{ background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.15)" }}>
+              <Clock size={14} className="text-green-400 mx-auto mb-1" />
+              <p className="text-[11px] text-gray-500 dark:text-[#9A9DAE]">Journey Days</p>
+              <p className="font-bold text-green-500 dark:text-green-400 text-sm">{journeyDays}</p>
+            </div>
+            <div className="rounded-xl p-2.5 text-center" style={{ background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.15)" }}>
+              <Camera size={14} className="text-amber-400 mx-auto mb-1" />
+              <p className="text-[11px] text-gray-500 dark:text-[#9A9DAE]">Latest</p>
+              <p className="font-bold text-amber-500 dark:text-amber-400 text-sm">{latestPhotoDate ? latestPhotoDate.month : "—"}</p>
+            </div>
+          </div>
+
+          {progressPhotos.length === 0 ? (
+            <div className="h-36 flex flex-col items-center justify-center bg-gray-50 dark:bg-white/[0.03] rounded-xl gap-2">
+              <Camera size={28} className="text-gray-300 dark:text-white/20" />
+              <p className="text-sm text-gray-400 dark:text-[#9A9DAE] text-center px-4">Add progress photos on the Home tab to track your visual journey.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-3">
+              {progressPhotos.map((p) => {
+                const fd = formatPhotoDate(p.isoDate);
+                const isLatest = p.isoDate === progressPhotos[0].isoDate;
+                return (
+                  <div key={p.isoDate} className="relative rounded-xl overflow-hidden border border-gray-100 dark:border-white/[0.08]">
+                    <img src={p.url} alt={`Progress ${p.isoDate}`} className="w-full object-cover" style={{ minHeight: 140, maxHeight: 200 }} />
+                    {isLatest && (
+                      <span className="absolute top-2 left-2 bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">Latest</span>
+                    )}
+                    <div className="text-center py-1.5">
+                      <p className="text-xs font-semibold text-gray-700 dark:text-[#E8E9F0]">{fd.month}</p>
+                      <p className="text-[10px] text-gray-400 dark:text-[#9A9DAE]">{fd.year}</p>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>

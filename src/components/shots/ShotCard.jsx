@@ -8,7 +8,7 @@ export default function ShotCard({ medication, dose, drugClass, drug_class, date
       <div className="flex items-start gap-3 w-full min-w-0">
         {/* Icon */}
         <div className="w-10 h-10 rounded-xl bg-green-50 dark:bg-transparent flex items-center justify-center flex-shrink-0"
-          style={{ minWidth: 40, background: "rgba(34,197,94,0.13)", boxShadow: "0 0 12px 2px rgba(34,197,94,0.18)" }}
+          style={{ minWidth: 40, background: "rgba(34,197,94,0.13)" }}
         >
           <Syringe size={18} className="text-green-500 dark:text-green-400" />
         </div>

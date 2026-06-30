@@ -4,18 +4,14 @@ import { Settings, Plus, BookOpen, Smile, FileText, AlertTriangle, Zap, Star, Cl
 import JournalEntryModal from "@/components/modals/JournalEntryModal";
 import { useAppState } from "@/lib/AppState";
 
-const CATEGORY_ICONS = {
-  "Mood": <Smile size={20} className="text-green-500" />,
-  "General Note": <FileText size={20} className="text-teal-500" />,
-  "Side Effect": <AlertTriangle size={20} className="text-red-500" />,
-  "Energy": <Zap size={20} className="text-purple-500" />,
-  "Milestone": <Star size={20} className="text-yellow-500" />,
-  "Food": <FileText size={20} className="text-orange-500" />,
-  "Exercise": <Zap size={20} className="text-blue-500" />
-};
-const CATEGORY_BG = {
-  "Mood": "bg-green-100", "General Note": "bg-teal-100", "Side Effect": "bg-red-100",
-  "Energy": "bg-purple-100", "Milestone": "bg-yellow-100", "Food": "bg-orange-100", "Exercise": "bg-blue-100"
+const CATEGORY_CONFIG = {
+  "Mood":         { icon: <Smile size={20} />,         lightBg: "bg-green-100",  darkBg: "rgba(34,197,94,0.13)",   color: "#4ADE80" },
+  "General Note": { icon: <FileText size={20} />,      lightBg: "bg-teal-100",   darkBg: "rgba(20,184,166,0.13)",  color: "#2DD4BF" },
+  "Side Effect":  { icon: <AlertTriangle size={20} />, lightBg: "bg-red-100",    darkBg: "rgba(239,68,68,0.13)",   color: "#F87171" },
+  "Energy":       { icon: <Zap size={20} />,           lightBg: "bg-purple-100", darkBg: "rgba(168,85,247,0.13)",  color: "#C084FC" },
+  "Milestone":    { icon: <Star size={20} />,          lightBg: "bg-yellow-100", darkBg: "rgba(234,179,8,0.13)",   color: "#FBBF24" },
+  "Food":         { icon: <FileText size={20} />,      lightBg: "bg-orange-100", darkBg: "rgba(249,115,22,0.13)",  color: "#FB923C" },
+  "Exercise":     { icon: <Zap size={20} />,           lightBg: "bg-blue-100",   darkBg: "rgba(59,130,246,0.13)",  color: "#60A5FA" },
 };
 const ALL_CATEGORIES = ["All", "Mood", "General Note", "Side Effect", "Energy", "Milestone", "Food", "Exercise"];
 
@@ -73,7 +69,7 @@ export default function Journal() {
         {filtered.length === 0 ?
         <div className="px-4">
             <div className="bg-white dark:bg-card rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-white/[0.07] text-center">
-              <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 bg-blue-100 dark:bg-blue-500/15" style={{boxShadow: "0 0 24px 4px rgba(59,130,246,0.18)"}}>
+              <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 bg-blue-100 dark:bg-blue-500/15">
                 <BookOpen size={36} className="text-blue-500 dark:text-blue-400" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">No Journal Entries</h3>
@@ -90,9 +86,15 @@ export default function Journal() {
             return (
               <button key={e.id} onClick={() => openEdit(e)} className="w-full text-left bg-white dark:bg-card rounded-xl p-4 shadow-sm border border-gray-100 dark:border-white/[0.07] overflow-hidden box-border">
                   <div className="flex items-start gap-3 w-full min-w-0">
-                    <div className={`w-10 h-10 rounded-xl ${CATEGORY_BG[e.category] || "bg-gray-100"} flex items-center justify-center flex-shrink-0`}>
-                      {CATEGORY_ICONS[e.category] || <FileText size={20} className="text-gray-500" />}
-                    </div>
+                    {(() => {
+                      const cfg = CATEGORY_CONFIG[e.category];
+                      return (
+                        <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                          style={{ background: cfg ? cfg.darkBg : "rgba(150,150,150,0.13)" }}>
+                          {cfg ? React.cloneElement(cfg.icon, { style: { color: cfg.color } }) : <FileText size={20} className="text-gray-500" />}
+                        </div>
+                      );
+                    })()}
                     <div className="flex-1 min-w-0">
                       <div className="flex justify-between items-start gap-2">
                         <p className="text-sm text-gray-700 dark:text-gray-300 overflow-hidden text-ellipsis whitespace-nowrap flex-1 min-w-0">{e.text}</p>
@@ -102,7 +104,7 @@ export default function Journal() {
                         <Clock size={11} className="flex-shrink-0" /><span>{e.time}</span>
                       </div>
                       <div className="flex items-center gap-2 mt-2 flex-wrap">
-                        <span className={`text-xs px-2 py-0.5 rounded-full font-medium whitespace-nowrap flex items-center gap-1 ${e.moodColor}`}>
+                        <span className="text-xs px-2 py-0.5 rounded-full font-medium whitespace-nowrap flex items-center gap-1 bg-white/10 dark:bg-white/[0.08] text-gray-600 dark:text-[#C0C3D4] border border-gray-200 dark:border-white/[0.1]">
                           <Heart size={10} /> {e.mood}
                         </span>
                         <span className="text-xs text-gray-400 whitespace-nowrap">• {e.category}</span>
