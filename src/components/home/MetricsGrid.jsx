@@ -6,6 +6,20 @@ import AddNutritionModal from "@/components/modals/AddNutritionModal";
 import AddMetricModal from "@/components/modals/AddMetricModal";
 import { todayKey } from "@/lib/dateUtils";
 
+// Warm pastel tints per metric (bg, icon color)
+const METRIC_STYLES = {
+  Weight:   { bgColor: "#FBEFD8", iconColor: "#D9A23B" },
+  Calories: { bgColor: "#FBE6DE", iconColor: "#E0795A" },
+  Protein:  { bgColor: "#DEF0EC", iconColor: "#2FA690" },
+  Fiber:    { bgColor: "#E7F2DD", iconColor: "#6FA84B" },
+  Carbs:    { bgColor: "#FBEAD6", iconColor: "#E0944A" },
+  Water:    { bgColor: "#DEEBF7", iconColor: "#4C8FD5" },
+  Exercise: { bgColor: "#FBE2E2", iconColor: "#D9685C" },
+  Progress: { bgColor: "#EFE2F7", iconColor: "#9266C2" },
+};
+
+const ICON_SIZE = 16;
+
 export default function MetricsGrid({ dayKey }) {
   const dk = dayKey || todayKey();
   const {
@@ -28,52 +42,60 @@ export default function MetricsGrid({ dayKey }) {
 
   const allMetrics = [
     {
-      icon: <Scale size={14} className="text-yellow-600" />, label: "Weight",
-      value: weight != null ? String(weight) : "–", unit: weightUnit, color: "bg-yellow-100",
+      icon: <Scale size={ICON_SIZE} />, label: "Weight",
+      value: weight != null ? String(weight) : "–", unit: weightUnit,
+      ...METRIC_STYLES.Weight,
       onAdd: () => setMetricModal({ label: "Weight", unit: weightUnit, current: weight != null ? String(weight) : "", onSave: (v) => saveWeight(dk, v) }),
     },
     {
-      icon: <Flame size={14} className="text-orange-500" />, label: "Calories",
-      value: nutrition.calories, unit: "kcal", color: "bg-orange-100",
+      icon: <Flame size={ICON_SIZE} />, label: "Calories",
+      value: nutrition.calories, unit: "kcal",
+      ...METRIC_STYLES.Calories,
       onAdd: () => setShowNutrition(true),
     },
     {
-      icon: <Beef size={14} className="text-teal-500" />, label: "Protein",
-      value: nutrition.protein, unit: "g", color: "bg-teal-100",
+      icon: <Beef size={ICON_SIZE} />, label: "Protein",
+      value: nutrition.protein, unit: "g",
+      ...METRIC_STYLES.Protein,
       onAdd: () => setShowNutrition(true),
     },
     {
-      icon: <Leaf size={14} className="text-green-500" />, label: "Fiber",
-      value: nutrition.fiber, unit: "g", color: "bg-green-100",
+      icon: <Leaf size={ICON_SIZE} />, label: "Fiber",
+      value: nutrition.fiber, unit: "g",
+      ...METRIC_STYLES.Fiber,
       onAdd: () => setShowNutrition(true),
     },
     {
-      icon: <Cookie size={14} className="text-amber-500" />, label: "Carbs",
-      value: nutrition.carbs, unit: "g", color: "bg-amber-100",
+      icon: <Cookie size={ICON_SIZE} />, label: "Carbs",
+      value: nutrition.carbs, unit: "g",
+      ...METRIC_STYLES.Carbs,
       onAdd: () => setShowNutrition(true),
     },
     {
-      icon: <Droplets size={14} className="text-blue-500" />, label: "Water",
-      value: nutrition.water, unit: liquidUnit, color: "bg-blue-100",
+      icon: <Droplets size={ICON_SIZE} />, label: "Water",
+      value: nutrition.water, unit: liquidUnit,
+      ...METRIC_STYLES.Water,
       onAdd: () => setShowNutrition(true),
     },
     {
-      icon: <Dumbbell size={14} className="text-red-400" />, label: "Exercise",
-      value: exercise != null ? String(exercise) : "0", unit: "min", color: "bg-red-100",
+      icon: <Dumbbell size={ICON_SIZE} />, label: "Exercise",
+      value: exercise != null ? String(exercise) : "0", unit: "min",
+      ...METRIC_STYLES.Exercise,
       onAdd: () => setMetricModal({ label: "Exercise", unit: "min", current: exercise != null ? String(exercise) : "", onSave: (v) => saveExercise(dk, v) }),
     },
     {
-      icon: <Camera size={14} className="text-purple-500" />, label: "Progress",
-      value: photo ? "✓" : "–", unit: "pic", color: "bg-purple-100",
+      icon: <Camera size={ICON_SIZE} />, label: "Progress",
+      value: photo ? "✓" : "–", unit: "pic",
+      ...METRIC_STYLES.Progress,
       onAdd: () => setMetricModal({ label: "Progress", unit: "pic", current: photo || "–", onSave: (v) => saveProgressPhoto(dk, v), onDelete: () => saveProgressPhoto(dk, null) }),
     },
   ];
 
   return (
     <>
-      <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-8 gap-2 px-3 mb-4">
+      <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-8 gap-3 px-4 mb-5">
         {allMetrics.map((m) => (
-          <MetricCard key={m.label} {...m} onAdd={m.onAdd} />
+          <MetricCard key={m.label} {...m} />
         ))}
       </div>
       <AddNutritionModal open={showNutrition} onClose={() => setShowNutrition(false)} dayKey={dk} />

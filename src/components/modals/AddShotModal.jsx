@@ -119,13 +119,13 @@ export default function AddShotModal({ open, onClose, editingShot }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
-      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="relative bg-white rounded-t-3xl sm:rounded-3xl w-full sm:max-w-[520px] max-h-[92vh] overflow-y-auto animate-in slide-in-from-bottom sm:mx-4">
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" onClick={onClose} />
+      <div className="relative bg-surface rounded-t-[28px] sm:rounded-[20px] w-full sm:max-w-[520px] max-h-[92vh] overflow-y-auto animate-in slide-in-from-bottom sm:mx-4">
         <div className="flex justify-center pt-3 pb-1">
           <div className="w-10 h-1 bg-gray-300 rounded-full" />
         </div>
         <div className="flex items-center justify-between px-5 pb-4">
-          <h2 className="text-xl font-bold">{editingShot ? "Edit Shot Log" : "Add Shot Log"}</h2>
+          <h2 className="text-xl font-bold text-ink">{editingShot ? "Edit Shot Log" : "Add Shot Log"}</h2>
           <div className="flex items-center gap-3">
             {editingShot && (
               <button onClick={handleDelete}><Trash2 size={20} className="text-red-400" /></button>
@@ -142,9 +142,9 @@ export default function AddShotModal({ open, onClose, editingShot }) {
             <label className="text-sm font-semibold text-gray-700 mb-2 block">Date & Time</label>
             <div className="flex gap-3">
               <input type="date" value={date} onChange={(e) => setDate(e.target.value)}
-                className="flex-1 border border-gray-200 rounded-xl px-4 py-3 text-base outline-none focus:border-blue-300" />
+                className="flex-1 border border-border-warm rounded-[14px] px-4 py-3 text-base outline-none focus:border-accent bg-surface-alt text-ink" />
               <input type="time" value={time} onChange={(e) => setTime(e.target.value)}
-                className="flex-1 border border-gray-200 rounded-xl px-4 py-3 text-base outline-none focus:border-blue-300" />
+                className="flex-1 border border-border-warm rounded-[14px] px-4 py-3 text-base outline-none focus:border-accent bg-surface-alt text-ink" />
             </div>
           </div>
 
@@ -153,15 +153,15 @@ export default function AddShotModal({ open, onClose, editingShot }) {
             <label className="text-sm font-semibold text-gray-700 mb-2 block">Medication</label>
             <div className="relative">
               <button onClick={() => { setShowMedDropdown(!showMedDropdown); setShowSiteDropdown(false); }}
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 flex items-center justify-between text-left">
-                <span className="text-base">{medication}</span>
-                <ChevronDown size={18} className="text-gray-400" />
+                className="w-full border border-border-warm rounded-[14px] px-4 py-3 flex items-center justify-between text-left bg-surface-alt">
+                <span className="text-base text-ink">{medication}</span>
+                <ChevronDown size={18} className="text-ink-tertiary" />
               </button>
               {showMedDropdown && (
-                <div className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-xl shadow-lg">
+                <div className="absolute z-10 mt-1 w-full bg-surface border border-border-warm rounded-[14px] shadow-float overflow-hidden">
                   {medications.map((m) => (
                     <button key={m} onClick={() => { setMedication(m); setShowMedDropdown(false); }}
-                      className={`w-full px-4 py-3 text-left text-sm ${medication === m ? "bg-blue-50 text-blue-600 font-medium" : "hover:bg-gray-50"}`}>
+                      className={`w-full px-4 py-3 text-left text-sm ${medication === m ? "bg-accent-tint text-accent font-semibold" : "hover:bg-surface-alt text-ink"}`}>
                       {m}
                     </button>
                   ))}
@@ -173,38 +173,38 @@ export default function AddShotModal({ open, onClose, editingShot }) {
           {/* Dose */}
           <div>
             <label className="text-sm font-semibold text-gray-700 mb-1 block">Dose (mg)</label>
-            <div className="border border-gray-200 rounded-xl px-4 py-3 flex items-center">
+            <div className="border border-border-warm rounded-[14px] px-4 py-3 flex items-center bg-surface-alt">
               <input type="number" value={dose} min="0.1" max="100" step="0.25"
-                onChange={(e) => setDose(e.target.value)} className="flex-1 outline-none text-base" />
-              <span className="text-gray-400 text-sm">mg</span>
+                onChange={(e) => setDose(e.target.value)} className="flex-1 outline-none text-base bg-transparent text-ink" />
+              <span className="text-ink-tertiary text-sm">mg</span>
             </div>
           </div>
 
           {/* Injection Site */}
           <div>
             <label className="text-sm font-semibold text-gray-700 mb-2 block">Injection Site</label>
-            <div className="bg-blue-50 border border-blue-100 rounded-xl p-3 mb-2 flex items-start gap-2">
-              <MapPin size={16} className="text-blue-500 mt-0.5 flex-shrink-0" />
+            <div className="bg-accent-tint rounded-[14px] p-3 mb-2 flex items-start gap-2">
+              <MapPin size={16} className="text-accent mt-0.5 flex-shrink-0" />
               <div className="flex-1">
-                <p className="text-sm font-semibold text-blue-700">Recommended: {recommendedSite}</p>
-                <p className="text-xs text-blue-500">Based on your rotation history</p>
+                <p className="text-sm font-semibold text-accent">Recommended: {recommendedSite}</p>
+                <p className="text-xs text-ink-tertiary">Based on your rotation history</p>
               </div>
-              <button onClick={() => setSite(recommendedSite)} className="text-blue-600 text-sm font-semibold">Use</button>
+              <button onClick={() => setSite(recommendedSite)} className="text-accent text-sm font-semibold">Use</button>
             </div>
             <div className="relative">
               <button onClick={() => { setShowSiteDropdown(!showSiteDropdown); setShowMedDropdown(false); }}
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 flex items-center justify-between text-left">
+                className="w-full border border-border-warm rounded-[14px] px-4 py-3 flex items-center justify-between text-left bg-surface-alt">
                 <div className="flex items-center gap-2">
-                  <Star size={16} className="text-amber-400" />
-                  <span className="text-base font-semibold">{site}</span>
+                  <Star size={16} className="text-warning" />
+                  <span className="text-base font-semibold text-ink">{site}</span>
                 </div>
-                <ChevronDown size={18} className="text-gray-400" />
+                <ChevronDown size={18} className="text-ink-tertiary" />
               </button>
               {showSiteDropdown && (
-                <div className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-xl shadow-lg max-h-48 overflow-y-auto">
+                <div className="absolute z-10 mt-1 w-full bg-surface border border-border-warm rounded-[14px] shadow-float max-h-48 overflow-y-auto">
                   {injectionSites.map((s) => (
                     <button key={s} onClick={() => { setSite(s); setShowSiteDropdown(false); }}
-                      className={`w-full px-4 py-3 text-left text-sm ${site === s ? "bg-blue-50 text-blue-600 font-medium" : "hover:bg-gray-50"}`}>
+                      className={`w-full px-4 py-3 text-left text-sm ${site === s ? "bg-accent-tint text-accent font-semibold" : "hover:bg-surface-alt text-ink"}`}>
                       {s}
                     </button>
                   ))}
@@ -215,7 +215,7 @@ export default function AddShotModal({ open, onClose, editingShot }) {
 
           {/* Pain Level */}
           <div>
-            <label className="text-sm font-semibold text-gray-700 mb-2 block">Pain Level: <span className="text-blue-600">{pain}/10</span></label>
+            <label className="text-sm font-semibold text-ink mb-2 block">Pain Level: <span className="text-accent">{pain}/10</span></label>
             <div className="px-1">
               <input type="range" min="0" max="10" value={pain} onChange={(e) => setPain(Number(e.target.value))} className="w-full accent-blue-600" />
               <div className="flex justify-between text-xs text-gray-400 mt-1">
@@ -226,16 +226,16 @@ export default function AddShotModal({ open, onClose, editingShot }) {
 
           {/* Notes */}
           <div>
-            <label className="text-sm font-semibold text-gray-700 mb-2 block">Notes (Optional)</label>
+            <label className="text-sm font-semibold text-ink mb-2 block">Notes (Optional)</label>
             <textarea value={notes} onChange={(e) => setNotes(e.target.value)}
               placeholder="Add any notes or side effects experienced"
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm resize-none h-24 outline-none focus:border-blue-300" />
+              className="w-full border border-border-warm rounded-[14px] px-4 py-3 text-sm resize-none h-24 outline-none focus:border-accent bg-surface-alt text-ink" />
           </div>
         </div>
 
         <div className="px-5 pb-8 pt-2">
           <button onClick={handleSave} disabled={saving}
-            className="w-full py-3.5 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-60">
+            className="w-full py-3.5 bg-accent text-white rounded-[14px] font-semibold flex items-center justify-center gap-2 disabled:opacity-60 active:scale-[0.97] transition-transform shadow-warm">
             <Save size={16} /> {saving ? "Saving…" : editingShot ? "Update Shot" : "Save Shot"}
           </button>
         </div>
