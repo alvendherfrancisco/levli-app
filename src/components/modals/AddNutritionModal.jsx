@@ -3,7 +3,7 @@ import { X, RotateCcw, Save } from "lucide-react";
 import { useAppState } from "@/lib/AppState";
 import { todayKey } from "@/lib/dateUtils";
 
-const EMPTY = { calories: "0.0", protein: "0.0", water: "0.0", fiber: "0.0", carbs: "0.0" };
+const EMPTY = { calories: "", protein: "", water: "", fiber: "", carbs: "" };
 
 function numericOnly(value) {
   let v = value.replace(/[^0-9.]/g, "");
@@ -70,8 +70,9 @@ export default function AddNutritionModal({ open, onClose, dayKey }) {
             <div key={f.key}>
               <label className="text-sm font-semibold text-gray-700 dark:text-[#9A9DAE] mb-1 block">{f.label}</label>
               <div className={`flex items-center border rounded-xl px-4 py-3 dark:bg-white/[0.05] ${errors[f.key] ? "border-red-400" : "border-gray-200 dark:border-white/[0.1]"}`}>
-                <input type="text" inputMode="decimal" value={values[f.key]} placeholder="0.0"
+                <input type="text" inputMode="decimal" value={values[f.key]} placeholder="0"
                   onChange={(e) => handleChange(f.key, e.target.value)}
+                  onFocus={(e) => e.target.select()}
                   className="flex-1 outline-none text-base bg-transparent dark:text-[#E8E9F0]" />
                 <span className="text-gray-400 text-sm ml-2">{f.unit}</span>
               </div>

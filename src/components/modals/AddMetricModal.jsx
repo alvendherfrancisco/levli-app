@@ -43,6 +43,7 @@ function ExerciseModal({ open, onClose, value, onSave, onDelete }) {
             type="text" inputMode="numeric"
             value={val}
             onChange={(e) => { setVal(numericOnly(e.target.value).split(".")[0]); setError(""); }}
+            onFocus={(e) => e.target.select()}
             placeholder="0"
             className="flex-1 outline-none text-lg font-medium bg-transparent text-gray-900 dark:text-[#E8E9F0] placeholder-gray-300 dark:placeholder-[#9A9DAE]"
             autoFocus
@@ -165,6 +166,7 @@ function GenericMetricModal({ open, onClose, label, unit, value, onSave }) {
             type="text" inputMode="decimal"
             value={val}
             onChange={(e) => { setVal(numericOnly(e.target.value)); setError(""); }}
+            onFocus={(e) => e.target.select()}
             placeholder="0.0"
             className="flex-1 outline-none text-lg font-medium bg-transparent text-gray-900 dark:text-[#E8E9F0] placeholder-gray-300 dark:placeholder-[#9A9DAE]"
             autoFocus
