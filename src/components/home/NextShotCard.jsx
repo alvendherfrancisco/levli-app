@@ -9,8 +9,8 @@ export default function NextShotCard() {
 
   if (shots.length === 0) {
     return (
-      <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mx-4 mb-4">
-        <p className="text-sm text-gray-400 mb-2">Next Shot</p>
+      <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 mx-4 mb-4">
+        <p className="text-sm text-gray-400 dark:text-gray-500 mb-2">Next Shot</p>
         <div className="bg-blue-50 rounded-xl p-3 flex items-start gap-2">
           <Syringe size={18} className="text-blue-500 mt-0.5 flex-shrink-0" />
           <p className="text-sm text-blue-700">No shots recorded yet. Add your first shot to start tracking your schedule.</p>
@@ -31,21 +31,21 @@ export default function NextShotCard() {
   else daysLabel = `In ${daysLeft}d`;
 
   return (
-    <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mx-4 mb-4">
-      <p className="text-sm text-gray-400 mb-1">Next Shot</p>
+    <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 mx-4 mb-4">
+      <p className="text-sm text-gray-400 dark:text-gray-500 mb-1">Next Shot</p>
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-xl font-bold text-gray-900">{nextDate}</h3>
+          <h3 className="text-xl font-bold text-gray-900 dark:text-white">{nextDate}</h3>
           <p className="text-sm font-medium text-blue-600 mt-0.5">{daysLabel}</p>
-          <div className="mt-2 border-t border-gray-100 pt-2">
-            <p className="text-xs text-gray-400">Last Dose</p>
-            <p className="text-sm font-semibold text-gray-700">{last.date} · {last.dose} mg</p>
+          <div className="mt-2 border-t border-gray-100 dark:border-gray-800 pt-2">
+            <p className="text-xs text-gray-400 dark:text-gray-500">Last Dose</p>
+            <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">{last.date} · {last.dose} mg</p>
           </div>
         </div>
         <div className="relative w-20 h-20 flex-shrink-0">
           <svg className="w-20 h-20 -rotate-90" viewBox="0 0 80 80">
-            <circle cx="40" cy="40" r="34" fill="none" stroke="hsl(var(--muted))" strokeWidth="5" />
-            <circle cx="40" cy="40" r="34" fill="none" stroke={daysLeft <= 0 ? "hsl(var(--secondary-foreground))" : "hsl(var(--accent-foreground))"} strokeWidth="5"
+            <circle cx="40" cy="40" r="34" fill="none" stroke="#E5E7EB" strokeWidth="5" />
+            <circle cx="40" cy="40" r="34" fill="none" stroke={daysLeft <= 0 ? "#22C55E" : "#3B6FE0"} strokeWidth="5"
               strokeDasharray={circumference}
               strokeDashoffset={circumference * (1 - progress)}
               strokeLinecap="round" />

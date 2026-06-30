@@ -20,10 +20,10 @@ export default function Home() {
   const greeting = hour < 12 ? "Good Morning!" : hour < 18 ? "Good Afternoon!" : "Good Evening!";
 
   return (
-    <div className="bg-gray-50 min-h-screen w-full">
-      <div className="sticky top-0 z-30 bg-gray-50 w-full flex items-center justify-between px-5 pt-6 pb-2">
-        <h1 className="text-2xl font-bold text-gray-900">{greeting}</h1>
-        <Link to="/settings"><Settings size={24} className="text-gray-600" /></Link>
+    <div className="bg-gray-50 dark:bg-gray-950 min-h-screen w-full">
+      <div className="sticky top-0 z-30 bg-gray-50 dark:bg-gray-950 w-full flex items-center justify-between px-5 pt-6 pb-2">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{greeting}</h1>
+        <Link to="/settings"><Settings size={24} className="text-gray-600 dark:text-gray-400" /></Link>
       </div>
 
       <div className="max-w-3xl mx-auto">
@@ -34,13 +34,13 @@ export default function Home() {
         {/* Side Effects card */}
         <button
           onClick={() => setShowSideEffects(true)}
-          className="mx-3 mb-4 bg-white rounded-2xl p-4 shadow-sm border border-gray-100 w-[calc(100%-1.5rem)] text-left"
+          className="mx-3 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 w-[calc(100%-1.5rem)] text-left"
         >
           <div className="flex items-center gap-2 mb-2">
             <div className="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center">
               <Wind size={16} className="text-teal-500" />
             </div>
-            <span className="font-semibold text-gray-700">Side effects</span>
+            <span className="font-semibold text-gray-700 dark:text-gray-300">Side effects</span>
           </div>
           {sideEffects ? (
             <p className="text-sm text-gray-700 bg-teal-50 rounded-xl p-3">{sideEffects}</p>
@@ -53,14 +53,14 @@ export default function Home() {
         </button>
 
         {/* Medication Levels card */}
-        <div className="mx-3 mb-4 bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+        <div className="mx-3 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
           <div className="flex items-start justify-between mb-2">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
                 <Syringe size={16} className="text-blue-600" />
               </div>
               <div>
-                <h3 className="font-bold text-gray-900">Medication Levels</h3>
+                <h3 className="font-bold text-gray-900 dark:text-white">Medication Levels</h3>
                 <p className="text-xs text-blue-500">Estimated medication levels in your system.</p>
               </div>
             </div>

@@ -54,18 +54,18 @@ export default function History() {
   const openNew = () => { setEditingShot(null); setShowShot(true); };
 
   return (
-    <div className="bg-gray-50 min-h-screen w-full">
-      <div className="sticky top-0 z-30 bg-gray-50 w-full flex items-center justify-between px-5 pt-6 pb-4">
-        <h1 className="text-2xl font-bold text-gray-900">History</h1>
-        <Link to="/settings"><Settings size={22} className="text-gray-600" /></Link>
+    <div className="bg-gray-50 dark:bg-gray-950 min-h-screen w-full">
+      <div className="sticky top-0 z-30 bg-gray-50 dark:bg-gray-950 w-full flex items-center justify-between px-5 pt-6 pb-4">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">History</h1>
+        <Link to="/settings"><Settings size={22} className="text-gray-600 dark:text-gray-400" /></Link>
       </div>
 
       <div className="max-w-3xl mx-auto">
         {/* Calendar */}
-        <div className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+        <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between mb-4">
             <button onClick={prevMonth}><ChevronLeft size={22} className="text-blue-500" /></button>
-            <h2 className="text-lg font-bold">{monthNames[month]} {year}</h2>
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white">{monthNames[month]} {year}</h2>
             <button onClick={nextMonth}><ChevronRight size={22} className="text-blue-500" /></button>
           </div>
           <div className="grid grid-cols-7 text-center mb-2">
@@ -81,10 +81,10 @@ export default function History() {
               const isSelected = day === selectedDay;
               const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
               return (
-                <button key={day} onClick={() => setSelectedDay(day)}
-                  className={`py-1.5 rounded-lg text-sm font-medium relative flex flex-col items-center ${
-                    isSelected ? "border-2 border-blue-500 text-blue-600" : isToday ? "text-blue-600" : "text-gray-700"
-                  }`}>
+              <button key={day} onClick={() => setSelectedDay(day)}
+                className={`py-1.5 rounded-lg text-sm font-medium relative flex flex-col items-center ${
+                  isSelected ? "border-2 border-blue-500 text-blue-600" : isToday ? "text-blue-600" : "text-gray-700 dark:text-gray-300"
+                }`}>
                   {day}
                   {hasShot && <div className="w-2 h-2 bg-green-500 rounded-full mt-0.5" />}
                 </button>
@@ -108,7 +108,7 @@ export default function History() {
         )}
         {selectedDay && selectedShots.length === 0 && (
           <div className="px-4 mb-4">
-            <div className="bg-white rounded-xl p-4 text-center border border-gray-100 text-gray-400 text-sm">
+            <div className="bg-white dark:bg-gray-900 rounded-xl p-4 text-center border border-gray-100 dark:border-gray-800 text-gray-400 dark:text-gray-500 text-sm">
               No shots logged for {monthNames[month]} {selectedDay}
             </div>
           </div>
@@ -117,12 +117,12 @@ export default function History() {
         {/* Side Effects for selected day */}
         {selectedDayKey && (
           <button onClick={() => setShowSideEffects(true)}
-            className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-sm border border-gray-100 w-[calc(100%-2rem)] text-left">
+            className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 w-[calc(100%-2rem)] text-left">
             <div className="flex items-center gap-2 mb-2">
               <div className="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center">
                 <Wind size={16} className="text-teal-500" />
               </div>
-              <span className="font-semibold text-gray-700">Side effects</span>
+              <span className="font-semibold text-gray-700 dark:text-gray-300">Side effects</span>
             </div>
             {sideEffects ? (
               <p className="text-sm text-gray-700 bg-teal-50 rounded-xl p-3">{sideEffects}</p>

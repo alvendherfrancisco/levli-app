@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { ChevronLeft, Download, Loader2 } from "lucide-react";
 import { useAppState } from "@/lib/AppState";
 import { parseShotDate } from "@/lib/dateUtils";
-import { base44 } from "@/api/base44Client";
 
 export default function ReportPage() {
   const navigate = useNavigate();
@@ -15,16 +14,13 @@ export default function ReportPage() {
   const painShots = shots.filter((s) => s.pain > 0);
   const avgPain = painShots.length ? (painShots.reduce((a, s) => a + s.pain, 0) / painShots.length).toFixed(1) : "0.0";
 
-  // Medication breakdown
   const medCounts = {};
   shots.forEach((s) => { medCounts[s.medication] = (medCounts[s.medication] || 0) + 1; });
 
-  // Site breakdown
   const siteCounts = {};
   shots.forEach((s) => { siteCounts[s.site] = (siteCounts[s.site] || 0) + 1; });
   const topSites = Object.entries(siteCounts).sort((a, b) => b[1] - a[1]).slice(0, 3);
 
-  // Date range
   const sortedShots = [...shots].sort((a, b) => parseShotDate(a.date) - parseShotDate(b.date));
   const firstDate = sortedShots[0]?.date || "—";
   const lastDate = sortedShots[sortedShots.length - 1]?.date || "—";
@@ -36,7 +32,6 @@ export default function ReportPage() {
     const pageW = doc.internal.pageSize.getWidth();
     let y = 20;
 
-    // Title
     doc.setFontSize(18); doc.setFont("helvetica", "bold");
     doc.text("GLP-1 Shot History Report", 14, y); y += 8;
     doc.setFontSize(10); doc.setFont("helvetica", "normal");
@@ -45,7 +40,6 @@ export default function ReportPage() {
     doc.text(`Date Range: ${firstDate} – ${lastDate}`, 14, y); y += 10;
     doc.setTextColor(0);
 
-    // Summary
     doc.setFont("helvetica", "bold"); doc.setFontSize(13);
     doc.text("Summary", 14, y); y += 2;
     doc.setDrawColor(59, 111, 224); doc.setLineWidth(0.5); doc.line(14, y, 60, y); y += 6;
@@ -65,7 +59,6 @@ export default function ReportPage() {
     });
     y += 4;
 
-    // Medication breakdown
     if (Object.keys(medCounts).length) {
       doc.setFont("helvetica", "bold"); doc.setFontSize(13); doc.text("Medications Used", 14, y); y += 2;
       doc.line(14, y, 70, y); y += 6;
@@ -78,7 +71,6 @@ export default function ReportPage() {
       y += 4;
     }
 
-    // Site breakdown
     if (topSites.length) {
       doc.setFont("helvetica", "bold"); doc.setFontSize(13); doc.text("Most Used Injection Sites", 14, y); y += 2;
       doc.line(14, y, 80, y); y += 6;
@@ -91,11 +83,9 @@ export default function ReportPage() {
       y += 4;
     }
 
-    // Table
     if (y > 220) { doc.addPage(); y = 20; }
     doc.setFont("helvetica", "bold"); doc.setFontSize(13); doc.text("Detailed Shot History", 14, y); y += 2;
     doc.line(14, y, 80, y); y += 6;
-    // Header
     doc.setFillColor(240, 240, 240); doc.rect(14, y - 3, pageW - 28, 7, "F");
     doc.setFontSize(9); doc.setFont("helvetica", "bold");
     ["Date", "Time", "Medication", "Dose", "Site", "Pain"].forEach((h, i) => {
@@ -124,119 +114,118 @@ export default function ReportPage() {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen w-full">
-      <div className="max-w-lg mx-auto">
-        <div className="flex items-center justify-between px-5 pt-6 pb-4 bg-white border-b border-gray-100">
-          <button onClick={() => navigate(-1)} className="flex items-center gap-1 text-blue-600">
-            <ChevronLeft size={22} /><span className="font-medium">Back</span>
-          </button>
-          <h1 className="text-lg font-bold text-gray-900">Report</h1>
-          <button onClick={handleExportPDF} disabled={exporting || shots.length === 0}
-            className="flex items-center gap-1 text-blue-600 disabled:opacity-40">
-            {exporting ? <Loader2 size={18} className="animate-spin" /> : <Download size={20} />}
-          </button>
+    <div className="bg-gray-50 dark:bg-gray-950 min-h-screen w-full">
+      {/* Full-width header */}
+      <div className="w-full flex items-center justify-between px-5 pt-6 pb-4 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 sticky top-0 z-30">
+        <button onClick={() => navigate(-1)} className="flex items-center gap-1 text-blue-600">
+          <ChevronLeft size={22} /><span className="font-medium">Back</span>
+        </button>
+        <h1 className="text-lg font-bold text-gray-900 dark:text-white">Report</h1>
+        <button onClick={handleExportPDF} disabled={exporting || shots.length === 0}
+          className="flex items-center gap-1 text-blue-600 disabled:opacity-40">
+          {exporting ? <Loader2 size={18} className="animate-spin" /> : <Download size={20} />}
+        </button>
+      </div>
+
+      <div className="max-w-lg mx-auto px-4 py-4">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 mb-4">
+          <div className="flex items-center gap-2 mb-1">
+            <div className="w-2 h-6 bg-blue-600 rounded-full" />
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white">GLP-1 Shot History Report</h2>
+          </div>
+          <p className="text-xs text-gray-400 ml-4">Generated on {new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</p>
+          {firstDate !== "—" && <p className="text-xs text-gray-400 ml-4">Range: {firstDate} – {lastDate}</p>}
         </div>
 
-        <div className="px-4 py-4">
-          <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mb-4">
-            <div className="flex items-center gap-2 mb-1">
-              <div className="w-2 h-6 bg-blue-600 rounded-full" />
-              <h2 className="text-lg font-bold text-gray-900">GLP-1 Shot History Report</h2>
-            </div>
-            <p className="text-xs text-gray-400 ml-4">Generated on {new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</p>
-            {firstDate !== "—" && <p className="text-xs text-gray-400 ml-4">Range: {firstDate} – {lastDate}</p>}
+        {/* Summary */}
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 mb-4">
+          <h3 className="text-base font-bold text-gray-900 dark:text-white mb-3 pb-2 border-b border-gray-100 dark:border-gray-800">Summary</h3>
+          <div className="space-y-2">
+            {[
+              ["Total Shots", shots.length],
+              ["Total Dose", `${totalDose.toFixed(1)} mg`],
+              ["Average Dose", `${avgDose} mg`],
+              ["Average Pain Level", `${avgPain}/10`],
+              ["Shots with Pain", `${painShots.length} (${shots.length ? Math.round(painShots.length / shots.length * 100) : 0}%)`],
+            ].map(([label, value]) => (
+              <div key={label} className="flex justify-between items-center">
+                <span className="text-sm text-gray-500 dark:text-gray-400">{label}</span>
+                <span className="text-sm font-semibold text-gray-900 dark:text-white">{value}</span>
+              </div>
+            ))}
           </div>
+        </div>
 
-          {/* Summary */}
-          <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mb-4">
-            <h3 className="text-base font-bold text-gray-900 mb-3 pb-2 border-b border-gray-100">Summary</h3>
+        {/* Medications */}
+        {Object.keys(medCounts).length > 0 && (
+          <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 mb-4">
+            <h3 className="text-base font-bold text-gray-900 dark:text-white mb-3 pb-2 border-b border-gray-100 dark:border-gray-800">Medications Used</h3>
             <div className="space-y-2">
-              {[
-                ["Total Shots", shots.length],
-                ["Total Dose", `${totalDose.toFixed(1)} mg`],
-                ["Average Dose", `${avgDose} mg`],
-                ["Average Pain Level", `${avgPain}/10`],
-                ["Shots with Pain", `${painShots.length} (${shots.length ? Math.round(painShots.length / shots.length * 100) : 0}%)`],
-              ].map(([label, value]) => (
-                <div key={label} className="flex justify-between items-center">
-                  <span className="text-sm text-gray-500">{label}</span>
-                  <span className="text-sm font-semibold text-gray-900">{value}</span>
+              {Object.entries(medCounts).map(([med, cnt]) => (
+                <div key={med} className="flex justify-between items-center">
+                  <span className="text-sm text-gray-500 dark:text-gray-400">{med}</span>
+                  <span className="text-sm font-semibold text-gray-900 dark:text-white">{cnt} ({Math.round(cnt/shots.length*100)}%)</span>
                 </div>
               ))}
             </div>
           </div>
+        )}
 
-          {/* Medications */}
-          {Object.keys(medCounts).length > 0 && (
-            <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mb-4">
-              <h3 className="text-base font-bold text-gray-900 mb-3 pb-2 border-b border-gray-100">Medications Used</h3>
-              <div className="space-y-2">
-                {Object.entries(medCounts).map(([med, cnt]) => (
-                  <div key={med} className="flex justify-between items-center">
-                    <span className="text-sm text-gray-500">{med}</span>
-                    <span className="text-sm font-semibold text-gray-900">{cnt} ({Math.round(cnt/shots.length*100)}%)</span>
-                  </div>
-                ))}
-              </div>
+        {/* Sites */}
+        {topSites.length > 0 && (
+          <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 mb-4">
+            <h3 className="text-base font-bold text-gray-900 dark:text-white mb-3 pb-2 border-b border-gray-100 dark:border-gray-800">Top Injection Sites</h3>
+            <div className="space-y-2">
+              {topSites.map(([site, cnt]) => (
+                <div key={site} className="flex justify-between items-center">
+                  <span className="text-sm text-gray-500 dark:text-gray-400">{site}</span>
+                  <span className="text-sm font-semibold text-gray-900 dark:text-white">{cnt} ({Math.round(cnt/shots.length*100)}%)</span>
+                </div>
+              ))}
             </div>
-          )}
-
-          {/* Sites */}
-          {topSites.length > 0 && (
-            <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mb-4">
-              <h3 className="text-base font-bold text-gray-900 mb-3 pb-2 border-b border-gray-100">Top Injection Sites</h3>
-              <div className="space-y-2">
-                {topSites.map(([site, cnt]) => (
-                  <div key={site} className="flex justify-between items-center">
-                    <span className="text-sm text-gray-500">{site}</span>
-                    <span className="text-sm font-semibold text-gray-900">{cnt} ({Math.round(cnt/shots.length*100)}%)</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Table */}
-          <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-            <h3 className="text-base font-bold text-gray-900 mb-3 pb-2 border-b border-gray-100">Detailed Shot History</h3>
-            {shots.length === 0 ? (
-              <p className="text-sm text-gray-400 text-center py-4">No shots recorded yet.</p>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-xs">
-                  <thead>
-                    <tr className="bg-gray-50">
-                      <th className="text-left p-2 text-gray-500 font-medium">Date</th>
-                      <th className="text-left p-2 text-gray-500 font-medium">Med</th>
-                      <th className="text-left p-2 text-gray-500 font-medium">Dose</th>
-                      <th className="text-left p-2 text-gray-500 font-medium">Site</th>
-                      <th className="text-left p-2 text-gray-500 font-medium">Pain</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {[...shots].sort((a,b) => parseShotDate(a.date) - parseShotDate(b.date)).map((s, i) => (
-                      <tr key={s.id} className={i % 2 === 1 ? "bg-gray-50" : ""}>
-                        <td className="p-2 text-gray-700">{s.date}</td>
-                        <td className="p-2 text-gray-700">{s.medication}</td>
-                        <td className="p-2 text-gray-700">{s.dose}mg</td>
-                        <td className="p-2 text-gray-700 max-w-[90px] truncate">{s.site}</td>
-                        <td className={`p-2 font-medium ${s.pain === 0 ? "text-green-600" : s.pain <= 3 ? "text-yellow-600" : "text-red-600"}`}>{s.pain}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
           </div>
+        )}
 
-          {shots.length > 0 && (
-            <button onClick={handleExportPDF} disabled={exporting}
-              className="mt-4 w-full py-3.5 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-60">
-              {exporting ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
-              {exporting ? "Generating PDF…" : "Export as PDF"}
-            </button>
+        {/* Table */}
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
+          <h3 className="text-base font-bold text-gray-900 dark:text-white mb-3 pb-2 border-b border-gray-100 dark:border-gray-800">Detailed Shot History</h3>
+          {shots.length === 0 ? (
+            <p className="text-sm text-gray-400 text-center py-4">No shots recorded yet.</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs">
+                <thead>
+                  <tr className="bg-gray-50 dark:bg-gray-800">
+                    <th className="text-left p-2 text-gray-500 dark:text-gray-400 font-medium">Date</th>
+                    <th className="text-left p-2 text-gray-500 dark:text-gray-400 font-medium">Med</th>
+                    <th className="text-left p-2 text-gray-500 dark:text-gray-400 font-medium">Dose</th>
+                    <th className="text-left p-2 text-gray-500 dark:text-gray-400 font-medium">Site</th>
+                    <th className="text-left p-2 text-gray-500 dark:text-gray-400 font-medium">Pain</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {sortedShots.map((s, i) => (
+                    <tr key={s.id} className={i % 2 === 1 ? "bg-gray-50 dark:bg-gray-800" : ""}>
+                      <td className="p-2 text-gray-700 dark:text-gray-300">{s.date}</td>
+                      <td className="p-2 text-gray-700 dark:text-gray-300">{s.medication}</td>
+                      <td className="p-2 text-gray-700 dark:text-gray-300">{s.dose}mg</td>
+                      <td className="p-2 text-gray-700 dark:text-gray-300 max-w-[90px] truncate">{s.site}</td>
+                      <td className={`p-2 font-medium ${s.pain === 0 ? "text-green-600" : s.pain <= 3 ? "text-yellow-600" : "text-red-600"}`}>{s.pain}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
+
+        {shots.length > 0 && (
+          <button onClick={handleExportPDF} disabled={exporting}
+            className="mt-4 w-full py-3.5 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-60">
+            {exporting ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
+            {exporting ? "Generating PDF…" : "Export as PDF"}
+          </button>
+        )}
       </div>
     </div>
   );

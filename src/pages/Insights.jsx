@@ -72,18 +72,18 @@ export default function Insights() {
     : null;
 
   return (
-    <div className="bg-gray-50 min-h-screen w-full">
-      <div className="sticky top-0 z-30 bg-gray-50 w-full flex items-center justify-between px-5 pt-6 pb-4">
-        <h1 className="text-2xl font-bold text-gray-900">Insights</h1>
-        <Link to="/settings"><Settings size={22} className="text-gray-600" /></Link>
+    <div className="bg-gray-50 dark:bg-gray-950 min-h-screen w-full">
+      <div className="sticky top-0 z-30 bg-gray-50 dark:bg-gray-950 w-full flex items-center justify-between px-5 pt-6 pb-4">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Insights</h1>
+        <Link to="/settings"><Settings size={22} className="text-gray-600 dark:text-gray-400" /></Link>
       </div>
 
       <div className="max-w-3xl mx-auto">
         {/* Weight Change Panel */}
-        <div className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-sm border border-gray-100 overflow-hidden">
+        <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
           <div className="flex items-center gap-2 mb-1">
             <TrendingDown size={18} className="text-blue-600" />
-            <h3 className="font-bold text-gray-900 text-lg">Weight Change</h3>
+            <h3 className="font-bold text-gray-900 dark:text-white text-lg">Weight Change</h3>
           </div>
           <div className="border-b-2 border-blue-500 w-12 mb-3" />
 
@@ -91,7 +91,7 @@ export default function Insights() {
             {Object.keys(WEIGHT_RANGES).map((r) => (
               <button key={r} onClick={() => setWeightRange(r)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                  weightRange === r ? "bg-gray-100 text-gray-900 border border-gray-200" : "text-gray-400"
+                  weightRange === r ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600" : "text-gray-400 dark:text-gray-500"
                 }`}>{r}</button>
             ))}
           </div>
@@ -123,11 +123,11 @@ export default function Insights() {
             <div className="h-48">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={weightData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--card))" />
-                  <XAxis dataKey="date" tick={{ fontSize: 10 }} stroke="hsl(var(--border))" interval="preserveStartEnd" />
-                  <YAxis tick={{ fontSize: 10 }} stroke="hsl(var(--border))" domain={["auto", "auto"]} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                  <XAxis dataKey="date" tick={{ fontSize: 10 }} stroke="#ccc" interval="preserveStartEnd" />
+                  <YAxis tick={{ fontSize: 10 }} stroke="#ccc" domain={["auto", "auto"]} />
                   <Tooltip formatter={(v) => [`${v} ${weightUnit}`, "Weight"]} />
-                  <Line type="monotone" dataKey="weight" stroke="hsl(var(--accent-foreground))" strokeWidth={2} dot={{ fill: "hsl(var(--accent-foreground))", r: 3 }} />
+                  <Line type="monotone" dataKey="weight" stroke="#3B6FE0" strokeWidth={2} dot={{ fill: "#3B6FE0", r: 3 }} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -139,12 +139,12 @@ export default function Insights() {
         </div>
 
         {/* Medication Levels Panel */}
-        <div className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+        <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
           <div className="flex items-start justify-between mb-1">
             <div className="flex items-center gap-2">
               <Syringe size={18} className="text-blue-600" />
               <div>
-                <h3 className="font-bold text-gray-900 text-lg">Medication Levels</h3>
+                <h3 className="font-bold text-gray-900 dark:text-white text-lg">Medication Levels</h3>
                 <p className="text-xs text-blue-500">Estimated concentration using pharmacokinetic decay model.</p>
               </div>
             </div>
@@ -156,7 +156,7 @@ export default function Insights() {
             {Object.keys(MED_RANGES).map((r) => (
               <button key={r} onClick={() => setMedRange(r)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                  medRange === r ? "bg-gray-100 text-gray-900 border border-gray-200" : "text-gray-400"
+                  medRange === r ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600" : "text-gray-400 dark:text-gray-500"
                 }`}>{r}</button>
             ))}
           </div>
@@ -165,11 +165,11 @@ export default function Insights() {
             <div className="h-48">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={medData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--card))" />
-                  <XAxis dataKey="day" tick={{ fontSize: 10 }} stroke="hsl(var(--border))" interval={Math.floor(medData.length / 5)} />
-                  <YAxis tick={{ fontSize: 10 }} stroke="hsl(var(--border))" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                  <XAxis dataKey="day" tick={{ fontSize: 10 }} stroke="#ccc" interval={Math.floor(medData.length / 5)} />
+                  <YAxis tick={{ fontSize: 10 }} stroke="#ccc" />
                   <Tooltip formatter={(v) => [`${v} mg`, "Concentration"]} />
-                  <Area type="monotone" dataKey="level" stroke="hsl(var(--accent-foreground))" fill="hsl(var(--accent-foreground))" fillOpacity={0.1} strokeWidth={2} />
+                  <Area type="monotone" dataKey="level" stroke="#3B6FE0" fill="#3B6FE0" fillOpacity={0.1} strokeWidth={2} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>

@@ -48,12 +48,12 @@ export default function Journal() {
   const normalizeEntry = (e) => ({ ...e, moodColor: e.mood_color || e.moodColor || "bg-gray-100 text-gray-600" });
 
   return (
-    <div className="bg-gray-50 min-h-screen w-full">
-      <div className="sticky top-0 z-30 bg-gray-50 w-full flex items-center justify-between px-5 pt-6 pb-4">
-        <h1 className="text-2xl font-bold text-gray-900">Journal</h1>
+    <div className="bg-gray-50 dark:bg-gray-950 min-h-screen w-full">
+      <div className="sticky top-0 z-30 bg-gray-50 dark:bg-gray-950 w-full flex items-center justify-between px-5 pt-6 pb-4">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Journal</h1>
         <div className="flex items-center gap-3">
-          <button onClick={openNew}><Plus size={22} className="text-gray-600" /></button>
-          <Link to="/settings"><Settings size={22} className="text-gray-600" /></Link>
+          <button onClick={openNew}><Plus size={22} className="text-gray-600 dark:text-gray-400" /></button>
+          <Link to="/settings"><Settings size={22} className="text-gray-600 dark:text-gray-400" /></Link>
         </div>
       </div>
 
@@ -62,7 +62,7 @@ export default function Journal() {
         {ALL_CATEGORIES.map((cat) => (
           <button key={cat} onClick={() => setFilterCat(cat)}
             className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 border transition-colors ${
-              filterCat === cat ? "bg-blue-600 text-white border-blue-600" : "bg-white text-gray-500 border-gray-200"
+              filterCat === cat ? "bg-blue-600 text-white border-blue-600" : "bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-700"
             }`}>
             {cat}
           </button>
@@ -72,11 +72,11 @@ export default function Journal() {
       <div className="max-w-3xl mx-auto">
         {filtered.length === 0 ? (
           <div className="px-4">
-            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 text-center">
+            <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-gray-800 text-center">
               <div className="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-4">
                 <BookOpen size={36} className="text-blue-500" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">No Journal Entries</h3>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">No Journal Entries</h3>
               <p className="text-sm text-gray-400 mb-4">Record your thoughts, symptoms, and medication experiences.</p>
               <button onClick={openNew} className="px-5 py-3 bg-blue-600 text-white rounded-xl font-semibold flex items-center gap-2 mx-auto">
                 <Plus size={18} /> Add Journal Entry
@@ -88,14 +88,14 @@ export default function Journal() {
             {filtered.map((entry) => {
               const e = normalizeEntry(entry);
               return (
-                <button key={e.id} onClick={() => openEdit(e)} className="w-full text-left bg-white rounded-xl p-4 shadow-sm border border-gray-100 overflow-hidden box-border">
+                <button key={e.id} onClick={() => openEdit(e)} className="w-full text-left bg-white dark:bg-gray-900 rounded-xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden box-border">
                   <div className="flex items-start gap-3 w-full min-w-0">
                     <div className={`w-10 h-10 rounded-xl ${CATEGORY_BG[e.category] || "bg-gray-100"} flex items-center justify-center flex-shrink-0`}>
                       {CATEGORY_ICONS[e.category] || <FileText size={20} className="text-gray-500" />}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex justify-between items-start gap-2">
-                        <p className="text-sm text-gray-700 overflow-hidden text-ellipsis whitespace-nowrap flex-1 min-w-0">{e.text}</p>
+                        <p className="text-sm text-gray-700 dark:text-gray-300 overflow-hidden text-ellipsis whitespace-nowrap flex-1 min-w-0">{e.text}</p>
                         <span className="text-xs text-gray-400 flex-shrink-0 whitespace-nowrap">{e.date}</span>
                       </div>
                       <div className="flex items-center gap-1 mt-1 text-xs text-gray-400">
