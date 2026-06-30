@@ -20,8 +20,8 @@ export default function Shots() {
   const openNew = () => { setEditingShot(null); setShowShot(true); };
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-950 min-h-screen w-full">
-      <div className="sticky top-0 z-30 bg-gray-50 dark:bg-gray-950 w-full flex items-center justify-between px-5 pt-6 pb-4">
+    <div className="bg-gray-50 dark:bg-background min-h-screen w-full">
+      <div className="sticky top-0 z-30 bg-gray-50 dark:bg-background w-full flex items-center justify-between px-5 pt-6 pb-4">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Shots</h1>
         <div className="flex items-center gap-3">
           <button onClick={() => navigate("/report")}><FileText size={22} className="text-gray-500" /></button>
@@ -32,7 +32,7 @@ export default function Shots() {
       <div className="max-w-3xl mx-auto">
         {/* Summary cards */}
         <div className="flex gap-2 px-4 mb-5 overflow-x-auto">
-          <div className="bg-white dark:bg-gray-900 rounded-xl p-3 shadow-sm border border-gray-100 dark:border-gray-800 min-w-[120px]">
+          <div className="bg-white dark:bg-card rounded-xl p-3 shadow-sm border border-gray-100 dark:border-white/[0.07] min-w-[120px]">
             <div className="flex items-center gap-1.5 mb-1">
               <div className="w-6 h-6 rounded-lg bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
                 <Syringe size={12} className="text-blue-600 dark:text-blue-400" />
@@ -41,7 +41,7 @@ export default function Shots() {
             </div>
             <p className="text-2xl font-bold text-gray-900 dark:text-white">{shots.length}</p>
           </div>
-          <div className="bg-white dark:bg-gray-900 rounded-xl p-3 shadow-sm border border-gray-100 dark:border-gray-800 min-w-[120px]">
+          <div className="bg-white dark:bg-card rounded-xl p-3 shadow-sm border border-gray-100 dark:border-white/[0.07] min-w-[120px]">
             <div className="flex items-center gap-1.5 mb-1">
               <div className="w-6 h-6 rounded-lg bg-yellow-100 dark:bg-yellow-900 flex items-center justify-center">
                 <Clock size={12} className="text-yellow-600 dark:text-yellow-400" />
@@ -55,7 +55,7 @@ export default function Shots() {
               </>
             ) : <p className="text-sm text-gray-400 dark:text-gray-500">No shots yet</p>}
           </div>
-          <div className="bg-white dark:bg-gray-900 rounded-xl p-3 shadow-sm border border-gray-100 dark:border-gray-800 min-w-[120px]">
+          <div className="bg-white dark:bg-card rounded-xl p-3 shadow-sm border border-gray-100 dark:border-white/[0.07] min-w-[120px]">
             <div className="flex items-center gap-1.5 mb-1">
               <div className="w-6 h-6 rounded-lg bg-green-100 dark:bg-green-900 flex items-center justify-center">
                 <CalendarCheck size={12} className="text-green-600 dark:text-green-400" />
@@ -73,7 +73,7 @@ export default function Shots() {
               <Loader2 size={28} className="animate-spin text-blue-400" />
             </div>
           ) : shots.length === 0 ? (
-            <div className="bg-white dark:bg-gray-900 rounded-xl p-6 text-center text-gray-400 dark:text-gray-500 border border-gray-100 dark:border-gray-800">
+            <div className="bg-white dark:bg-card rounded-xl p-6 text-center text-gray-400 dark:text-[#9A9DAE] border border-gray-100 dark:border-white/[0.07]">
               <Syringe size={32} className="mx-auto mb-2 opacity-30" />
               <p className="text-sm">No shots logged yet. Tap Add Shot to get started.</p>
             </div>

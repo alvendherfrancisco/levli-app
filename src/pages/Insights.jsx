@@ -72,15 +72,15 @@ export default function Insights() {
     : null;
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-950 min-h-screen w-full">
-      <div className="sticky top-0 z-30 bg-gray-50 dark:bg-gray-950 w-full flex items-center justify-between px-5 pt-6 pb-4">
+    <div className="bg-gray-50 dark:bg-background min-h-screen w-full">
+      <div className="sticky top-0 z-30 bg-gray-50 dark:bg-background w-full flex items-center justify-between px-5 pt-6 pb-4">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Insights</h1>
         <Link to="/settings"><Settings size={22} className="text-gray-600 dark:text-gray-400" /></Link>
       </div>
 
       <div className="max-w-3xl mx-auto">
         {/* Weight Change Panel */}
-        <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+        <div className="mx-4 mb-4 bg-white dark:bg-card rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-white/[0.07] overflow-hidden">
           <div className="flex items-center gap-2 mb-1">
             <TrendingDown size={18} className="text-blue-600" />
             <h3 className="font-bold text-gray-900 dark:text-white text-lg">Weight Change</h3>
@@ -139,7 +139,7 @@ export default function Insights() {
         </div>
 
         {/* Medication Levels Panel */}
-        <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
+        <div className="mx-4 mb-4 bg-white dark:bg-card rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-white/[0.07]">
           <div className="flex items-start justify-between mb-1">
             <div className="flex items-center gap-2">
               <Syringe size={18} className="text-blue-600" />

@@ -50,10 +50,10 @@ export default function SideEffectsModal({ open, onClose, dayKey }) {
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="relative bg-white rounded-t-3xl sm:rounded-3xl w-full sm:max-w-[520px] max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom sm:mx-4">
+      <div className="relative bg-white dark:bg-card rounded-t-3xl sm:rounded-3xl w-full sm:max-w-[520px] max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom sm:mx-4 dark:shadow-[0_-8px_40px_rgba(0,0,0,0.5)]">
         <div className="flex justify-center pt-3 pb-1"><div className="w-10 h-1 bg-gray-300 rounded-full" /></div>
         <div className="flex items-center justify-between px-5 pb-4">
-          <h2 className="text-xl font-bold">Side Effects</h2>
+          <h2 className="text-xl font-bold dark:text-[#E8E9F0]">Side Effects</h2>
           <button onClick={onClose}><X size={22} className="text-gray-400" /></button>
         </div>
         <div className="px-5 pb-4 space-y-4">
@@ -62,15 +62,15 @@ export default function SideEffectsModal({ open, onClose, dayKey }) {
             <label className="text-sm font-semibold text-gray-700 mb-2 block">Select Side Effect</label>
             <div className="relative">
               <button onClick={() => setShowDropdown(!showDropdown)}
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 flex items-center justify-between text-left">
-                <span className="text-base text-gray-600">{selectedEffect ? `${selectedEffect.emoji} ${selectedEffect.label}` : "Choose a side effect..."}</span>
+                className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] rounded-xl px-4 py-3 flex items-center justify-between text-left">
+                <span className="text-base text-gray-600 dark:text-[#9A9DAE]">{selectedEffect ? `${selectedEffect.emoji} ${selectedEffect.label}` : "Choose a side effect..."}</span>
                 <ChevronDown size={18} className="text-gray-400" />
               </button>
               {showDropdown && (
-                <div className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-xl shadow-lg max-h-48 overflow-y-auto">
+                <div className="absolute z-10 mt-1 w-full bg-white dark:bg-[#1e2130] border border-gray-200 dark:border-white/[0.08] rounded-xl shadow-lg max-h-48 overflow-y-auto">
                   {SIDE_EFFECT_OPTIONS.map((o) => (
                     <button key={o.label} onClick={() => { setSelectedEffect(o); setShowDropdown(false); }}
-                      className="w-full px-4 py-3 text-left text-sm hover:bg-gray-50 flex items-center gap-2">
+                      className="w-full px-4 py-3 text-left text-sm dark:text-[#E8E9F0] hover:bg-gray-50 dark:hover:bg-white/[0.05] flex items-center gap-2">
                       <span>{o.emoji}</span> {o.label}
                     </button>
                   ))}
@@ -85,7 +85,7 @@ export default function SideEffectsModal({ open, onClose, dayKey }) {
             <div className="flex gap-2">
               {SEVERITIES.map((s) => (
                 <button key={s} onClick={() => setSeverity(s)}
-                  className={`flex-1 py-2 rounded-xl text-sm font-medium border transition-colors ${severity === s ? "bg-blue-100 text-blue-700 border-blue-300" : "bg-white text-gray-500 border-gray-200"}`}>
+                  className={`flex-1 py-2 rounded-xl text-sm font-medium border transition-colors ${severity === s ? "bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-500/30" : "bg-white dark:bg-white/[0.05] text-gray-500 dark:text-[#9A9DAE] border-gray-200 dark:border-white/[0.1]"}`}>
                   {s}
                 </button>
               ))}
@@ -112,7 +112,7 @@ export default function SideEffectsModal({ open, onClose, dayKey }) {
             <label className="text-sm font-semibold text-gray-700 mb-2 block">Additional Notes</label>
             <textarea value={notes} onChange={(e) => setNotes(e.target.value)}
               placeholder="Any other observations..."
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm resize-none h-20 outline-none focus:border-blue-300" />
+              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-sm resize-none h-20 outline-none focus:border-blue-300" />
           </div>
         </div>
         <div className="px-5 pb-8 pt-2">

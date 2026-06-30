@@ -20,8 +20,8 @@ export default function Home() {
   const greeting = hour < 12 ? "Good Morning!" : hour < 18 ? "Good Afternoon!" : "Good Evening!";
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-950 min-h-screen w-full">
-      <div className="sticky top-0 z-30 bg-gray-50 dark:bg-gray-950 w-full flex items-center justify-between px-5 pt-6 pb-2">
+    <div className="bg-gray-50 dark:bg-background min-h-screen w-full">
+      <div className="sticky top-0 z-30 bg-gray-50 dark:bg-background w-full flex items-center justify-between px-5 pt-6 pb-2">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{greeting}</h1>
         <Link to="/settings"><Settings size={24} className="text-gray-600 dark:text-gray-400" /></Link>
       </div>
@@ -34,10 +34,10 @@ export default function Home() {
         {/* Side Effects card */}
         <button
           onClick={() => setShowSideEffects(true)}
-          className="mx-3 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 w-[calc(100%-1.5rem)] text-left"
+          className="mx-3 mb-4 bg-white dark:bg-card rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-white/[0.07] w-[calc(100%-1.5rem)] text-left"
         >
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-teal-100 dark:bg-teal-500/15 flex items-center justify-center" style={{boxShadow: "var(--dm, none)"}}>
               <Wind size={16} className="text-teal-500" />
             </div>
             <span className="font-semibold text-gray-700 dark:text-gray-300">Side effects</span>
@@ -53,10 +53,10 @@ export default function Home() {
         </button>
 
         {/* Medication Levels card */}
-        <div className="mx-3 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
+        <div className="mx-3 mb-4 bg-white dark:bg-card rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-white/[0.07]">
           <div className="flex items-start justify-between mb-2">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-500/15 flex items-center justify-center">
                 <Syringe size={16} className="text-blue-600" />
               </div>
               <div>
@@ -76,7 +76,8 @@ export default function Home() {
 
       <button
         onClick={() => setShowShot(true)}
-        className="fixed bottom-24 right-5 lg:right-8 bg-blue-600 text-white rounded-2xl shadow-lg shadow-blue-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-blue-700 transition-colors text-sm px-5 py-3"
+        className="fixed bottom-24 right-5 lg:right-8 bg-blue-600 dark:bg-blue-500 text-white rounded-2xl shadow-lg shadow-blue-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-blue-700 dark:hover:bg-blue-400 transition-colors text-sm px-5 py-3"
+      style={{ boxShadow: "0 4px 24px 4px rgba(59,130,246,0.35)" }}
       >
         <Plus size={18} /> Add Shot
       </button>

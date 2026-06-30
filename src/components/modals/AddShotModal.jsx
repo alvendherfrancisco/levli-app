@@ -120,12 +120,12 @@ export default function AddShotModal({ open, onClose, editingShot }) {
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="relative bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-3xl w-full sm:max-w-[520px] max-h-[92vh] overflow-y-auto animate-in slide-in-from-bottom sm:mx-4">
+      <div className="relative bg-white dark:bg-card rounded-t-3xl sm:rounded-3xl w-full sm:max-w-[520px] max-h-[92vh] overflow-y-auto animate-in slide-in-from-bottom sm:mx-4 dark:shadow-[0_-8px_40px_rgba(0,0,0,0.5)]">
         <div className="flex justify-center pt-3 pb-1">
           <div className="w-10 h-1 bg-gray-300 rounded-full" />
         </div>
         <div className="flex items-center justify-between px-5 pb-4">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white">{editingShot ? "Edit Shot Log" : "Add Shot Log"}</h2>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-[#E8E9F0]">{editingShot ? "Edit Shot Log" : "Add Shot Log"}</h2>
           <div className="flex items-center gap-3">
             {editingShot && (
               <button onClick={handleDelete}><Trash2 size={20} className="text-red-400" /></button>
@@ -142,9 +142,9 @@ export default function AddShotModal({ open, onClose, editingShot }) {
             <label className="text-sm font-semibold text-gray-700 mb-2 block">Date & Time</label>
             <div className="flex gap-3">
               <input type="date" value={date} onChange={(e) => setDate(e.target.value)}
-                className="flex-1 border border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-xl px-4 py-3 text-base outline-none focus:border-blue-300" />
+                className="flex-1 border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-blue-300" />
               <input type="time" value={time} onChange={(e) => setTime(e.target.value)}
-                className="flex-1 border border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-xl px-4 py-3 text-base outline-none focus:border-blue-300" />
+                className="flex-1 border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-blue-300" />
             </div>
           </div>
 
@@ -153,15 +153,15 @@ export default function AddShotModal({ open, onClose, editingShot }) {
             <label className="text-sm font-semibold text-gray-700 mb-2 block">Medication</label>
             <div className="relative">
               <button onClick={() => { setShowMedDropdown(!showMedDropdown); setShowSiteDropdown(false); }}
-                className="w-full border border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-xl px-4 py-3 flex items-center justify-between text-left">
+                className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 flex items-center justify-between text-left">
                 <span className="text-base">{medication}</span>
                 <ChevronDown size={18} className="text-gray-400" />
               </button>
               {showMedDropdown && (
-                <div className="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg">
+                <div className="absolute z-10 mt-1 w-full bg-white dark:bg-[#1e2130] border border-gray-200 dark:border-white/[0.08] rounded-xl shadow-lg">
                   {medications.map((m) => (
                     <button key={m} onClick={() => { setMedication(m); setShowMedDropdown(false); }}
-                      className={`w-full px-4 py-3 text-left text-sm dark:text-gray-300 ${medication === m ? "bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-300 font-medium" : "hover:bg-gray-50 dark:hover:bg-gray-700"}`}>
+                      className={`w-full px-4 py-3 text-left text-sm dark:text-[#E8E9F0] ${medication === m ? "bg-blue-50 dark:bg-blue-500/20 text-blue-600 dark:text-blue-300 font-medium" : "hover:bg-gray-50 dark:hover:bg-white/[0.05]"}`}>
                       {m}
                     </button>
                   ))}
@@ -173,9 +173,9 @@ export default function AddShotModal({ open, onClose, editingShot }) {
           {/* Dose */}
           <div>
             <label className="text-sm font-semibold text-gray-700 mb-1 block">Dose (mg)</label>
-            <div className="border border-gray-200 dark:border-gray-700 dark:bg-gray-800 rounded-xl px-4 py-3 flex items-center">
+            <div className="border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] rounded-xl px-4 py-3 flex items-center">
               <input type="number" value={dose} min="0.1" max="100" step="0.25"
-                onChange={(e) => setDose(e.target.value)} className="flex-1 outline-none text-base bg-transparent dark:text-white" />
+                onChange={(e) => setDose(e.target.value)} className="flex-1 outline-none text-base bg-transparent dark:text-[#E8E9F0]" />
               <span className="text-gray-400 text-sm">mg</span>
             </div>
           </div>
@@ -193,7 +193,7 @@ export default function AddShotModal({ open, onClose, editingShot }) {
             </div>
             <div className="relative">
               <button onClick={() => { setShowSiteDropdown(!showSiteDropdown); setShowMedDropdown(false); }}
-                className="w-full border border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-xl px-4 py-3 flex items-center justify-between text-left">
+                className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 flex items-center justify-between text-left">
                 <div className="flex items-center gap-2">
                   <Star size={16} className="text-amber-400" />
                   <span className="text-base font-semibold">{site}</span>
@@ -201,10 +201,10 @@ export default function AddShotModal({ open, onClose, editingShot }) {
                 <ChevronDown size={18} className="text-gray-400" />
               </button>
               {showSiteDropdown && (
-                <div className="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg max-h-48 overflow-y-auto">
+                <div className="absolute z-10 mt-1 w-full bg-white dark:bg-[#1e2130] border border-gray-200 dark:border-white/[0.08] rounded-xl shadow-lg max-h-48 overflow-y-auto">
                   {injectionSites.map((s) => (
                     <button key={s} onClick={() => { setSite(s); setShowSiteDropdown(false); }}
-                      className={`w-full px-4 py-3 text-left text-sm dark:text-gray-300 ${site === s ? "bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-300 font-medium" : "hover:bg-gray-50 dark:hover:bg-gray-700"}`}>
+                      className={`w-full px-4 py-3 text-left text-sm dark:text-[#E8E9F0] ${site === s ? "bg-blue-50 dark:bg-blue-500/20 text-blue-600 dark:text-blue-300 font-medium" : "hover:bg-gray-50 dark:hover:bg-white/[0.05]"}`}>
                       {s}
                     </button>
                   ))}
@@ -229,7 +229,7 @@ export default function AddShotModal({ open, onClose, editingShot }) {
             <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">Notes (Optional)</label>
             <textarea value={notes} onChange={(e) => setNotes(e.target.value)}
               placeholder="Add any notes or side effects experienced"
-              className="w-full border border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-xl px-4 py-3 text-sm resize-none h-24 outline-none focus:border-blue-300" />
+              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-sm resize-none h-24 outline-none focus:border-blue-300" />
           </div>
         </div>
 

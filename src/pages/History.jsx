@@ -54,15 +54,15 @@ export default function History() {
   const openNew = () => { setEditingShot(null); setShowShot(true); };
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-950 min-h-screen w-full">
-      <div className="sticky top-0 z-30 bg-gray-50 dark:bg-gray-950 w-full flex items-center justify-between px-5 pt-6 pb-4">
+    <div className="bg-gray-50 dark:bg-background min-h-screen w-full">
+      <div className="sticky top-0 z-30 bg-gray-50 dark:bg-background w-full flex items-center justify-between px-5 pt-6 pb-4">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">History</h1>
         <Link to="/settings"><Settings size={22} className="text-gray-600 dark:text-gray-400" /></Link>
       </div>
 
       <div className="max-w-3xl mx-auto">
         {/* Calendar */}
-        <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
+        <div className="mx-4 mb-4 bg-white dark:bg-card rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-white/[0.07]">
           <div className="flex items-center justify-between mb-4">
             <button onClick={prevMonth}><ChevronLeft size={22} className="text-blue-500" /></button>
             <h2 className="text-lg font-bold text-gray-900 dark:text-white">{monthNames[month]} {year}</h2>
@@ -108,7 +108,7 @@ export default function History() {
         )}
         {selectedDay && selectedShots.length === 0 && (
           <div className="px-4 mb-4">
-            <div className="bg-white dark:bg-gray-900 rounded-xl p-4 text-center border border-gray-100 dark:border-gray-800 text-gray-400 dark:text-gray-500 text-sm">
+            <div className="bg-white dark:bg-card rounded-xl p-4 text-center border border-gray-100 dark:border-white/[0.07] text-gray-400 dark:text-[#9A9DAE] text-sm">
               No shots logged for {monthNames[month]} {selectedDay}
             </div>
           </div>
@@ -117,7 +117,7 @@ export default function History() {
         {/* Side Effects for selected day */}
         {selectedDayKey && (
           <button onClick={() => setShowSideEffects(true)}
-            className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 w-[calc(100%-2rem)] text-left">
+            className="mx-4 mb-4 bg-white dark:bg-card rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-white/[0.07] w-[calc(100%-2rem)] text-left">
             <div className="flex items-center gap-2 mb-2">
               <div className="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center">
                 <Wind size={16} className="text-teal-500" />
