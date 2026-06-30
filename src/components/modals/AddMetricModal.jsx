@@ -19,7 +19,7 @@ function ExerciseModal({ open, onClose, value, onSave, onDelete }) {
   if (!open) return null;
   return (
     <ModalShell onClose={onClose}>
-      <div className="relative bg-white dark:bg-card rounded-3xl w-full max-w-sm p-6 shadow-2xl dark:shadow-[0_8px_40px_rgba(0,0,0,0.6)] border border-transparent dark:border-white/[0.07]">
+      <div className="relative bg-white dark:bg-[#0f1117] rounded-3xl w-full max-w-sm p-6 shadow-2xl dark:shadow-[0_8px_40px_rgba(0,0,0,0.6)] border border-transparent dark:border-white/[0.07]">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-[#E8E9F0] mb-4">Update Exercise</h2>
         <label className="text-sm text-gray-400 dark:text-[#9A9DAE] mb-2 block">Duration</label>
         <div className="flex items-center border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] rounded-xl px-4 py-3 mb-6">
@@ -68,7 +68,7 @@ function ProgressModal({ open, onClose, value, onSave, onDelete }) {
 
   return (
     <ModalShell onClose={onClose} bottom>
-      <div className="relative bg-white dark:bg-card rounded-t-3xl w-full max-w-lg max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom dark:shadow-[0_-8px_40px_rgba(0,0,0,0.5)] dark:border-t dark:border-white/[0.07]">
+      <div className="relative bg-white dark:bg-[#0f1117] rounded-t-3xl w-full max-w-lg max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom dark:shadow-[0_-8px_40px_rgba(0,0,0,0.5)] dark:border-t dark:border-white/[0.07]">
         <div className="flex items-center justify-between px-5 pt-5 pb-4">
           <h2 className="text-xl font-bold text-gray-900 dark:text-[#E8E9F0]">{hasExisting ? "Edit Progress Picture" : "Add Progress Picture"}</h2>
           <button onClick={onClose}><X size={22} className="text-gray-400" /></button>
@@ -128,7 +128,7 @@ function GenericMetricModal({ open, onClose, label, unit, value, onSave }) {
   if (!open) return null;
   return (
     <ModalShell onClose={onClose}>
-      <div className="relative bg-white dark:bg-card rounded-3xl w-full max-w-sm p-6 shadow-2xl dark:shadow-[0_8px_40px_rgba(0,0,0,0.6)] border border-transparent dark:border-white/[0.07]">
+      <div className="relative bg-white dark:bg-[#0f1117] rounded-3xl w-full max-w-sm p-6 shadow-2xl dark:shadow-[0_8px_40px_rgba(0,0,0,0.6)] border border-transparent dark:border-white/[0.07]">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-[#E8E9F0] mb-4">Update {label}</h2>
         <label className="text-sm text-gray-400 dark:text-[#9A9DAE] mb-2 block">{label}</label>
         <div className="flex items-center border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] rounded-xl px-4 py-3 mb-6">
