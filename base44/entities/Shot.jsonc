@@ -1,0 +1,37 @@
+{
+  "type": "object",
+  "properties": {
+    "medication": {
+      "type": "string"
+    },
+    "dose": {
+      "type": "number"
+    },
+    "drug_class": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string"
+    },
+    "time": {
+      "type": "string"
+    },
+    "site": {
+      "type": "string"
+    },
+    "pain": {
+      "type": "number"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "medication",
+    "dose",
+    "date",
+    "time",
+    "site"
+  ],
+  "name": "Shot"
+}

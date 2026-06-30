@@ -1,30 +1,75 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Settings, TrendingDown, Syringe, HelpCircle, ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { useAppState } from "@/lib/AppState";
+import { parseShotDate, fromDayKey } from "@/lib/dateUtils";
 
-const weightData = [
-  { date: "Feb", weight: 210 },
-  { date: "Mar", weight: 207 },
-  { date: "Apr", weight: 200 },
-  { date: "May", weight: 195 },
-  { date: "Jun", weight: 185 },
-  { date: "Jul", weight: 183 },
-  { date: "Aug", weight: 180 },
-];
+// Half-lives in days per drug class
+const HALF_LIFE = { Semaglutide: 7, Tirzepatide: 5, Liraglutide: 1, Retatrutide: 6, "GLP-1": 7 };
 
-const medData = [
-  { day: "5/6", level: 0.5 }, { day: "", level: 2.5 }, { day: "5/10", level: 1.8 },
-  { day: "", level: 3.8 }, { day: "5/14", level: 3.2 }, { day: "", level: 2.0 },
-  { day: "5/18", level: 3.5 }, { day: "", level: 3.8 }, { day: "5/22", level: 2.2 },
-  { day: "", level: 3.9 }, { day: "5/26", level: 3.6 }, { day: "", level: 3.0 },
-  { day: "5/31", level: 3.2 }, { day: "", level: 2.8 }, { day: "6/4", level: 2.5 },
-];
+function buildMedLevelData(shots, days) {
+  if (!shots.length) return [];
+  const now = new Date(); now.setHours(0,0,0,0);
+  const points = [];
+  for (let i = days; i >= 0; i--) {
+    const t = new Date(now); t.setDate(t.getDate() - i);
+    let level = 0;
+    shots.forEach((s) => {
+      const sd = parseShotDate(s.date);
+      if (!sd) return;
+      const halfLife = HALF_LIFE[s.drug_class || s.drugClass] || 7;
+      const daysSince = (t - sd) / 86400000;
+      if (daysSince >= 0 && daysSince < halfLife * 7) {
+        level += (s.dose || 0) * Math.pow(0.5, daysSince / halfLife);
+      }
+    });
+    const mNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    points.push({ day: `${mNames[t.getMonth()]} ${t.getDate()}`, level: Math.round(level * 100) / 100 });
+  }
+  return points;
+}
+
+function buildWeightData(weightHistory, daysBack) {
+  if (!weightHistory.length) return [];
+  const now = new Date(); now.setHours(0,0,0,0);
+  const cutoff = new Date(now); cutoff.setDate(cutoff.getDate() - daysBack);
+  return weightHistory
+    .filter(({ date }) => new Date(date) >= cutoff)
+    .map(({ date, weight }) => {
+      const d = new Date(date);
+      const mNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+      return { date: `${mNames[d.getMonth()]} ${d.getDate()}`, weight };
+    });
+}
+
+const WEIGHT_RANGES = { "30 Days": 30, "180 Days": 180, "1 Year": 365 };
+const MED_RANGES = { "7 Days": 7, "30 Days": 30, "90 Days": 90 };
 
 export default function Insights() {
+  const { shots, weightHistory, profile } = useAppState();
   const [weightRange, setWeightRange] = useState("180 Days");
   const [medRange, setMedRange] = useState("30 Days");
-  const [showShotsToggle, setShowShotsToggle] = useState(false);
+  const weightUnit = profile?.weight_unit || "lb";
+
+  const medData = useMemo(() => buildMedLevelData(shots, MED_RANGES[medRange]), [shots, medRange]);
+  const weightData = useMemo(() => buildWeightData(weightHistory, WEIGHT_RANGES[weightRange]), [weightHistory, weightRange]);
+
+  // Weight stats
+  const weightLoss = weightData.length >= 2 ? weightData[0].weight - weightData[weightData.length - 1].weight : null;
+  const weeksCovered = weightData.length >= 2
+    ? Math.max(1, WEIGHT_RANGES[weightRange] / 7)
+    : 1;
+  const ratePerWeek = weightLoss != null ? (weightLoss / weeksCovered).toFixed(1) : null;
+
+  // BMI: weight in lbs, height in ft/in
+  const latestWeight = weightHistory.length ? weightHistory[weightHistory.length - 1].weight : null;
+  const heightFt = parseFloat(profile?.height_ft || 5);
+  const heightIn = parseFloat(profile?.height_in || 8);
+  const totalInches = heightFt * 12 + heightIn;
+  const bmi = latestWeight && totalInches > 0
+    ? ((latestWeight / (totalInches * totalInches)) * 703).toFixed(1)
+    : null;
 
   return (
     <div className="bg-gray-50 min-h-screen w-full">
@@ -34,128 +79,111 @@ export default function Insights() {
       </div>
 
       <div className="max-w-3xl mx-auto">
-      {/* Weight Change Panel */}
-      <div className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-sm border border-gray-100 overflow-hidden">
-        <div className="flex items-center gap-2 mb-1">
-          <TrendingDown size={18} className="text-blue-600" />
-          <h3 className="font-bold text-gray-900 text-lg">Weight Change</h3>
-        </div>
-        <div className="border-b-2 border-blue-500 w-12 mb-3" />
-
-        {/* Range tabs */}
-        <div className="flex items-center gap-1 mb-3 w-full box-border flex-nowrap">
-          {["30 Days", "180 Days", "1 Year"].map((r) => (
-            <button
-              key={r}
-              onClick={() => setWeightRange(r)}
-              className={`px-2 py-1.5 rounded-lg text-xs font-medium transition-colors flex-shrink-0 ${
-                weightRange === r ? "bg-gray-100 text-gray-900 border border-gray-200" : "text-gray-400"
-              }`}
-            >
-              {r}
-            </button>
-          ))}
-          <div className="flex-1" />
-          <button
-            onClick={() => setShowShotsToggle(!showShotsToggle)}
-            className={`px-2 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1 border flex-shrink-0 whitespace-nowrap ${
-              showShotsToggle ? "bg-blue-50 border-blue-200 text-blue-600" : "border-gray-200 text-gray-400"
-            }`}
-          >
-            <Syringe size={12} /> Shots
-          </button>
-        </div>
-
-        {/* Date range navigation */}
-        <div className="flex items-center justify-between gap-1 mb-3 flex-nowrap">
-          <button className="p-1 rounded bg-gray-100 flex-shrink-0"><ChevronLeft size={16} className="text-gray-500" /></button>
-          <span className="flex-1 text-center text-xs text-gray-500 italic whitespace-nowrap overflow-hidden text-ellipsis px-1">Jan 20, 2025 – Jul 19, 2025</span>
-          <button className="p-1 rounded bg-gray-100 flex-shrink-0"><ChevronRight size={16} className="text-gray-500" /></button>
-          <button className="px-2 py-1 rounded text-xs text-blue-600 font-medium flex items-center gap-1 border border-blue-200 flex-shrink-0 whitespace-nowrap">
-            <RotateCcw size={12} /> Reset
-          </button>
-        </div>
-
-        {/* Summary chips */}
-        <div className="flex flex-row gap-2 mb-4">
-          <div className="bg-green-50 rounded-xl p-2.5 text-center flex-1 min-w-0 overflow-hidden">
-            <TrendingDown size={14} className="text-green-500 mx-auto mb-1" />
-            <p className="text-gray-500 truncate" style={{ fontSize: "clamp(9px, 2.5vw, 12px)" }}>Weight Loss</p>
-            <p className="font-bold text-green-600 truncate" style={{ fontSize: "clamp(11px, 2.5vw, 14px)" }}>-38.0 lbs</p>
+        {/* Weight Change Panel */}
+        <div className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-sm border border-gray-100 overflow-hidden">
+          <div className="flex items-center gap-2 mb-1">
+            <TrendingDown size={18} className="text-blue-600" />
+            <h3 className="font-bold text-gray-900 text-lg">Weight Change</h3>
           </div>
-          <div className="bg-blue-50 rounded-xl p-2.5 text-center flex-1 min-w-0 overflow-hidden">
-            <span className="text-blue-500 text-sm">⚡</span>
-            <p className="text-gray-500 truncate" style={{ fontSize: "clamp(9px, 2.5vw, 12px)" }}>Rate/Week</p>
-            <p className="font-bold text-blue-600 truncate" style={{ fontSize: "clamp(11px, 2.5vw, 14px)" }}>-3.1 lbs</p>
-          </div>
-          <div className="bg-orange-50 rounded-xl p-2.5 text-center flex-1 min-w-0 overflow-hidden">
-            <span className="text-orange-500 text-sm">📊</span>
-            <p className="text-gray-500 truncate" style={{ fontSize: "clamp(9px, 2.5vw, 12px)" }}>Current BMI</p>
-            <p className="font-bold text-orange-600 truncate" style={{ fontSize: "clamp(11px, 2.5vw, 14px)" }}>25.4</p>
-          </div>
-        </div>
+          <div className="border-b-2 border-blue-500 w-12 mb-3" />
 
-        {/* Weight Chart */}
-        <div className="h-48">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={weightData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-              <XAxis dataKey="date" tick={{ fontSize: 11 }} stroke="#ccc" />
-              <YAxis domain={[175, 215]} tick={{ fontSize: 11 }} stroke="#ccc" />
-              <Tooltip />
-              <Line type="monotone" dataKey="weight" stroke="#3B6FE0" strokeWidth={2} dot={{ fill: "#3B6FE0", r: 4 }} />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
+          <div className="flex items-center gap-1 mb-3 flex-wrap">
+            {Object.keys(WEIGHT_RANGES).map((r) => (
+              <button key={r} onClick={() => setWeightRange(r)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                  weightRange === r ? "bg-gray-100 text-gray-900 border border-gray-200" : "text-gray-400"
+                }`}>{r}</button>
+            ))}
+          </div>
 
-      {/* Medication Levels Panel */}
-      <div className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-        <div className="flex items-start justify-between mb-1">
-          <div className="flex items-center gap-2">
-            <Syringe size={18} className="text-blue-600" />
-            <div>
-              <h3 className="font-bold text-gray-900 text-lg">Medication Levels</h3>
-              <p className="text-xs text-blue-500">Estimated medication levels in your system over time.</p>
+          {/* Summary chips */}
+          <div className="flex flex-row gap-2 mb-4">
+            <div className="bg-green-50 rounded-xl p-2.5 text-center flex-1 min-w-0">
+              <TrendingDown size={14} className="text-green-500 mx-auto mb-1" />
+              <p className="text-gray-500 text-[11px]">Weight Loss</p>
+              <p className="font-bold text-green-600 text-sm">
+                {weightLoss != null ? `${weightLoss >= 0 ? "-" : "+"}${Math.abs(weightLoss).toFixed(1)} ${weightUnit}` : "—"}
+              </p>
+            </div>
+            <div className="bg-blue-50 rounded-xl p-2.5 text-center flex-1 min-w-0">
+              <span className="text-blue-500 text-sm">⚡</span>
+              <p className="text-gray-500 text-[11px]">Rate/Week</p>
+              <p className="font-bold text-blue-600 text-sm">
+                {ratePerWeek != null ? `${parseFloat(ratePerWeek) >= 0 ? "-" : "+"}${Math.abs(parseFloat(ratePerWeek)).toFixed(1)} ${weightUnit}` : "—"}
+              </p>
+            </div>
+            <div className="bg-orange-50 rounded-xl p-2.5 text-center flex-1 min-w-0">
+              <span className="text-orange-500 text-sm">📊</span>
+              <p className="text-gray-500 text-[11px]">Current BMI</p>
+              <p className="font-bold text-orange-600 text-sm">{bmi || "—"}</p>
             </div>
           </div>
-          <HelpCircle size={18} className="text-blue-400" />
-        </div>
-        <div className="border-b-2 border-blue-500 w-12 mb-3" />
 
-        {/* Range tabs */}
-        <div className="flex items-center gap-2 mb-4">
-          {["7 Days", "30 Days", "90 Days"].map((r) => (
-            <button
-              key={r}
-              onClick={() => setMedRange(r)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                medRange === r ? "bg-gray-100 text-gray-900 border border-gray-200" : "text-gray-400"
-              }`}
-            >
-              {r}
-            </button>
-          ))}
+          {weightData.length >= 2 ? (
+            <div className="h-48">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={weightData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                  <XAxis dataKey="date" tick={{ fontSize: 10 }} stroke="#ccc" interval="preserveStartEnd" />
+                  <YAxis tick={{ fontSize: 10 }} stroke="#ccc" domain={["auto", "auto"]} />
+                  <Tooltip formatter={(v) => [`${v} ${weightUnit}`, "Weight"]} />
+                  <Line type="monotone" dataKey="weight" stroke="#3B6FE0" strokeWidth={2} dot={{ fill: "#3B6FE0", r: 3 }} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <div className="h-48 flex items-center justify-center bg-gray-50 rounded-xl">
+              <p className="text-sm text-gray-400">Log your weight in the Home tab to see trends here.</p>
+            </div>
+          )}
         </div>
 
-        {/* Med levels chart */}
-        <div className="h-48">
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={medData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-              <XAxis dataKey="day" tick={{ fontSize: 10 }} stroke="#ccc" />
-              <YAxis domain={[0, 4.5]} tick={{ fontSize: 10 }} stroke="#ccc" />
-              <Tooltip />
-              <Area type="monotone" dataKey="level" stroke="#3B6FE0" fill="#3B6FE0" fillOpacity={0.1} strokeWidth={2} />
-            </AreaChart>
-          </ResponsiveContainer>
+        {/* Medication Levels Panel */}
+        <div className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+          <div className="flex items-start justify-between mb-1">
+            <div className="flex items-center gap-2">
+              <Syringe size={18} className="text-blue-600" />
+              <div>
+                <h3 className="font-bold text-gray-900 text-lg">Medication Levels</h3>
+                <p className="text-xs text-blue-500">Estimated concentration using pharmacokinetic decay model.</p>
+              </div>
+            </div>
+            <HelpCircle size={18} className="text-blue-400" />
+          </div>
+          <div className="border-b-2 border-blue-500 w-12 mb-3" />
+
+          <div className="flex items-center gap-2 mb-4">
+            {Object.keys(MED_RANGES).map((r) => (
+              <button key={r} onClick={() => setMedRange(r)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                  medRange === r ? "bg-gray-100 text-gray-900 border border-gray-200" : "text-gray-400"
+                }`}>{r}</button>
+            ))}
+          </div>
+
+          {shots.length > 0 ? (
+            <div className="h-48">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={medData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                  <XAxis dataKey="day" tick={{ fontSize: 10 }} stroke="#ccc" interval={Math.floor(medData.length / 5)} />
+                  <YAxis tick={{ fontSize: 10 }} stroke="#ccc" />
+                  <Tooltip formatter={(v) => [`${v} mg`, "Concentration"]} />
+                  <Area type="monotone" dataKey="level" stroke="#3B6FE0" fill="#3B6FE0" fillOpacity={0.1} strokeWidth={2} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <div className="h-48 flex items-center justify-center bg-gray-50 rounded-xl">
+              <p className="text-sm text-gray-400">Log your first shot to see medication levels here.</p>
+            </div>
+          )}
+          <p className="text-xs text-gray-400 text-center mt-2">Time vs Concentration (mg)</p>
+          <div className="flex items-center justify-center gap-1.5 mt-1">
+            <div className="w-4 h-0.5 bg-blue-600 rounded" />
+            <span className="text-xs text-gray-500">{shots[0]?.drug_class || "GLP-1"}</span>
+          </div>
         </div>
-        <p className="text-xs text-gray-400 text-center mt-2">Time vs Concentration (mg)</p>
-        <div className="flex items-center justify-center gap-1.5 mt-1">
-          <div className="w-4 h-0.5 bg-blue-600 rounded" />
-          <span className="text-xs text-gray-500">Semaglutide</span>
-        </div>
-      </div>
       </div>
     </div>
   );

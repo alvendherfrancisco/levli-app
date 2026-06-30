@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { X, Camera, Image, Trash2, Save } from "lucide-react";
 
 // Exercise modal - centered dialog style
@@ -106,7 +106,8 @@ function ProgressModal({ open, onClose, value, onSave, onDelete }) {
 
 // Generic fallback modal for Weight etc.
 function GenericMetricModal({ open, onClose, label, unit, value, onSave }) {
-  const [val, setVal] = useState(value && value !== "–" ? value : "");
+  const [val, setVal] = useState("");
+  useEffect(() => { if (open) setVal(value && value !== "–" ? String(value) : ""); }, [open]);
 
   if (!open) return null;
 
@@ -129,7 +130,7 @@ function GenericMetricModal({ open, onClose, label, unit, value, onSave }) {
         </div>
         <div className="flex items-center justify-end gap-6">
           <button onClick={onClose} className="text-red-500 font-semibold text-base">Cancel</button>
-          <button onClick={() => { onSave(val); onClose(); }} className="text-blue-600 font-semibold text-base">Save</button>
+          <button onClick={() => { if (val && parseFloat(val) >= 0) { onSave(val); onClose(); } }} className="text-blue-600 font-semibold text-base">Save</button>
         </div>
       </div>
     </div>

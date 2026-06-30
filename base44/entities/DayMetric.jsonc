@@ -1,0 +1,40 @@
+{
+  "type": "object",
+  "properties": {
+    "day_key": {
+      "type": "string",
+      "description": "YYYY-MM-DD"
+    },
+    "weight": {
+      "type": "number"
+    },
+    "calories": {
+      "type": "number"
+    },
+    "protein": {
+      "type": "number"
+    },
+    "water": {
+      "type": "number"
+    },
+    "fiber": {
+      "type": "number"
+    },
+    "carbs": {
+      "type": "number"
+    },
+    "exercise_min": {
+      "type": "number"
+    },
+    "progress_photo": {
+      "type": "string"
+    },
+    "side_effects": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "day_key"
+  ],
+  "name": "DayMetric"
+}

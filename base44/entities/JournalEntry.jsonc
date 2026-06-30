@@ -1,0 +1,28 @@
+{
+  "type": "object",
+  "properties": {
+    "text": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string"
+    },
+    "time": {
+      "type": "string"
+    },
+    "mood": {
+      "type": "string"
+    },
+    "mood_color": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "text",
+    "date"
+  ],
+  "name": "JournalEntry"
+}

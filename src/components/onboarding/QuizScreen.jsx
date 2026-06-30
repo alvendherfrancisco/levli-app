@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 
-export default function QuizScreen({ question, subtitle, options, multiSelect, preSelected }) {
+export default function QuizScreen({ question, subtitle, options, multiSelect, preSelected, onAnswerChange }) {
   const [selected, setSelected] = useState(preSelected || []);
 
   const toggle = (opt) => {
+    let next;
     if (multiSelect) {
-      setSelected((prev) =>
-        prev.includes(opt) ? prev.filter((o) => o !== opt) : [...prev, opt]
-      );
+      next = selected.includes(opt) ? selected.filter((o) => o !== opt) : [...selected, opt];
     } else {
-      setSelected([opt]);
+      next = [opt];
     }
+    setSelected(next);
+    if (onAnswerChange) onAnswerChange(next);
   };
 
   return (

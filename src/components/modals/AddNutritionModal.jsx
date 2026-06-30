@@ -1,29 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { X, RotateCcw, Save } from "lucide-react";
-
 import { useAppState } from "@/lib/AppState";
+import { todayKey } from "@/lib/dateUtils";
 
 const EMPTY = { calories: "0.0", protein: "0.0", water: "0.0", fiber: "0.0", carbs: "0.0" };
-const fields = [
-  { key: "calories", label: "Calories", unit: "kcal" },
-  { key: "protein", label: "Protein", unit: "g" },
-  { key: "water", label: "Water", unit: "oz" },
-  { key: "fiber", label: "Fiber", unit: "g" },
-  { key: "carbs", label: "Carbohydrates", unit: "g" },
-];
 
-export default function AddNutritionModal({ open, onClose }) {
-  const { nutrition, setNutrition } = useAppState();
-  const [values, setValues] = useState({ ...nutrition });
+export default function AddNutritionModal({ open, onClose, dayKey }) {
+  const dk = dayKey || todayKey();
+  const { getNutrition, saveNutrition, profile } = useAppState();
+  const liquidUnit = profile?.liquid_unit || "oz";
+
+  const fields = [
+    { key: "calories", label: "Calories", unit: "kcal" },
+    { key: "protein", label: "Protein", unit: "g" },
+    { key: "water", label: "Water", unit: liquidUnit },
+    { key: "fiber", label: "Fiber", unit: "g" },
+    { key: "carbs", label: "Carbohydrates", unit: "g" },
+  ];
+
+  const [values, setValues] = useState({ ...EMPTY });
+
+  useEffect(() => {
+    if (open) setValues(getNutrition(dk));
+  }, [open, dk]);
 
   if (!open) return null;
 
   const handleSave = () => {
-    setNutrition(values);
+    saveNutrition(dk, values);
     onClose();
   };
-
-  const handleReset = () => setValues({ ...EMPTY });
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
@@ -41,7 +47,7 @@ export default function AddNutritionModal({ open, onClose }) {
             <div key={f.key}>
               <label className="text-sm font-semibold text-gray-700 mb-1 block">{f.label}</label>
               <div className="flex items-center border border-gray-200 rounded-xl px-4 py-3">
-                <input type="number" value={values[f.key]}
+                <input type="number" min="0" value={values[f.key]}
                   onChange={(e) => setValues({ ...values, [f.key]: e.target.value })}
                   className="flex-1 outline-none text-base" />
                 <span className="text-gray-400 text-sm ml-2">{f.unit}</span>
@@ -50,7 +56,7 @@ export default function AddNutritionModal({ open, onClose }) {
           ))}
         </div>
         <div className="flex gap-3 px-5 pb-8 pt-2">
-          <button onClick={handleReset} className="flex-1 py-3.5 bg-gray-100 text-gray-600 rounded-xl font-semibold flex items-center justify-center gap-2">
+          <button onClick={() => setValues({ ...EMPTY })} className="flex-1 py-3.5 bg-gray-100 text-gray-600 rounded-xl font-semibold flex items-center justify-center gap-2">
             <RotateCcw size={16} /> Reset
           </button>
           <button onClick={handleSave} className="flex-1 py-3.5 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2">

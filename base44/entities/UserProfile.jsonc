@@ -1,0 +1,36 @@
+{
+  "type": "object",
+  "properties": {
+    "height_ft": {
+      "type": "string"
+    },
+    "height_in": {
+      "type": "string"
+    },
+    "goal_weight": {
+      "type": "string"
+    },
+    "days_between": {
+      "type": "string"
+    },
+    "liquid_unit": {
+      "type": "string"
+    },
+    "height_unit": {
+      "type": "string"
+    },
+    "weight_unit": {
+      "type": "string"
+    },
+    "default_medication": {
+      "type": "string"
+    },
+    "notifications_enabled": {
+      "type": "boolean"
+    },
+    "dark_mode": {
+      "type": "boolean"
+    }
+  },
+  "name": "UserProfile"
+}

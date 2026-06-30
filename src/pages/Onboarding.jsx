@@ -4,16 +4,36 @@ import OnboardingScreen from "@/components/onboarding/OnboardingScreen";
 import PhoneMockup from "@/components/onboarding/PhoneMockup";
 import QuizScreen from "@/components/onboarding/QuizScreen";
 import { Bell, Droplets } from "lucide-react";
+import { useAppState } from "@/lib/AppState";
 
 const TOTAL_STEPS = 14;
 
 export default function Onboarding() {
   const [step, setStep] = useState(0);
   const navigate = useNavigate();
+  const { setProfile, profile } = useAppState();
+  const [quizAnswers, setQuizAnswers] = useState({});
 
-  const next = () => {
-    if (step < TOTAL_STEPS - 1) setStep(step + 1);
-    else {
+  const handleQuizAnswer = (questionKey, answers) => {
+    setQuizAnswers((prev) => ({ ...prev, [questionKey]: answers }));
+  };
+
+  const next = async () => {
+    if (step < TOTAL_STEPS - 1) {
+      setStep(step + 1);
+    } else {
+      // Save onboarding answers to profile
+      const medAnswers = quizAnswers["medication"] || [];
+      let defaultMed = "Ozempic®";
+      if (medAnswers.some(a => a.includes("Tirzepatide"))) defaultMed = "Zepbound®";
+      else if (medAnswers.some(a => a.includes("Semaglutide"))) defaultMed = "Ozempic®";
+
+      const freqAnswers = quizAnswers["frequency"] || [];
+      let daysBetween = "7";
+      if (freqAnswers.some(a => a.includes("two weeks"))) daysBetween = "14";
+      else if (freqAnswers.some(a => a.includes("monthly"))) daysBetween = "30";
+
+      await setProfile({ ...profile, default_medication: defaultMed, days_between: daysBetween });
       localStorage.setItem("onboarding_complete", "true");
       navigate("/");
     }
@@ -73,6 +93,7 @@ export default function Onboarding() {
             "Retatrutide (Clinical trial)",
             "Considering starting GLP-1 therapy",
           ]}
+          onAnswerChange={(answers) => handleQuizAnswer("medication", answers)}
         />
       )}
       {step === 12 && (
@@ -88,6 +109,7 @@ export default function Onboarding() {
             "Currently dose escalating",
             "Irregular schedule due to side effects",
           ]}
+          onAnswerChange={(answers) => handleQuizAnswer("frequency", answers)}
         />
       )}
       {step === 13 && <FinalStep />}

@@ -1,150 +1,122 @@
-import React, { useState } from "react";
-import { X, Save, ChevronDown, Plus } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { X, Save, ChevronDown } from "lucide-react";
 import { useAppState } from "@/lib/AppState";
+import { todayKey } from "@/lib/dateUtils";
 
-const SIDE_EFFECTS = [
-  { emoji: "🤢", label: "Nausea" },
-  { emoji: "🔥", label: "Heartburn" },
-  { emoji: "🍽️", label: "Food Noise" },
-  { emoji: "💥", label: "Migraine" },
-  { emoji: "🚽", label: "Constipation" },
-  { emoji: "💩", label: "Diarrhea" },
-  { emoji: "💨", label: "Belching" },
-  { emoji: "💉", label: "Injection Site Reaction" },
-  { emoji: "😠", label: "Mood Swings" },
-  { emoji: "🤢", label: "Indigestion" },
-  { emoji: "🦷", label: "Metallic Taste" },
-  { emoji: "😟", label: "Stomach Pain" },
-  { emoji: "💇", label: "Hair Loss" },
-  { emoji: "😴", label: "Fatigue" },
-  { emoji: "🍽️", label: "Suppressed Appetite" },
+const SIDE_EFFECT_OPTIONS = [
+  { label: "Nausea", emoji: "🤢" }, { label: "Vomiting", emoji: "🤮" },
+  { label: "Diarrhea", emoji: "💩" }, { label: "Constipation", emoji: "😣" },
+  { label: "Fatigue", emoji: "😴" }, { label: "Headache", emoji: "🤕" },
+  { label: "Dizziness", emoji: "💫" }, { label: "Injection site pain", emoji: "💉" },
+  { label: "Stomach pain", emoji: "😖" }, { label: "Heartburn", emoji: "🔥" },
 ];
-
 const SEVERITIES = ["Mild", "Moderate", "Severe"];
 
-export default function SideEffectsModal({ open, onClose }) {
-  const { setSideEffects } = useAppState();
-  const [selectedEffect, setSelectedEffect] = useState(SIDE_EFFECTS[0]);
-  const [severity, setSeverity] = useState("Mild");
+export default function SideEffectsModal({ open, onClose, dayKey }) {
+  const dk = dayKey || todayKey();
+  const { getSideEffects, saveSideEffects } = useAppState();
   const [chips, setChips] = useState([]);
   const [notes, setNotes] = useState("");
-  const [showEffectDropdown, setShowEffectDropdown] = useState(false);
-  const [showSeverityDropdown, setShowSeverityDropdown] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [selectedEffect, setSelectedEffect] = useState(null);
+  const [severity, setSeverity] = useState("Mild");
+
+  useEffect(() => {
+    if (open) {
+      const existing = getSideEffects(dk);
+      setNotes(existing || "");
+      setChips([]);
+    }
+  }, [open, dk]);
 
   if (!open) return null;
 
   const addChip = () => {
-    const key = `${selectedEffect.label}-${severity}`;
-    if (!chips.find((c) => c.key === key)) {
-      setChips((prev) => [...prev, { key, emoji: selectedEffect.emoji, label: selectedEffect.label, severity }]);
-    }
+    if (!selectedEffect) return;
+    const chip = `${selectedEffect.emoji} ${selectedEffect.label} (${severity})`;
+    if (!chips.includes(chip)) setChips([...chips, chip]);
+    setShowDropdown(false);
+    setSelectedEffect(null);
   };
 
-  const removeChip = (key) => setChips((prev) => prev.filter((c) => c.key !== key));
-
   const handleSave = () => {
-    const text = chips.map((c) => `${c.emoji} ${c.label} (${c.severity})`).join(", ");
-    setSideEffects(text + (notes ? ` — ${notes}` : ""));
+    const parts = [];
+    if (chips.length) parts.push(chips.join(", "));
+    if (notes.trim()) parts.push(notes.trim());
+    saveSideEffects(dk, parts.join(" | "));
     onClose();
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="relative bg-white rounded-t-3xl sm:rounded-3xl w-full sm:max-w-[480px] max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom sm:mx-4">
-        <div className="flex justify-center pt-3 pb-1">
-          <div className="w-10 h-1 bg-gray-300 rounded-full" />
-        </div>
-        <div className="flex items-center justify-between px-5 pb-4 pt-2">
-          <h2 className="text-xl font-bold">Add Side Effects</h2>
+      <div className="relative bg-white rounded-t-3xl sm:rounded-3xl w-full sm:max-w-[520px] max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom sm:mx-4">
+        <div className="flex justify-center pt-3 pb-1"><div className="w-10 h-1 bg-gray-300 rounded-full" /></div>
+        <div className="flex items-center justify-between px-5 pb-4">
+          <h2 className="text-xl font-bold">Side Effects</h2>
           <button onClick={onClose}><X size={22} className="text-gray-400" /></button>
         </div>
-
         <div className="px-5 pb-4 space-y-4">
-          {/* Dropdowns row */}
-          <div className="flex items-center gap-2">
-            {/* Effect dropdown */}
-            <div className="relative flex-1">
-              <button
-                onClick={() => { setShowEffectDropdown(!showEffectDropdown); setShowSeverityDropdown(false); }}
-                className="w-full border border-gray-200 rounded-xl px-3 py-3 flex items-center justify-between text-left bg-white">
-                <span className="flex items-center gap-2 text-sm font-medium">
-                  <span>{selectedEffect.emoji}</span>
-                  <span>{selectedEffect.label}</span>
-                </span>
-                <ChevronDown size={16} className="text-gray-400 flex-shrink-0" />
+          {/* Dropdown */}
+          <div>
+            <label className="text-sm font-semibold text-gray-700 mb-2 block">Select Side Effect</label>
+            <div className="relative">
+              <button onClick={() => setShowDropdown(!showDropdown)}
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 flex items-center justify-between text-left">
+                <span className="text-base text-gray-600">{selectedEffect ? `${selectedEffect.emoji} ${selectedEffect.label}` : "Choose a side effect..."}</span>
+                <ChevronDown size={18} className="text-gray-400" />
               </button>
-              {showEffectDropdown && (
-                <div className="absolute z-20 mt-1 w-full bg-white border border-gray-200 rounded-xl shadow-xl max-h-64 overflow-y-auto">
-                  {SIDE_EFFECTS.map((se) => (
-                    <button key={se.label} onClick={() => { setSelectedEffect(se); setShowEffectDropdown(false); }}
-                      className={`w-full px-4 py-3 text-left text-sm flex items-center gap-3 ${selectedEffect.label === se.label ? "bg-gray-100" : "hover:bg-gray-50"}`}>
-                      <span>{se.emoji}</span>
-                      <span>{se.label}</span>
+              {showDropdown && (
+                <div className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-xl shadow-lg max-h-48 overflow-y-auto">
+                  {SIDE_EFFECT_OPTIONS.map((o) => (
+                    <button key={o.label} onClick={() => { setSelectedEffect(o); setShowDropdown(false); }}
+                      className="w-full px-4 py-3 text-left text-sm hover:bg-gray-50 flex items-center gap-2">
+                      <span>{o.emoji}</span> {o.label}
                     </button>
                   ))}
                 </div>
               )}
             </div>
-
-            {/* Severity dropdown */}
-            <div className="relative w-28">
-              <button
-                onClick={() => { setShowSeverityDropdown(!showSeverityDropdown); setShowEffectDropdown(false); }}
-                className="w-full border border-gray-200 rounded-xl px-3 py-3 flex items-center justify-between text-left bg-white">
-                <span className="text-sm font-medium">{severity}</span>
-                <ChevronDown size={16} className="text-gray-400" />
-              </button>
-              {showSeverityDropdown && (
-                <div className="absolute z-20 mt-1 w-full bg-white border border-gray-200 rounded-xl shadow-xl">
-                  {SEVERITIES.map((s) => (
-                    <button key={s} onClick={() => { setSeverity(s); setShowSeverityDropdown(false); }}
-                      className={`w-full px-4 py-3 text-left text-sm ${severity === s ? "bg-gray-100 font-medium" : "hover:bg-gray-50"}`}>
-                      {s}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Add button */}
-            <button onClick={addChip}
-              className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0">
-              <Plus size={20} className="text-white" />
-            </button>
           </div>
 
-          {/* Selected chips */}
+          {/* Severity */}
+          <div>
+            <label className="text-sm font-semibold text-gray-700 mb-2 block">Severity</label>
+            <div className="flex gap-2">
+              {SEVERITIES.map((s) => (
+                <button key={s} onClick={() => setSeverity(s)}
+                  className={`flex-1 py-2 rounded-xl text-sm font-medium border transition-colors ${severity === s ? "bg-blue-100 text-blue-700 border-blue-300" : "bg-white text-gray-500 border-gray-200"}`}>
+                  {s}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <button onClick={addChip}
+            className="w-full py-2.5 bg-blue-50 text-blue-600 border border-blue-200 rounded-xl font-semibold text-sm">
+            + Add to List
+          </button>
+
           {chips.length > 0 && (
-            <div>
-              <p className="text-sm font-semibold text-gray-700 mb-2">Selected Side Effects</p>
-              <div className="flex flex-wrap gap-2">
-                {chips.map((c) => (
-                  <span key={c.key} className="flex items-center gap-1.5 bg-green-500 text-white rounded-full px-3 py-1.5 text-sm font-medium">
-                    <span>{c.emoji}</span>
-                    <span>{c.label}</span>
-                    <button onClick={() => removeChip(c.key)} className="ml-1 text-white/80 hover:text-white">✕</button>
-                  </span>
-                ))}
-              </div>
+            <div className="flex flex-wrap gap-2">
+              {chips.map((c, i) => (
+                <span key={i} className="flex items-center gap-1 bg-teal-50 text-teal-700 border border-teal-200 rounded-full px-3 py-1 text-sm">
+                  {c}
+                  <button onClick={() => setChips(chips.filter((_, j) => j !== i))} className="ml-1 text-teal-400 hover:text-teal-600">×</button>
+                </span>
+              ))}
             </div>
           )}
 
-          {/* Notes */}
           <div>
-            <label className="text-sm font-semibold text-gray-700 mb-2 block">Notes (Optional)</label>
-            <textarea
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              placeholder="Add any notes about your side effects"
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm resize-none h-24 outline-none focus:border-blue-300"
-            />
+            <label className="text-sm font-semibold text-gray-700 mb-2 block">Additional Notes</label>
+            <textarea value={notes} onChange={(e) => setNotes(e.target.value)}
+              placeholder="Any other observations..."
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm resize-none h-20 outline-none focus:border-blue-300" />
           </div>
         </div>
-
         <div className="px-5 pb-8 pt-2">
-          <button onClick={handleSave}
-            className="w-full py-3.5 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2">
+          <button onClick={handleSave} className="w-full py-3.5 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2">
             <Save size={16} /> Save
           </button>
         </div>

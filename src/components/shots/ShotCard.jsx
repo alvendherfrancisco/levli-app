@@ -1,7 +1,8 @@
 import React from "react";
 import { Syringe, MapPin } from "lucide-react";
 
-export default function ShotCard({ medication, dose, drugClass, date, time, site, pain }) {
+export default function ShotCard({ medication, dose, drugClass, drug_class, date, time, site, pain }) {
+  const dc = drugClass || drug_class || "GLP-1";
   return (
     <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 overflow-hidden w-full box-border">
       <div className="flex items-start gap-3 w-full min-w-0">
@@ -14,7 +15,7 @@ export default function ShotCard({ medication, dose, drugClass, date, time, site
           <div className="flex items-center gap-2 flex-nowrap">
             <span className="font-semibold text-gray-900 truncate">{medication}</span>
             <span className="text-blue-600 font-semibold whitespace-nowrap flex-shrink-0">{dose} mg</span>
-            <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-lg font-medium whitespace-nowrap flex-shrink-0">{drugClass}</span>
+            <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-lg font-medium whitespace-nowrap flex-shrink-0">{dc}</span>
           </div>
           <div className="flex items-center gap-1 mt-1 text-sm text-gray-400 min-w-0">
             <span>📅</span>
