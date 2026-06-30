@@ -1,7 +1,7 @@
 import React from "react";
 import { Syringe } from "lucide-react";
 import { useAppState } from "@/lib/AppState";
-import { addDaysToShotDate, daysUntilShotDate } from "@/lib/dateUtils";
+import { addDaysToShotDate, daysUntilShotDate, parseShotDate } from "@/lib/dateUtils";
 
 export default function NextShotCard() {
   const { shots, profile } = useAppState();
@@ -9,11 +9,11 @@ export default function NextShotCard() {
 
   if (shots.length === 0) {
     return (
-      <div className="bg-surface rounded-[20px] p-5 shadow-card border border-border-warm mx-4 mb-5">
-        <p className="text-sm text-ink-tertiary mb-2">Next Shot</p>
-        <div className="bg-accent-tint rounded-[14px] p-3 flex items-start gap-2">
-          <Syringe size={18} className="text-accent mt-0.5 flex-shrink-0" />
-          <p className="text-sm text-accent">No shots recorded yet. Add your first shot to start tracking your schedule.</p>
+      <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mx-4 mb-4">
+        <p className="text-sm text-gray-400 mb-2">Next Shot</p>
+        <div className="bg-blue-50 rounded-xl p-3 flex items-start gap-2">
+          <Syringe size={18} className="text-blue-500 mt-0.5 flex-shrink-0" />
+          <p className="text-sm text-blue-700">No shots recorded yet. Add your first shot to start tracking your schedule.</p>
         </div>
       </div>
     );
@@ -23,41 +23,34 @@ export default function NextShotCard() {
   const nextDate = addDaysToShotDate(last.date, daysBetween);
   const daysLeft = daysUntilShotDate(nextDate);
   const progress = Math.max(0, Math.min(1, (daysBetween - daysLeft) / daysBetween));
-  const r = 34;
-  const circumference = 2 * Math.PI * r;
+  const circumference = 2 * Math.PI * 34;
 
   let daysLabel;
   if (daysLeft <= 0) daysLabel = "Today!";
   else if (daysLeft === 1) daysLabel = "Tomorrow";
   else daysLabel = `In ${daysLeft}d`;
 
-  const ringColor = daysLeft <= 0 ? "#3FA66B" : "#4C5FD5";
-
   return (
-    <div className="bg-surface rounded-[20px] p-5 shadow-card border border-border-warm mx-4 mb-5">
-      <p className="text-sm text-ink-tertiary mb-1">Next Shot</p>
+    <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mx-4 mb-4">
+      <p className="text-sm text-gray-400 mb-1">Next Shot</p>
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-xl font-bold text-ink">{nextDate}</h3>
-          <p className="text-sm font-semibold mt-0.5" style={{ color: ringColor }}>{daysLabel}</p>
-          <div className="mt-3 border-t border-border-warm pt-2">
-            <p className="text-xs text-ink-tertiary">Last Dose</p>
-            <p className="text-sm font-semibold text-ink">{last.date} · {last.dose} mg</p>
+          <h3 className="text-xl font-bold text-gray-900">{nextDate}</h3>
+          <p className="text-sm font-medium text-blue-600 mt-0.5">{daysLabel}</p>
+          <div className="mt-2 border-t border-gray-100 pt-2">
+            <p className="text-xs text-gray-400">Last Dose</p>
+            <p className="text-sm font-semibold text-gray-700">{last.date} · {last.dose} mg</p>
           </div>
         </div>
         <div className="relative w-20 h-20 flex-shrink-0">
           <svg className="w-20 h-20 -rotate-90" viewBox="0 0 80 80">
-            <circle cx="40" cy="40" r={r} fill="none" stroke="#E8E2D9" strokeWidth="7" />
-            <circle
-              cx="40" cy="40" r={r} fill="none"
-              stroke={ringColor} strokeWidth="7"
+            <circle cx="40" cy="40" r="34" fill="none" stroke="#E5E7EB" strokeWidth="5" />
+            <circle cx="40" cy="40" r="34" fill="none" stroke={daysLeft <= 0 ? "#22C55E" : "#3B6FE0"} strokeWidth="5"
               strokeDasharray={circumference}
               strokeDashoffset={circumference * (1 - progress)}
-              strokeLinecap="round"
-              style={{ transition: "stroke-dashoffset 0.6s cubic-bezier(0.22, 1, 0.36, 1)" }}
-            />
+              strokeLinecap="round" />
           </svg>
-          <span className="absolute inset-0 flex items-center justify-center text-[10px] text-ink-secondary font-semibold text-center leading-tight px-1">
+          <span className="absolute inset-0 flex items-center justify-center text-[10px] text-gray-500 font-medium text-center leading-tight px-1">
             {daysLeft <= 0 ? "Now!" : `${daysLeft}d left`}
           </span>
         </div>

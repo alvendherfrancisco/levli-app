@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Settings, Syringe, Scale, User, Check, Loader2 } from "lucide-react";
+import { Settings, Syringe, Lock, User, Check, Loader2 } from "lucide-react";
 import { useAppState } from "@/lib/AppState";
 
 export default function Profile() {
@@ -9,12 +9,10 @@ export default function Profile() {
   const [saved, setSaved] = useState({});
   const [saving, setSaving] = useState({});
 
+  // Keep local in sync when profile loads from DB
   useEffect(() => {
     setLocal({ ...profile });
   }, [profile]);
-
-  const heightUnit = local.height_unit || "in";
-  const weightUnit = local.weight_unit || "lb";
 
   const handleSave = async (fields) => {
     const updates = Array.isArray(fields) ? fields : [fields];
@@ -31,36 +29,28 @@ export default function Profile() {
   const SaveBtn = ({ fields }) => {
     const key = Array.isArray(fields) ? fields.join("+") : fields;
     return (
-      <button
-        onClick={() => handleSave(fields)}
+      <button onClick={() => handleSave(fields)}
         disabled={saving[key]}
-        className={`px-4 py-2.5 rounded-[14px] font-semibold text-sm transition-all min-w-[64px] flex items-center justify-center shadow-warm active:scale-[0.97] ${
-          saved[key] ? "bg-success text-white" : "bg-accent text-white"
-        } disabled:opacity-60`}
-      >
+        className={`px-4 py-2.5 rounded-xl font-semibold text-sm transition-all min-w-[60px] flex items-center justify-center ${
+          saved[key] ? "bg-green-500 text-white" : "bg-blue-600 text-white"
+        } disabled:opacity-60`}>
         {saving[key] ? <Loader2 size={14} className="animate-spin" /> : saved[key] ? <Check size={16} /> : "Save"}
       </button>
     );
   };
 
   const UnitToggle = ({ label, opt1, opt2, field }) => (
-    <div className="flex items-center justify-between py-2.5">
-      <span className="text-sm text-ink-secondary font-medium">{label}</span>
-      <div className="flex rounded-[10px] overflow-hidden border border-border-warm">
+    <div className="flex items-center justify-between py-2">
+      <span className="text-sm text-gray-700 font-medium">{label}</span>
+      <div className="flex rounded-xl overflow-hidden border border-gray-200">
         {[opt1, opt2].map((opt) => (
-          <button
-            key={opt}
+          <button key={opt}
             onClick={async () => {
               const next = { ...local, [field]: opt };
               setLocal(next);
               await setProfile({ ...profile, [field]: opt });
             }}
-            className={`px-5 py-2 text-sm font-medium transition-colors ${
-              local[field] === opt
-                ? "bg-accent-tint text-accent font-semibold"
-                : "bg-surface text-ink-tertiary"
-            }`}
-          >
+            className={`px-5 py-2 text-sm font-medium transition-colors ${local[field] === opt ? "bg-blue-100 text-blue-700" : "bg-white text-gray-500"}`}>
             {opt}
           </button>
         ))}
@@ -69,132 +59,91 @@ export default function Profile() {
   );
 
   return (
-    <div className="bg-canvas min-h-screen w-full">
-      <div className="sticky top-0 z-30 bg-canvas w-full flex items-center justify-between px-5 pt-6 pb-4">
-        <h1 className="text-2xl font-bold text-ink">Profile</h1>
-        <Link to="/settings"><Settings size={22} className="text-ink-secondary" /></Link>
+    <div className="bg-gray-50 min-h-screen w-full">
+      <div className="sticky top-0 z-30 bg-gray-50 w-full flex items-center justify-between px-5 pt-6 pb-4">
+        <h1 className="text-2xl font-bold text-gray-900">Profile</h1>
+        <Link to="/settings"><Settings size={22} className="text-gray-600" /></Link>
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 space-y-4 pb-8">
+      <div className="max-w-3xl mx-auto">
         {/* Profile Info */}
-        <div className="bg-surface rounded-[20px] p-5 shadow-card border border-border-warm">
+        <div className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
           <div className="flex items-center gap-2 mb-1">
-            <div className="w-8 h-8 rounded-[10px] bg-accent-tint flex items-center justify-center">
-              <User size={16} className="text-accent" />
-            </div>
-            <h3 className="font-bold text-ink text-lg">Profile Info</h3>
+            <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center"><User size={16} className="text-blue-600" /></div>
+            <h3 className="font-bold text-gray-900 text-lg">Profile Info</h3>
           </div>
-          <div className="border-b-2 border-accent w-10 mb-5" />
+          <div className="border-b-2 border-blue-500 w-10 mb-4" />
 
-          {/* Height — dynamic unit display */}
-          <label className="text-sm text-ink font-semibold block mb-2">Height</label>
+          <label className="text-sm text-gray-700 font-medium block mb-2">Height</label>
           <div className="flex items-center gap-2 mb-4">
-            {heightUnit === "in" ? (
-              <>
-                <div className="flex-1 border border-border-warm rounded-[14px] px-3 py-2.5 bg-surface-alt flex items-center">
-                  <input
-                    type="number" value={local.height_ft || ""} min="0" max="9"
-                    onChange={(e) => setLocal({ ...local, height_ft: e.target.value })}
-                    className="w-full outline-none text-base bg-transparent text-ink"
-                  />
-                  <span className="text-ink-tertiary text-sm ml-1">ft</span>
-                </div>
-                <div className="flex-1 border border-border-warm rounded-[14px] px-3 py-2.5 bg-surface-alt flex items-center">
-                  <input
-                    type="number" value={local.height_in || ""} min="0" max="11"
-                    onChange={(e) => setLocal({ ...local, height_in: e.target.value })}
-                    className="w-full outline-none text-base bg-transparent text-ink"
-                  />
-                  <span className="text-ink-tertiary text-sm ml-1">in</span>
-                </div>
-                <SaveBtn fields={["height_ft", "height_in"]} />
-              </>
-            ) : (
-              <>
-                <div className="flex-1 border border-border-warm rounded-[14px] px-3 py-2.5 bg-surface-alt flex items-center">
-                  <input
-                    type="number" value={local.height_ft || ""} min="0"
-                    onChange={(e) => setLocal({ ...local, height_ft: e.target.value })}
-                    className="w-full outline-none text-base bg-transparent text-ink"
-                    placeholder="0.0"
-                  />
-                  <span className="text-ink-tertiary text-sm ml-1">cm</span>
-                </div>
-                <SaveBtn fields={["height_ft"]} />
-              </>
-            )}
+            <div className="flex-1 border border-gray-200 rounded-xl px-3 py-2.5 flex items-center">
+              <input type="number" value={local.height_ft || ""} min="0" max="9"
+                onChange={(e) => setLocal({ ...local, height_ft: e.target.value })} className="w-full outline-none text-base" />
+              <span className="text-gray-400 text-sm ml-1">ft</span>
+            </div>
+            <div className="flex-1 border border-gray-200 rounded-xl px-3 py-2.5 flex items-center">
+              <input type="number" value={local.height_in || ""} min="0" max="11"
+                onChange={(e) => setLocal({ ...local, height_in: e.target.value })} className="w-full outline-none text-base" />
+              <span className="text-gray-400 text-sm ml-1">in</span>
+            </div>
+            <SaveBtn fields={["height_ft", "height_in"]} />
           </div>
 
-          <label className="text-sm text-ink font-semibold block mb-2">Goal Weight</label>
+          <label className="text-sm text-gray-700 font-medium block mb-2">Goal Weight</label>
           <div className="flex items-center gap-2">
-            <div className="flex-1 border border-border-warm rounded-[14px] px-3 py-2.5 bg-surface-alt flex items-center">
-              <input
-                type="number" value={local.goal_weight || ""} min="0"
-                onChange={(e) => setLocal({ ...local, goal_weight: e.target.value })}
-                className="w-full outline-none text-base bg-transparent text-ink"
-              />
-              <span className="text-ink-tertiary text-sm ml-1">{weightUnit}</span>
+            <div className="flex-1 border border-gray-200 rounded-xl px-3 py-2.5 flex items-center">
+              <input type="number" value={local.goal_weight || ""} min="0"
+                onChange={(e) => setLocal({ ...local, goal_weight: e.target.value })} className="w-full outline-none text-base" />
+              <span className="text-gray-400 text-sm ml-1">{local.weight_unit || "lb"}</span>
             </div>
             <SaveBtn fields={["goal_weight"]} />
           </div>
         </div>
 
         {/* Shot Preferences */}
-        <div className="bg-surface rounded-[20px] p-5 shadow-card border border-border-warm">
+        <div className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
           <div className="flex items-center gap-2 mb-1">
-            <div className="w-8 h-8 rounded-[10px] bg-accent-tint flex items-center justify-center">
-              <Syringe size={16} className="text-accent" />
-            </div>
-            <h3 className="font-bold text-ink text-lg">Shot Preferences</h3>
+            <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center"><Syringe size={16} className="text-blue-600" /></div>
+            <h3 className="font-bold text-gray-900 text-lg">Shot Preferences</h3>
           </div>
-          <div className="border-b-2 border-accent w-10 mb-5" />
+          <div className="border-b-2 border-blue-500 w-10 mb-4" />
 
-          <label className="text-sm text-ink font-semibold block mb-2">Days Between Shots</label>
+          <label className="text-sm text-gray-700 font-medium block mb-2">Days Between Shots</label>
           <div className="flex items-center gap-2 mb-2">
-            <div className="flex-1 border border-border-warm rounded-[14px] px-3 py-2.5 bg-surface-alt flex items-center">
-              <input
-                type="number" value={local.days_between || ""} min="1" max="90"
-                onChange={(e) => setLocal({ ...local, days_between: e.target.value })}
-                className="w-full outline-none text-base bg-transparent text-ink"
-              />
-              <span className="text-ink-tertiary text-sm ml-1">days</span>
+            <div className="flex-1 border border-gray-200 rounded-xl px-3 py-2.5 flex items-center">
+              <input type="number" value={local.days_between || ""} min="1" max="90"
+                onChange={(e) => setLocal({ ...local, days_between: e.target.value })} className="w-full outline-none text-base" />
+              <span className="text-gray-400 text-sm ml-1">days</span>
             </div>
             <SaveBtn fields={["days_between"]} />
           </div>
-          <p className="text-xs text-ink-tertiary mb-5">This affects how your next shot date is calculated</p>
+          <p className="text-xs text-gray-400">This affects how your next shot date is calculated</p>
 
-          <label className="text-sm text-ink font-semibold block mb-2">Default Medication</label>
+          <label className="text-sm text-gray-700 font-medium block mb-2 mt-4">Default Medication</label>
           <div className="flex items-center gap-2">
-            <div className="flex-1 border border-border-warm rounded-[14px] px-3 py-2.5 bg-surface-alt flex items-center">
-              <input
-                type="text" value={local.default_medication || ""}
-                onChange={(e) => setLocal({ ...local, default_medication: e.target.value })}
-                className="w-full outline-none text-base bg-transparent text-ink"
-              />
+            <div className="flex-1 border border-gray-200 rounded-xl px-3 py-2.5 flex items-center">
+              <input type="text" value={local.default_medication || ""}
+                onChange={(e) => setLocal({ ...local, default_medication: e.target.value })} className="w-full outline-none text-base" />
             </div>
             <SaveBtn fields={["default_medication"]} />
           </div>
         </div>
 
         {/* Measurement Units */}
-        <div className="bg-surface rounded-[20px] p-5 shadow-card border border-border-warm">
+        <div className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
           <div className="flex items-center gap-2 mb-1">
-            <div className="w-8 h-8 rounded-[10px] bg-accent-tint flex items-center justify-center">
-              <Scale size={16} className="text-accent" />
-            </div>
-            <h3 className="font-bold text-ink text-lg">Measurement Units</h3>
+            <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center"><Lock size={16} className="text-blue-600" /></div>
+            <h3 className="font-bold text-gray-900 text-lg">Measurement Units</h3>
           </div>
-          <div className="border-b-2 border-accent w-10 mb-2" />
+          <div className="border-b-2 border-blue-500 w-10 mb-4" />
           <UnitToggle label="Liquid Unit" opt1="mL" opt2="oz" field="liquid_unit" />
-          <div className="border-t border-border-warm" />
           <UnitToggle label="Height Unit" opt1="cm" opt2="in" field="height_unit" />
-          <div className="border-t border-border-warm" />
           <UnitToggle label="Weight Unit" opt1="kg" opt2="lb" field="weight_unit" />
         </div>
 
-        <div className="bg-surface-alt rounded-[20px] p-5 border border-border-warm">
-          <h4 className="font-bold text-ink mb-1">Important</h4>
-          <p className="text-xs text-ink-tertiary leading-relaxed">
+        <div className="mx-4 mb-8 bg-gray-100 rounded-2xl p-4 border border-gray-200">
+          <h4 className="font-bold text-gray-700 mb-1">Important</h4>
+          <p className="text-xs text-gray-500 leading-relaxed">
             This application is not intended as a substitute for professional medical care. Only your doctor can diagnose and treat medical problems.
           </p>
         </div>
