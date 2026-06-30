@@ -17,7 +17,7 @@ export default function BottomTabBar() {
   return (
     <>
       {/* Mobile: bottom bar */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-card border-t border-gray-100 dark:border-white/[0.07] pb-safe z-40">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 pb-safe z-40">
         <div className="flex items-center justify-around px-2 py-2">
           {tabs.map((tab) => {
             const isActive = location.pathname === tab.path;
@@ -46,7 +46,7 @@ export default function BottomTabBar() {
       </div>
 
       {/* Desktop: left side rail */}
-      <div className="hidden lg:flex flex-col fixed top-0 left-0 h-full w-56 bg-white dark:bg-card border-r border-gray-100 dark:border-white/[0.07] z-40 pt-8 pb-6 px-4">
+      <div className="hidden lg:flex flex-col fixed top-0 left-0 h-full w-56 bg-white dark:bg-gray-900 border-r border-gray-100 dark:border-gray-800 z-40 pt-8 pb-6 px-4">
         <div className="mb-8 px-2">
           <span className="text-xl font-bold text-blue-600 dark:text-blue-400">Dosely</span>
         </div>

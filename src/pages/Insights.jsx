@@ -142,7 +142,7 @@ export default function Insights() {
 
       <div className="max-w-3xl mx-auto">
         {/* Weight Change Panel */}
-        <div className="mx-4 mb-4 bg-white dark:bg-card rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-white/[0.07] overflow-hidden">
+        <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
           <div className="flex items-center gap-2 mb-1">
             <TrendingDown size={18} className="text-blue-600" />
             <h3 className="font-bold text-gray-900 dark:text-white text-lg">Weight Change</h3>
@@ -217,7 +217,7 @@ export default function Insights() {
         </div>
 
         {/* Progress Pictures Panel */}
-        <div className="mx-4 mb-4 bg-white dark:bg-card rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-white/[0.07]">
+        <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
           <div className="flex items-center gap-2 mb-1">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "rgba(59,130,246,0.13)" }}>
               <Camera size={16} className="text-blue-500" />
@@ -273,7 +273,7 @@ export default function Insights() {
         </div>
 
         {/* Medication Levels Panel */}
-        <div className="mx-4 mb-4 bg-white dark:bg-card rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-white/[0.07]">
+        <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
           <div className="flex items-start justify-between mb-1">
             <div className="flex items-center gap-2">
               <Syringe size={18} className="text-blue-600" />

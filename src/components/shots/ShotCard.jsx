@@ -4,7 +4,7 @@ import { Syringe, MapPin, Calendar, Activity } from "lucide-react";
 export default function ShotCard({ medication, dose, drugClass, drug_class, date, time, site, pain }) {
   const dc = drugClass || drug_class || "GLP-1";
   return (
-    <div className="bg-white dark:bg-card rounded-xl p-4 shadow-sm border border-gray-100 dark:border-white/[0.07] overflow-hidden w-full box-border">
+    <div className="bg-white dark:bg-gray-900 rounded-xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden w-full box-border">
       <div className="flex items-start gap-3 w-full min-w-0">
         {/* Icon */}
         <div className="w-10 h-10 rounded-xl bg-green-50 dark:bg-transparent flex items-center justify-center flex-shrink-0"

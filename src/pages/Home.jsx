@@ -34,7 +34,7 @@ export default function Home() {
         {/* Side Effects card */}
         <button
           onClick={() => setShowSideEffects(true)}
-          className="mx-3 mb-4 bg-white dark:bg-card rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-white/[0.07] w-[calc(100%-1.5rem)] text-left"
+          className="mx-3 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 w-[calc(100%-1.5rem)] text-left"
         >
           <div className="flex items-center gap-2 mb-2">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{background:"rgba(20,184,166,0.13)"}}>
@@ -53,7 +53,7 @@ export default function Home() {
         </button>
 
         {/* Medication Levels card */}
-        <div className="mx-3 mb-4 bg-white dark:bg-card rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-white/[0.07]">
+        <div className="mx-3 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
           <div className="flex items-start justify-between mb-2">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{background:"rgba(59,130,246,0.13)"}}>

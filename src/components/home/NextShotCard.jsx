@@ -9,7 +9,7 @@ export default function NextShotCard() {
 
   if (shots.length === 0) {
     return (
-      <div className="bg-white dark:bg-card rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-white/[0.07] mx-4 mb-4">
+      <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 mx-4 mb-4">
         <p className="text-sm text-gray-400 dark:text-[#9A9DAE] mb-2">Next Shot</p>
         <div className="bg-blue-50 dark:bg-blue-500/10 rounded-xl p-3 flex items-start gap-2">
           <Syringe size={18} className="text-blue-500 mt-0.5 flex-shrink-0" />
@@ -35,13 +35,13 @@ export default function NextShotCard() {
   else daysLabel = `In ${daysLeft}d`;
 
   return (
-    <div className="bg-white dark:bg-card rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-white/[0.07] mx-4 mb-4">
+    <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 mx-4 mb-4">
       <p className="text-sm text-gray-400 dark:text-[#9A9DAE] mb-1">Next Shot</p>
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-xl font-bold text-gray-900 dark:text-[#E8E9F0]">{nextDate}</h3>
           <p className="text-sm font-medium text-blue-600 dark:text-blue-400 mt-0.5">{daysLabel}</p>
-          <div className="mt-2 border-t border-gray-100 dark:border-white/[0.07] pt-2">
+          <div className="mt-2 border-t border-gray-100 dark:border-gray-800 pt-2">
             <p className="text-xs text-gray-400 dark:text-[#9A9DAE]">Last Dose</p>
             <p className="text-sm font-semibold text-gray-700 dark:text-[#E8E9F0]">{last.date} · {last.dose} mg</p>
           </div>

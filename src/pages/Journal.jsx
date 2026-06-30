@@ -58,7 +58,7 @@ export default function Journal() {
         {ALL_CATEGORIES.map((cat) =>
         <button key={cat} onClick={() => setFilterCat(cat)}
         className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 border transition-colors ${
-        filterCat === cat ? "bg-blue-600 text-white border-blue-600" : "bg-white dark:bg-card text-gray-500 dark:text-[#9A9DAE] border-gray-200 dark:border-white/[0.08]"}`
+        filterCat === cat ? "bg-blue-600 text-white border-blue-600" : "bg-white dark:bg-gray-900 text-gray-500 dark:text-[#9A9DAE] border-gray-200 dark:border-gray-700"}`
         }>
             {cat}
           </button>
@@ -68,7 +68,7 @@ export default function Journal() {
       <div className="max-w-3xl mx-auto">
         {filtered.length === 0 ?
         <div className="px-4">
-            <div className="bg-white dark:bg-card rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-white/[0.07] text-center">
+            <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-gray-800 text-center">
               <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 bg-blue-100 dark:bg-blue-500/15">
                 <BookOpen size={36} className="text-blue-500 dark:text-blue-400" />
               </div>
@@ -84,7 +84,7 @@ export default function Journal() {
             {filtered.map((entry) => {
             const e = normalizeEntry(entry);
             return (
-              <button key={e.id} onClick={() => openEdit(e)} className="w-full text-left bg-white dark:bg-card rounded-xl p-4 shadow-sm border border-gray-100 dark:border-white/[0.07] overflow-hidden box-border">
+              <button key={e.id} onClick={() => openEdit(e)} className="w-full text-left bg-white dark:bg-gray-900 rounded-xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden box-border">
                   <div className="flex items-start gap-3 w-full min-w-0">
                     {(() => {
                       const cfg = CATEGORY_CONFIG[e.category];

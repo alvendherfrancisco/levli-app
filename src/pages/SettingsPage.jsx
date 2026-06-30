@@ -72,9 +72,9 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="bg-gray-50 dark:bg-background min-h-screen w-full">
+    <div className="bg-gray-50 dark:bg-gray-950 min-h-screen w-full">
       {/* Full-width header */}
-      <div className="w-full flex items-center gap-3 px-5 pt-6 pb-4 bg-gray-50 dark:bg-background sticky top-0 z-30">
+      <div className="w-full flex items-center gap-3 px-5 pt-6 pb-4 bg-gray-50 dark:bg-gray-950 sticky top-0 z-30">
         <button onClick={() => navigate(-1)}><ChevronLeft size={24} className="text-gray-600 dark:text-gray-400" /></button>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Settings</h1>
       </div>
@@ -83,7 +83,7 @@ export default function SettingsPage() {
         {/* Settings toggles */}
         <div className="px-4 mb-4">
           <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase mb-2 px-1">Appearance & Security</p>
-          <div className="bg-white dark:bg-card rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-white/[0.07] space-y-3">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <Moon size={18} className="text-gray-500 dark:text-gray-400" />
@@ -104,7 +104,7 @@ export default function SettingsPage() {
         {/* General */}
         <div className="px-4 mb-4">
           <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase mb-2 px-1">General</p>
-          <div className="bg-white dark:bg-card rounded-2xl px-4 shadow-sm border border-gray-100 dark:border-white/[0.07] divide-y divide-gray-100 dark:divide-white/[0.07]">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl px-4 shadow-sm border border-gray-100 dark:border-gray-800 divide-y divide-gray-100 dark:divide-white/[0.07]">
             <MenuItem icon={backupLoading ? <Loader2 size={18} className="animate-spin text-gray-400" /> : <Download size={18} className="text-gray-500 dark:text-gray-400" />} label="Backup Data" onPress={handleBackup} />
             <MenuItem icon={restoreLoading ? <Loader2 size={18} className="animate-spin text-gray-400" /> : <Upload size={18} className="text-gray-500 dark:text-gray-400" />} label="Restore Data" onPress={handleRestore} />
             <MenuItem icon={<Mail size={18} className="text-gray-500 dark:text-gray-400" />} label="Contact Us" href="mailto:support@dosely.app" />
@@ -114,7 +114,7 @@ export default function SettingsPage() {
         {/* Policy */}
         <div className="px-4 mb-4">
           <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase mb-2 px-1">Policy and application terms</p>
-          <div className="bg-white dark:bg-card rounded-2xl px-4 shadow-sm border border-gray-100 dark:border-white/[0.07] divide-y divide-gray-100 dark:divide-white/[0.07]">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl px-4 shadow-sm border border-gray-100 dark:border-gray-800 divide-y divide-gray-100 dark:divide-white/[0.07]">
             <MenuItem icon={<FileText size={18} className="text-gray-500 dark:text-gray-400" />} label="Privacy policy" href="https://dosely.app/privacy" />
             <MenuItem icon={<FileText size={18} className="text-gray-500 dark:text-gray-400" />} label="Terms and conditions" href="https://dosely.app/terms" />
           </div>
@@ -122,7 +122,7 @@ export default function SettingsPage() {
 
         {/* Feedback */}
         <div className="px-4 mb-4">
-          <div className="bg-white dark:bg-card rounded-2xl px-4 shadow-sm border border-gray-100 dark:border-white/[0.07]">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl px-4 shadow-sm border border-gray-100 dark:border-gray-800">
             <MenuItem icon={<MessageSquare size={18} className="text-gray-500 dark:text-gray-400" />} label="Leave feedback" href="mailto:feedback@dosely.app" />
           </div>
         </div>

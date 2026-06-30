@@ -21,7 +21,7 @@ export default function MetricCard({ icon, label, value, unit, color, onAdd }) {
   const darkIcon = ds ? React.cloneElement(icon, { style: { color: ds.color } }) : icon;
 
   return (
-    <div className="bg-white dark:bg-card rounded-xl p-2.5 shadow-sm border border-gray-100 dark:border-white/[0.07] min-h-[90px] overflow-hidden flex flex-col">
+    <div className="bg-white dark:bg-gray-900 rounded-xl p-2.5 shadow-sm border border-gray-100 dark:border-gray-800 min-h-[90px] overflow-hidden flex flex-col">
       <div className="flex items-center justify-between mb-2">
         {/* Light mode chip */}
         <div className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 dark:hidden ${color}`}>

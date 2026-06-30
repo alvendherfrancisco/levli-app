@@ -62,7 +62,7 @@ export default function History() {
 
       <div className="max-w-3xl mx-auto">
         {/* Calendar */}
-        <div className="mx-4 mb-4 bg-white dark:bg-card rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-white/[0.07]">
+        <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between mb-4">
             <button onClick={prevMonth}><ChevronLeft size={22} className="text-blue-500" /></button>
             <h2 className="text-lg font-bold text-gray-900 dark:text-white">{monthNames[month]} {year}</h2>
@@ -108,7 +108,7 @@ export default function History() {
         )}
         {selectedDay && selectedShots.length === 0 && (
           <div className="px-4 mb-4">
-            <div className="bg-white dark:bg-card rounded-xl p-4 text-center border border-gray-100 dark:border-white/[0.07] text-gray-400 dark:text-[#9A9DAE] text-sm">
+            <div className="bg-white dark:bg-gray-900 rounded-xl p-4 text-center border border-gray-100 dark:border-gray-800 text-gray-400 dark:text-[#9A9DAE] text-sm">
               No shots logged for {monthNames[month]} {selectedDay}
             </div>
           </div>
@@ -117,9 +117,9 @@ export default function History() {
         {/* Side Effects for selected day */}
         {selectedDayKey && (
           <button onClick={() => setShowSideEffects(true)}
-            className="mx-4 mb-4 bg-white dark:bg-card rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-white/[0.07] w-[calc(100%-2rem)] text-left">
+            className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 w-[calc(100%-2rem)] text-left">
             <div className="flex items-center gap-2 mb-2">
-              <div className="w-8 h-8 rounded-lg bg-teal-100 dark:bg-transparent flex items-center justify-center" style={{background:"rgba(20,184,166,0.13)",boxShadow:"0 0 12px 2px rgba(20,184,166,0.18)"}}>
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{background:"rgba(20,184,166,0.13)"}}>
                 <Wind size={16} className="text-teal-500 dark:text-teal-400" />
               </div>
               <span className="font-semibold text-gray-700 dark:text-gray-300">Side effects</span>
