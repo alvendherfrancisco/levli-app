@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function OnboardingScreen({ step, totalSteps, children, onContinue }) {
+export default function OnboardingScreen({ step, totalSteps, children, onContinue, hideButton }) {
   const progress = ((step + 1) / totalSteps) * 100;
   const isLastStep = step === totalSteps - 1;
   return (
@@ -23,14 +23,16 @@ export default function OnboardingScreen({ step, totalSteps, children, onContinu
         </div>
 
         {/* Continue button */}
-        <div className="px-6 pb-10 pt-4">
-          <button
-            onClick={onContinue}
-            className="w-full py-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold text-lg rounded-2xl transition-colors"
-          >
-            {isLastStep ? "Go to Dashboard →" : "Continue"}
-          </button>
-        </div>
+        {!hideButton && (
+          <div className="px-6 pb-10 pt-4">
+            <button
+              onClick={onContinue}
+              className="w-full py-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold text-lg rounded-2xl transition-colors"
+            >
+              {isLastStep ? "Get Started →" : "Continue"}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

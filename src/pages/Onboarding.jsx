@@ -40,7 +40,7 @@ export default function Onboarding() {
   };
 
   return (
-    <OnboardingScreen step={step} totalSteps={TOTAL_STEPS} onContinue={next}>
+    <OnboardingScreen step={step} totalSteps={TOTAL_STEPS} onContinue={next} hideButton={step === 7}>
       {step === 0 && <WelcomeStep />}
       {step === 1 && <NeverMissStep />}
       {step === 2 && <VisualizeStep />}
@@ -236,16 +236,22 @@ function NotificationStep({ onContinue }) {
         </p>
       </div>
       {enabled ? (
-        <div className="px-6 py-3 bg-green-500/20 text-green-400 rounded-xl text-sm font-medium flex items-center gap-2 mx-auto border border-green-500/40">
+        <div className="px-6 py-3 bg-green-500/20 text-green-400 rounded-xl text-sm font-medium flex items-center gap-2 mx-auto border border-green-500/40 mb-4">
           <Bell size={16} /> Notifications Enabled ✓
         </div>
       ) : (
-        <button onClick={() => { setEnabled(true); setTimeout(onContinue, 800); }}
-          className="px-6 py-3 border border-blue-500 text-blue-400 rounded-xl text-sm font-medium flex items-center gap-2 mx-auto">
+        <button onClick={() => setEnabled(true)}
+          className="px-6 py-3 border border-blue-500 text-blue-400 rounded-xl text-sm font-medium flex items-center gap-2 mx-auto mb-4">
           <Bell size={16} /> Enable Notifications
         </button>
       )}
-      <p className="text-gray-500 text-xs mt-4">You can adjust your notification preferences later in Settings.</p>
+      <p className="text-gray-500 text-xs mb-6">You can adjust your notification preferences later in Settings.</p>
+      <button
+        onClick={onContinue}
+        className="w-full py-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold text-lg rounded-2xl transition-colors"
+      >
+        Continue
+      </button>
     </div>
   );
 }
