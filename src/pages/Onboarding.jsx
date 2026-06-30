@@ -116,76 +116,104 @@ export default function Onboarding() {
   );
 }
 
-function StepWithPhone({ title, subtitle, children }) {
-  return (
-    <div className="flex flex-col items-center text-center flex-1">
-      <h1 className="text-2xl font-bold mb-1.5 leading-tight">{title}</h1>
-      <p className="text-gray-400 text-sm leading-relaxed mb-3 max-w-xs">{subtitle}</p>
-      <PhoneMockup>{children}</PhoneMockup>
-    </div>
-  );
-}
-
 function WelcomeStep() {
   return (
     <div className="flex flex-col items-center text-center flex-1">
-      <div className="w-14 h-14 bg-blue-500 rounded-2xl flex items-center justify-center mb-3 mt-1">
-        <Droplets size={28} className="text-white" />
+      <div className="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center mb-6 mt-4">
+        <Droplets size={32} className="text-white" />
       </div>
-      <h1 className="text-2xl font-bold mb-1.5">Welcome to Dosely</h1>
-      <p className="text-gray-400 text-sm leading-relaxed mb-3 max-w-xs">
-        Your GLP-1 companion. Track shots, monitor progress, and reach your health goals.
+      <h1 className="text-3xl font-bold mb-3">Welcome to GLP1 Tracker</h1>
+      <p className="text-gray-400 text-base leading-relaxed mb-6">
+        The ultimate companion for your GLP-1 medication journey. Track shots, monitor progress, and achieve your health goals with confidence.
       </p>
-      <PhoneMockup><MiniHomeScreen /></PhoneMockup>
+      <PhoneMockup>
+        <MiniHomeScreen />
+      </PhoneMockup>
     </div>
   );
 }
 
 function NeverMissStep() {
   return (
-    <StepWithPhone title="Never Miss a Shot Again" subtitle="Detailed shot logs and smart scheduling keep you perfectly on track.">
-      <MiniShotsScreen />
-    </StepWithPhone>
+    <div className="flex flex-col items-center text-center flex-1">
+      <h1 className="text-3xl font-bold mb-3">Never Miss a Shot Again</h1>
+      <p className="text-gray-400 text-base leading-relaxed mb-4">
+        Smart reminders and detailed shot logs ensure perfect adherence to your medication schedule. Your doctor will love the complete records.
+      </p>
+      <PhoneMockup>
+        <MiniShotsScreen />
+      </PhoneMockup>
+    </div>
   );
 }
 
 function VisualizeStep() {
   return (
-    <StepWithPhone title="Visualize Your Success" subtitle="Watch your weight loss journey unfold with beautiful charts and trends.">
-      <MiniInsightsScreen />
-    </StepWithPhone>
+    <div className="flex flex-col items-center text-center flex-1">
+      <h1 className="text-3xl font-bold mb-3">Visualize Your Success</h1>
+      <p className="text-gray-400 text-base leading-relaxed mb-4">
+        Watch your weight loss journey unfold with beautiful charts and progress tracking.
+      </p>
+      <PhoneMockup>
+        <MiniInsightsScreen />
+      </PhoneMockup>
+    </div>
   );
 }
 
 function MedicationTrackingStep() {
   return (
-    <StepWithPhone title="Track Medication Levels" subtitle="Monitor estimated drug concentration with a scientific pharmacokinetic model.">
-      <MiniMedLevelsScreen />
-    </StepWithPhone>
+    <div className="flex flex-col items-center text-center flex-1">
+      <h1 className="text-3xl font-bold mb-3">Advanced Medication Tracking</h1>
+      <p className="text-gray-400 text-base leading-relaxed mb-4">
+        Monitor estimated medication levels in your system with scientific precision.
+      </p>
+      <PhoneMockup>
+        <MiniMedLevelsScreen />
+      </PhoneMockup>
+    </div>
   );
 }
 
 function HistoryCalendarStep() {
   return (
-    <StepWithPhone title="Complete History & Calendar" subtitle="Navigate your entire journey — view any day's shots, nutrition, and notes.">
-      <MiniCalendarScreen />
-    </StepWithPhone>
+    <div className="flex flex-col items-center text-center flex-1">
+      <h1 className="text-3xl font-bold mb-3">Complete History & Calendar</h1>
+      <p className="text-gray-400 text-base leading-relaxed mb-4">
+        Navigate your entire GLP-1 journey. View any day's shots, weight, nutrition, and side effects at a glance.
+      </p>
+      <PhoneMockup>
+        <MiniCalendarScreen />
+      </PhoneMockup>
+    </div>
   );
 }
 
 function JournalStep() {
   return (
-    <StepWithPhone title="Your Health Journal" subtitle="Log symptoms, celebrate wins, and track how you feel day by day.">
-      <MiniJournalScreen />
-    </StepWithPhone>
+    <div className="flex flex-col items-center text-center flex-1">
+      <h1 className="text-3xl font-bold mb-3">Your Personal Health Journal</h1>
+      <p className="text-gray-400 text-base leading-relaxed mb-4">
+        Document symptoms, celebrate victories, and track how you feel.
+      </p>
+      <PhoneMockup>
+        <MiniJournalScreen />
+      </PhoneMockup>
+    </div>
   );
 }
 
 function ReportsStep() {
   return (
-    <StepWithPhone title="Professional Reports" subtitle="Generate PDF shot history reports to share with your healthcare provider.">
-      <MiniReportScreen />
-    </StepWithPhone>
+    <div className="flex flex-col items-center text-center flex-1">
+      <h1 className="text-3xl font-bold mb-3">Professional Medical Reports</h1>
+      <p className="text-gray-400 text-base leading-relaxed mb-4">
+        Generate comprehensive PDF reports of shots you've taken. Perfect for sharing with your healthcare provider.
+      </p>
+      <PhoneMockup>
+        <MiniReportScreen />
+      </PhoneMockup>
+    </div>
   );
 }
 
@@ -250,106 +278,60 @@ function FinalStep() {
   );
 }
 
-/* ─── Mini mockup screens (dark-themed, matching app design) ─── */
+/* ─── Mini mockup screens ─── */
 
 function MiniHomeScreen() {
   return (
-    <div className="h-full flex flex-col bg-gray-950 px-2.5 pt-1 pb-1 overflow-hidden">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-2">
-        <span className="font-bold text-[11px] text-white">Good Morning! ☀️</span>
-        <div className="w-5 h-5 rounded-md bg-gray-800 flex items-center justify-center">
-          <span className="text-[8px]">⚙</span>
-        </div>
+    <div className="p-2">
+      <div className="flex justify-between items-center mb-1">
+        <span className="font-bold text-[10px]">Good Morning!</span>
+        <span className="text-[8px]">⚙️</span>
       </div>
-      {/* Date strip */}
-      <div className="flex gap-1 mb-2.5 justify-between">
-        {[{d:"Tue",n:28},{d:"Wed",n:29},{d:"Thu",n:30,a:true},{d:"Fri",n:1},{d:"Sat",n:2}].map((x) => (
-          <div key={x.d} className={`flex-1 text-center py-1 rounded-lg ${x.a ? "bg-blue-600" : "bg-gray-800/60"}`}>
-            <div className={`text-[7px] ${x.a ? "text-blue-200" : "text-gray-500"}`}>{x.d}</div>
-            <div className={`text-[9px] font-bold ${x.a ? "text-white" : "text-gray-300"}`}>{x.n}</div>
-            {x.a && <div className="w-1 h-1 bg-blue-300 rounded-full mx-auto mt-0.5" />}
+      <div className="flex gap-1 mb-2 justify-center">
+        {["Tue","Wed","Thu","Fri","Sat"].map((d, i) => (
+          <div key={d} className={`text-center px-1 py-0.5 rounded ${i === 2 ? "bg-blue-600 text-white" : ""}`}>
+            <div className="text-[7px]">{d}</div>
+            <div className="text-[8px] font-bold">{3 + i}</div>
+            <div className="text-[7px]">Jun</div>
           </div>
         ))}
       </div>
-      {/* Next Shot card */}
-      <div className="bg-gray-900 rounded-xl p-2 mb-2 border border-gray-800">
-        <div className="text-[7px] text-gray-500 mb-0.5">Next Shot</div>
-        <div className="text-[10px] font-bold text-white">Jul 07, 2026</div>
-        <div className="text-[7px] text-blue-400 font-medium">In 7 days</div>
-        <div className="text-[7px] text-gray-500 mt-0.5">Last: Jun 30 · 2.5 mg</div>
+      <div className="bg-gray-50 rounded-lg p-1.5 mb-2">
+        <div className="text-[7px] text-gray-400">Next Shot</div>
+        <div className="text-[9px] font-bold">Fri, Jun 6, 2025</div>
+        <div className="text-[7px] text-gray-400 mt-0.5">Last Dose: Fri, May 30 · 2.5 mg</div>
       </div>
-      {/* Metrics grid */}
-      <div className="grid grid-cols-4 gap-1 mb-2">
-        {[
-          {l:"Weight",v:"178 lb",c:"text-purple-400"},
-          {l:"Calories",v:"1,840",c:"text-orange-400"},
-          {l:"Protein",v:"82 g",c:"text-green-400"},
-          {l:"Water",v:"48 oz",c:"text-cyan-400"},
-          {l:"Fiber",v:"22 g",c:"text-yellow-400"},
-          {l:"Carbs",v:"120 g",c:"text-pink-400"},
-          {l:"Exercise",v:"35 min",c:"text-red-400"},
-          {l:"Progress",v:"— pic",c:"text-indigo-400"},
-        ].map(m=>(
-          <div key={m.l} className="bg-gray-900 rounded-lg p-1 border border-gray-800">
-            <div className="text-[6px] text-gray-500">{m.l}</div>
-            <div className={`text-[7px] font-bold ${m.c}`}>{m.v}</div>
+      <div className="grid grid-cols-3 gap-1">
+        {[{l:"Weight",v:"178.5 lb"},{l:"Calories",v:"2100 kcal"},{l:"Protein",v:"60.0 g"},{l:"Fiber",v:"—"},{l:"Carbs",v:"—"},{l:"Water",v:"—"}].map(m=>(
+          <div key={m.l} className="bg-gray-50 rounded p-1">
+            <div className="text-[7px] text-gray-500">{m.l}</div>
+            <div className="text-[8px] font-semibold">{m.v}</div>
           </div>
         ))}
-      </div>
-      {/* Side effects */}
-      <div className="bg-gray-900 rounded-xl p-2 border border-gray-800">
-        <div className="text-[8px] font-semibold text-gray-300 mb-1">Side Effects</div>
-        <div className="bg-teal-500/10 rounded-lg px-2 py-1 border border-teal-500/20">
-          <p className="text-[7px] text-teal-300">Mild nausea in the morning, resolved by noon.</p>
-        </div>
       </div>
     </div>
   );
 }
 
 function MiniShotsScreen() {
-  const shots = [
-    {d:"Jun 30",t:"7:00 AM",s:"Stomach – Upper Right",p:0},
-    {d:"Jun 23",t:"6:30 AM",s:"Thigh – Left",p:2},
-    {d:"Jun 16",t:"8:00 AM",s:"Stomach – Lower Left",p:1},
-  ];
   return (
-    <div className="h-full flex flex-col bg-gray-950 px-2.5 pt-1 overflow-hidden">
-      <div className="font-bold text-[11px] text-white mb-2">Shots</div>
-      {/* Summary chips */}
-      <div className="flex gap-1 mb-2.5">
-        <div className="bg-gray-900 rounded-lg p-1.5 flex-1 border border-gray-800">
-          <div className="text-[6px] text-gray-500">Total</div>
-          <div className="text-[11px] font-bold text-white">12</div>
-        </div>
-        <div className="bg-gray-900 rounded-lg p-1.5 flex-1 border border-gray-800">
-          <div className="text-[6px] text-gray-500">Last Dose</div>
-          <div className="text-[9px] font-bold text-blue-400">2.5 mg</div>
-          <div className="text-[6px] text-gray-500">Jun 30</div>
-        </div>
-        <div className="bg-gray-900 rounded-lg p-1.5 flex-1 border border-gray-800">
-          <div className="text-[6px] text-gray-500">Next Shot</div>
-          <div className="text-[9px] font-bold text-green-400">Jul 07</div>
-          <div className="text-[6px] text-gray-500">7 days</div>
-        </div>
+    <div className="p-2">
+      <div className="font-bold text-[10px] mb-1">Shots</div>
+      <div className="flex gap-1 mb-2">
+        <div className="bg-gray-50 rounded p-1 flex-1"><div className="text-[7px] text-gray-400">Total Shots</div><div className="text-[10px] font-bold">6</div></div>
+        <div className="bg-gray-50 rounded p-1 flex-1"><div className="text-[7px] text-gray-400">Last Dose</div><div className="text-[9px] font-bold">2.5 mg</div><div className="text-[6px] text-gray-400">6 days ago</div></div>
+        <div className="bg-gray-50 rounded p-1 flex-1"><div className="text-[7px] text-gray-400">Next Shot</div><div className="text-[9px] font-bold">Jun 6</div><div className="text-[6px] text-gray-400">Today</div></div>
       </div>
-      <div className="text-[8px] font-semibold text-gray-400 mb-1.5">Recent History</div>
-      {shots.map((s,i)=>(
-        <div key={i} className="bg-gray-900 rounded-xl px-2.5 py-2 mb-1.5 border border-gray-800">
-          <div className="flex items-center gap-1.5">
-            <div className="w-5 h-5 rounded-lg bg-green-500/15 flex items-center justify-center flex-shrink-0">
-              <span className="text-[8px]">💉</span>
+      <div className="text-[8px] font-bold mb-1">History</div>
+      {[{d:"May 30",t:"6:00 AM",s:"Stomach - Upper Right"},{d:"May 22",t:"12:12 PM",s:"Stomach - Upper Right",p:2},{d:"May 15",t:"7:00 AM",s:"Stomach - Lower Left",p:5}].map((s,i)=>(
+        <div key={i} className="bg-gray-50 rounded p-1.5 mb-1">
+          <div className="flex justify-between items-start">
+            <div>
+              <div className="text-[8px] font-semibold">Ozempic® <span className="text-blue-600">2.5 mg</span></div>
+              <div className="text-[7px] text-gray-400">{s.d}, 2025 · {s.t}</div>
+              <div className="text-[7px] text-gray-400">📍 {s.s} {s.p ? `· Pain: ${s.p}` : ""}</div>
             </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-1">
-                <span className="text-[8px] font-semibold text-white">Ozempic®</span>
-                <span className="text-[7px] font-bold text-blue-400">2.5 mg</span>
-                <span className="text-[5px] bg-green-500/15 text-green-400 px-1 rounded border border-green-500/20">Semaglutide</span>
-              </div>
-              <div className="text-[6px] text-gray-500">{s.d} · {s.t}</div>
-              <div className="text-[6px] text-gray-500">📍 {s.s}{s.p > 0 ? ` · Pain: ${s.p}` : ""}</div>
-            </div>
+            <span className="text-[6px] bg-green-100 text-green-700 px-1 rounded">Semaglutide</span>
           </div>
         </div>
       ))}
@@ -358,65 +340,27 @@ function MiniShotsScreen() {
 }
 
 function MiniInsightsScreen() {
-  const pts = [100,96,91,86,80,76,72,68,65,62];
-  const max = 100; const min = 60;
   return (
-    <div className="h-full flex flex-col bg-gray-950 px-2.5 pt-1 overflow-hidden">
-      <div className="font-bold text-[11px] text-white mb-2">Insights</div>
-      <div className="bg-gray-900 rounded-xl p-2 mb-2 border border-gray-800">
-        <div className="flex items-center gap-1 mb-1.5">
-          <span className="text-[8px]">📉</span>
-          <span className="text-[9px] font-bold text-white">Weight Change</span>
+    <div className="p-2">
+      <div className="font-bold text-[10px] mb-1">Insights</div>
+      <div className="bg-gray-50 rounded-lg p-1.5">
+        <div className="text-[8px] font-bold mb-1">📈 Weight Change</div>
+        <div className="flex gap-1 mb-1">
+          <span className="text-[7px] px-1 py-0.5 bg-white rounded border">30 Days</span>
+          <span className="text-[7px] px-1 py-0.5 bg-blue-100 text-blue-600 rounded border border-blue-200 font-medium">180 Days</span>
+          <span className="text-[7px] px-1 py-0.5 bg-white rounded border">1 Year</span>
         </div>
-        {/* Range tabs */}
-        <div className="flex gap-1 mb-2">
-          {["30D","180D","1Y"].map((r,i)=>(
-            <span key={r} className={`text-[6px] px-1.5 py-0.5 rounded-md font-medium ${i===1?"bg-gray-700 text-white border border-gray-600":"text-gray-500"}`}>{r}</span>
-          ))}
+        <div className="flex gap-1 mb-1">
+          <div className="bg-green-50 rounded p-1 flex-1 text-center"><div className="text-[6px] text-gray-500">Weight Loss</div><div className="text-[8px] font-bold text-green-600">-38.0 lbs</div></div>
+          <div className="bg-blue-50 rounded p-1 flex-1 text-center"><div className="text-[6px] text-gray-500">Rate/Week</div><div className="text-[8px] font-bold text-blue-600">-3.1 lbs</div></div>
+          <div className="bg-orange-50 rounded p-1 flex-1 text-center"><div className="text-[6px] text-gray-500">Current BMI</div><div className="text-[8px] font-bold text-orange-600">25.4</div></div>
         </div>
-        {/* Stat chips */}
-        <div className="flex gap-1 mb-2">
-          <div className="bg-green-500/10 rounded-lg p-1 flex-1 text-center border border-green-500/15">
-            <div className="text-[6px] text-gray-500">Loss</div>
-            <div className="text-[8px] font-bold text-green-400">-38 lb</div>
-          </div>
-          <div className="bg-blue-500/10 rounded-lg p-1 flex-1 text-center border border-blue-500/15">
-            <div className="text-[6px] text-gray-500">Rate</div>
-            <div className="text-[8px] font-bold text-blue-400">-3.1/wk</div>
-          </div>
-          <div className="bg-orange-500/10 rounded-lg p-1 flex-1 text-center border border-orange-500/15">
-            <div className="text-[6px] text-gray-500">BMI</div>
-            <div className="text-[8px] font-bold text-orange-400">25.4</div>
-          </div>
-        </div>
-        {/* SVG line chart */}
-        <svg viewBox="0 0 100 36" className="w-full" style={{height:36}}>
-          <defs>
-            <linearGradient id="wg" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.3"/>
-              <stop offset="100%" stopColor="#3b82f6" stopOpacity="0"/>
-            </linearGradient>
-          </defs>
-          {(() => {
-            const w = 100; const h = 36; const pad = 4;
-            const xs = pts.map((_,i) => pad + i * (w - pad*2) / (pts.length-1));
-            const ys = pts.map(v => h - pad - (v - min) / (max - min) * (h - pad*2));
-            const d = xs.map((x,i) => `${i===0?"M":"L"}${x},${ys[i]}`).join(" ");
-            const fill = d + ` L${xs[xs.length-1]},${h} L${xs[0]},${h} Z`;
-            return (<><path d={fill} fill="url(#wg)"/><path d={d} fill="none" stroke="#3b82f6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>{xs.map((x,i)=><circle key={i} cx={x} cy={ys[i]} r="1.5" fill="#3b82f6"/>)}</>);
-          })()}
-        </svg>
-      </div>
-      {/* Progress photos teaser */}
-      <div className="bg-gray-900 rounded-xl p-2 border border-gray-800">
-        <div className="flex items-center gap-1 mb-1">
-          <span className="text-[8px]">📸</span>
-          <span className="text-[9px] font-bold text-white">Progress Pictures</span>
-        </div>
-        <div className="grid grid-cols-3 gap-1">
-          {["Jan","Mar","Jun"].map(m=>(
-            <div key={m} className="bg-gray-800 rounded-lg flex flex-col items-center justify-center border border-gray-700" style={{height:28}}>
-              <span className="text-[6px] text-gray-400">{m}</span>
+        {/* Simple chart representation */}
+        <div className="h-16 flex items-end gap-[2px] px-1">
+          {[100,95,88,82,78,72,68,65].map((h,i)=>(
+            <div key={i} className="flex-1 flex flex-col items-center">
+              <div className="w-1 h-1 rounded-full bg-blue-500 mb-[1px]" />
+              <div className="w-[1px] bg-blue-400" style={{height: `${h * 0.14}px`}} />
             </div>
           ))}
         </div>
@@ -427,37 +371,25 @@ function MiniInsightsScreen() {
 
 function MiniMedLevelsScreen() {
   return (
-    <div className="h-full flex flex-col bg-gray-950 px-2.5 pt-1 overflow-hidden">
-      <div className="font-bold text-[11px] text-white mb-2">Insights</div>
-      <div className="bg-gray-900 rounded-xl p-2 border border-gray-800">
-        <div className="flex items-center gap-1 mb-0.5">
-          <span className="text-[8px]">💉</span>
-          <span className="text-[9px] font-bold text-white">Medication Levels</span>
+    <div className="p-2">
+      <div className="font-bold text-[10px] mb-1">Insights</div>
+      <div className="bg-gray-50 rounded-lg p-1.5">
+        <div className="text-[8px] font-bold mb-0.5">💉 Medication Levels</div>
+        <div className="text-[6px] text-gray-400 mb-1">Estimated medication levels in your system over time.</div>
+        <div className="flex gap-1 mb-1">
+          <span className="text-[7px] px-1 py-0.5 bg-white rounded border">7 Days</span>
+          <span className="text-[7px] px-1 py-0.5 bg-blue-100 text-blue-600 rounded border border-blue-200 font-medium">30 Days</span>
+          <span className="text-[7px] px-1 py-0.5 bg-white rounded border">90 Days</span>
         </div>
-        <div className="text-[6px] text-blue-400 mb-1.5">Pharmacokinetic decay model</div>
-        <div className="flex gap-1 mb-2">
-          {["7D","30D","90D"].map((r,i)=>(
-            <span key={r} className={`text-[6px] px-1.5 py-0.5 rounded-md font-medium ${i===1?"bg-gray-700 text-white border border-gray-600":"text-gray-500"}`}>{r}</span>
-          ))}
-        </div>
-        {/* Sawtooth med-level chart */}
-        <svg viewBox="0 0 110 44" className="w-full" style={{height:44}}>
-          <defs>
-            <linearGradient id="mg" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.25"/>
-              <stop offset="100%" stopColor="#3b82f6" stopOpacity="0"/>
-            </linearGradient>
-          </defs>
-          <path d="M5 40 L14 10 L22 28 L32 7 L40 26 L50 5 L58 24 L68 8 L76 22 L86 10 L95 18 L105 12" fill="none" stroke="#3b82f6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          <path d="M5 40 L14 10 L22 28 L32 7 L40 26 L50 5 L58 24 L68 8 L76 22 L86 10 L95 18 L105 12 L105 44 L5 44 Z" fill="url(#mg)"/>
-          {[[14,10],[32,7],[50,5],[68,8],[86,10]].map(([x,y],i)=>(
-            <circle key={i} cx={x} cy={y} r="2" fill="#3b82f6"/>
-          ))}
+        {/* Sawtooth representation */}
+        <svg viewBox="0 0 120 40" className="w-full h-12">
+          <path d="M5 35 L15 10 L25 20 L35 8 L45 18 L55 6 L65 16 L75 8 L85 15 L95 10 L105 12 L115 14" fill="none" stroke="hsl(var(--accent-foreground))" strokeWidth="1.5" />
+          <path d="M5 35 L15 10 L25 20 L35 8 L45 18 L55 6 L65 16 L75 8 L85 15 L95 10 L105 12 L115 14 L115 40 L5 40 Z" fill="hsl(var(--accent-foreground))" fillOpacity="0.1" />
         </svg>
-        <div className="text-[6px] text-gray-500 text-center mt-1">Time vs Concentration (mg)</div>
-        <div className="flex items-center justify-center gap-1 mt-1">
-          <div className="w-4 h-[2px] bg-blue-500 rounded"/>
-          <span className="text-[6px] text-gray-400">Semaglutide</span>
+        <div className="text-[6px] text-gray-400 text-center">Time vs Concentration (mg)</div>
+        <div className="flex items-center justify-center gap-1 mt-0.5">
+          <div className="w-2 h-[2px] bg-blue-600 rounded" />
+          <span className="text-[6px] text-gray-500">Semaglutide</span>
         </div>
       </div>
     </div>
@@ -465,47 +397,29 @@ function MiniMedLevelsScreen() {
 }
 
 function MiniCalendarScreen() {
-  const shotDays = [2, 9, 16, 23, 30];
-  const today = 30;
+  const shotDays = [1, 8, 15, 22, 30];
   return (
-    <div className="h-full flex flex-col bg-gray-950 px-2.5 pt-1 overflow-hidden">
-      <div className="font-bold text-[11px] text-white mb-1.5">History</div>
-      <div className="bg-gray-900 rounded-xl p-2 mb-2 border border-gray-800">
-        <div className="text-center text-[9px] font-bold text-white mb-1.5">June 2026</div>
-        <div className="grid grid-cols-7 gap-[2px] text-center mb-1">
-          {["S","M","T","W","T","F","S"].map((d,i) => (
-            <div key={i} className="text-[6px] text-gray-500 font-semibold">{d}</div>
-          ))}
-          {/* June 2026 starts on Monday (offset 1) */}
-          <div/>
-          {Array.from({length:30}).map((_,i)=>{
-            const day = i+1;
-            const hasShot = shotDays.includes(day);
-            const isToday = day === today;
-            return (
-              <div key={day} className={`text-[7px] py-[1px] rounded-md relative ${isToday?"bg-blue-600 text-white font-bold":hasShot?"text-white":"text-gray-400"}`}>
-                {day}
-                {hasShot && !isToday && <div className="w-1 h-1 bg-green-400 rounded-full mx-auto mt-[1px]"/>}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-      {/* Selected day detail */}
-      <div className="bg-gray-900 rounded-xl px-2.5 py-2 border border-gray-800">
-        <div className="flex items-center gap-1.5">
-          <div className="w-5 h-5 rounded-lg bg-green-500/15 flex items-center justify-center">
-            <span className="text-[8px]">💉</span>
-          </div>
-          <div>
-            <div className="flex items-center gap-1">
-              <span className="text-[8px] font-semibold text-white">Ozempic®</span>
-              <span className="text-[7px] font-bold text-blue-400">2.5 mg</span>
+    <div className="p-2">
+      <div className="font-bold text-[10px] mb-1">History</div>
+      <div className="text-center text-[8px] font-semibold mb-1">May 2025</div>
+      <div className="grid grid-cols-7 gap-[1px] text-center mb-1">
+        {["S","M","T","W","T","F","S"].map((d,i) => <div key={i} className="text-[6px] text-gray-400">{d}</div>)}
+        {Array.from({length:3}).map((_,i)=><div key={`e${i}`}/>)}
+        {Array.from({length:31}).map((_,i)=>{
+          const day = i+1;
+          const hasShot = shotDays.includes(day);
+          return (
+            <div key={day} className={`text-[7px] py-[1px] ${day===30?"text-blue-600 font-bold border border-blue-400 rounded":""}`}>
+              {day}
+              {hasShot && <div className="w-1 h-1 bg-green-500 rounded-full mx-auto" />}
             </div>
-            <div className="text-[6px] text-gray-500">Jun 30, 2026 · 7:00 AM</div>
-            <div className="text-[6px] text-gray-500">📍 Stomach – Upper Right</div>
-          </div>
-        </div>
+          );
+        })}
+      </div>
+      <div className="bg-gray-50 rounded p-1.5">
+        <div className="text-[8px] font-semibold">Ozempic® <span className="text-blue-600">2.5 mg</span></div>
+        <div className="text-[7px] text-gray-400">May 30, 2025 · 6:00 AM</div>
+        <div className="text-[7px] text-gray-400">📍 Stomach - Upper Right</div>
       </div>
     </div>
   );
@@ -513,34 +427,27 @@ function MiniCalendarScreen() {
 
 function MiniJournalScreen() {
   const entries = [
-    { emoji: "😊", text: "Down 8 lbs after 4 weeks on Ozempic! Feeling great.", time: "7:00 AM", date: "Jun 30", cat: "Milestone", badgeColor: "bg-green-500/15 text-green-400 border-green-500/20" },
-    { emoji: "🙂", text: "One month in — appetite is much more manageable now.", time: "6:00 PM", date: "Jun 28", cat: "General Note", badgeColor: "bg-blue-500/15 text-blue-400 border-blue-500/20" },
-    { emoji: "😐", text: "Mild nausea this morning after my shot, but it passed.", time: "5:18 PM", date: "Jun 23", cat: "Side Effect", badgeColor: "bg-yellow-500/15 text-yellow-400 border-yellow-500/20" },
-    { emoji: "⚡", text: "Energy levels through the roof today — best week yet!", time: "1:44 PM", date: "Jun 20", cat: "Energy", badgeColor: "bg-orange-500/15 text-orange-400 border-orange-500/20" },
+    { emoji: "😊", text: "Just completed my 4th week on Ozempic and I'm down 8 lbs!...", time: "7:00 AM", date: "Jun 5", mood: "Feeling Excellent", cat: "Mood", moodColor: "bg-green-100 text-green-700" },
+    { emoji: "🙂", text: "Can't believe it's been a month since I started my GLP-1...", time: "6:00 PM", date: "Jun 3", mood: "Feeling Good", cat: "General Note", moodColor: "bg-green-100 text-green-600" },
+    { emoji: "⚠️", text: "Had some rough nausea today after my Wegovy shot...", time: "5:18 PM", date: "Jun 1", mood: "Feeling Neutral", cat: "Side Effect", moodColor: "bg-yellow-100 text-yellow-700" },
+    { emoji: "⚡", text: "Doctor appointment tomorrow! Excited to share my progress...", time: "1:44 PM", date: "May 27", mood: "Feeling Excellent", cat: "Energy", moodColor: "bg-green-100 text-green-700" },
   ];
   return (
-    <div className="h-full flex flex-col bg-gray-950 px-2.5 pt-1 overflow-hidden">
-      <div className="flex justify-between items-center mb-2">
-        <span className="font-bold text-[11px] text-white">Journal</span>
-        <div className="bg-blue-600 rounded-lg px-1.5 py-0.5">
-          <span className="text-[7px] text-white font-semibold">+ New</span>
-        </div>
-      </div>
-      {/* Filter chips */}
-      <div className="flex gap-1 mb-2 overflow-hidden">
-        {["All","Mood","Side Effect","Milestone"].map((c,i)=>(
-          <span key={c} className={`text-[6px] px-1.5 py-0.5 rounded-full border flex-shrink-0 ${i===0?"bg-gray-700 text-white border-gray-600":"text-gray-500 border-gray-700"}`}>{c}</span>
-        ))}
+    <div className="p-2">
+      <div className="flex justify-between items-center mb-1">
+        <span className="font-bold text-[10px]">Journal</span>
+        <span className="text-[8px]">+ ⚙️</span>
       </div>
       {entries.map((e, i) => (
-        <div key={i} className="bg-gray-900 rounded-xl px-2 py-1.5 mb-1.5 border border-gray-800">
-          <div className="flex gap-1.5 items-start">
-            <span className="text-[11px] flex-shrink-0">{e.emoji}</span>
+        <div key={i} className="bg-gray-50 rounded p-1.5 mb-1">
+          <div className="flex gap-1">
+            <span className="text-[10px]">{e.emoji}</span>
             <div className="flex-1 min-w-0">
-              <div className="text-[7px] text-gray-200 leading-snug truncate">{e.text}</div>
-              <div className="flex items-center gap-1 mt-0.5">
-                <span className="text-[6px] text-gray-500">{e.time} · {e.date}</span>
-                <span className={`text-[5px] px-1 rounded border ${e.badgeColor}`}>{e.cat}</span>
+              <div className="text-[7px] leading-snug truncate">{e.text}</div>
+              <div className="text-[6px] text-gray-400">{e.time} · {e.date}</div>
+              <div className="flex gap-1 mt-0.5">
+                <span className={`text-[5px] px-1 rounded ${e.moodColor}`}>{e.mood}</span>
+                <span className="text-[5px] text-gray-400">• {e.cat}</span>
               </div>
             </div>
           </div>
@@ -552,34 +459,32 @@ function MiniJournalScreen() {
 
 function MiniReportScreen() {
   return (
-    <div className="h-full flex flex-col bg-gray-950 px-2.5 pt-1 overflow-hidden">
-      <div className="flex items-center gap-1 mb-2">
-        <span className="text-[9px] text-gray-400">←</span>
-        <span className="font-bold text-[11px] text-white">Shot Report</span>
+    <div className="p-2">
+      <div className="flex items-center gap-1 mb-1">
+        <span className="text-[8px]">←</span>
+        <span className="font-bold text-[10px]">Report</span>
       </div>
-      <div className="bg-gray-900 rounded-xl p-2 mb-2 border border-gray-800">
-        <div className="text-[8px] font-bold text-white mb-0.5">GLP-1 Shot History</div>
-        <div className="text-[6px] text-gray-500 mb-1.5">Jun 01 – Jun 30, 2026</div>
-        <div className="grid grid-cols-2 gap-1 mb-1.5">
-          {[{l:"Total Shots",v:"12"},{l:"Total Dose",v:"30.0 mg"},{l:"Avg Dose",v:"2.5 mg"},{l:"Avg Pain",v:"1.2 / 10"}].map(r=>(
-            <div key={r.l} className="bg-gray-800 rounded-lg p-1 border border-gray-700">
-              <div className="text-[6px] text-gray-500">{r.l}</div>
-              <div className="text-[8px] font-bold text-white">{r.v}</div>
-            </div>
-          ))}
+      <div className="bg-gray-50 rounded-lg p-1.5">
+        <div className="text-[8px] font-bold mb-0.5">GLP-1 Shot History Report</div>
+        <div className="text-[6px] text-gray-400 mb-1">Date Range: May 30 - Jun 05, 2025</div>
+        <div className="text-[7px] font-semibold mb-0.5">Summary</div>
+        <div className="space-y-[1px] text-[6px] mb-1">
+          <div className="flex justify-between"><span className="text-gray-500">Total Shots</span><span>6</span></div>
+          <div className="flex justify-between"><span className="text-gray-500">Total Dose</span><span>15.0 mg</span></div>
+          <div className="flex justify-between"><span className="text-gray-500">Average Dose</span><span>2.5 mg</span></div>
+          <div className="flex justify-between"><span className="text-gray-500">Average Pain Level</span><span>1.5/10</span></div>
+          <div className="flex justify-between"><span className="text-gray-500">Shots with Pain</span><span>4 (66.7%)</span></div>
+          <div className="flex justify-between"><span className="text-gray-500">Period Covered</span><span>36 days</span></div>
         </div>
-      </div>
-      <div className="bg-gray-900 rounded-xl p-2 border border-gray-800">
-        <div className="text-[7px] font-semibold text-gray-300 mb-1">Recent Shots</div>
-        {[{d:"Jun 30",dose:"2.5mg",site:"Stomach UR",pain:0},{d:"Jun 23",dose:"2.5mg",site:"Thigh L",pain:2},{d:"Jun 16",dose:"2.5mg",site:"Stomach LL",pain:1}].map((r,i)=>(
-          <div key={i} className={`flex items-center justify-between py-1 ${i<2?"border-b border-gray-800":""}`}>
-            <div>
-              <div className="text-[7px] text-gray-300">{r.d} · Ozempic® {r.dose}</div>
-              <div className="text-[6px] text-gray-500">📍 {r.site}</div>
-            </div>
-            <span className={`text-[6px] font-bold ${r.pain===0?"text-green-400":r.pain<=2?"text-yellow-400":"text-red-400"}`}>Pain: {r.pain}</span>
-          </div>
-        ))}
+        <div className="text-[7px] font-semibold mb-0.5">Detailed Shot History</div>
+        <table className="w-full text-[5px]">
+          <thead><tr className="bg-gray-200"><th className="p-0.5">Date</th><th className="p-0.5">Med</th><th className="p-0.5">Dose</th><th className="p-0.5">Site</th><th className="p-0.5">Pain</th></tr></thead>
+          <tbody>
+            <tr><td className="p-0.5">May 30</td><td className="p-0.5">Ozempic®</td><td className="p-0.5">2.5mg</td><td className="p-0.5">Stomach UR</td><td className="p-0.5 text-green-600">0</td></tr>
+            <tr className="bg-gray-50"><td className="p-0.5">May 22</td><td className="p-0.5">Ozempic®</td><td className="p-0.5">2.5mg</td><td className="p-0.5">Stomach UR</td><td className="p-0.5 text-yellow-600">2</td></tr>
+            <tr><td className="p-0.5">May 15</td><td className="p-0.5">Ozempic®</td><td className="p-0.5">2.5mg</td><td className="p-0.5">Stomach LL</td><td className="p-0.5 text-red-600">5</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
   );

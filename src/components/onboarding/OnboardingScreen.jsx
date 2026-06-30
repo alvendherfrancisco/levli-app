@@ -18,7 +18,7 @@ export default function OnboardingScreen({ step, totalSteps, children, onContinu
         </div>
 
         {/* Content */}
-        <div className="flex-1 flex flex-col px-5 pt-4 overflow-y-auto">
+        <div className="flex-1 flex flex-col px-6 pt-6 overflow-y-auto">
           {children}
         </div>
 
