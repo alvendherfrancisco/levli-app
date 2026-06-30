@@ -11,11 +11,11 @@ const CATEGORY_ICONS = {
   "Energy": <Zap size={20} className="text-purple-500" />,
   "Milestone": <Star size={20} className="text-yellow-500" />,
   "Food": <FileText size={20} className="text-orange-500" />,
-  "Exercise": <Zap size={20} className="text-blue-500" />,
+  "Exercise": <Zap size={20} className="text-blue-500" />
 };
 const CATEGORY_BG = {
   "Mood": "bg-green-100", "General Note": "bg-teal-100", "Side Effect": "bg-red-100",
-  "Energy": "bg-purple-100", "Milestone": "bg-yellow-100", "Food": "bg-orange-100", "Exercise": "bg-blue-100",
+  "Energy": "bg-purple-100", "Milestone": "bg-yellow-100", "Food": "bg-orange-100", "Exercise": "bg-blue-100"
 };
 const ALL_CATEGORIES = ["All", "Mood", "General Note", "Side Effect", "Energy", "Milestone", "Food", "Exercise"];
 
@@ -40,10 +40,10 @@ export default function Journal() {
     setShowModal(false);
   };
 
-  const openEdit = (entry) => { setEditingEntry(entry); setShowModal(true); };
-  const openNew = () => { setEditingEntry(null); setShowModal(true); };
+  const openEdit = (entry) => {setEditingEntry(entry);setShowModal(true);};
+  const openNew = () => {setEditingEntry(null);setShowModal(true);};
 
-  const filtered = filterCat === "All" ? journalEntries : journalEntries.filter(e => e.category === filterCat);
+  const filtered = filterCat === "All" ? journalEntries : journalEntries.filter((e) => e.category === filterCat);
   // Map DB field name to display name
   const normalizeEntry = (e) => ({ ...e, moodColor: e.mood_color || e.moodColor || "bg-gray-100 text-gray-600" });
 
@@ -59,21 +59,21 @@ export default function Journal() {
 
       {/* Category filter chips */}
       <div className="max-w-3xl mx-auto px-4 mb-3 flex gap-2 overflow-x-auto pb-1">
-        {ALL_CATEGORIES.map((cat) => (
-          <button key={cat} onClick={() => setFilterCat(cat)}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 border transition-colors ${
-              filterCat === cat ? "bg-blue-600 text-white border-blue-600" : "bg-white dark:bg-card text-gray-500 dark:text-[#9A9DAE] border-gray-200 dark:border-white/[0.08]"
-            }`}>
+        {ALL_CATEGORIES.map((cat) =>
+        <button key={cat} onClick={() => setFilterCat(cat)}
+        className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 border transition-colors ${
+        filterCat === cat ? "bg-blue-600 text-white border-blue-600" : "bg-white dark:bg-card text-gray-500 dark:text-[#9A9DAE] border-gray-200 dark:border-white/[0.08]"}`
+        }>
             {cat}
           </button>
-        ))}
+        )}
       </div>
 
       <div className="max-w-3xl mx-auto">
-        {filtered.length === 0 ? (
-          <div className="px-4">
+        {filtered.length === 0 ?
+        <div className="px-4">
             <div className="bg-white dark:bg-card rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-white/[0.07] text-center">
-              <div className="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-4">
+              <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 bg-[hsl(var(--sidebar-accent))]">
                 <BookOpen size={36} className="text-blue-500" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">No Journal Entries</h3>
@@ -82,13 +82,13 @@ export default function Journal() {
                 <Plus size={18} /> Add Journal Entry
               </button>
             </div>
-          </div>
-        ) : (
-          <div className="px-4 space-y-3 pb-28">
+          </div> :
+
+        <div className="px-4 space-y-3 pb-28">
             {filtered.map((entry) => {
-              const e = normalizeEntry(entry);
-              return (
-                <button key={e.id} onClick={() => openEdit(e)} className="w-full text-left bg-white dark:bg-card rounded-xl p-4 shadow-sm border border-gray-100 dark:border-white/[0.07] overflow-hidden box-border">
+            const e = normalizeEntry(entry);
+            return (
+              <button key={e.id} onClick={() => openEdit(e)} className="w-full text-left bg-white dark:bg-card rounded-xl p-4 shadow-sm border border-gray-100 dark:border-white/[0.07] overflow-hidden box-border">
                   <div className="flex items-start gap-3 w-full min-w-0">
                     <div className={`w-10 h-10 rounded-xl ${CATEGORY_BG[e.category] || "bg-gray-100"} flex items-center justify-center flex-shrink-0`}>
                       {CATEGORY_ICONS[e.category] || <FileText size={20} className="text-gray-500" />}
@@ -109,20 +109,20 @@ export default function Journal() {
                       </div>
                     </div>
                   </div>
-                </button>
-              );
-            })}
+                </button>);
+
+          })}
           </div>
-        )}
+        }
       </div>
 
       <JournalEntryModal
         open={showModal}
-        onClose={() => { setShowModal(false); setEditingEntry(null); }}
+        onClose={() => {setShowModal(false);setEditingEntry(null);}}
         onSave={handleSave}
         onDelete={editingEntry ? () => handleDelete(editingEntry.id) : null}
-        initialEntry={editingEntry}
-      />
-    </div>
-  );
+        initialEntry={editingEntry} />
+      
+    </div>);
+
 }
