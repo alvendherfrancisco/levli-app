@@ -101,7 +101,7 @@ export default function Onboarding() {
           question="How often do you take your GLP-1 shots?"
           subtitle="Select all that apply"
           multiSelect
-          preSelected={["Once weekly (standard dosing)"]}
+          preSelected={[]}
           options={[
             "Once weekly (standard dosing)",
             "Every two weeks",

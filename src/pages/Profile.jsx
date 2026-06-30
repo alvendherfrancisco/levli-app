@@ -3,11 +3,22 @@ import { Link } from "react-router-dom";
 import { Settings, Syringe, Lock, User, Check, Loader2 } from "lucide-react";
 import { useAppState } from "@/lib/AppState";
 
+// Only allow digits, one leading decimal, and basic numeric chars
+function numericOnly(value, { allowDecimal = true, max = null, min = 0 } = {}) {
+  let v = allowDecimal ? value.replace(/[^0-9.]/g, "") : value.replace(/[^0-9]/g, "");
+  // Prevent multiple decimal points
+  const parts = v.split(".");
+  if (parts.length > 2) v = parts[0] + "." + parts.slice(1).join("");
+  if (max !== null && parseFloat(v) > max) v = String(max);
+  return v;
+}
+
 export default function Profile() {
   const { profile, setProfile } = useAppState();
   const [local, setLocal] = useState({ ...profile });
   const [saved, setSaved] = useState({});
   const [saving, setSaving] = useState({});
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     setLocal({ ...profile });
@@ -18,9 +29,24 @@ export default function Profile() {
   const handleSave = async (fields) => {
     const updates = Array.isArray(fields) ? fields : [fields];
     const key = updates.join("+");
+    // Validate numeric fields before saving
+    const numericFields = ["height_ft", "height_in", "goal_weight", "days_between"];
+    let hasError = false;
+    updates.forEach((f) => {
+      if (numericFields.includes(f)) {
+        const v = local[f];
+        if (v !== "" && v !== undefined && (isNaN(parseFloat(v)) || parseFloat(v) < 0)) {
+          setErrors((p) => ({ ...p, [f]: "Must be a valid number" }));
+          hasError = true;
+        } else {
+          setErrors((p) => ({ ...p, [f]: null }));
+        }
+      }
+    });
+    if (hasError) return;
     setSaving((p) => ({ ...p, [key]: true }));
     const partial = {};
-    updates.forEach((f) => {partial[f] = local[f];});
+    updates.forEach((f) => { partial[f] = local[f]; });
     await setProfile({ ...profile, ...partial });
     setSaving((p) => ({ ...p, [key]: false }));
     setSaved((p) => ({ ...p, [key]: true }));
@@ -82,25 +108,24 @@ export default function Profile() {
           <div className="border-b-2 border-blue-500 w-10 mb-4" />
 
           <label className="text-sm text-gray-700 dark:text-gray-300 font-medium block mb-2">Height</label>
-          <div className="flex items-center gap-2 mb-4">
+          <div className="flex items-center gap-2 mb-1">
             {heightUnit === "cm" ?
-            <div className="flex-1 border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2.5 flex items-center bg-white dark:bg-gray-800">
-                <input type="number" value={local.height_ft || ""} min="0" max="300"
-              onChange={(e) => setLocal({ ...local, height_ft: e.target.value })}
+            <div className={`flex-1 border rounded-xl px-3 py-2.5 flex items-center bg-white dark:bg-gray-800 ${errors.height_ft ? "border-red-400" : "border-gray-200 dark:border-gray-700"}`}>
+                <input type="text" inputMode="decimal" value={local.height_ft || ""} placeholder="0.0"
+              onChange={(e) => setLocal({ ...local, height_ft: numericOnly(e.target.value) })}
               className="w-full outline-none text-base bg-transparent text-gray-900 dark:text-white" />
                 <span className="text-gray-400 text-sm ml-1">cm</span>
               </div> :
-
             <>
-                <div className="flex-1 border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2.5 flex items-center bg-white dark:bg-gray-800">
-                  <input type="number" value={local.height_ft || ""} min="0" max="9"
-                onChange={(e) => setLocal({ ...local, height_ft: e.target.value })}
+                <div className={`flex-1 border rounded-xl px-3 py-2.5 flex items-center bg-white dark:bg-gray-800 ${errors.height_ft ? "border-red-400" : "border-gray-200 dark:border-gray-700"}`}>
+                  <input type="text" inputMode="decimal" value={local.height_ft || ""} placeholder="0"
+                onChange={(e) => setLocal({ ...local, height_ft: numericOnly(e.target.value, { allowDecimal: false }) })}
                 className="w-full outline-none text-base bg-transparent text-gray-900 dark:text-white" />
                   <span className="text-gray-400 text-sm ml-1">ft</span>
                 </div>
-                <div className="flex-1 border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2.5 flex items-center bg-white dark:bg-gray-800">
-                  <input type="number" value={local.height_in || ""} min="0" max="11"
-                onChange={(e) => setLocal({ ...local, height_in: e.target.value })}
+                <div className={`flex-1 border rounded-xl px-3 py-2.5 flex items-center bg-white dark:bg-gray-800 ${errors.height_in ? "border-red-400" : "border-gray-200 dark:border-gray-700"}`}>
+                  <input type="text" inputMode="decimal" value={local.height_in || ""} placeholder="0.0"
+                onChange={(e) => setLocal({ ...local, height_in: numericOnly(e.target.value, { max: 11.9 }) })}
                 className="w-full outline-none text-base bg-transparent text-gray-900 dark:text-white" />
                   <span className="text-gray-400 text-sm ml-1">in</span>
                 </div>
@@ -108,17 +133,20 @@ export default function Profile() {
             }
             <SaveBtn fields={heightUnit === "cm" ? ["height_ft"] : ["height_ft", "height_in"]} />
           </div>
+          {(errors.height_ft || errors.height_in) && <p className="text-xs text-red-500 mb-2">Please enter a valid number.</p>}
+          {!errors.height_ft && !errors.height_in && <div className="mb-4" />}
 
           <label className="text-sm text-gray-700 dark:text-gray-300 font-medium block mb-2">Goal Weight</label>
           <div className="flex items-center gap-2">
-            <div className="flex-1 border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2.5 flex items-center bg-white dark:bg-gray-800">
-              <input type="number" value={local.goal_weight || ""} min="0"
-              onChange={(e) => setLocal({ ...local, goal_weight: e.target.value })}
+            <div className={`flex-1 border rounded-xl px-3 py-2.5 flex items-center bg-white dark:bg-gray-800 ${errors.goal_weight ? "border-red-400" : "border-gray-200 dark:border-gray-700"}`}>
+              <input type="text" inputMode="decimal" value={local.goal_weight || ""} placeholder="0.0"
+              onChange={(e) => setLocal({ ...local, goal_weight: numericOnly(e.target.value) })}
               className="w-full outline-none text-base bg-transparent text-gray-900 dark:text-white" />
               <span className="text-gray-400 text-sm ml-1">{local.weight_unit || "lb"}</span>
             </div>
             <SaveBtn fields={["goal_weight"]} />
           </div>
+          {errors.goal_weight && <p className="text-xs text-red-500 mt-1">Please enter a valid number.</p>}
         </div>
 
         {/* Shot Preferences */}
@@ -132,15 +160,16 @@ export default function Profile() {
           <div className="border-b-2 border-blue-500 w-10 mb-4" />
 
           <label className="text-sm text-gray-700 dark:text-gray-300 font-medium block mb-2">Days Between Shots</label>
-          <div className="flex items-center gap-2 mb-2">
-            <div className="flex-1 border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2.5 flex items-center bg-white dark:bg-gray-800">
-              <input type="number" value={local.days_between || ""} min="1" max="90"
-              onChange={(e) => setLocal({ ...local, days_between: e.target.value })}
+          <div className="flex items-center gap-2 mb-1">
+            <div className={`flex-1 border rounded-xl px-3 py-2.5 flex items-center bg-white dark:bg-gray-800 ${errors.days_between ? "border-red-400" : "border-gray-200 dark:border-gray-700"}`}>
+              <input type="text" inputMode="numeric" value={local.days_between || ""} placeholder="7"
+              onChange={(e) => setLocal({ ...local, days_between: numericOnly(e.target.value, { allowDecimal: false, max: 90 }) })}
               className="w-full outline-none text-base bg-transparent text-gray-900 dark:text-white" />
               <span className="text-gray-400 text-sm ml-1">days</span>
             </div>
             <SaveBtn fields={["days_between"]} />
           </div>
+          {errors.days_between ? <p className="text-xs text-red-500 mb-1">Please enter a whole number (1–90).</p> : null}
           <p className="text-xs text-gray-400 dark:text-gray-500">This affects how your next shot date is calculated</p>
 
           <label className="text-sm text-gray-700 dark:text-gray-300 font-medium block mb-2 mt-4">Default Medication</label>

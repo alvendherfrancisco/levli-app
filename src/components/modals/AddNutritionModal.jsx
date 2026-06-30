@@ -5,6 +5,17 @@ import { todayKey } from "@/lib/dateUtils";
 
 const EMPTY = { calories: "0.0", protein: "0.0", water: "0.0", fiber: "0.0", carbs: "0.0" };
 
+function numericOnly(value) {
+  let v = value.replace(/[^0-9.]/g, "");
+  const parts = v.split(".");
+  if (parts.length > 2) v = parts[0] + "." + parts.slice(1).join("");
+  return v;
+}
+
+function isValidNum(v) {
+  return v === "" || (!isNaN(parseFloat(v)) && parseFloat(v) >= 0);
+}
+
 export default function AddNutritionModal({ open, onClose, dayKey }) {
   const dk = dayKey || todayKey();
   const { getNutrition, saveNutrition, profile } = useAppState();
@@ -19,14 +30,26 @@ export default function AddNutritionModal({ open, onClose, dayKey }) {
   ];
 
   const [values, setValues] = useState({ ...EMPTY });
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    if (open) setValues(getNutrition(dk));
+    if (open) { setValues(getNutrition(dk)); setErrors({}); }
   }, [open, dk]);
 
   if (!open) return null;
 
+  const handleChange = (key, raw) => {
+    const v = numericOnly(raw);
+    setValues((p) => ({ ...p, [key]: v }));
+    setErrors((p) => ({ ...p, [key]: v !== "" && !isValidNum(v) ? "Invalid number" : null }));
+  };
+
   const handleSave = () => {
+    const newErrors = {};
+    Object.entries(values).forEach(([k, v]) => {
+      if (!isValidNum(v)) newErrors[k] = "Invalid number";
+    });
+    if (Object.values(newErrors).some(Boolean)) { setErrors(newErrors); return; }
     saveNutrition(dk, values);
     onClose();
   };
@@ -46,12 +69,13 @@ export default function AddNutritionModal({ open, onClose, dayKey }) {
           {fields.map((f) => (
             <div key={f.key}>
               <label className="text-sm font-semibold text-gray-700 dark:text-[#9A9DAE] mb-1 block">{f.label}</label>
-              <div className="flex items-center border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] rounded-xl px-4 py-3">
-                <input type="number" min="0" value={values[f.key]}
-                  onChange={(e) => setValues({ ...values, [f.key]: e.target.value })}
+              <div className={`flex items-center border rounded-xl px-4 py-3 dark:bg-white/[0.05] ${errors[f.key] ? "border-red-400" : "border-gray-200 dark:border-white/[0.1]"}`}>
+                <input type="text" inputMode="decimal" value={values[f.key]} placeholder="0.0"
+                  onChange={(e) => handleChange(f.key, e.target.value)}
                   className="flex-1 outline-none text-base bg-transparent dark:text-[#E8E9F0]" />
                 <span className="text-gray-400 text-sm ml-2">{f.unit}</span>
               </div>
+              {errors[f.key] && <p className="text-xs text-red-500 mt-0.5">Please enter a valid number.</p>}
             </div>
           ))}
         </div>

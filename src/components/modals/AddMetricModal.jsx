@@ -1,6 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import { X, Camera, Image, Trash2, Save } from "lucide-react";
 
+function numericOnly(value) {
+  let v = value.replace(/[^0-9.]/g, "");
+  const parts = v.split(".");
+  if (parts.length > 2) v = parts[0] + "." + parts.slice(1).join("");
+  return v;
+}
+
 // ── Shared dark-mode dialog shell ───────────────────────────────────────────
 function ModalShell({ onClose, children, bottom = false }) {
   return (
@@ -14,25 +21,36 @@ function ModalShell({ onClose, children, bottom = false }) {
 // ── Exercise ─────────────────────────────────────────────────────────────────
 function ExerciseModal({ open, onClose, value, onSave, onDelete }) {
   const [val, setVal] = useState("");
-  useEffect(() => { if (open) setVal(value && value !== "0" ? String(value) : ""); }, [open, value]);
+  const [error, setError] = useState("");
+  useEffect(() => { if (open) { setVal(value && value !== "0" ? String(value) : ""); setError(""); } }, [open, value]);
 
   if (!open) return null;
+
+  const handleSave = () => {
+    const n = parseFloat(val);
+    if (val !== "" && (isNaN(n) || n < 0)) { setError("Please enter a valid number of minutes."); return; }
+    onSave(val || "0");
+    onClose();
+  };
+
   return (
     <ModalShell onClose={onClose}>
       <div className="relative bg-white dark:bg-[#0f1117] rounded-3xl w-full max-w-sm p-6 shadow-2xl dark:shadow-[0_8px_40px_rgba(0,0,0,0.6)] border border-transparent dark:border-white/[0.07]">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-[#E8E9F0] mb-4">Update Exercise</h2>
         <label className="text-sm text-gray-400 dark:text-[#9A9DAE] mb-2 block">Duration</label>
-        <div className="flex items-center border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] rounded-xl px-4 py-3 mb-6">
+        <div className={`flex items-center border rounded-xl px-4 py-3 mb-1 dark:bg-white/[0.05] ${error ? "border-red-400" : "border-gray-200 dark:border-white/[0.1]"}`}>
           <input
-            type="number"
+            type="text" inputMode="numeric"
             value={val}
-            onChange={(e) => setVal(e.target.value)}
+            onChange={(e) => { setVal(numericOnly(e.target.value).split(".")[0]); setError(""); }}
             placeholder="0"
             className="flex-1 outline-none text-lg font-medium bg-transparent text-gray-900 dark:text-[#E8E9F0] placeholder-gray-300 dark:placeholder-[#9A9DAE]"
             autoFocus
           />
           <span className="text-gray-400 dark:text-[#9A9DAE] text-sm ml-2">minutes</span>
         </div>
+        {error && <p className="text-xs text-red-500 mb-4">{error}</p>}
+        {!error && <div className="mb-5" />}
         <div className="flex items-center justify-end gap-4">
           <button
             onClick={() => { onDelete(); onClose(); }}
@@ -40,7 +58,7 @@ function ExerciseModal({ open, onClose, value, onSave, onDelete }) {
             Delete
           </button>
           <button
-            onClick={() => { onSave(val); onClose(); }}
+            onClick={handleSave}
             className="px-5 py-2 rounded-xl text-sm font-semibold bg-blue-600 text-white">
             Save
           </button>
@@ -123,25 +141,38 @@ function ProgressModal({ open, onClose, value, onSave, onDelete }) {
 // ── Generic (Weight, and any future metric) ───────────────────────────────────
 function GenericMetricModal({ open, onClose, label, unit, value, onSave }) {
   const [val, setVal] = useState("");
-  useEffect(() => { if (open) setVal(value && value !== "–" ? String(value) : ""); }, [open, value]);
+  const [error, setError] = useState("");
+  useEffect(() => { if (open) { setVal(value && value !== "–" ? String(value) : ""); setError(""); } }, [open, value]);
 
   if (!open) return null;
+
+  const handleSave = () => {
+    if (!val || isNaN(parseFloat(val)) || parseFloat(val) < 0) {
+      setError(`Please enter a valid ${label.toLowerCase()} value.`);
+      return;
+    }
+    onSave(val);
+    onClose();
+  };
+
   return (
     <ModalShell onClose={onClose}>
       <div className="relative bg-white dark:bg-[#0f1117] rounded-3xl w-full max-w-sm p-6 shadow-2xl dark:shadow-[0_8px_40px_rgba(0,0,0,0.6)] border border-transparent dark:border-white/[0.07]">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-[#E8E9F0] mb-4">Update {label}</h2>
         <label className="text-sm text-gray-400 dark:text-[#9A9DAE] mb-2 block">{label}</label>
-        <div className="flex items-center border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] rounded-xl px-4 py-3 mb-6">
+        <div className={`flex items-center border rounded-xl px-4 py-3 mb-1 dark:bg-white/[0.05] ${error ? "border-red-400" : "border-gray-200 dark:border-white/[0.1]"}`}>
           <input
-            type="number"
+            type="text" inputMode="decimal"
             value={val}
-            onChange={(e) => setVal(e.target.value)}
-            placeholder="0"
+            onChange={(e) => { setVal(numericOnly(e.target.value)); setError(""); }}
+            placeholder="0.0"
             className="flex-1 outline-none text-lg font-medium bg-transparent text-gray-900 dark:text-[#E8E9F0] placeholder-gray-300 dark:placeholder-[#9A9DAE]"
             autoFocus
           />
           <span className="text-gray-400 dark:text-[#9A9DAE] text-sm ml-2">{unit}</span>
         </div>
+        {error && <p className="text-xs text-red-500 mb-4">{error}</p>}
+        {!error && <div className="mb-5" />}
         <div className="flex items-center justify-end gap-4">
           <button
             onClick={onClose}
@@ -149,7 +180,7 @@ function GenericMetricModal({ open, onClose, label, unit, value, onSave }) {
             Cancel
           </button>
           <button
-            onClick={() => { if (val && parseFloat(val) >= 0) { onSave(val); onClose(); } }}
+            onClick={handleSave}
             className="px-5 py-2 rounded-xl text-sm font-semibold bg-blue-600 text-white">
             Save
           </button>
