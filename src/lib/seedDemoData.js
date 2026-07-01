@@ -50,12 +50,12 @@ function randRange(min, max) {
 }
 
 const PROGRESS_PHOTOS = [
-  "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=80",
-  "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=80",
-  "https://images.unsplash.com/photo-1571731956672-f2b94d7dd0cb?w=800&q=80",
-  "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=800&q=80",
-  "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=800&q=80",
-  "https://images.unsplash.com/photo-1584466977773-e625c37cdd50?w=800&q=80",
+  "https://plus.unsplash.com/premium_photo-1749734291134-8872068fef89?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.0.3",
+  "https://images.unsplash.com/photo-1581822261290-991b38693d1b?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.0.3",
+  "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.0.3",
+  "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.0.3",
+  "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.0.3",
+  "https://images.unsplash.com/photo-1571731956672-f2b94d7dd0cb?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.0.3",
 ];
 
 export async function seedDemoDataIfNeeded() {

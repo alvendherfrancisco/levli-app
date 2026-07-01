@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { X, RotateCcw, Save } from "lucide-react";
 import { useAppState } from "@/lib/AppState";
 import { todayKey } from "@/lib/dateUtils";
+import { toast } from "sonner";
 
 const EMPTY = { calories: "", protein: "", water: "", fiber: "", carbs: "" };
 
@@ -51,6 +52,7 @@ export default function AddNutritionModal({ open, onClose, dayKey }) {
     });
     if (Object.values(newErrors).some(Boolean)) { setErrors(newErrors); return; }
     saveNutrition(dk, values);
+    toast.success("Nutrition data saved successfully!");
     onClose();
   };
 

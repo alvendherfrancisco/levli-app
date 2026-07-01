@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { X, Save, ChevronDown } from "lucide-react";
 import { useAppState } from "@/lib/AppState";
 import { todayKey } from "@/lib/dateUtils";
+import { toast } from "sonner";
 
 const SIDE_EFFECT_OPTIONS = [
   { label: "Nausea", emoji: "🤢" }, { label: "Vomiting", emoji: "🤮" },
@@ -44,6 +45,7 @@ export default function SideEffectsModal({ open, onClose, dayKey }) {
     if (chips.length) parts.push(chips.join(", "));
     if (notes.trim()) parts.push(notes.trim());
     saveSideEffects(dk, parts.join(" | "));
+    toast.success("Side effects saved successfully!");
     onClose();
   };
 

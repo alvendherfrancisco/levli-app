@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { X, Save, MapPin, Star, ChevronDown, Trash2 } from "lucide-react";
 import { useAppState } from "@/lib/AppState";
 import { formatShotDate } from "@/lib/dateUtils";
+import { toast } from "sonner";
 
 const medications = ["Zepbound®", "Mounjaro®", "Tirzepatide", "Wegovy®", "Ozempic®", "Semaglutide", "Retatrutide", "Saxenda®", "Liraglutide"];
 const injectionSites = [
@@ -98,22 +99,25 @@ export default function AddShotModal({ open, onClose, editingShot }) {
       date: formattedDate, time: formattedTime, site, pain: pain || 0, notes,
     };
     if (editingShot) {
-      await updateShot(editingShot.id, {
-        medication: payload.medication, dose: payload.dose, drug_class: payload.drugClass,
-        date: payload.date, time: payload.time, site: payload.site,
-        pain: payload.pain, notes: payload.notes,
-      });
-    } else {
-      await addShot(payload);
-    }
-    setSaving(false);
-    onClose();
+       await updateShot(editingShot.id, {
+         medication: payload.medication, dose: payload.dose, drug_class: payload.drugClass,
+         date: payload.date, time: payload.time, site: payload.site,
+         pain: payload.pain, notes: payload.notes,
+       });
+       toast.success("Shot updated successfully!");
+     } else {
+       await addShot(payload);
+       toast.success("Shot added successfully!");
+     }
+     setSaving(false);
+     onClose();
   };
 
   const handleDelete = async () => {
     if (!editingShot) return;
     if (!confirm("Delete this shot?")) return;
     await deleteShot(editingShot.id);
+    toast.success("Shot deleted successfully!");
     onClose();
   };
 

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Settings, Plus, BookOpen, Smile, FileText, AlertTriangle, Zap, Star, Clock, Heart } from "lucide-react";
 import JournalEntryModal from "@/components/modals/JournalEntryModal";
 import { useAppState } from "@/lib/AppState";
+import { toast } from "sonner";
 
 const CATEGORY_CONFIG = {
   "Mood":         { icon: <Smile size={20} />,         lightBg: "bg-green-100",  darkBg: "rgba(34,197,94,0.13)",   color: "#4ADE80" },
@@ -32,6 +33,7 @@ export default function Journal() {
 
   const handleDelete = (id) => {
     deleteJournalEntry(id);
+    toast.success("Entry deleted successfully!");
     setEditingEntry(null);
     setShowModal(false);
   };

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { X, Save, Trash2 } from "lucide-react";
 import { useAppState } from "@/lib/AppState";
+import { toast } from "sonner";
 
 const MOODS = [
   { label: "Feeling Excellent", emoji: "😊", lightCls: "bg-green-100 text-green-700 border-green-300", darkBg: "rgba(34,197,94,0.15)",  darkBorder: "rgba(34,197,94,0.3)",  darkText: "#4ade80" },
@@ -50,6 +51,7 @@ export default function JournalEntryModal({ open, onClose, onSave, onDelete, ini
     if (!text.trim()) return;
     const { date, time } = initialEntry ? { date: initialEntry.date, time: initialEntry.time } : nowFormatted();
     onSave({ text: text.trim(), date, time, mood: mood.label, moodColor: mood.lightCls, category });
+    toast.success(initialEntry ? "Entry updated successfully!" : "Entry added successfully!");
     onClose();
   };
 
