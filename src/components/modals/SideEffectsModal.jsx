@@ -40,13 +40,17 @@ export default function SideEffectsModal({ open, onClose, dayKey }) {
     setSelectedEffect(null);
   };
 
-  const handleSave = () => {
-    const parts = [];
-    if (chips.length) parts.push(chips.join(", "));
-    if (notes.trim()) parts.push(notes.trim());
-    saveSideEffects(dk, parts.join(" | "));
-    toast.success("Side effects saved successfully!");
-    onClose();
+  const handleSave = async () => {
+    try {
+      const parts = [];
+      if (chips.length) parts.push(chips.join(", "));
+      if (notes.trim()) parts.push(notes.trim());
+      await saveSideEffects(dk, parts.join(" | "));
+      toast.success("Side effects saved successfully!");
+      setTimeout(() => onClose(), 500);
+    } catch (err) {
+      toast.error("Failed to save side effects");
+    }
   };
 
   return (

@@ -30,14 +30,14 @@ const Toaster = ({
       toastOptions={{
         duration: 4000,
         classNames: {
-          toast: "!bg-white !dark:bg-[#0f1117] !text-gray-900 !dark:text-[#E8E9F0] !border !border-gray-200 !dark:border-white/[0.1] !shadow-lg !rounded-2xl !px-6 !py-4 !flex !items-center !gap-3 !max-w-sm !mx-4",
-          description: "!text-gray-600 !dark:text-[#9A9DAE] !text-sm",
+          toast: "!bg-white !dark:bg-slate-900/95 !text-gray-900 !dark:text-gray-100 !border !border-gray-200 !dark:border-gray-700/50 !shadow-md !dark:shadow-xl !rounded-xl !px-5 !py-3 !flex !items-center !gap-3 !max-w-md !mx-4",
+          description: "!text-gray-600 !dark:text-gray-300 !text-sm !font-medium",
           actionButton: "!bg-blue-600 !text-white !rounded-lg !px-3 !py-1.5 !text-sm !font-medium",
-          cancelButton: "!bg-gray-100 !dark:bg-white/[0.1] !text-gray-700 !dark:text-[#9A9DAE] !rounded-lg !px-3 !py-1.5 !text-sm",
-          closeButton: "!text-gray-400 hover:!text-gray-600 !dark:hover:!text-gray-300",
-          success: "!bg-white !dark:bg-[#0f1117] !border-green-200 !dark:border-green-500/20",
-          error: "!bg-white !dark:bg-[#0f1117] !border-red-200 !dark:border-red-500/20",
-          info: "!bg-white !dark:bg-[#0f1117] !border-blue-200 !dark:border-blue-500/20",
+          cancelButton: "!bg-gray-100 !dark:bg-gray-800 !text-gray-700 !dark:text-gray-300 !rounded-lg !px-3 !py-1.5 !text-sm",
+          closeButton: "!text-gray-400 hover:!text-gray-600 !dark:text-gray-500 !dark:hover:!text-gray-400",
+          success: "!bg-white !dark:bg-slate-900/95 !border-green-200 !dark:border-green-500/30 !text-green-700 !dark:text-green-400",
+          error: "!bg-white !dark:bg-slate-900/95 !border-red-200 !dark:border-red-500/30 !text-red-700 !dark:text-red-400",
+          info: "!bg-white !dark:bg-slate-900/95 !border-blue-200 !dark:border-blue-500/30 !text-blue-700 !dark:text-blue-400",
         },
       }}
       {...props}

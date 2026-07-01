@@ -47,12 +47,16 @@ export default function JournalEntryModal({ open, onClose, onSave, onDelete, ini
 
   if (!open) return null;
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!text.trim()) return;
-    const { date, time } = initialEntry ? { date: initialEntry.date, time: initialEntry.time } : nowFormatted();
-    onSave({ text: text.trim(), date, time, mood: mood.label, moodColor: mood.lightCls, category });
-    toast.success(initialEntry ? "Entry updated successfully!" : "Entry added successfully!");
-    onClose();
+    try {
+      const { date, time } = initialEntry ? { date: initialEntry.date, time: initialEntry.time } : nowFormatted();
+      await onSave({ text: text.trim(), date, time, mood: mood.label, moodColor: mood.lightCls, category });
+      toast.success(initialEntry ? "Journal entry updated successfully!" : "Journal entry added successfully!");
+      setTimeout(() => onClose(), 500);
+    } catch (err) {
+      toast.error("Failed to save journal entry");
+    }
   };
 
   return (

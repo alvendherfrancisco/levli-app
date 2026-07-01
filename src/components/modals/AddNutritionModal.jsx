@@ -51,9 +51,13 @@ export default function AddNutritionModal({ open, onClose, dayKey }) {
       if (!isValidNum(v)) newErrors[k] = "Invalid number";
     });
     if (Object.values(newErrors).some(Boolean)) { setErrors(newErrors); return; }
-    saveNutrition(dk, values);
-    toast.success("Nutrition data saved successfully!");
-    onClose();
+    try {
+      saveNutrition(dk, values);
+      toast.success("Nutrition data saved successfully!");
+      setTimeout(() => onClose(), 500);
+    } catch (err) {
+      toast.error("Failed to save nutrition data");
+    }
   };
 
   return (

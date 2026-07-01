@@ -22,20 +22,24 @@ export default function Journal() {
   const [editingEntry, setEditingEntry] = useState(null);
   const [filterCat, setFilterCat] = useState("All");
 
-  const handleSave = (entry) => {
+  const handleSave = async (entry) => {
     if (editingEntry) {
-      updateJournalEntry(editingEntry.id, entry);
+      await updateJournalEntry(editingEntry.id, entry);
     } else {
-      addJournalEntry(entry);
+      await addJournalEntry(entry);
     }
     setEditingEntry(null);
   };
 
-  const handleDelete = (id) => {
-    deleteJournalEntry(id);
-    toast.success("Entry deleted successfully!");
-    setEditingEntry(null);
-    setShowModal(false);
+  const handleDelete = async (id) => {
+    try {
+      await deleteJournalEntry(id);
+      toast.success("Journal entry deleted successfully!");
+      setEditingEntry(null);
+      setShowModal(false);
+    } catch (err) {
+      toast.error("Failed to delete journal entry");
+    }
   };
 
   const openEdit = (entry) => {setEditingEntry(entry);setShowModal(true);};

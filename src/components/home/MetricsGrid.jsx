@@ -5,6 +5,8 @@ import { useAppState } from "@/lib/AppState";
 import AddNutritionModal from "@/components/modals/AddNutritionModal";
 import AddMetricModal from "@/components/modals/AddMetricModal";
 import { todayKey } from "@/lib/dateUtils";
+import { useToast } from "@/hooks/useToast";
+import { toast } from "sonner";
 
 export default function MetricsGrid({ dayKey }) {
   const dk = dayKey || todayKey();
@@ -30,7 +32,7 @@ export default function MetricsGrid({ dayKey }) {
     {
       icon: <Scale size={14} className="text-yellow-600" />, label: "Weight",
       value: weight != null ? String(weight) : "–", unit: weightUnit, color: "bg-yellow-100",
-      onAdd: () => setMetricModal({ label: "Weight", unit: weightUnit, current: weight != null ? String(weight) : "", onSave: (v) => saveWeight(dk, v) }),
+      onAdd: () => setMetricModal({ label: "Weight", unit: weightUnit, current: weight != null ? String(weight) : "", onSave: async (v) => { await saveWeight(dk, v); toast.success("Weight saved successfully!"); } }),
     },
     {
       icon: <Flame size={14} className="text-orange-500" />, label: "Calories",
@@ -60,12 +62,12 @@ export default function MetricsGrid({ dayKey }) {
     {
       icon: <Dumbbell size={14} className="text-red-400" />, label: "Exercise",
       value: exercise != null ? String(exercise) : "0", unit: "min", color: "bg-red-100",
-      onAdd: () => setMetricModal({ label: "Exercise", unit: "min", current: exercise != null ? String(exercise) : "", onSave: (v) => saveExercise(dk, v) }),
+      onAdd: () => setMetricModal({ label: "Exercise", unit: "min", current: exercise != null ? String(exercise) : "", onSave: async (v) => { await saveExercise(dk, v); toast.success("Exercise saved successfully!"); } }),
     },
     {
       icon: <Camera size={14} className="text-purple-500" />, label: "Progress",
       value: photo ? "✓" : "–", unit: "pic", color: "bg-purple-100",
-      onAdd: () => setMetricModal({ label: "Progress", unit: "pic", current: photo || "–", onSave: (v) => saveProgressPhoto(dk, v), onDelete: () => saveProgressPhoto(dk, null) }),
+      onAdd: () => setMetricModal({ label: "Progress", unit: "pic", current: photo || "–", onSave: async (v) => { await saveProgressPhoto(dk, v); toast.success("Progress photo saved successfully!"); }, onDelete: async () => { await saveProgressPhoto(dk, null); toast.success("Progress photo deleted successfully!"); } }),
     },
   ];
 

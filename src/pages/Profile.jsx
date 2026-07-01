@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Settings, Syringe, Lock, User, Check, Loader2 } from "lucide-react";
 import { useAppState } from "@/lib/AppState";
+import { toast } from "sonner";
 
 // Only allow digits, one leading decimal, and basic numeric chars
 function numericOnly(value, { allowDecimal = true, max = null, min = 0 } = {}) {
@@ -47,7 +48,12 @@ export default function Profile() {
     setSaving((p) => ({ ...p, [key]: true }));
     const partial = {};
     updates.forEach((f) => { partial[f] = local[f]; });
-    await setProfile({ ...profile, ...partial });
+    try {
+      await setProfile({ ...profile, ...partial });
+      toast.success("Profile updated successfully!");
+    } catch (err) {
+      toast.error("Failed to update profile");
+    }
     setSaving((p) => ({ ...p, [key]: false }));
     setSaved((p) => ({ ...p, [key]: true }));
     setTimeout(() => setSaved((p) => ({ ...p, [key]: false })), 1500);
@@ -75,7 +81,12 @@ export default function Profile() {
       onClick={async () => {
         const next = { ...local, [field]: opt };
         setLocal(next);
-        await setProfile({ ...profile, [field]: opt });
+        try {
+          await setProfile({ ...profile, [field]: opt });
+          toast.success("Profile updated successfully!");
+        } catch (err) {
+          toast.error("Failed to update profile");
+        }
       }}
       className={`px-5 py-2 text-sm font-medium transition-colors ${
       local[field] === opt ?
