@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Settings, TrendingDown, Syringe, HelpCircle, Zap, Gauge, Camera, Image, Clock, Plus } from "lucide-react";
-import ProgressPhotosModal from "@/components/modals/ProgressPhotosModal";
+import { Settings, TrendingDown, Syringe, HelpCircle, Zap, Gauge, Camera, Image, Clock, Plus, ArrowRight, Maximize2, Minimize2 } from "lucide-react";
+import ProgressPhotoCard from "@/components/insights/ProgressPhotoCard";
 import AddMetricModal from "@/components/modals/AddMetricModal";
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { useAppState } from "@/lib/AppState";
@@ -61,24 +61,15 @@ const WEIGHT_RANGES = { "30 Days": 30, "180 Days": 180, "1 Year": 365 };
 const MED_RANGES = { "7 Days": 7, "30 Days": 30, "90 Days": 90 };
 
 export default function Insights() {
-  const { shots, weightHistory, profile, dayMetrics, saveProgressPhoto } = useAppState();
+  const { shots, weightHistory, profile, dayMetrics, progressPhotosList, addProgressPhotoRecord, updateProgressPhotoRecord, deleteProgressPhotoRecord } = useAppState();
   const [weightRange, setWeightRange] = useState("180 Days");
   const [medRange, setMedRange] = useState("30 Days");
-  const [showPhotosModal, setShowPhotosModal] = useState(false);
-  const [photoModalDay, setPhotoModalDay] = useState(null);
+  const [viewAllPhotos, setViewAllPhotos] = useState(false);
+  const [photoModal, setPhotoModal] = useState(null); // { mode: "add", dayKey } | { mode: "edit", id, dayKey, url }
   const weightUnit = profile?.weight_unit || "lb";
 
   const medData = useMemo(() => buildMedLevelData(shots, MED_RANGES[medRange]), [shots, medRange]);
   const weightData = useMemo(() => buildWeightData(weightHistory, WEIGHT_RANGES[weightRange]), [weightHistory, weightRange]);
-
-  // Progress pictures: all days with a photo, sorted newest first
-  const progressPhotos = useMemo(() =>
-    Object.entries(dayMetrics)
-      .filter(([, m]) => m.progress_photo)
-      .map(([key, m]) => ({ isoDate: key, url: m.progress_photo }))
-      .sort((a, b) => b.isoDate.localeCompare(a.isoDate)),
-    [dayMetrics]
-  );
 
   const formatPhotoDate = (isoDate) => {
     const [y, m, d] = isoDate.split("-").map(Number);
@@ -86,27 +77,51 @@ export default function Insights() {
     return { month: `${months[m-1]} ${d}`, year: String(y) };
   };
 
-  // Journey days = days between first and latest photo
-  const journeyDays = progressPhotos.length >= 2
-    ? Math.round((new Date(progressPhotos[0].isoDate) - new Date(progressPhotos[progressPhotos.length-1].isoDate)) / 86400000)
+  // All photos sorted oldest → newest
+  const photosAsc = useMemo(() =>
+    [...progressPhotosList].sort((a, b) => new Date(a.created_date) - new Date(b.created_date)),
+    [progressPhotosList]
+  );
+  const latestPhoto = photosAsc.length ? photosAsc[photosAsc.length - 1] : null;
+
+  // Distinct days that have photos, oldest → newest
+  const distinctDayKeys = useMemo(() => {
+    const seen = [];
+    photosAsc.forEach((p) => { if (!seen.includes(p.day_key)) seen.push(p.day_key); });
+    return seen;
+  }, [photosAsc]);
+
+  const journeyDays = distinctDayKeys.length >= 2
+    ? Math.round((new Date(distinctDayKeys[distinctDayKeys.length - 1]) - new Date(distinctDayKeys[0])) / 86400000)
     : 0;
 
-  const latestPhotoDate = progressPhotos.length ? formatPhotoDate(progressPhotos[0].isoDate) : null;
-
-  const handleAddPhoto = async (url) => {
-    const today = new Date();
-    const dayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-    await saveProgressPhoto(dayKey, url);
+  const latestPhotoDate = latestPhoto ? formatPhotoDate(latestPhoto.day_key) : null;
+  const getWeightLabel = (dayKey) => {
+    const w = dayMetrics[dayKey]?.weight;
+    return w != null ? `${w.toFixed(1)} ${weightUnit}` : null;
   };
 
-  const photoModalValue = photoModalDay ? (dayMetrics[photoModalDay]?.progress_photo || "–") : "–";
+  // Collapsed view: latest photo of the previous distinct day + latest photo overall
+  const prevDayKey = distinctDayKeys.length >= 2 ? distinctDayKeys[distinctDayKeys.length - 2] : null;
+  const prevDayPhoto = prevDayKey ? [...photosAsc].reverse().find((p) => p.day_key === prevDayKey) : null;
+  const gapDays = prevDayKey && latestPhoto
+    ? Math.round((new Date(latestPhoto.day_key) - new Date(prevDayKey)) / 86400000)
+    : null;
+
+  const openAddPhoto = () => setPhotoModal({ mode: "add", dayKey: todayKey() });
+  const openEditPhoto = (photo) => setPhotoModal({ mode: "edit", id: photo.id, dayKey: photo.day_key, url: photo.url });
+
   const handleSavePhotoModal = async (url) => {
-    const wasExisting = photoModalValue !== "–";
-    await saveProgressPhoto(photoModalDay, url);
-    toast.success(wasExisting ? "Progress photo updated successfully!" : "Progress photo added successfully!");
+    if (photoModal.mode === "add") {
+      await addProgressPhotoRecord(photoModal.dayKey, url);
+      toast.success("Progress photo added successfully!");
+    } else {
+      await updateProgressPhotoRecord(photoModal.id, photoModal.dayKey, url);
+      toast.success("Progress photo updated successfully!");
+    }
   };
   const handleDeletePhotoModal = async () => {
-    await saveProgressPhoto(photoModalDay, null);
+    await deleteProgressPhotoRecord(photoModal.id, photoModal.dayKey);
     toast.success("Progress photo deleted successfully!");
   };
 
@@ -253,7 +268,7 @@ export default function Insights() {
             <div className="rounded-xl p-2.5 text-center" style={{ background: "rgba(59,130,246,0.1)", border: "1px solid rgba(59,130,246,0.15)" }}>
               <Image size={14} className="text-blue-400 mx-auto mb-1" />
               <p className="text-[11px] text-gray-500 dark:text-[#9A9DAE]">Total Photos</p>
-              <p className="font-bold text-blue-500 dark:text-blue-400 text-sm">{progressPhotos.length}</p>
+              <p className="font-bold text-blue-500 dark:text-blue-400 text-sm">{photosAsc.length}</p>
             </div>
             <div className="rounded-xl p-2.5 text-center" style={{ background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.15)" }}>
               <Clock size={14} className="text-green-400 mx-auto mb-1" />
@@ -267,55 +282,78 @@ export default function Insights() {
             </div>
           </div>
 
-          {progressPhotos.length === 0 ? (
+          {photosAsc.length === 0 ? (
             <div className="h-36 flex flex-col items-center justify-center bg-gray-50 dark:bg-white/[0.03] rounded-xl gap-2">
               <Camera size={28} className="text-gray-300 dark:text-white/20" />
-              <p className="text-sm text-gray-400 dark:text-[#9A9DAE] text-center px-4">Add progress photos on the Home tab to track your visual journey.</p>
+              <p className="text-sm text-gray-400 dark:text-[#9A9DAE] text-center px-4">Add progress photos to track your visual journey.</p>
             </div>
           ) : (
             <div className="space-y-3">
-              <div className="grid grid-cols-2 gap-3">
-                {progressPhotos.slice(0, 4).map((p) => {
-                  const fd = formatPhotoDate(p.isoDate);
-                  const isLatest = p.isoDate === progressPhotos[0].isoDate;
-                  return (
-                    <button key={p.isoDate} onClick={() => setPhotoModalDay(p.isoDate)}
-                      className="relative rounded-xl overflow-hidden border border-gray-100 dark:border-white/[0.08] text-left">
-                      <img src={p.url} alt={`Progress ${p.isoDate}`} className="w-full object-cover aspect-square" />
-                      {isLatest && (
-                        <span className="absolute top-2 left-2 bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">Latest</span>
-                      )}
-                      <div className="text-center py-1.5 bg-gray-50 dark:bg-white/[0.05]">
-                        <p className="text-xs font-semibold text-gray-700 dark:text-[#E8E9F0]">{fd.month}</p>
-                        <p className="text-[10px] text-gray-400 dark:text-[#9A9DAE]">{fd.year}</p>
+              {viewAllPhotos ? (
+                <div className="flex gap-3 overflow-x-auto pb-1">
+                  {photosAsc.map((p) => (
+                    <ProgressPhotoCard
+                      key={p.id}
+                      photo={p}
+                      dateLabel={formatPhotoDate(p.day_key)}
+                      weightLabel={getWeightLabel(p.day_key)}
+                      tag={p.id === latestPhoto.id ? "latest" : (p.day_key === latestPhoto.day_key ? "same-day" : null)}
+                      onClick={() => openEditPhoto(p)}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="flex items-center justify-center gap-3">
+                  {prevDayPhoto && (
+                    <>
+                      <ProgressPhotoCard
+                        photo={prevDayPhoto}
+                        dateLabel={formatPhotoDate(prevDayPhoto.day_key)}
+                        weightLabel={getWeightLabel(prevDayPhoto.day_key)}
+                        tag={null}
+                        onClick={() => openEditPhoto(prevDayPhoto)}
+                      />
+                      <div className="flex flex-col items-center gap-1 flex-shrink-0">
+                        <ArrowRight size={18} className="text-blue-500" />
+                        <span className="text-xs text-blue-400 whitespace-nowrap">{gapDays} days</span>
                       </div>
-                    </button>
-                  );
-                })}
-              </div>
-              {progressPhotos.length > 4 && (
-                <button onClick={() => setShowPhotosModal(true)}
-                  className="w-full py-2.5 text-blue-600 dark:text-blue-400 font-semibold text-sm hover:bg-blue-50 dark:hover:bg-blue-500/10 rounded-xl transition-colors">
-                  View All ({progressPhotos.length})
-                </button>
+                    </>
+                  )}
+                  <ProgressPhotoCard
+                    photo={latestPhoto}
+                    dateLabel={formatPhotoDate(latestPhoto.day_key)}
+                    weightLabel={getWeightLabel(latestPhoto.day_key)}
+                    tag="latest"
+                    onClick={() => openEditPhoto(latestPhoto)}
+                  />
+                </div>
               )}
-              <button
-                onClick={() => setPhotoModalDay(todayKey())}
-                className="w-full py-2.5 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-blue-700 transition-colors text-sm">
-                <Plus size={16} /> Add Photo
-              </button>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={openAddPhoto}
+                  className="flex-1 py-3 bg-blue-600 text-white rounded-full font-semibold flex items-center justify-center gap-2 hover:bg-blue-700 transition-colors text-sm">
+                  <Plus size={16} /> Add Photo
+                </button>
+                {distinctDayKeys.length >= 2 && (
+                  <button
+                    onClick={() => setViewAllPhotos((v) => !v)}
+                    className="flex-1 py-3 bg-gray-100 dark:bg-white/[0.07] text-blue-600 dark:text-blue-400 rounded-full font-semibold flex items-center justify-center gap-2 hover:bg-gray-200 dark:hover:bg-white/[0.12] transition-colors text-sm">
+                    {viewAllPhotos ? <><Minimize2 size={16} /> Collapse</> : <><Maximize2 size={16} /> View All</>}
+                  </button>
+                )}
+              </div>
             </div>
           )}
 
-        <ProgressPhotosModal open={showPhotosModal} onClose={() => setShowPhotosModal(false)} photos={progressPhotos} onAddPhoto={handleAddPhoto} />
         <AddMetricModal
-          open={!!photoModalDay}
-          onClose={() => setPhotoModalDay(null)}
+          open={!!photoModal}
+          onClose={() => setPhotoModal(null)}
           label="Progress"
           unit="pic"
-          value={photoModalValue}
+          value={photoModal?.mode === "edit" ? photoModal.url : "–"}
           onSave={handleSavePhotoModal}
-          onDelete={handleDeletePhotoModal}
+          onDelete={photoModal?.mode === "edit" ? handleDeletePhotoModal : undefined}
         />
         </div>
 

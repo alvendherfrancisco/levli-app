@@ -14,7 +14,7 @@ export default function MetricsGrid({ dayKey }) {
     getNutrition, saveNutrition,
     getWeight, saveWeight,
     getExercise, saveExercise,
-    getProgressPhoto, saveProgressPhoto,
+    getProgressPhoto, addProgressPhotoRecord, deleteLatestProgressPhoto,
     profile,
   } = useAppState();
 
@@ -67,7 +67,7 @@ export default function MetricsGrid({ dayKey }) {
     {
       icon: <Camera size={14} className="text-purple-500" />, label: "Progress",
       value: photo ? "✓" : "–", unit: "pic", color: "bg-purple-100",
-      onAdd: () => setMetricModal({ label: "Progress", unit: "pic", current: photo || "–", onSave: async (v) => { await saveProgressPhoto(dk, v); photo ? toast.success("Progress photo updated successfully!") : toast.success("Progress photo added successfully!"); }, onDelete: async () => { await saveProgressPhoto(dk, null); toast.success("Progress photo deleted successfully!"); } }),
+      onAdd: () => setMetricModal({ label: "Progress", unit: "pic", current: photo || "–", onSave: async (v) => { await addProgressPhotoRecord(dk, v); toast.success("Progress photo added successfully!"); }, onDelete: async () => { await deleteLatestProgressPhoto(dk); toast.success("Progress photo deleted successfully!"); } }),
     },
   ];
 

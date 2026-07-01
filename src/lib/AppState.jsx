@@ -15,6 +15,7 @@ export function AppStateProvider({ children }) {
   const [shots, setShots] = useState([]);
   const [shotsLoading, setShotsLoading] = useState(true);
   const [dayMetrics, setDayMetrics] = useState({}); // key: day_key → record
+  const [progressPhotosList, setProgressPhotosList] = useState([]); // all ProgressPhoto records, sorted asc by created_date
   const [journalEntries, setJournalEntries] = useState([]);
   const [profile, setProfileState] = useState(DEFAULT_PROFILE);
   const [profileId, setProfileId] = useState(null);
@@ -34,6 +35,7 @@ export function AppStateProvider({ children }) {
       loadJournal();
       loadProfile();
       loadDayMetrics();
+      loadProgressPhotos();
     })();
   }, []);
 
@@ -73,6 +75,11 @@ export function AppStateProvider({ children }) {
     const map = {};
     data.forEach((d) => { map[d.day_key] = d; });
     setDayMetrics(map);
+  };
+
+  const loadProgressPhotos = async () => {
+    const data = await base44.entities.ProgressPhoto.list("created_date", 1000);
+    setProgressPhotosList(data);
   };
 
   // ── Shots CRUD ─────────────────────────────────────────────────────────────
@@ -147,7 +154,47 @@ export function AppStateProvider({ children }) {
   const saveExercise = (dayKey, val) => saveDayMetric(dayKey, { exercise_min: parseFloat(val) || 0 });
 
   const getProgressPhoto = (dayKey) => dayMetrics[dayKey]?.progress_photo || null;
-  const saveProgressPhoto = (dayKey, url) => saveDayMetric(dayKey, { progress_photo: url });
+
+  // ── Progress Photos (multiple per day) ────────────────────────────────────
+  const getPhotosForDay = (dayKey) => progressPhotosList.filter((p) => p.day_key === dayKey);
+
+  const addProgressPhotoRecord = async (dayKey, url) => {
+    const rec = await base44.entities.ProgressPhoto.create({ day_key: dayKey, url });
+    setProgressPhotosList((prev) => [...prev, rec]);
+    await saveDayMetric(dayKey, { progress_photo: url });
+    return rec;
+  };
+
+  const updateProgressPhotoRecord = async (id, dayKey, url) => {
+    const rec = await base44.entities.ProgressPhoto.update(id, { url });
+    const dayPhotos = getPhotosForDay(dayKey);
+    const isLatest = dayPhotos.length > 0 && dayPhotos[dayPhotos.length - 1].id === id;
+    setProgressPhotosList((prev) => prev.map((p) => (p.id === id ? { ...p, ...rec } : p)));
+    if (isLatest) await saveDayMetric(dayKey, { progress_photo: url });
+    return rec;
+  };
+
+  const deleteProgressPhotoRecord = async (id, dayKey) => {
+    await base44.entities.ProgressPhoto.delete(id);
+    let remainingForDay = [];
+    setProgressPhotosList((prev) => {
+      const next = prev.filter((p) => p.id !== id);
+      remainingForDay = next.filter((p) => p.day_key === dayKey);
+      return next;
+    });
+    const newLatestUrl = remainingForDay.length ? remainingForDay[remainingForDay.length - 1].url : null;
+    await saveDayMetric(dayKey, { progress_photo: newLatestUrl });
+  };
+
+  const deleteLatestProgressPhoto = async (dayKey) => {
+    const dayPhotos = getPhotosForDay(dayKey);
+    if (dayPhotos.length > 0) {
+      const latest = dayPhotos[dayPhotos.length - 1];
+      await deleteProgressPhotoRecord(latest.id, dayKey);
+    } else {
+      await saveDayMetric(dayKey, { progress_photo: null });
+    }
+  };
 
   // ── Journal CRUD ───────────────────────────────────────────────────────────
   const addJournalEntry = async (entry) => {
@@ -209,6 +256,7 @@ export function AppStateProvider({ children }) {
   const resetState = () => {
     setShots([]);
     setDayMetrics({});
+    setProgressPhotosList([]);
     setJournalEntries([]);
     setProfileState(DEFAULT_PROFILE);
     setProfileId(null);
@@ -252,7 +300,9 @@ export function AppStateProvider({ children }) {
       getSideEffects, saveSideEffects,
       getWeight, saveWeight,
       getExercise, saveExercise,
-      getProgressPhoto, saveProgressPhoto,
+      getProgressPhoto,
+      progressPhotosList, getPhotosForDay,
+      addProgressPhotoRecord, updateProgressPhotoRecord, deleteProgressPhotoRecord, deleteLatestProgressPhoto,
       // Journal
       journalEntries, addJournalEntry, updateJournalEntry, deleteJournalEntry,
       // Profile

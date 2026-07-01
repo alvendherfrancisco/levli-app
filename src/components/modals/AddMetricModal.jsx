@@ -76,7 +76,8 @@ function ProgressModal({ open, onClose, value, onSave, onDelete }) {
   const hasExisting = value && value !== "–";
   const [imgUrl, setImgUrl] = useState(hasExisting ? value : null);
   const [uploading, setUploading] = useState(false);
-  const fileRef = useRef();
+  const cameraRef = useRef();
+  const galleryRef = useRef();
 
   useEffect(() => { if (open) { setImgUrl(hasExisting ? value : null); setUploading(false); } }, [open]);
 
@@ -91,6 +92,7 @@ function ProgressModal({ open, onClose, value, onSave, onDelete }) {
       setImgUrl(file_url);
     } finally {
       setUploading(false);
+      e.target.value = "";
     }
   };
 
@@ -118,19 +120,21 @@ function ProgressModal({ open, onClose, value, onSave, onDelete }) {
             )}
           </div>
           <div className="flex gap-3 mt-4">
-            <button disabled={uploading} onClick={() => fileRef.current?.click()}
+            <button disabled={uploading} onClick={() => cameraRef.current?.click()}
               className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-60">
               <Camera size={18} /> Camera
             </button>
-            <button disabled={uploading} onClick={() => fileRef.current?.click()}
+            <button disabled={uploading} onClick={() => galleryRef.current?.click()}
               className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-60">
               <Image size={18} /> Gallery
             </button>
-            <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
+            <input ref={cameraRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={handleFile} />
+            <input ref={galleryRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
           </div>
         </div>
+        <div className="border-t border-gray-100 dark:border-white/[0.08]" />
         {hasExisting ? (
-          <div className="flex gap-3 px-5 pb-8">
+          <div className="flex gap-3 px-5 pt-5 pb-8">
             <button onClick={() => { onDelete(); onClose(); }}
               className="flex-1 py-3 bg-red-500/10 dark:bg-red-500/10 text-red-500 dark:text-red-400 border border-red-500/20 rounded-xl font-semibold flex items-center justify-center gap-2">
               <Trash2 size={18} /> Delete
@@ -141,7 +145,7 @@ function ProgressModal({ open, onClose, value, onSave, onDelete }) {
             </button>
           </div>
         ) : (
-          <div className="px-5 pb-8">
+          <div className="px-5 pt-5 pb-8">
             <button disabled={uploading || !imgUrl} onClick={() => { if (imgUrl) { onSave(imgUrl); onClose(); } }}
               className={`w-full py-3.5 rounded-xl font-semibold flex items-center justify-center gap-2 bg-blue-600 text-white ${!imgUrl || uploading ? "opacity-60" : ""}`}>
               <Save size={18} /> Save
