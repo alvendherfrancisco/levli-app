@@ -37,6 +37,18 @@ const JOURNAL_TEXTS = [
   "Cravings were tough today but stayed on track.",
 ];
 
+// 26 weekly doses, escalating: 0.5mg x6 → 1mg x7 → 1.7mg x7 → 2.5mg x6
+const DOSE_STAGES = [
+  0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
+  1, 1, 1, 1, 1, 1, 1,
+  1.7, 1.7, 1.7, 1.7, 1.7, 1.7, 1.7,
+  2.5, 2.5, 2.5, 2.5, 2.5, 2.5,
+];
+
+function randRange(min, max) {
+  return Math.round(min + Math.random() * (max - min));
+}
+
 export async function seedDemoDataIfNeeded() {
   let user;
   try {
@@ -46,65 +58,91 @@ export async function seedDemoDataIfNeeded() {
   }
   if (!user || user.email !== DEMO_EMAIL) return;
 
-  const existing = await base44.entities.Shot.list("-date", 1);
-  if (existing.length > 0) return; // already seeded
+  const [existingShots, existingDayMetrics, existingJournal] = await Promise.all([
+    base44.entities.Shot.list("-date", 1),
+    base44.entities.DayMetric.list("-day_key", 1),
+    base44.entities.JournalEntry.list("-date", 1),
+  ]);
 
   const today = new Date();
 
-  // 26 weekly shots going back ~26 weeks
-  const shots = [];
-  for (let i = 25; i >= 0; i--) {
-    const d = new Date(today);
-    d.setDate(d.getDate() - i * 7);
-    shots.push({
-      medication: "Ozempic®",
-      dose: 2.5,
-      drug_class: "Semaglutide",
-      date: fmtDate(d),
-      time: "8:00 AM",
-      site: SITES[(25 - i) % SITES.length],
-      pain: Math.floor(Math.random() * 4),
-      notes: "",
-    });
+  // ── Shots: 26 weekly shots with escalating doses ────────────────────────────
+  if (existingShots.length === 0) {
+    const shots = [];
+    for (let i = 25; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(d.getDate() - i * 7);
+      shots.push({
+        medication: "Ozempic®",
+        dose: DOSE_STAGES[25 - i],
+        drug_class: "Semaglutide",
+        date: fmtDate(d),
+        time: "8:00 AM",
+        site: SITES[(25 - i) % SITES.length],
+        pain: Math.floor(Math.random() * 4),
+        notes: "",
+      });
+    }
+    await base44.entities.Shot.bulkCreate(shots);
   }
 
-  // 57 daily metrics going back 57 days with a gentle downward weight trend
-  const dayMetrics = [];
-  const startWeight = 195;
-  for (let i = 56; i >= 0; i--) {
-    const d = new Date(today);
-    d.setDate(d.getDate() - i);
-    const progress = (56 - i) / 56;
-    const weight = Math.round((startWeight - progress * 18 + (Math.random() * 1.5 - 0.75)) * 10) / 10;
-    dayMetrics.push({
-      day_key: dayKey(d),
-      weight,
-      calories: 1500 + Math.floor(Math.random() * 400),
-      protein: 80 + Math.floor(Math.random() * 40),
-      water: 40 + Math.floor(Math.random() * 40),
-      fiber: 15 + Math.floor(Math.random() * 15),
-      carbs: 100 + Math.floor(Math.random() * 80),
-      exercise_min: Math.floor(Math.random() * 45),
-    });
+  // ── Day metrics: weekly kg weight trend (6mo) + daily nutrition (30d) ───────
+  if (existingDayMetrics.length === 0) {
+    const dayMetricsMap = {};
+
+    // Weekly weight points, 98kg → 90kg over 26 weeks, with realistic fluctuation
+    let currentWeight = 98;
+    const weeks = 26;
+    for (let w = 0; w < weeks; w++) {
+      const remainingWeeks = weeks - w;
+      const remainingLoss = currentWeight - 90;
+      const avgNeeded = remainingWeeks > 0 ? remainingLoss / remainingWeeks : 0;
+      const fluctuation = (Math.random() - 0.5) * 0.4;
+      let loss = avgNeeded + fluctuation;
+      loss = Math.max(0.1, Math.min(0.6, loss));
+      currentWeight = Math.round((currentWeight - loss) * 10) / 10;
+      if (w === weeks - 1) currentWeight = 90;
+
+      const d = new Date(today);
+      d.setDate(d.getDate() - (weeks - 1 - w) * 7);
+      dayMetricsMap[dayKey(d)] = { day_key: dayKey(d), weight: currentWeight };
+    }
+
+    // Last 30 days: nutrition + exercise, merged with any existing weight day
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(d.getDate() - i);
+      const key = dayKey(d);
+      dayMetricsMap[key] = {
+        ...(dayMetricsMap[key] || { day_key: key }),
+        calories: randRange(1600, 1900),
+        protein: randRange(70, 90),
+        water: randRange(1500, 2000),
+        fiber: randRange(18, 25),
+        carbs: randRange(130, 180),
+        exercise_min: randRange(0, 45),
+      };
+    }
+
+    await base44.entities.DayMetric.bulkCreate(Object.values(dayMetricsMap));
   }
 
-  // 12 journal entries spread across the last ~50 days
-  const journalEntries = [];
-  for (let i = 0; i < 12; i++) {
-    const d = new Date(today);
-    d.setDate(d.getDate() - Math.floor((56 / 12) * i));
-    const moodPick = MOODS[i % MOODS.length];
-    journalEntries.push({
-      text: JOURNAL_TEXTS[i % JOURNAL_TEXTS.length],
-      date: fmtDate(d),
-      time: "7:30 PM",
-      mood: moodPick.mood,
-      mood_color: moodPick.mood_color,
-      category: CATEGORIES[i % CATEGORIES.length],
-    });
+  // ── Journal entries ──────────────────────────────────────────────────────────
+  if (existingJournal.length === 0) {
+    const journalEntries = [];
+    for (let i = 0; i < 12; i++) {
+      const d = new Date(today);
+      d.setDate(d.getDate() - Math.floor((56 / 12) * i));
+      const moodPick = MOODS[i % MOODS.length];
+      journalEntries.push({
+        text: JOURNAL_TEXTS[i % JOURNAL_TEXTS.length],
+        date: fmtDate(d),
+        time: "7:30 PM",
+        mood: moodPick.mood,
+        mood_color: moodPick.mood_color,
+        category: CATEGORIES[i % CATEGORIES.length],
+      });
+    }
+    await base44.entities.JournalEntry.bulkCreate(journalEntries);
   }
-
-  await base44.entities.Shot.bulkCreate(shots);
-  await base44.entities.DayMetric.bulkCreate(dayMetrics);
-  await base44.entities.JournalEntry.bulkCreate(journalEntries);
 }
