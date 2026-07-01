@@ -4,8 +4,14 @@
   left: 50% !important;
   right: auto !important;
   transform: translateX(-50%) !important;
-  width: calc(100% - 2rem) !important;
-  max-width: 480px !important;
+  width: 100% !important;
+  max-width: 420px !important;
+}
+
+@media (max-width: 640px) {
+  [data-sonner-toaster] {
+    width: calc(100% - 2rem) !important;
+  }
 }
 
 /* Toast card */
@@ -72,9 +78,7 @@
   font-size: 0.9375rem;
   line-height: 1.375;
   color: #111827;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  word-break: break-word;
 }
 
 .dark .app-toast [data-title] {
