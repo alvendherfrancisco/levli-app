@@ -25,7 +25,7 @@ export function Toaster() {
 
   return (
     <SonnerToaster
-      position="top-right"
+      position="top-center"
       theme={theme}
       closeButton
       limit={3}
@@ -41,6 +41,7 @@ export function Toaster() {
         unstyled: true,
         classNames: {
           toast: "app-toast",
+          closeButton: "app-toast-close",
           success: "app-toast-success",
           error: "app-toast-error",
           warning: "app-toast-warning",
