@@ -24,7 +24,7 @@ export function Toaster() {
 
   return (
     <SonnerToaster
-      position="top-center"
+      position="top-right"
       theme={theme}
       closeButton
       richColors
