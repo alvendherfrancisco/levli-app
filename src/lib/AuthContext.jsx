@@ -5,6 +5,15 @@ import { createAxiosClient } from '@base44/sdk/dist/utils/axios-client';
 
 const AuthContext = createContext();
 
+const AUTH_CHECK_TIMEOUT_MS = 5000;
+
+function withTimeout(promise, ms) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), ms)),
+  ]);
+}
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -35,7 +44,10 @@ export const AuthProvider = ({ children }) => {
       });
       
       try {
-        const publicSettings = await appClient.get(`/prod/public-settings/by-id/${appParams.appId}`);
+        const publicSettings = await withTimeout(
+          appClient.get(`/prod/public-settings/by-id/${appParams.appId}`),
+          AUTH_CHECK_TIMEOUT_MS
+        );
         setAppPublicSettings(publicSettings);
         
         // If we got the app public settings successfully, check if user is authenticated
@@ -70,20 +82,23 @@ export const AuthProvider = ({ children }) => {
             });
           }
         } else {
+          // Network error, timeout, or unknown failure — don't hang, send to login
           setAuthError({
-            type: 'unknown',
+            type: 'auth_required',
             message: appError.message || 'Failed to load app'
           });
         }
+        setAuthChecked(true);
         setIsLoadingPublicSettings(false);
         setIsLoadingAuth(false);
       }
     } catch (error) {
       console.error('Unexpected error:', error);
       setAuthError({
-        type: 'unknown',
+        type: 'auth_required',
         message: error.message || 'An unexpected error occurred'
       });
+      setAuthChecked(true);
       setIsLoadingPublicSettings(false);
       setIsLoadingAuth(false);
     }
@@ -93,7 +108,7 @@ export const AuthProvider = ({ children }) => {
     try {
       // Now check if the user is authenticated
       setIsLoadingAuth(true);
-      const currentUser = await base44.auth.me();
+      const currentUser = await withTimeout(base44.auth.me(), AUTH_CHECK_TIMEOUT_MS);
       setUser(currentUser);
       setIsAuthenticated(true);
       setIsLoadingAuth(false);
@@ -103,14 +118,12 @@ export const AuthProvider = ({ children }) => {
       setIsLoadingAuth(false);
       setIsAuthenticated(false);
       setAuthChecked(true);
-      
-      // If user auth fails, it might be an expired token
-      if (error.status === 401 || error.status === 403) {
-        setAuthError({
-          type: 'auth_required',
-          message: 'Authentication required'
-        });
-      }
+
+      // Token expired/invalid, or the check timed out — send to login instead of hanging
+      setAuthError({
+        type: 'auth_required',
+        message: 'Authentication required'
+      });
     }
   };
 
