@@ -2,9 +2,10 @@ import React from "react";
 import { useAppState } from "@/lib/AppState";
 import { parseShotDate, toDayKey } from "@/lib/dateUtils";
 
-export default function DateStrip() {
+export default function DateStrip({ selectedDate, onSelectDate }) {
   const { shots } = useAppState();
   const today = new Date();
+  const selected = selectedDate || today;
 
   const shotDayKeys = new Set(shots.map((s) => {
     const d = parseShotDate(s.date);
@@ -24,28 +25,28 @@ export default function DateStrip() {
   return (
     <div className="flex items-center justify-center gap-3 py-3">
       {days.map((d) => {
-        const isToday = d.getDate() === today.getDate() && d.getMonth() === today.getMonth() && d.getFullYear() === today.getFullYear();
+        const isSelected = d.getDate() === selected.getDate() && d.getMonth() === selected.getMonth() && d.getFullYear() === selected.getFullYear();
         const hasShot = shotDayKeys.has(toDayKey(d));
         return (
-          <div
+          <button
             key={d.getTime()}
+            onClick={() => onSelectDate && onSelectDate(d)}
             className={`flex flex-col items-center gap-0.5 px-3 py-2 rounded-2xl min-w-[52px] transition-all ${
-              isToday
+              isSelected
                 ? "bg-blue-600 dark:bg-blue-500/80 text-white shadow-lg dark:[box-shadow:0_0_18px_4px_rgba(91,141,239,0.35)]"
                 : "text-gray-400 dark:text-[#9A9DAE]"
             }`}
-            style={isToday ? { boxShadow: undefined } : undefined}
           >
             <span className="text-[11px] font-medium">{dayNames[d.getDay()]}</span>
-            <span className={`text-lg font-bold ${isToday ? "text-white" : "text-gray-600 dark:text-[#E8E9F0]"}`}>{d.getDate()}</span>
-            <span className={`text-[11px] ${isToday ? "text-blue-200 dark:text-blue-200" : "text-gray-400 dark:text-[#9A9DAE]"}`}>{monthNames[d.getMonth()]}</span>
+            <span className={`text-lg font-bold ${isSelected ? "text-white" : "text-gray-600 dark:text-[#E8E9F0]"}`}>{d.getDate()}</span>
+            <span className={`text-[11px] ${isSelected ? "text-blue-200 dark:text-blue-200" : "text-gray-400 dark:text-[#9A9DAE]"}`}>{monthNames[d.getMonth()]}</span>
             {hasShot && (
               <div
                 className="w-1.5 h-1.5 rounded-full bg-green-400 mt-0.5"
                 style={{ boxShadow: "0 0 6px 2px rgba(74,222,128,0.5)" }}
               />
             )}
-          </div>
+          </button>
         );
       })}
     </div>

@@ -7,13 +7,14 @@ import MetricsGrid from "@/components/home/MetricsGrid";
 import AddShotModal from "@/components/modals/AddShotModal";
 import SideEffectsModal from "@/components/modals/SideEffectsModal";
 import { useAppState } from "@/lib/AppState";
-import { todayKey } from "@/lib/dateUtils";
+import { toDayKey } from "@/lib/dateUtils";
 
 export default function Home() {
   const [showShot, setShowShot] = useState(false);
   const [showSideEffects, setShowSideEffects] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const { getSideEffects } = useAppState();
-  const dk = todayKey();
+  const dk = toDayKey(selectedDate);
   const sideEffects = getSideEffects(dk);
 
   const hour = new Date().getHours();
@@ -27,7 +28,7 @@ export default function Home() {
       </div>
 
       <div className="max-w-3xl mx-auto">
-        <DateStrip />
+        <DateStrip selectedDate={selectedDate} onSelectDate={setSelectedDate} />
         <NextShotCard />
         <MetricsGrid dayKey={dk} />
 
