@@ -3,17 +3,19 @@ import { useNavigate } from "react-router-dom";
 import OnboardingScreen from "@/components/onboarding/OnboardingScreen";
 import PhoneMockup from "@/components/onboarding/PhoneMockup";
 import QuizScreen from "@/components/onboarding/QuizScreen";
+import UnitsStep from "@/components/onboarding/UnitsStep";
 import { Bell, Droplets } from "lucide-react";
 import { useAppState } from "@/lib/AppState";
 import { MiniHomeScreen, MiniShotsScreen, MiniInsightsScreen, MiniCalendarScreen, MiniJournalScreen, MiniProfileScreen } from "@/components/onboarding/MiniScreens";
 
-const TOTAL_STEPS = 14;
+const TOTAL_STEPS = 15;
 
 export default function Onboarding() {
   const [step, setStep] = useState(0);
   const navigate = useNavigate();
   const { setProfile, profile } = useAppState();
   const [quizAnswers, setQuizAnswers] = useState({});
+  const [units, setUnits] = useState({ weight_unit: "lb", height_unit: "ft_in", liquid_unit: "oz" });
 
   const handleQuizAnswer = (questionKey, answers) => {
     setQuizAnswers((prev) => ({ ...prev, [questionKey]: answers }));
@@ -34,7 +36,7 @@ export default function Onboarding() {
       if (freqAnswers.some(a => a.includes("two weeks"))) daysBetween = "14";
       else if (freqAnswers.some(a => a.includes("monthly"))) daysBetween = "30";
 
-      await setProfile({ ...profile, default_medication: defaultMed, days_between: daysBetween, onboarding_completed: true });
+      await setProfile({ ...profile, default_medication: defaultMed, days_between: daysBetween, ...units, onboarding_completed: true });
       navigate("/");
     }
   };
@@ -112,7 +114,8 @@ export default function Onboarding() {
           onAnswerChange={(answers) => handleQuizAnswer("frequency", answers)}
         />
       )}
-      {step === 13 && <FinalStep />}
+      {step === 13 && <UnitsStep units={units} setUnits={setUnits} />}
+      {step === 14 && <FinalStep />}
     </OnboardingScreen>
   );
 }
