@@ -51,11 +51,11 @@ function randRange(min, max) {
 
 const PROGRESS_PHOTOS = [
   "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=80",
-  "https://images.unsplash.com/photo-1594381898411-846e7d193883?w=800&q=80",
-  "https://images.unsplash.com/photo-1550345332-09e3ac987658?w=800&q=80",
-  "https://images.unsplash.com/photo-1554344728-77cf90d9ed26?w=800&q=80",
-  "https://images.unsplash.com/photo-1571731956672-f2b94d7dd0cb?w=800&q=80",
   "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=80",
+  "https://images.unsplash.com/photo-1571731956672-f2b94d7dd0cb?w=800&q=80",
+  "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=800&q=80",
+  "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=800&q=80",
+  "https://images.unsplash.com/photo-1584466977773-e625c37cdd50?w=800&q=80",
 ];
 
 export async function seedDemoDataIfNeeded() {
