@@ -26,23 +26,8 @@ export function Toaster() {
     <SonnerToaster
       position="top-center"
       theme={theme}
-      richColors
       closeButton
-      expand={true}
-      gap={12}
-      toast={{
-        classNames: {
-          toast:
-            "app-toast rounded-2xl p-4 shadow-lg dark:bg-[#1a1d2e] bg-white border-0 flex items-center gap-3",
-          description: "text-sm font-medium dark:text-[#E8E9F0] text-gray-900",
-          closeButton:
-            "text-gray-400 dark:text-[#9A9DAE] hover:bg-gray-100 dark:hover:bg-white/10",
-          success: "app-toast-success",
-          error: "app-toast-error",
-          warning: "app-toast-warning",
-          info: "app-toast-info",
-        },
-      }}
+      richColors
     />
   );
 }
