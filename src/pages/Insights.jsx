@@ -344,7 +344,7 @@ export default function Insights() {
                   className="flex-1 py-3 bg-blue-600 text-white rounded-full font-semibold flex items-center justify-center gap-2 hover:bg-blue-700 transition-colors text-sm">
                   <Plus size={16} /> Add Photo
                 </button>
-                {distinctDayKeys.length >= 2 && (
+                {photosAsc.length >= 2 && (
                   <button
                     onClick={() => setViewAllPhotos((v) => !v)}
                     className="flex-1 py-3 bg-gray-100 dark:bg-white/[0.07] text-blue-600 dark:text-blue-400 rounded-full font-semibold flex items-center justify-center gap-2 hover:bg-gray-200 dark:hover:bg-white/[0.12] transition-colors text-sm">
