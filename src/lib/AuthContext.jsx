@@ -141,6 +141,12 @@ export const AuthProvider = ({ children }) => {
   };
 
   const navigateToLogin = () => {
+    // Never redirect (or append from_url) when already on a public auth page —
+    // prevents /login?from_url=/login?from_url=... stacking
+    const publicPaths = ['/login', '/register', '/forgot-password', '/reset-password'];
+    if (publicPaths.includes(window.location.pathname)) {
+      return;
+    }
     // Use the SDK's redirectToLogin method
     base44.auth.redirectToLogin(window.location.href);
   };

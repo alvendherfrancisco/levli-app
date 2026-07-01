@@ -56,10 +56,13 @@ const AuthenticatedApp = () => {
     );
   }
 
+  const publicPaths = ['/login', '/register', '/forgot-password', '/reset-password'];
+  const onPublicPath = publicPaths.includes(window.location.pathname);
+
   if (authError) {
     if (authError.type === 'user_not_registered') {
       return <UserNotRegisteredError />;
-    } else if (authError.type === 'auth_required') {
+    } else if (authError.type === 'auth_required' && !onPublicPath) {
       navigateToLogin();
       return null;
     }
