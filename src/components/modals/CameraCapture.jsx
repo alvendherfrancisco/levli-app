@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import { X, RotateCcw, Check, SwitchCamera } from "lucide-react";
+import { RotateCcw, Check, SwitchCamera, Zap, ZapOff } from "lucide-react";
+
+const FLASH_MODES = ["off", "on", "auto"];
 
 export default function CameraCapture({ onCapture, onClose }) {
   const videoRef = useRef();
@@ -7,6 +9,7 @@ export default function CameraCapture({ onCapture, onClose }) {
   const [error, setError] = useState("");
   const [capturedImage, setCapturedImage] = useState(null);
   const [facingMode, setFacingMode] = useState("environment");
+  const [flashMode, setFlashMode] = useState("off");
 
   useEffect(() => {
     let active = true;
@@ -44,25 +47,27 @@ export default function CameraCapture({ onCapture, onClose }) {
       });
   };
 
+  const cycleFlash = () => {
+    setFlashMode((m) => FLASH_MODES[(FLASH_MODES.indexOf(m) + 1) % FLASH_MODES.length]);
+  };
+
   return (
     <div className="fixed inset-0 z-[70] bg-black flex flex-col">
-      <div className="flex items-center justify-between px-4 py-3 shrink-0">
-        <button onClick={onClose} className="text-white p-1">
-          <X size={26} />
-        </button>
-        {!error && !capturedImage && (
-          <button onClick={() => setFacingMode((m) => (m === "environment" ? "user" : "environment"))} className="text-white p-1">
-            <SwitchCamera size={24} />
-          </button>
-        )}
-      </div>
-      <div className="flex-1 relative flex items-center justify-center overflow-hidden">
+      <div className="relative flex-1 overflow-hidden">
         {error ? (
-          <p className="text-white text-sm text-center px-8">{error}</p>
+          <div className="w-full h-full flex items-center justify-center">
+            <p className="text-white text-sm text-center px-8">{error}</p>
+          </div>
         ) : capturedImage ? (
           <img src={capturedImage} alt="Captured" className="w-full h-full object-contain" />
         ) : (
-          <video ref={videoRef} autoPlay playsInline muted className="w-full h-full object-cover" />
+          <>
+            <video ref={videoRef} autoPlay playsInline muted className="w-full h-full object-cover" />
+            <button onClick={cycleFlash} className="absolute top-4 left-4 text-white p-1 flex flex-col items-center">
+              {flashMode === "off" ? <ZapOff size={22} /> : <Zap size={22} className={flashMode === "on" ? "fill-white" : ""} />}
+              <span className="text-[10px] uppercase mt-0.5 tracking-wide">{flashMode}</span>
+            </button>
+          </>
         )}
       </div>
       {!error && (
@@ -88,6 +93,10 @@ export default function CameraCapture({ onCapture, onClose }) {
                 Cancel
               </button>
               <button onClick={handleCapture} className="w-16 h-16 rounded-full border-4 border-white bg-white/20" />
+              <button onClick={() => setFacingMode((m) => (m === "environment" ? "user" : "environment"))}
+                className="absolute right-6 w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white">
+                <SwitchCamera size={20} />
+              </button>
             </>
           )}
         </div>

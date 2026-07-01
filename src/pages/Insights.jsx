@@ -292,7 +292,7 @@ export default function Insights() {
               </button>
               <button
                 onClick={openAddPhoto}
-                className="w-full py-3.5 bg-blue-600 text-white rounded-full font-semibold flex items-center justify-center gap-2 hover:bg-blue-700 transition-colors text-sm">
+                className="w-full py-3.5 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-blue-700 transition-colors text-sm">
                 <Plus size={18} /> Add Picture
               </button>
             </div>
@@ -341,13 +341,13 @@ export default function Insights() {
               <div className="flex gap-3">
                 <button
                   onClick={openAddPhoto}
-                  className="flex-1 py-3 bg-blue-600 text-white rounded-full font-semibold flex items-center justify-center gap-2 hover:bg-blue-700 transition-colors text-sm">
+                  className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-blue-700 transition-colors text-sm">
                   <Plus size={16} /> Add Photo
                 </button>
                 {photosAsc.length >= 2 && (
                   <button
                     onClick={() => setViewAllPhotos((v) => !v)}
-                    className="flex-1 py-3 bg-gray-100 dark:bg-white/[0.07] text-blue-600 dark:text-blue-400 rounded-full font-semibold flex items-center justify-center gap-2 hover:bg-gray-200 dark:hover:bg-white/[0.12] transition-colors text-sm">
+                    className="flex-1 py-3 bg-gray-100 dark:bg-white/[0.07] text-blue-600 dark:text-blue-400 rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-gray-200 dark:hover:bg-white/[0.12] transition-colors text-sm">
                     {viewAllPhotos ? <><Minimize2 size={16} /> Collapse</> : <><Maximize2 size={16} /> View All</>}
                   </button>
                 )}
