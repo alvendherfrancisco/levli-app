@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import { X, Camera, Image, Trash2, Save } from "lucide-react";
+import { X, Camera, Image, Trash2, Save, Loader2 } from "lucide-react";
+import { base44 } from "@/api/base44Client";
 
 function numericOnly(value) {
   let v = value.replace(/[^0-9.]/g, "");
@@ -73,16 +74,23 @@ function ExerciseModal({ open, onClose, value, onSave, onDelete }) {
 function ProgressModal({ open, onClose, value, onSave, onDelete }) {
   const hasExisting = value && value !== "–";
   const [imgUrl, setImgUrl] = useState(hasExisting ? value : null);
+  const [uploading, setUploading] = useState(false);
   const fileRef = useRef();
 
-  useEffect(() => { if (open) setImgUrl(hasExisting ? value : null); }, [open]);
+  useEffect(() => { if (open) { setImgUrl(hasExisting ? value : null); setUploading(false); } }, [open]);
 
   if (!open) return null;
 
-  const handleFile = (e) => {
+  const handleFile = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    setImgUrl(URL.createObjectURL(file));
+    setUploading(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      setImgUrl(file_url);
+    } finally {
+      setUploading(false);
+    }
   };
 
   return (
@@ -94,7 +102,12 @@ function ProgressModal({ open, onClose, value, onSave, onDelete }) {
         </div>
         <div className="px-5 pb-4">
           <div className="border border-gray-200 dark:border-white/[0.1] rounded-2xl overflow-hidden bg-gray-50 dark:bg-white/[0.04] flex items-center justify-center" style={{ minHeight: 220 }}>
-            {imgUrl ? (
+            {uploading ? (
+              <div className="flex flex-col items-center gap-3 py-12 text-gray-400 dark:text-[#9A9DAE]">
+                <Loader2 size={40} className="animate-spin" />
+                <p className="text-sm">Uploading...</p>
+              </div>
+            ) : imgUrl ? (
               <img src={imgUrl} alt="Progress" className="w-full object-cover max-h-64" />
             ) : (
               <div className="flex flex-col items-center gap-3 py-12 text-gray-300 dark:text-white/20">
@@ -104,12 +117,12 @@ function ProgressModal({ open, onClose, value, onSave, onDelete }) {
             )}
           </div>
           <div className="flex gap-3 mt-4">
-            <button onClick={() => fileRef.current?.click()}
-              className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2">
+            <button disabled={uploading} onClick={() => fileRef.current?.click()}
+              className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-60">
               <Camera size={18} /> Camera
             </button>
-            <button onClick={() => fileRef.current?.click()}
-              className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2">
+            <button disabled={uploading} onClick={() => fileRef.current?.click()}
+              className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-60">
               <Image size={18} /> Gallery
             </button>
             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
@@ -121,15 +134,15 @@ function ProgressModal({ open, onClose, value, onSave, onDelete }) {
               className="flex-1 py-3 bg-red-500/10 dark:bg-red-500/10 text-red-500 dark:text-red-400 border border-red-500/20 rounded-xl font-semibold flex items-center justify-center gap-2">
               <Trash2 size={18} /> Delete
             </button>
-            <button onClick={() => { onSave(imgUrl || "✓ pic"); onClose(); }}
-              className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2">
+            <button disabled={uploading || !imgUrl} onClick={() => { onSave(imgUrl); onClose(); }}
+              className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-60">
               <Save size={18} /> Update
             </button>
           </div>
         ) : (
           <div className="px-5 pb-8">
-            <button onClick={() => { if (imgUrl) { onSave(imgUrl); onClose(); } }}
-              className={`w-full py-3.5 rounded-xl font-semibold flex items-center justify-center gap-2 bg-blue-600 text-white ${!imgUrl ? "opacity-60" : ""}`}>
+            <button disabled={uploading || !imgUrl} onClick={() => { if (imgUrl) { onSave(imgUrl); onClose(); } }}
+              className={`w-full py-3.5 rounded-xl font-semibold flex items-center justify-center gap-2 bg-blue-600 text-white ${!imgUrl || uploading ? "opacity-60" : ""}`}>
               <Save size={18} /> Save
             </button>
           </div>
