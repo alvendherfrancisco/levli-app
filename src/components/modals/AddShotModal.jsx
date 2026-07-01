@@ -98,19 +98,25 @@ export default function AddShotModal({ open, onClose, editingShot }) {
       medication, dose: doseNum, drugClass: DRUG_CLASS[medication] || "GLP-1",
       date: formattedDate, time: formattedTime, site, pain: pain || 0, notes,
     };
-    if (editingShot) {
-       await updateShot(editingShot.id, {
-         medication: payload.medication, dose: payload.dose, drug_class: payload.drugClass,
-         date: payload.date, time: payload.time, site: payload.site,
-         pain: payload.pain, notes: payload.notes,
-       });
-       toast.success("Shot updated successfully!");
-     } else {
-       await addShot(payload);
-       toast.success("Shot added successfully!");
-     }
-     setSaving(false);
-     onClose();
+    try {
+      if (editingShot) {
+        await updateShot(editingShot.id, {
+          medication: payload.medication, dose: payload.dose, drug_class: payload.drugClass,
+          date: payload.date, time: payload.time, site: payload.site,
+          pain: payload.pain, notes: payload.notes,
+        });
+        toast.success("Shot updated successfully!");
+      } else {
+        await addShot(payload);
+        toast.success("Shot added successfully!");
+      }
+      setSaving(false);
+      setTimeout(() => onClose(), 500);
+    } catch (err) {
+      console.error("Error saving shot:", err);
+      toast.error("Failed to save shot");
+      setSaving(false);
+    }
   };
 
   const handleDelete = async () => {
