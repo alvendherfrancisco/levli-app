@@ -49,6 +49,15 @@ function randRange(min, max) {
   return Math.round(min + Math.random() * (max - min));
 }
 
+const PROGRESS_PHOTOS = [
+  "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=80",
+  "https://images.unsplash.com/photo-1594381898411-846e7d193883?w=800&q=80",
+  "https://images.unsplash.com/photo-1550345332-09e3ac987658?w=800&q=80",
+  "https://images.unsplash.com/photo-1554344728-77cf90d9ed26?w=800&q=80",
+  "https://images.unsplash.com/photo-1571731956672-f2b94d7dd0cb?w=800&q=80",
+  "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=80",
+];
+
 export async function seedDemoDataIfNeeded() {
   let user;
   try {
@@ -128,6 +137,18 @@ export async function seedDemoDataIfNeeded() {
         exercise_min: randRange(0, 45),
       };
     }
+
+    // Progress photos: spread a handful of placeholder shots across the 183-day trend
+    const photoOffsets = [175, 140, 105, 70, 35, 0];
+    photoOffsets.forEach((offset, idx) => {
+      const d = new Date(today);
+      d.setDate(d.getDate() - offset);
+      const key = dayKey(d);
+      dayMetricsMap[key] = {
+        ...(dayMetricsMap[key] || { day_key: key }),
+        progress_photo: PROGRESS_PHOTOS[idx % PROGRESS_PHOTOS.length],
+      };
+    });
 
     await base44.entities.DayMetric.bulkCreate(Object.values(dayMetricsMap));
   }
