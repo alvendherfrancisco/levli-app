@@ -263,29 +263,38 @@ export default function Insights() {
           </div>
           <div className="border-b-2 border-blue-500 w-12 mb-3" />
 
-          {/* Stats row */}
-          <div className="grid grid-cols-3 gap-2 mb-4">
-            <div className="rounded-xl p-2.5 text-center" style={{ background: "rgba(59,130,246,0.1)", border: "1px solid rgba(59,130,246,0.15)" }}>
-              <Image size={14} className="text-blue-400 mx-auto mb-1" />
-              <p className="text-[11px] text-gray-500 dark:text-[#9A9DAE]">Total Photos</p>
-              <p className="font-bold text-blue-500 dark:text-blue-400 text-sm">{photosAsc.length}</p>
+          {photosAsc.length > 0 && (
+            <div className="grid grid-cols-3 gap-2 mb-4">
+              <div className="rounded-xl p-2.5 text-center" style={{ background: "rgba(59,130,246,0.1)", border: "1px solid rgba(59,130,246,0.15)" }}>
+                <Image size={14} className="text-blue-400 mx-auto mb-1" />
+                <p className="text-[11px] text-gray-500 dark:text-[#9A9DAE]">Total Photos</p>
+                <p className="font-bold text-blue-500 dark:text-blue-400 text-sm">{photosAsc.length}</p>
+              </div>
+              <div className="rounded-xl p-2.5 text-center" style={{ background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.15)" }}>
+                <Clock size={14} className="text-green-400 mx-auto mb-1" />
+                <p className="text-[11px] text-gray-500 dark:text-[#9A9DAE]">Journey Days</p>
+                <p className="font-bold text-green-500 dark:text-green-400 text-sm">{journeyDays}</p>
+              </div>
+              <div className="rounded-xl p-2.5 text-center" style={{ background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.15)" }}>
+                <Camera size={14} className="text-amber-400 mx-auto mb-1" />
+                <p className="text-[11px] text-gray-500 dark:text-[#9A9DAE]">Latest</p>
+                <p className="font-bold text-amber-500 dark:text-amber-400 text-sm">{latestPhotoDate ? latestPhotoDate.month : "—"}</p>
+              </div>
             </div>
-            <div className="rounded-xl p-2.5 text-center" style={{ background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.15)" }}>
-              <Clock size={14} className="text-green-400 mx-auto mb-1" />
-              <p className="text-[11px] text-gray-500 dark:text-[#9A9DAE]">Journey Days</p>
-              <p className="font-bold text-green-500 dark:text-green-400 text-sm">{journeyDays}</p>
-            </div>
-            <div className="rounded-xl p-2.5 text-center" style={{ background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.15)" }}>
-              <Camera size={14} className="text-amber-400 mx-auto mb-1" />
-              <p className="text-[11px] text-gray-500 dark:text-[#9A9DAE]">Latest</p>
-              <p className="font-bold text-amber-500 dark:text-amber-400 text-sm">{latestPhotoDate ? latestPhotoDate.month : "—"}</p>
-            </div>
-          </div>
+          )}
 
           {photosAsc.length === 0 ? (
-            <div className="h-36 flex flex-col items-center justify-center bg-gray-50 dark:bg-white/[0.03] rounded-xl gap-2">
-              <Camera size={28} className="text-gray-300 dark:text-white/20" />
-              <p className="text-sm text-gray-400 dark:text-[#9A9DAE] text-center px-4">Add progress photos to track your visual journey.</p>
+            <div className="space-y-4">
+              <button onClick={openAddPhoto}
+                className="w-full flex items-center gap-3 rounded-xl p-4 text-left" style={{ background: "rgba(59,130,246,0.1)", border: "1px solid rgba(59,130,246,0.25)" }}>
+                <Camera size={22} className="text-blue-500 flex-shrink-0" />
+                <p className="text-blue-500 font-medium text-sm">No progress pictures yet. Tap to add your first photo!</p>
+              </button>
+              <button
+                onClick={openAddPhoto}
+                className="w-full py-3.5 bg-blue-600 text-white rounded-full font-semibold flex items-center justify-center gap-2 hover:bg-blue-700 transition-colors text-sm">
+                <Plus size={18} /> Add Picture
+              </button>
             </div>
           ) : (
             <div className="space-y-3">
