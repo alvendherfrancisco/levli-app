@@ -171,16 +171,6 @@ export default function Profile() {
           </div>
           {errors.days_between ? <p className="text-xs text-red-500 mb-1">Please enter a whole number (1–90).</p> : null}
           <p className="text-xs text-gray-400 dark:text-gray-500">This affects how your next shot date is calculated</p>
-
-          <label className="text-sm text-gray-700 dark:text-gray-300 font-medium block mb-2 mt-4">Default Medication</label>
-          <div className="flex items-center gap-2">
-            <div className="flex-1 border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2.5 flex items-center bg-white dark:bg-gray-800">
-              <input type="text" value={local.default_medication || ""}
-              onChange={(e) => setLocal({ ...local, default_medication: e.target.value })}
-              className="w-full outline-none text-base bg-transparent text-gray-900 dark:text-white" />
-            </div>
-            <SaveBtn fields={["default_medication"]} />
-          </div>
         </div>
 
         {/* Measurement Units */}
