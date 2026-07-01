@@ -10,6 +10,7 @@ export default function CameraCapture({ onCapture, onClose }) {
   const [capturedImage, setCapturedImage] = useState(null);
   const [facingMode, setFacingMode] = useState("environment");
   const [flashMode, setFlashMode] = useState("off");
+  const [flashing, setFlashing] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -28,14 +29,45 @@ export default function CameraCapture({ onCapture, onClose }) {
     };
   }, [facingMode]);
 
-  const handleCapture = () => {
+  const drawFrame = () => {
     const video = videoRef.current;
     if (!video) return;
     const canvas = document.createElement("canvas");
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
-    canvas.getContext("2d").drawImage(video, 0, 0);
+    const ctx = canvas.getContext("2d");
+    if (facingMode === "user") {
+      ctx.translate(canvas.width, 0);
+      ctx.scale(-1, 1);
+    }
+    ctx.drawImage(video, 0, 0);
     setCapturedImage(canvas.toDataURL("image/jpeg", 0.92));
+  };
+
+  const handleCapture = async () => {
+    if (flashMode === "off") { drawFrame(); return; }
+
+    const track = streamRef.current?.getVideoTracks?.()[0];
+    const supportsTorch = !!track?.getCapabilities?.().torch;
+
+    if (supportsTorch) {
+      try {
+        await track.applyConstraints({ advanced: [{ torch: true }] });
+        await new Promise((r) => setTimeout(r, 250));
+        drawFrame();
+        await track.applyConstraints({ advanced: [{ torch: false }] });
+        return;
+      } catch {
+        // torch failed, fall back to screen flash below
+      }
+    }
+
+    // Screen-flash fallback for devices/cameras without hardware torch control
+    setFlashing(true);
+    setTimeout(() => {
+      drawFrame();
+      setTimeout(() => setFlashing(false), 150);
+    }, 80);
   };
 
   const handleUsePhoto = () => {
@@ -58,15 +90,27 @@ export default function CameraCapture({ onCapture, onClose }) {
           <div className="w-full h-full flex items-center justify-center">
             <p className="text-white text-sm text-center px-8">{error}</p>
           </div>
-        ) : capturedImage ? (
-          <img src={capturedImage} alt="Captured" className="w-full h-full object-contain" />
         ) : (
           <>
-            <video ref={videoRef} autoPlay playsInline muted className="w-full h-full object-cover" />
-            <button onClick={cycleFlash} className="absolute top-4 left-4 text-white p-1 flex flex-col items-center">
-              {flashMode === "off" ? <ZapOff size={22} /> : <Zap size={22} className={flashMode === "on" ? "fill-white" : ""} />}
-              <span className="text-[10px] uppercase mt-0.5 tracking-wide">{flashMode}</span>
-            </button>
+            {/* Video stays mounted at all times so retaking a photo never loses the live stream */}
+            <video
+              ref={videoRef}
+              autoPlay
+              playsInline
+              muted
+              className={`w-full h-full object-cover ${facingMode === "user" ? "-scale-x-100" : ""}`}
+              style={{ display: capturedImage ? "none" : "block" }}
+            />
+            {capturedImage && (
+              <img src={capturedImage} alt="Captured" className="w-full h-full object-contain" />
+            )}
+            {flashing && <div className="absolute inset-0 bg-white z-10" />}
+            {!capturedImage && (
+              <button onClick={cycleFlash} className="absolute top-4 left-4 text-white p-1 flex flex-col items-center z-20">
+                {flashMode === "off" ? <ZapOff size={22} /> : <Zap size={22} className={flashMode === "on" ? "fill-white" : ""} />}
+                <span className="text-[10px] uppercase mt-0.5 tracking-wide">{flashMode}</span>
+              </button>
+            )}
           </>
         )}
       </div>
