@@ -15,7 +15,7 @@ export default function Onboarding() {
   const navigate = useNavigate();
   const { setProfile, profile } = useAppState();
   const [quizAnswers, setQuizAnswers] = useState({});
-  const [units, setUnits] = useState({ weight_unit: "lb", height_unit: "ft_in", liquid_unit: "oz" });
+  const [units, setUnits] = useState({ weight_unit: "lb", height_unit: "in", liquid_unit: "oz" });
 
   const handleQuizAnswer = (questionKey, answers) => {
     setQuizAnswers((prev) => ({ ...prev, [questionKey]: answers }));

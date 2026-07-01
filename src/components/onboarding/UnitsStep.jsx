@@ -2,8 +2,8 @@ import React from "react";
 
 const GROUPS = [
   { key: "weight_unit", label: "Weight", options: [{ value: "lb", label: "Pounds (lb)" }, { value: "kg", label: "Kilograms (kg)" }] },
-  { key: "height_unit", label: "Height", options: [{ value: "ft_in", label: "Feet & Inches" }, { value: "cm", label: "Centimeters (cm)" }] },
-  { key: "liquid_unit", label: "Liquids", options: [{ value: "oz", label: "Ounces (oz)" }, { value: "ml", label: "Milliliters (ml)" }] },
+  { key: "height_unit", label: "Height", options: [{ value: "in", label: "Feet & Inches" }, { value: "cm", label: "Centimeters (cm)" }] },
+  { key: "liquid_unit", label: "Liquids", options: [{ value: "oz", label: "Ounces (oz)" }, { value: "mL", label: "Milliliters (mL)" }] },
 ];
 
 export default function UnitsStep({ units, setUnits }) {
