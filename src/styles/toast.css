@@ -1,18 +1,22 @@
-/* Toast Container - position and size */
+/* Toast Container - anchored with equal left/right insets so it can never
+   drift off-center (no 50%+transform math that can be thrown off by scaling
+   or scrollbar quirks). The card itself is width-capped and auto-centered
+   inside this symmetric band. */
 [data-sonner-toaster] {
   top: max(1rem, env(safe-area-inset-top, 0) + 1rem) !important;
-  left: 50% !important;
-  right: auto !important;
-  transform: translateX(-50%) !important;
-  width: calc(100% - 2rem) !important;
-  max-width: 420px !important;
+  left: 16px !important;
+  right: 16px !important;
+  width: auto !important;
+  max-width: none !important;
+  transform: none !important;
+  margin: 0 !important;
 }
 
 @media (max-width: 480px) {
   [data-sonner-toaster] {
     top: max(4.5rem, env(safe-area-inset-top, 0) + 4.5rem) !important;
-    width: calc(100% - 24px) !important;
-    max-width: calc(100% - 24px) !important;
+    left: 12px !important;
+    right: 12px !important;
   }
 }
 
@@ -26,7 +30,10 @@
   border-radius: 1.5rem;
   background-color: #ffffff;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.14);
-  width: 100%;
+  width: 100% !important;
+  max-width: 420px !important;
+  margin: 0 auto !important;
+  box-sizing: border-box;
   overflow: visible;
   animation: toastSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
