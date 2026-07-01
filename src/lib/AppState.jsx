@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { base44 } from "@/api/base44Client";
 import { toDayKey, todayKey } from "@/lib/dateUtils";
+import { seedDemoDataIfNeeded } from "@/lib/seedDemoData";
 
 const AppStateContext = createContext(null);
 
@@ -27,10 +28,13 @@ export function AppStateProvider({ children }) {
 
   // ── Load all data on mount ─────────────────────────────────────────────────
   useEffect(() => {
-    loadShots();
-    loadJournal();
-    loadProfile();
-    loadDayMetrics();
+    (async () => {
+      await seedDemoDataIfNeeded();
+      loadShots();
+      loadJournal();
+      loadProfile();
+      loadDayMetrics();
+    })();
   }, []);
 
   const loadShots = async () => {
