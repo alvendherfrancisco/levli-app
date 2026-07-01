@@ -86,29 +86,34 @@ export async function seedDemoDataIfNeeded() {
     await base44.entities.Shot.bulkCreate(shots);
   }
 
-  // ── Day metrics: weekly kg weight trend (6mo) + daily nutrition (30d) ───────
+  // ── Day metrics: daily kg weight trend (183 days) + daily nutrition (30d) ───
   if (existingDayMetrics.length === 0) {
     const dayMetricsMap = {};
 
-    // Weekly weight points, 98kg → 90kg over 26 weeks, with realistic fluctuation
+    // Daily weight, 98kg → 90kg over 183 days, with realistic fluctuation.
+    // Stored every day for the last 30 days, then weekly for the rest.
     let currentWeight = 98;
-    const weeks = 26;
-    for (let w = 0; w < weeks; w++) {
-      const remainingWeeks = weeks - w;
+    const totalDays = 183;
+    for (let offset = totalDays - 1; offset >= 0; offset--) {
+      const daysElapsed = totalDays - 1 - offset;
+      const remainingDays = offset + 1;
       const remainingLoss = currentWeight - 90;
-      const avgNeeded = remainingWeeks > 0 ? remainingLoss / remainingWeeks : 0;
-      const fluctuation = (Math.random() - 0.5) * 0.4;
+      const avgNeeded = remainingDays > 0 ? remainingLoss / remainingDays : 0;
+      const fluctuation = (Math.random() - 0.5) * 0.15;
       let loss = avgNeeded + fluctuation;
-      loss = Math.max(0.1, Math.min(0.6, loss));
+      loss = Math.max(-0.05, Math.min(0.15, loss));
       currentWeight = Math.round((currentWeight - loss) * 10) / 10;
-      if (w === weeks - 1) currentWeight = 90;
+      if (offset === 0) currentWeight = 90;
+
+      const storeThisDay = offset < 30 || daysElapsed % 7 === 0;
+      if (!storeThisDay) continue;
 
       const d = new Date(today);
-      d.setDate(d.getDate() - (weeks - 1 - w) * 7);
+      d.setDate(d.getDate() - offset);
       dayMetricsMap[dayKey(d)] = { day_key: dayKey(d), weight: currentWeight };
     }
 
-    // Last 30 days: nutrition + exercise, merged with any existing weight day
+    // Last 30 days: nutrition + exercise, merged with the daily weight entries
     for (let i = 29; i >= 0; i--) {
       const d = new Date(today);
       d.setDate(d.getDate() - i);
