@@ -14,7 +14,7 @@
 
 @media (max-width: 480px) {
   [data-sonner-toaster] {
-    top: max(4.5rem, env(safe-area-inset-top, 0) + 4.5rem) !important;
+    top: max(0.75rem, env(safe-area-inset-top, 0) + 0.75rem) !important;
     left: 12px !important;
     right: 12px !important;
   }
