@@ -1,33 +1,34 @@
-import { useToast } from "@/components/ui/use-toast";
-import {
-  Toast,
-  ToastClose,
-  ToastDescription,
-  ToastProvider,
-  ToastTitle,
-  ToastViewport,
-} from "@/components/ui/toast";
+import { Toaster as SonnerToaster } from "sonner";
+import { useEffect, useState } from "react";
 
 export function Toaster() {
-  const { toasts } = useToast();
+  const [theme, setTheme] = useState("light");
+
+  useEffect(() => {
+    // Set initial theme
+    const isDark = document.documentElement.classList.contains("dark");
+    setTheme(isDark ? "dark" : "light");
+
+    // Watch for theme changes
+    const observer = new MutationObserver(() => {
+      const isDark = document.documentElement.classList.contains("dark");
+      setTheme(isDark ? "dark" : "light");
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <ToastProvider>
-      {toasts.map(function ({ id, title, description, action, ...props }) {
-        return (
-          <Toast key={id} {...props}>
-            <div className="grid gap-1">
-              {title && <ToastTitle>{title}</ToastTitle>}
-              {description && (
-                <ToastDescription>{description}</ToastDescription>
-              )}
-            </div>
-            {action}
-            <ToastClose />
-          </Toast>
-        );
-      })}
-      <ToastViewport />
-    </ToastProvider>
+    <SonnerToaster
+      position="top-center"
+      richColors
+      closeButton
+      theme={theme}
+    />
   );
-} 
+}
