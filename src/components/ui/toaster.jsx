@@ -29,6 +29,8 @@ export function Toaster() {
       closeButton
       richColors
       limit={1}
+      duration={4000}
+      style={{ "--toast-duration": "4000ms" }}
     />
   );
 }

@@ -1,10 +1,12 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Settings, TrendingDown, Syringe, HelpCircle, Zap, Gauge, Camera, Image, Clock, Plus } from "lucide-react";
 import ProgressPhotosModal from "@/components/modals/ProgressPhotosModal";
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { useAppState } from "@/lib/AppState";
 import { parseShotDate } from "@/lib/dateUtils";
+import { base44 } from "@/api/base44Client";
+import { toast } from "sonner";
 
 // Half-lives in days per drug class
 const HALF_LIFE = { Semaglutide: 7, Tirzepatide: 5, Liraglutide: 1, Retatrutide: 6, "GLP-1": 7 };
@@ -63,6 +65,8 @@ export default function Insights() {
   const [weightRange, setWeightRange] = useState("180 Days");
   const [medRange, setMedRange] = useState("30 Days");
   const [showPhotosModal, setShowPhotosModal] = useState(false);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const addPhotoInputRef = useRef(null);
   const weightUnit = profile?.weight_unit || "lb";
 
   const medData = useMemo(() => buildMedLevelData(shots, MED_RANGES[medRange]), [shots, medRange]);
@@ -94,6 +98,20 @@ export default function Insights() {
     const today = new Date();
     const dayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
     await saveProgressPhoto(dayKey, url);
+  };
+
+  const handleAddPhotoFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setUploadingPhoto(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      await handleAddPhoto(file_url);
+      toast.success("Progress photo added successfully!");
+    } finally {
+      setUploadingPhoto(false);
+      e.target.value = "";
+    }
   };
 
   // ── Weight stats ────────────────────────────────────────────────────────────
@@ -284,9 +302,13 @@ export default function Insights() {
                   View All ({progressPhotos.length})
                 </button>
               )}
-              <label className="w-full py-2.5 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 cursor-pointer hover:bg-blue-700 transition-colors text-sm">
-                <Plus size={16} /> Add Photo
-              </label>
+              <button
+                onClick={() => addPhotoInputRef.current?.click()}
+                disabled={uploadingPhoto}
+                className="w-full py-2.5 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-blue-700 transition-colors text-sm disabled:opacity-60">
+                <Plus size={16} /> {uploadingPhoto ? "Uploading..." : "Add Photo"}
+              </button>
+              <input ref={addPhotoInputRef} type="file" accept="image/*" className="hidden" onChange={handleAddPhotoFileChange} />
             </div>
           )}
 
