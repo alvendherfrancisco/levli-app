@@ -1,11 +1,11 @@
-import React, { useState, useMemo, useRef } from "react";
+import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Settings, TrendingDown, Syringe, HelpCircle, Zap, Gauge, Camera, Image, Clock, Plus } from "lucide-react";
 import ProgressPhotosModal from "@/components/modals/ProgressPhotosModal";
+import AddMetricModal from "@/components/modals/AddMetricModal";
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { useAppState } from "@/lib/AppState";
-import { parseShotDate } from "@/lib/dateUtils";
-import { base44 } from "@/api/base44Client";
+import { parseShotDate, todayKey } from "@/lib/dateUtils";
 import { toast } from "sonner";
 
 // Half-lives in days per drug class
@@ -65,8 +65,7 @@ export default function Insights() {
   const [weightRange, setWeightRange] = useState("180 Days");
   const [medRange, setMedRange] = useState("30 Days");
   const [showPhotosModal, setShowPhotosModal] = useState(false);
-  const [uploadingPhoto, setUploadingPhoto] = useState(false);
-  const addPhotoInputRef = useRef(null);
+  const [photoModalDay, setPhotoModalDay] = useState(null);
   const weightUnit = profile?.weight_unit || "lb";
 
   const medData = useMemo(() => buildMedLevelData(shots, MED_RANGES[medRange]), [shots, medRange]);
@@ -100,18 +99,15 @@ export default function Insights() {
     await saveProgressPhoto(dayKey, url);
   };
 
-  const handleAddPhotoFileChange = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    setUploadingPhoto(true);
-    try {
-      const { file_url } = await base44.integrations.Core.UploadFile({ file });
-      await handleAddPhoto(file_url);
-      toast.success("Progress photo added successfully!");
-    } finally {
-      setUploadingPhoto(false);
-      e.target.value = "";
-    }
+  const photoModalValue = photoModalDay ? (dayMetrics[photoModalDay]?.progress_photo || "–") : "–";
+  const handleSavePhotoModal = async (url) => {
+    const wasExisting = photoModalValue !== "–";
+    await saveProgressPhoto(photoModalDay, url);
+    toast.success(wasExisting ? "Progress photo updated successfully!" : "Progress photo added successfully!");
+  };
+  const handleDeletePhotoModal = async () => {
+    await saveProgressPhoto(photoModalDay, null);
+    toast.success("Progress photo deleted successfully!");
   };
 
   // ── Weight stats ────────────────────────────────────────────────────────────
@@ -283,7 +279,8 @@ export default function Insights() {
                   const fd = formatPhotoDate(p.isoDate);
                   const isLatest = p.isoDate === progressPhotos[0].isoDate;
                   return (
-                    <div key={p.isoDate} className="relative rounded-xl overflow-hidden border border-gray-100 dark:border-white/[0.08]">
+                    <button key={p.isoDate} onClick={() => setPhotoModalDay(p.isoDate)}
+                      className="relative rounded-xl overflow-hidden border border-gray-100 dark:border-white/[0.08] text-left">
                       <img src={p.url} alt={`Progress ${p.isoDate}`} className="w-full object-cover aspect-square" />
                       {isLatest && (
                         <span className="absolute top-2 left-2 bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">Latest</span>
@@ -292,7 +289,7 @@ export default function Insights() {
                         <p className="text-xs font-semibold text-gray-700 dark:text-[#E8E9F0]">{fd.month}</p>
                         <p className="text-[10px] text-gray-400 dark:text-[#9A9DAE]">{fd.year}</p>
                       </div>
-                    </div>
+                    </button>
                   );
                 })}
               </div>
@@ -303,16 +300,23 @@ export default function Insights() {
                 </button>
               )}
               <button
-                onClick={() => addPhotoInputRef.current?.click()}
-                disabled={uploadingPhoto}
-                className="w-full py-2.5 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-blue-700 transition-colors text-sm disabled:opacity-60">
-                <Plus size={16} /> {uploadingPhoto ? "Uploading..." : "Add Photo"}
+                onClick={() => setPhotoModalDay(todayKey())}
+                className="w-full py-2.5 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-blue-700 transition-colors text-sm">
+                <Plus size={16} /> Add Photo
               </button>
-              <input ref={addPhotoInputRef} type="file" accept="image/*" className="hidden" onChange={handleAddPhotoFileChange} />
             </div>
           )}
 
         <ProgressPhotosModal open={showPhotosModal} onClose={() => setShowPhotosModal(false)} photos={progressPhotos} onAddPhoto={handleAddPhoto} />
+        <AddMetricModal
+          open={!!photoModalDay}
+          onClose={() => setPhotoModalDay(null)}
+          label="Progress"
+          unit="pic"
+          value={photoModalValue}
+          onSave={handleSavePhotoModal}
+          onDelete={handleDeletePhotoModal}
+        />
         </div>
 
         {/* Medication Levels Panel */}
