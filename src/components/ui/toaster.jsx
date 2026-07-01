@@ -1,5 +1,6 @@
 import { Toaster as SonnerToaster } from "sonner";
 import { useEffect, useState } from "react";
+import { CheckCircle2, XCircle, AlertTriangle, Info } from "lucide-react";
 import "@/styles/toast.css";
 
 export function Toaster() {
@@ -27,10 +28,25 @@ export function Toaster() {
       position="top-right"
       theme={theme}
       closeButton
-      richColors
-      limit={1}
+      limit={3}
       duration={4000}
       style={{ "--toast-duration": "4000ms" }}
+      icons={{
+        success: <CheckCircle2 className="app-toast-icon-svg" />,
+        error: <XCircle className="app-toast-icon-svg" />,
+        warning: <AlertTriangle className="app-toast-icon-svg" />,
+        info: <Info className="app-toast-icon-svg" />,
+      }}
+      toastOptions={{
+        unstyled: true,
+        classNames: {
+          toast: "app-toast",
+          success: "app-toast-success",
+          error: "app-toast-error",
+          warning: "app-toast-warning",
+          info: "app-toast-info",
+        },
+      }}
     />
   );
 }
