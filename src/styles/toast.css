@@ -11,8 +11,8 @@
 @media (max-width: 480px) {
   [data-sonner-toaster] {
     top: max(4.5rem, env(safe-area-inset-top, 0) + 4.5rem) !important;
-    width: calc(100% - 28px) !important;
-    max-width: calc(100% - 28px) !important;
+    width: calc(100% - 24px) !important;
+    max-width: calc(100% - 24px) !important;
   }
 }
 
@@ -20,14 +20,14 @@
 .app-toast {
   position: relative;
   display: flex !important;
-  align-items: flex-start !important;
+  align-items: center !important;
   gap: 0.875rem;
   padding: 1.125rem 1.125rem 1.375rem;
   border-radius: 1.5rem;
   background-color: #ffffff;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.14);
   width: 100%;
-  overflow: hidden;
+  overflow: visible;
   animation: toastSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
@@ -50,7 +50,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0.0625rem 0 0 !important;
+  margin: 0 !important;
   position: static !important;
 }
 
@@ -104,7 +104,7 @@
   height: 1.75rem;
   min-width: 1.75rem;
   padding: 0;
-  margin: -0.25rem -0.25rem 0 0 !important;
+  margin: 0 !important;
   background: transparent !important;
   border: none;
   color: #9ca3af;
@@ -145,6 +145,7 @@
   right: 0;
   bottom: 0;
   height: 3px;
+  border-radius: 0 0 1.5rem 1.5rem;
   background-color: #e5e7eb;
 }
 
@@ -160,6 +161,7 @@
   right: 0;
   bottom: 0;
   height: 3px;
+  border-radius: 0 0 1.5rem 1.5rem;
   background-color: #9ca3af;
   transform-origin: left center;
   animation: progressFill var(--toast-duration, 4s) linear forwards;
@@ -206,7 +208,14 @@
 /* Mobile responsiveness */
 @media (max-width: 480px) {
   .app-toast {
-    padding: 1rem 1rem 1.25rem;
+    gap: 0.625rem;
+    padding: 0.875rem 0.875rem 1.125rem;
+    border-radius: 1.25rem;
+  }
+
+  .app-toast::after,
+  .app-toast::before {
+    border-radius: 0 0 1.25rem 1.25rem;
   }
 
   .app-toast [data-title] {
@@ -214,14 +223,14 @@
   }
 
   .app-toast [data-icon] {
-    width: 1.25rem;
-    height: 1.25rem;
+    width: 1.125rem;
+    height: 1.125rem;
   }
 
   .app-toast [data-close-button] {
-    width: 1.75rem;
-    height: 1.75rem;
-    min-width: 1.75rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    min-width: 1.5rem;
   }
 }
 
