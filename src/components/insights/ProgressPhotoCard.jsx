@@ -3,7 +3,7 @@ import React from "react";
 // tag: "latest" | "same-day" | null
 export default function ProgressPhotoCard({ photo, dateLabel, weightLabel, tag, onClick }) {
   return (
-    <button onClick={onClick} className="flex flex-col items-center flex-shrink-0 text-left" style={{ width: 140 }}>
+    <button onClick={onClick} className="flex flex-col items-center flex-shrink-0 text-left w-24 sm:w-[140px]">
       {tag === "same-day" && (
         <p className="text-xs text-gray-400 dark:text-[#9A9DAE] mb-1">Same day</p>
       )}

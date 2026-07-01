@@ -77,9 +77,9 @@ export default function Insights() {
     return { month: `${months[m-1]} ${d}`, year: String(y) };
   };
 
-  // All photos sorted oldest → newest
+  // All photos sorted oldest → newest by the date they represent (day_key), not creation time
   const photosAsc = useMemo(() =>
-    [...progressPhotosList].sort((a, b) => new Date(a.created_date) - new Date(b.created_date)),
+    [...progressPhotosList].sort((a, b) => a.day_key.localeCompare(b.day_key)),
     [progressPhotosList]
   );
   const latestPhoto = photosAsc.length ? photosAsc[photosAsc.length - 1] : null;
@@ -312,7 +312,7 @@ export default function Insights() {
                   ))}
                 </div>
               ) : (
-                <div className="flex items-center justify-center gap-3">
+                <div className="flex items-center justify-center gap-2 sm:gap-3">
                   {prevDayPhoto && (
                     <>
                       <ProgressPhotoCard
