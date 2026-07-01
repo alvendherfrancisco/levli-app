@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Settings, TrendingDown, Syringe, HelpCircle, Zap, Gauge, Camera, Image, Clock } from "lucide-react";
+import { Settings, TrendingDown, Syringe, HelpCircle, Zap, Gauge, Camera, Image, Clock, Plus } from "lucide-react";
+import ProgressPhotosModal from "@/components/modals/ProgressPhotosModal";
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { useAppState } from "@/lib/AppState";
 import { parseShotDate } from "@/lib/dateUtils";
@@ -58,9 +59,10 @@ const WEIGHT_RANGES = { "30 Days": 30, "180 Days": 180, "1 Year": 365 };
 const MED_RANGES = { "7 Days": 7, "30 Days": 30, "90 Days": 90 };
 
 export default function Insights() {
-  const { shots, weightHistory, profile, dayMetrics } = useAppState();
+  const { shots, weightHistory, profile, dayMetrics, saveProgressPhoto } = useAppState();
   const [weightRange, setWeightRange] = useState("180 Days");
   const [medRange, setMedRange] = useState("30 Days");
+  const [showPhotosModal, setShowPhotosModal] = useState(false);
   const weightUnit = profile?.weight_unit || "lb";
 
   const medData = useMemo(() => buildMedLevelData(shots, MED_RANGES[medRange]), [shots, medRange]);
@@ -87,6 +89,12 @@ export default function Insights() {
     : 0;
 
   const latestPhotoDate = progressPhotos.length ? formatPhotoDate(progressPhotos[0].isoDate) : null;
+
+  const handleAddPhoto = async (url) => {
+    const today = new Date();
+    const dayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+    await saveProgressPhoto(dayKey, url);
+  };
 
   // ── Weight stats ────────────────────────────────────────────────────────────
   // weightData is oldest→newest; loss = first weight minus last weight
@@ -251,25 +259,38 @@ export default function Insights() {
               <p className="text-sm text-gray-400 dark:text-[#9A9DAE] text-center px-4">Add progress photos on the Home tab to track your visual journey.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-3">
-              {progressPhotos.map((p) => {
-                const fd = formatPhotoDate(p.isoDate);
-                const isLatest = p.isoDate === progressPhotos[0].isoDate;
-                return (
-                  <div key={p.isoDate} className="relative rounded-xl overflow-hidden border border-gray-100 dark:border-white/[0.08]">
-                    <img src={p.url} alt={`Progress ${p.isoDate}`} className="w-full object-cover" style={{ minHeight: 140, maxHeight: 200 }} />
-                    {isLatest && (
-                      <span className="absolute top-2 left-2 bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">Latest</span>
-                    )}
-                    <div className="text-center py-1.5">
-                      <p className="text-xs font-semibold text-gray-700 dark:text-[#E8E9F0]">{fd.month}</p>
-                      <p className="text-[10px] text-gray-400 dark:text-[#9A9DAE]">{fd.year}</p>
+            <div className="space-y-3">
+              <div className="grid grid-cols-2 gap-3">
+                {progressPhotos.slice(0, 4).map((p) => {
+                  const fd = formatPhotoDate(p.isoDate);
+                  const isLatest = p.isoDate === progressPhotos[0].isoDate;
+                  return (
+                    <div key={p.isoDate} className="relative rounded-xl overflow-hidden border border-gray-100 dark:border-white/[0.08]">
+                      <img src={p.url} alt={`Progress ${p.isoDate}`} className="w-full object-cover aspect-square" />
+                      {isLatest && (
+                        <span className="absolute top-2 left-2 bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">Latest</span>
+                      )}
+                      <div className="text-center py-1.5 bg-gray-50 dark:bg-white/[0.05]">
+                        <p className="text-xs font-semibold text-gray-700 dark:text-[#E8E9F0]">{fd.month}</p>
+                        <p className="text-[10px] text-gray-400 dark:text-[#9A9DAE]">{fd.year}</p>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
+              {progressPhotos.length > 4 && (
+                <button onClick={() => setShowPhotosModal(true)}
+                  className="w-full py-2.5 text-blue-600 dark:text-blue-400 font-semibold text-sm hover:bg-blue-50 dark:hover:bg-blue-500/10 rounded-xl transition-colors">
+                  View All ({progressPhotos.length})
+                </button>
+              )}
+              <label className="w-full py-2.5 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 cursor-pointer hover:bg-blue-700 transition-colors text-sm">
+                <Plus size={16} /> Add Photo
+              </label>
             </div>
           )}
+
+        <ProgressPhotosModal open={showPhotosModal} onClose={() => setShowPhotosModal(false)} photos={progressPhotos} onAddPhoto={handleAddPhoto} />
         </div>
 
         {/* Medication Levels Panel */}
