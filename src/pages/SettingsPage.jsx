@@ -1,11 +1,18 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { ChevronLeft, Moon, Lock, Mail, Bell, Database, FileText, MessageSquare, ChevronRight, Download, Upload, Loader2 } from "lucide-react";
+import { ChevronLeft, Moon, Lock, Mail, Bell, Database, FileText, MessageSquare, ChevronRight, Download, Upload, Loader2, LogOut } from "lucide-react";
 import { useAppState } from "@/lib/AppState";
+import { useAuth } from "@/lib/AuthContext";
 
 export default function SettingsPage() {
   const navigate = useNavigate();
-  const { darkMode, setDarkMode, profile, setProfile, shots, journalEntries, dayMetrics } = useAppState();
+  const { darkMode, setDarkMode, profile, setProfile, shots, journalEntries, dayMetrics, resetState } = useAppState();
+  const { logout } = useAuth();
+
+  const handleLogout = () => {
+    resetState();
+    logout();
+  };
   const [notifEnabled, setNotifEnabled] = useState(profile?.notifications_enabled || false);
   const [backupLoading, setBackupLoading] = useState(false);
   const [restoreLoading, setRestoreLoading] = useState(false);
@@ -126,6 +133,15 @@ export default function SettingsPage() {
           <div className="bg-white dark:bg-gray-900 rounded-2xl px-4 shadow-sm border border-gray-100 dark:border-gray-800">
             <MenuItem icon={<MessageSquare size={18} className="text-gray-500 dark:text-gray-400" />} label="Leave feedback" href="mailto:feedback@dosely.app" />
           </div>
+        </div>
+
+        <div className="px-4 mb-4">
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center gap-2 py-3.5 bg-white dark:bg-gray-900 text-red-500 font-semibold rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800"
+          >
+            <LogOut size={18} /> Log Out
+          </button>
         </div>
 
         <div className="py-6 text-center">

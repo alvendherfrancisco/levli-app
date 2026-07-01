@@ -201,6 +201,17 @@ export function AppStateProvider({ children }) {
 
   const setDarkMode = (val) => setProfile({ ...profile, dark_mode: val });
 
+  // Clear all locally cached user data (used on logout)
+  const resetState = () => {
+    setShots([]);
+    setDayMetrics({});
+    setJournalEntries([]);
+    setProfileState(DEFAULT_PROFILE);
+    setProfileId(null);
+    setDarkModeState(false);
+    setOnboardingCompleted(null);
+  };
+
   const completeOnboarding = async () => {
     setOnboardingCompleted(true);
     await setProfile({ ...profile, onboarding_completed: true });
@@ -249,6 +260,8 @@ export function AppStateProvider({ children }) {
       darkMode, setDarkMode,
       // Onboarding
       onboardingCompleted, completeOnboarding,
+      // Reset (logout)
+      resetState,
     }}>
       {children}
     </AppStateContext.Provider>
