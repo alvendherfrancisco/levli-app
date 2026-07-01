@@ -32,7 +32,6 @@ function ExerciseModal({ open, onClose, value, onSave, onDelete }) {
     const n = parseFloat(val);
     if (val !== "" && (isNaN(n) || n < 0)) { setError("Please enter a valid number of minutes."); return; }
     onSave(val || "0");
-    toast.success("Exercise data saved successfully!");
     onClose();
   };
 
@@ -136,14 +135,14 @@ function ProgressModal({ open, onClose, value, onSave, onDelete }) {
               className="flex-1 py-3 bg-red-500/10 dark:bg-red-500/10 text-red-500 dark:text-red-400 border border-red-500/20 rounded-xl font-semibold flex items-center justify-center gap-2">
               <Trash2 size={18} /> Delete
             </button>
-            <button disabled={uploading || !imgUrl} onClick={() => { onSave(imgUrl); toast.success("Progress picture updated successfully!"); onClose(); }}
+            <button disabled={uploading || !imgUrl} onClick={() => { onSave(imgUrl); onClose(); }}
               className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-60">
               <Save size={18} /> Update
             </button>
           </div>
         ) : (
           <div className="px-5 pb-8">
-            <button disabled={uploading || !imgUrl} onClick={() => { if (imgUrl) { onSave(imgUrl); toast.success("Progress picture added successfully!"); onClose(); } }}
+            <button disabled={uploading || !imgUrl} onClick={() => { if (imgUrl) { onSave(imgUrl); onClose(); } }}
               className={`w-full py-3.5 rounded-xl font-semibold flex items-center justify-center gap-2 bg-blue-600 text-white ${!imgUrl || uploading ? "opacity-60" : ""}`}>
               <Save size={18} /> Save
             </button>
@@ -168,7 +167,6 @@ function GenericMetricModal({ open, onClose, label, unit, value, onSave }) {
       return;
     }
     onSave(val);
-    toast.success(`${label} saved successfully!`);
     onClose();
   };
 

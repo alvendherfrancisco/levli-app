@@ -28,6 +28,7 @@ export function Toaster() {
       theme={theme}
       closeButton
       richColors
+      limit={1}
     />
   );
 }

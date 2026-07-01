@@ -32,9 +32,15 @@ export default function AddNutritionModal({ open, onClose, dayKey }) {
 
   const [values, setValues] = useState({ ...EMPTY });
   const [errors, setErrors] = useState({});
+  const [isNew, setIsNew] = useState(false);
 
   useEffect(() => {
-    if (open) { setValues(getNutrition(dk)); setErrors({}); }
+    if (open) { 
+      const current = getNutrition(dk);
+      setValues(current);
+      setErrors({});
+      setIsNew(!current.calories || current.calories === "0.0");
+    }
   }, [open, dk]);
 
   if (!open) return null;
@@ -53,7 +59,7 @@ export default function AddNutritionModal({ open, onClose, dayKey }) {
     if (Object.values(newErrors).some(Boolean)) { setErrors(newErrors); return; }
     try {
       saveNutrition(dk, values);
-      toast.success("Nutrition data saved successfully!");
+      toast.success(isNew ? "Nutrition data added successfully!" : "Nutrition data updated successfully!");
       setTimeout(() => onClose(), 500);
     } catch (err) {
       toast.error("Failed to save nutrition data");

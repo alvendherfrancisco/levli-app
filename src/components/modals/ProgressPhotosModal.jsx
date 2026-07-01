@@ -14,7 +14,6 @@ export default function ProgressPhotosModal({ open, onClose, photos, onAddPhoto 
     try {
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
       await onAddPhoto(file_url);
-      toast.success("Progress photo added successfully!");
     } catch (err) {
       toast.error("Failed to upload photo");
       console.error(err);

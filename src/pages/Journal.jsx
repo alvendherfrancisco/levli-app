@@ -25,8 +25,10 @@ export default function Journal() {
   const handleSave = async (entry) => {
     if (editingEntry) {
       await updateJournalEntry(editingEntry.id, entry);
+      toast.success("Journal entry updated successfully!");
     } else {
       await addJournalEntry(entry);
+      toast.success("Journal entry added successfully!");
     }
     setEditingEntry(null);
   };
