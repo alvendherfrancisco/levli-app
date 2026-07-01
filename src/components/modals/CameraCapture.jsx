@@ -1,16 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
-import { X, RotateCcw, Check } from "lucide-react";
+import { X, RotateCcw, Check, SwitchCamera } from "lucide-react";
 
 export default function CameraCapture({ onCapture, onClose }) {
   const videoRef = useRef();
   const streamRef = useRef();
   const [error, setError] = useState("");
   const [capturedImage, setCapturedImage] = useState(null);
+  const [facingMode, setFacingMode] = useState("environment");
 
   useEffect(() => {
     let active = true;
+    streamRef.current?.getTracks().forEach((t) => t.stop());
     navigator.mediaDevices
-      .getUserMedia({ video: { facingMode: "environment" }, audio: false })
+      .getUserMedia({ video: { facingMode }, audio: false })
       .then((stream) => {
         if (!active) { stream.getTracks().forEach((t) => t.stop()); return; }
         streamRef.current = stream;
@@ -21,7 +23,7 @@ export default function CameraCapture({ onCapture, onClose }) {
       active = false;
       streamRef.current?.getTracks().forEach((t) => t.stop());
     };
-  }, []);
+  }, [facingMode]);
 
   const handleCapture = () => {
     const video = videoRef.current;
@@ -48,6 +50,11 @@ export default function CameraCapture({ onCapture, onClose }) {
         <button onClick={onClose} className="text-white p-1">
           <X size={26} />
         </button>
+        {!error && !capturedImage && (
+          <button onClick={() => setFacingMode((m) => (m === "environment" ? "user" : "environment"))} className="text-white p-1">
+            <SwitchCamera size={24} />
+          </button>
+        )}
       </div>
       <div className="flex-1 relative flex items-center justify-center overflow-hidden">
         {error ? (
@@ -59,9 +66,9 @@ export default function CameraCapture({ onCapture, onClose }) {
         )}
       </div>
       {!error && (
-        <div className="flex items-center justify-center gap-10 py-8 shrink-0">
+        <div className="relative flex items-center justify-center py-8 shrink-0">
           {capturedImage ? (
-            <>
+            <div className="flex items-center justify-center gap-10">
               <button onClick={() => setCapturedImage(null)} className="flex flex-col items-center gap-1.5 text-white">
                 <div className="w-14 h-14 rounded-full bg-white/15 flex items-center justify-center">
                   <RotateCcw size={22} />
@@ -74,9 +81,14 @@ export default function CameraCapture({ onCapture, onClose }) {
                 </div>
                 <span className="text-xs">Use Photo</span>
               </button>
-            </>
+            </div>
           ) : (
-            <button onClick={handleCapture} className="w-16 h-16 rounded-full border-4 border-white bg-white/20" />
+            <>
+              <button onClick={onClose} className="absolute left-6 text-white text-sm font-medium">
+                Cancel
+              </button>
+              <button onClick={handleCapture} className="w-16 h-16 rounded-full border-4 border-white bg-white/20" />
+            </>
           )}
         </div>
       )}
