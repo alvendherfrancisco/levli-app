@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, Navigate } from "react-router-dom";
 import OnboardingScreen from "@/components/onboarding/OnboardingScreen";
 import PhoneMockup from "@/components/onboarding/PhoneMockup";
 import QuizScreen from "@/components/onboarding/QuizScreen";
@@ -16,6 +16,10 @@ export default function Onboarding() {
   const { setProfile, profile } = useAppState();
   const [quizAnswers, setQuizAnswers] = useState({});
   const [units, setUnits] = useState({ weight_unit: "lb", height_unit: "in", liquid_unit: "oz" });
+
+  if (profile?.onboarding_completed) {
+    return <Navigate to="/" replace />;
+  }
 
   const handleQuizAnswer = (questionKey, answers) => {
     setQuizAnswers((prev) => ({ ...prev, [questionKey]: answers }));

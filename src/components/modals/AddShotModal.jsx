@@ -134,12 +134,12 @@ export default function AddShotModal({ open, onClose, editingShot }) {
           </div>
         </div>
 
-        {error && <p className="mx-5 mb-3 text-sm text-red-500 bg-red-50 rounded-xl px-3 py-2">{error}</p>}
+        {error && <p className="mx-5 mb-3 text-sm text-red-500 dark:text-red-400 bg-red-50 dark:bg-red-500/10 rounded-xl px-3 py-2">{error}</p>}
 
         <div className="px-5 pb-4 space-y-5">
           {/* Date & Time */}
           <div>
-            <label className="text-sm font-semibold text-gray-700 mb-2 block">Date & Time</label>
+            <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">Date & Time</label>
             <div className="flex gap-3">
               <input type="date" value={date} onChange={(e) => setDate(e.target.value)}
                 className="flex-1 border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-blue-300" />
@@ -150,7 +150,7 @@ export default function AddShotModal({ open, onClose, editingShot }) {
 
           {/* Medication */}
           <div>
-            <label className="text-sm font-semibold text-gray-700 mb-2 block">Medication</label>
+            <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">Medication</label>
             <div className="relative">
               <button onClick={() => { setShowMedDropdown(!showMedDropdown); setShowSiteDropdown(false); }}
                 className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 flex items-center justify-between text-left">
@@ -172,7 +172,7 @@ export default function AddShotModal({ open, onClose, editingShot }) {
 
           {/* Dose */}
           <div>
-            <label className="text-sm font-semibold text-gray-700 mb-1 block">Dose (mg)</label>
+            <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1 block">Dose (mg)</label>
             <div className="border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] rounded-xl px-4 py-3 flex items-center">
               <input type="number" value={dose} min="0.1" max="100" step="0.25"
                 onChange={(e) => setDose(e.target.value)} className="flex-1 outline-none text-base bg-transparent dark:text-[#E8E9F0]" />
@@ -182,7 +182,7 @@ export default function AddShotModal({ open, onClose, editingShot }) {
 
           {/* Injection Site */}
           <div>
-            <label className="text-sm font-semibold text-gray-700 mb-2 block">Injection Site</label>
+            <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">Injection Site</label>
             <div className="rounded-xl p-3 mb-2 flex items-start gap-2 bg-blue-50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-500/20">
               <MapPin size={16} className="text-blue-500 dark:text-blue-400 mt-0.5 flex-shrink-0" />
               <div className="flex-1">
