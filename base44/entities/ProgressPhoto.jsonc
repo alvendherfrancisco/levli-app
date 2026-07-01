@@ -21,7 +21,9 @@
     "read": {
       "created_by_id": "{{user.id}}"
     },
-    "update": null,
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
     "delete": {
       "created_by_id": "{{user.id}}"
     }
