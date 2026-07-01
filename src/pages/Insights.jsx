@@ -111,12 +111,13 @@ export default function Insights() {
   const openAddPhoto = () => setPhotoModal({ mode: "add", dayKey: todayKey() });
   const openEditPhoto = (photo) => setPhotoModal({ mode: "edit", id: photo.id, dayKey: photo.day_key, url: photo.url });
 
-  const handleSavePhotoModal = async (url) => {
+  const handleSavePhotoModal = async (url, newDayKey) => {
+    const dayKey = newDayKey || photoModal.dayKey;
     if (photoModal.mode === "add") {
-      await addProgressPhotoRecord(photoModal.dayKey, url);
+      await addProgressPhotoRecord(dayKey, url);
       toast.success("Progress photo added successfully!");
     } else {
-      await updateProgressPhotoRecord(photoModal.id, photoModal.dayKey, url);
+      await updateProgressPhotoRecord(photoModal.id, dayKey, url);
       toast.success("Progress photo updated successfully!");
     }
   };
@@ -361,6 +362,7 @@ export default function Insights() {
           label="Progress"
           unit="pic"
           value={photoModal?.mode === "edit" ? photoModal.url : "–"}
+          dayKey={photoModal?.dayKey}
           onSave={handleSavePhotoModal}
           onDelete={photoModal?.mode === "edit" ? handleDeletePhotoModal : undefined}
         />

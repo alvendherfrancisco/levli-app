@@ -67,7 +67,7 @@ export default function MetricsGrid({ dayKey }) {
     {
       icon: <Camera size={14} className="text-purple-500" />, label: "Progress",
       value: photo ? "✓" : "–", unit: "pic", color: "bg-purple-100",
-      onAdd: () => setMetricModal({ label: "Progress", unit: "pic", current: photo || "–", onSave: async (v) => { await addProgressPhotoRecord(dk, v); toast.success("Progress photo added successfully!"); }, onDelete: async () => { await deleteLatestProgressPhoto(dk); toast.success("Progress photo deleted successfully!"); } }),
+      onAdd: () => setMetricModal({ label: "Progress", unit: "pic", current: photo || "–", dayKey: dk, onSave: async (v, newDayKey) => { await addProgressPhotoRecord(newDayKey || dk, v); toast.success("Progress photo added successfully!"); }, onDelete: async () => { await deleteLatestProgressPhoto(dk); toast.success("Progress photo deleted successfully!"); } }),
     },
   ];
 
@@ -86,6 +86,7 @@ export default function MetricsGrid({ dayKey }) {
           label={metricModal.label}
           unit={metricModal.unit}
           value={metricModal.current}
+          dayKey={metricModal.dayKey}
           onSave={metricModal.onSave}
           onDelete={metricModal.onDelete}
         />

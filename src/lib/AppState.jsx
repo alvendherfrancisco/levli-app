@@ -166,7 +166,7 @@ export function AppStateProvider({ children }) {
   };
 
   const updateProgressPhotoRecord = async (id, dayKey, url) => {
-    const rec = await base44.entities.ProgressPhoto.update(id, { url });
+    const rec = await base44.entities.ProgressPhoto.update(id, { url, day_key: dayKey });
     const dayPhotos = getPhotosForDay(dayKey);
     const isLatest = dayPhotos.length > 0 && dayPhotos[dayPhotos.length - 1].id === id;
     setProgressPhotosList((prev) => prev.map((p) => (p.id === id ? { ...p, ...rec } : p)));

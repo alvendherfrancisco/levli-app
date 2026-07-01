@@ -73,14 +73,15 @@ function ExerciseModal({ open, onClose, value, onSave, onDelete }) {
 }
 
 // ── Progress Photo ────────────────────────────────────────────────────────────
-function ProgressModal({ open, onClose, value, onSave, onDelete }) {
+function ProgressModal({ open, onClose, value, dayKey, onSave, onDelete }) {
   const hasExisting = value && value !== "–";
   const [imgUrl, setImgUrl] = useState(hasExisting ? value : null);
+  const [photoDate, setPhotoDate] = useState(dayKey || "");
   const [uploading, setUploading] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
   const galleryRef = useRef();
 
-  useEffect(() => { if (open) { setImgUrl(hasExisting ? value : null); setUploading(false); setShowCamera(false); } }, [open]);
+  useEffect(() => { if (open) { setImgUrl(hasExisting ? value : null); setPhotoDate(dayKey || ""); setUploading(false); setShowCamera(false); } }, [open]);
 
   if (!open) return null;
 
@@ -140,6 +141,15 @@ function ProgressModal({ open, onClose, value, onSave, onDelete }) {
             </button>
             <input ref={galleryRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
           </div>
+          <div className="mt-4">
+            <label className="text-sm text-gray-400 dark:text-[#9A9DAE] mb-2 block">Date</label>
+            <input
+              type="date"
+              value={photoDate}
+              onChange={(e) => setPhotoDate(e.target.value)}
+              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] rounded-xl px-4 py-3 outline-none text-gray-900 dark:text-[#E8E9F0]"
+            />
+          </div>
         </div>
         {showCamera && <CameraCapture onCapture={handleCameraCapture} onClose={() => setShowCamera(false)} />}
         <div className="border-t border-gray-100 dark:border-white/[0.08]" />
@@ -149,14 +159,14 @@ function ProgressModal({ open, onClose, value, onSave, onDelete }) {
               className="flex-1 py-3 bg-red-500/10 dark:bg-red-500/10 text-red-500 dark:text-red-400 border border-red-500/20 rounded-xl font-semibold flex items-center justify-center gap-2">
               <Trash2 size={18} /> Delete
             </button>
-            <button disabled={uploading || !imgUrl} onClick={() => { onSave(imgUrl); onClose(); }}
+            <button disabled={uploading || !imgUrl || !photoDate} onClick={() => { onSave(imgUrl, photoDate); onClose(); }}
               className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-60">
               <Save size={18} /> Update
             </button>
           </div>
         ) : (
           <div className="px-5 pt-5 pb-8">
-            <button disabled={uploading || !imgUrl} onClick={() => { if (imgUrl) { onSave(imgUrl); onClose(); } }}
+            <button disabled={uploading || !imgUrl || !photoDate} onClick={() => { if (imgUrl) { onSave(imgUrl, photoDate); onClose(); } }}
               className={`w-full py-3.5 rounded-xl font-semibold flex items-center justify-center gap-2 bg-blue-600 text-white ${!imgUrl || uploading ? "opacity-60" : ""}`}>
               <Save size={18} /> Save
             </button>
@@ -220,12 +230,12 @@ function GenericMetricModal({ open, onClose, label, unit, value, onSave }) {
   );
 }
 
-export default function AddMetricModal({ open, onClose, label, unit, value, onSave, onDelete }) {
+export default function AddMetricModal({ open, onClose, label, unit, value, dayKey, onSave, onDelete }) {
   if (label === "Exercise") {
     return <ExerciseModal open={open} onClose={onClose} value={value} onSave={onSave} onDelete={onDelete || (() => onSave("0"))} />;
   }
   if (label === "Progress") {
-    return <ProgressModal open={open} onClose={onClose} value={value} onSave={onSave} onDelete={onDelete || (() => onSave("–"))} />;
+    return <ProgressModal open={open} onClose={onClose} value={value} dayKey={dayKey} onSave={onSave} onDelete={onDelete || (() => onSave("–"))} />;
   }
   return <GenericMetricModal open={open} onClose={onClose} label={label} unit={unit} value={value} onSave={onSave} />;
 }
