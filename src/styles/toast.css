@@ -5,7 +5,7 @@
   right: auto !important;
   transform: translateX(-50%) !important;
   width: calc(100% - 2rem) !important;
-  max-width: 480px !important;
+  max-width: none !important;
 }
 
 /* Toast card */
@@ -73,8 +73,7 @@
   line-height: 1.375;
   color: #111827;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow: visible;
 }
 
 .dark .app-toast [data-title] {
