@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { X, Camera, Image, Trash2, Save, Loader2 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
+import CameraCapture from "@/components/modals/CameraCapture";
 
 function numericOnly(value) {
   let v = value.replace(/[^0-9.]/g, "");
@@ -76,24 +77,33 @@ function ProgressModal({ open, onClose, value, onSave, onDelete }) {
   const hasExisting = value && value !== "–";
   const [imgUrl, setImgUrl] = useState(hasExisting ? value : null);
   const [uploading, setUploading] = useState(false);
-  const cameraRef = useRef();
+  const [showCamera, setShowCamera] = useState(false);
   const galleryRef = useRef();
 
-  useEffect(() => { if (open) { setImgUrl(hasExisting ? value : null); setUploading(false); } }, [open]);
+  useEffect(() => { if (open) { setImgUrl(hasExisting ? value : null); setUploading(false); setShowCamera(false); } }, [open]);
 
   if (!open) return null;
 
-  const handleFile = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+  const uploadFile = async (file) => {
     setUploading(true);
     try {
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
       setImgUrl(file_url);
     } finally {
       setUploading(false);
-      e.target.value = "";
     }
+  };
+
+  const handleFile = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    await uploadFile(file);
+    e.target.value = "";
+  };
+
+  const handleCameraCapture = async (file) => {
+    setShowCamera(false);
+    await uploadFile(file);
   };
 
   return (
@@ -120,7 +130,7 @@ function ProgressModal({ open, onClose, value, onSave, onDelete }) {
             )}
           </div>
           <div className="flex gap-3 mt-4">
-            <button disabled={uploading} onClick={() => cameraRef.current?.click()}
+            <button disabled={uploading} onClick={() => setShowCamera(true)}
               className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-60">
               <Camera size={18} /> Camera
             </button>
@@ -128,10 +138,10 @@ function ProgressModal({ open, onClose, value, onSave, onDelete }) {
               className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-60">
               <Image size={18} /> Gallery
             </button>
-            <input ref={cameraRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={handleFile} />
             <input ref={galleryRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
           </div>
         </div>
+        {showCamera && <CameraCapture onCapture={handleCameraCapture} onClose={() => setShowCamera(false)} />}
         <div className="border-t border-gray-100 dark:border-white/[0.08]" />
         {hasExisting ? (
           <div className="flex gap-3 px-5 pt-5 pb-8">
