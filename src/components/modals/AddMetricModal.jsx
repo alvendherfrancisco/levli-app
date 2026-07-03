@@ -147,7 +147,7 @@ function ProgressModal({ open, onClose, value, dayKey, onSave, onDelete }) {
               type="date"
               value={photoDate}
               onChange={(e) => setPhotoDate(e.target.value)}
-              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] rounded-xl px-4 py-3 outline-none text-gray-900 dark:text-[#E8E9F0]"
+              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] rounded-xl px-4 py-3 outline-none text-gray-900 dark:text-[#E8E9F0] dark:[color-scheme:dark]"
             />
           </div>
         </div>
