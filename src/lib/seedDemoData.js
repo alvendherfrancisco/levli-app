@@ -67,16 +67,11 @@ export async function seedDemoDataIfNeeded() {
   }
   if (!user || user.email !== DEMO_EMAIL) return;
 
-  const [existingShots, existingDayMetrics, existingJournal, existingProfile] = await Promise.all([
+  const [existingShots, existingDayMetrics, existingJournal] = await Promise.all([
     base44.entities.Shot.list("-date", 1),
     base44.entities.DayMetric.list("-day_key", 1),
     base44.entities.JournalEntry.list("-date", 1),
-    base44.entities.UserProfile.list("", 1),
   ]);
-
-  // A profile already existing means this account's demo data has already been
-  // set up (manually or otherwise) — never auto-reseed over it.
-  if (existingProfile.length > 0) return;
 
   const today = new Date();
 
