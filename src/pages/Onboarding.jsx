@@ -130,7 +130,7 @@ function WelcomeStep() {
       <div className="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center mb-6 mt-4">
         <Droplets size={32} className="text-white" />
       </div>
-      <h1 className="text-3xl font-bold mb-3">Welcome to GLP1 Tracker</h1>
+      <h1 className="text-3xl font-bold mb-3">Welcome to Levli</h1>
       <p className="text-gray-400 text-base leading-relaxed mb-6">
         The ultimate companion for your GLP-1 medication journey. Track shots, monitor progress, and achieve your health goals with confidence.
       </p>
@@ -231,7 +231,7 @@ function NotificationStep({ onContinue }) {
     <div className="flex flex-col items-center text-center flex-1">
       <h1 className="text-3xl font-bold mb-3">Never Miss a Shot Again</h1>
       <p className="text-gray-400 text-base leading-relaxed mb-6">
-        GLP1 Tracker gently reminds you when it's time to take your shots — so you never have to worry about forgetting again.
+        Levli gently reminds you when it's time to take your shots — so you never have to worry about forgetting again.
       </p>
       <div className="bg-gray-900 rounded-2xl p-6 mb-4 border border-gray-800">
         <div className="w-14 h-14 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -239,7 +239,7 @@ function NotificationStep({ onContinue }) {
         </div>
         <h3 className="text-lg font-semibold mb-2">Allow Notifications</h3>
         <p className="text-gray-400 text-sm">
-          To make the most of GLP1 Tracker, please allow notifications so we can remind you when it's time to take your medications.
+          To make the most of Levli, please allow notifications so we can remind you when it's time to take your medications.
         </p>
       </div>
       {enabled ? (
@@ -268,7 +268,7 @@ function PersonalizeStep() {
     <div className="flex flex-col items-center text-center flex-1">
       <h1 className="text-3xl font-bold mb-3">Let's Personalize Your Experience</h1>
       <p className="text-gray-400 text-base leading-relaxed mb-6">
-        Answer a few quick questions to help us tailor GLP1 Tracker to your specific needs.
+        Answer a few quick questions to help us tailor Levli to your specific needs.
       </p>
       <div className="w-32 h-32 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-3xl flex items-center justify-center mb-6 shadow-lg shadow-blue-500/30">
         <Droplets size={64} className="text-white" />

@@ -31,7 +31,7 @@ export default function PrivacyPolicyPage() {
         <p className="text-xs text-gray-400 dark:text-gray-500 mb-4">Last updated: June 30, 2026</p>
 
         <Section title="1. What Data We Collect">
-          <p>When you use Dosely, we collect the following personal health data that you voluntarily provide:</p>
+          <p>When you use Levli, we collect the following personal health data that you voluntarily provide:</p>
           <ul className="list-disc list-inside space-y-1 mt-2">
             <li>Medication shot logs (drug name, dose, date, time, injection site, pain level, notes)</li>
             <li>Daily health metrics (weight, calories, protein, water, fiber, carbohydrates, exercise minutes)</li>
@@ -48,7 +48,7 @@ export default function PrivacyPolicyPage() {
         </Section>
 
         <Section title="3. How We Use Your Data">
-          <p>Your data is used exclusively to provide and improve the Dosely app experience, including:</p>
+          <p>Your data is used exclusively to provide and improve the Levli app experience, including:</p>
           <ul className="list-disc list-inside space-y-1 mt-2">
             <li>Displaying your shot history and scheduling your next dose</li>
             <li>Computing estimated medication levels and health trends</li>
@@ -63,24 +63,24 @@ export default function PrivacyPolicyPage() {
         </Section>
 
         <Section title="5. Medical Disclaimer">
-          <p>Dosely is not a substitute for professional medical care. The information and data tracked in this app are for personal reference only.</p>
+          <p>Levli is not a substitute for professional medical care. The information and data tracked in this app are for personal reference only.</p>
           <p className="text-gray-900 dark:text-white font-medium">Only your doctor can diagnose and treat medical problems. Always consult a qualified healthcare professional before making changes to your medication or treatment plan.</p>
         </Section>
 
         <Section title="6. Data Retention & Deletion">
           <p>Your data is retained for as long as your account is active. You may delete individual records at any time from within the app.</p>
           <p>To request full deletion of your account and all associated data, email us at:</p>
-          <p className="text-blue-600 dark:text-blue-400 font-medium mt-1">privacy@dosely.app <span className="text-gray-400 dark:text-gray-500 text-xs">(placeholder — replace with your actual contact)</span></p>
+          <p className="text-blue-600 dark:text-blue-400 font-medium mt-1">privacy@levli.app <span className="text-gray-400 dark:text-gray-500 text-xs">(placeholder — replace with your actual contact)</span></p>
           <p>We will process deletion requests within 30 days.</p>
         </Section>
 
         <Section title="7. Contact">
           <p>For any privacy-related questions or concerns, contact us at:</p>
-          <p className="text-blue-600 dark:text-blue-400 font-medium mt-1">privacy@dosely.app <span className="text-gray-400 dark:text-gray-500 text-xs">(placeholder)</span></p>
+          <p className="text-blue-600 dark:text-blue-400 font-medium mt-1">privacy@levli.app <span className="text-gray-400 dark:text-gray-500 text-xs">(placeholder)</span></p>
         </Section>
 
         <div className="py-6 text-center">
-          <p className="text-xs text-gray-400 dark:text-gray-600">© 2026 Dosely · Placeholder privacy policy</p>
+          <p className="text-xs text-gray-400 dark:text-gray-600">© 2026 Levli · Placeholder privacy policy</p>
         </div>
       </div>
     </div>

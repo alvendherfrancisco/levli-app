@@ -31,15 +31,15 @@ export default function TermsPage() {
         <p className="text-xs text-gray-400 dark:text-gray-500 mb-4">Last updated: June 30, 2026</p>
 
         <Section title="1. Acceptance of Terms">
-          <p>By creating an account and using Dosely, you agree to these Terms and Conditions. If you do not agree, please do not use the app.</p>
+          <p>By creating an account and using Levli, you agree to these Terms and Conditions. If you do not agree, please do not use the app.</p>
         </Section>
 
         <Section title="2. Description of Service">
-          <p>Dosely is a personal health tracking application that allows users to log GLP-1 medication shots, track daily health metrics (weight, nutrition, exercise), record journal entries, and view trends and insights based on their own data.</p>
+          <p>Levli is a personal health tracking application that allows users to log GLP-1 medication shots, track daily health metrics (weight, nutrition, exercise), record journal entries, and view trends and insights based on their own data.</p>
         </Section>
 
         <Section title="3. Medical Disclaimer">
-          <p>Dosely is <span className="text-gray-900 dark:text-white font-semibold">not</span> a medical device and is not intended to diagnose, treat, cure, or prevent any disease or medical condition.</p>
+          <p>Levli is <span className="text-gray-900 dark:text-white font-semibold">not</span> a medical device and is not intended to diagnose, treat, cure, or prevent any disease or medical condition.</p>
           <p className="text-gray-900 dark:text-white font-medium">This application is not a substitute for professional medical care. Only your doctor can diagnose and treat medical problems. Always consult a qualified healthcare professional before making any changes to your medication or treatment plan.</p>
           <p>Medication level estimates shown in the app are based on general pharmacokinetic models and are for informational purposes only — they do not reflect actual blood concentrations.</p>
         </Section>
@@ -55,11 +55,11 @@ export default function TermsPage() {
         </Section>
 
         <Section title="5. Your Data">
-          <p>You retain full ownership of all health data you enter into Dosely. We act only as a data processor to operate the service on your behalf. See our Privacy Policy for full details on how data is stored and protected.</p>
+          <p>You retain full ownership of all health data you enter into Levli. We act only as a data processor to operate the service on your behalf. See our Privacy Policy for full details on how data is stored and protected.</p>
         </Section>
 
         <Section title="6. Prohibited Use">
-          <p>You agree not to use Dosely to:</p>
+          <p>You agree not to use Levli to:</p>
           <ul className="list-disc list-inside space-y-1 mt-2">
             <li>Provide medical advice to others</li>
             <li>Circumvent, hack, or abuse the platform</li>
@@ -68,7 +68,7 @@ export default function TermsPage() {
         </Section>
 
         <Section title="7. Limitation of Liability">
-          <p>To the maximum extent permitted by law, Dosely and its developers are not liable for any health decisions made based on information displayed in the app, or for any loss of data.</p>
+          <p>To the maximum extent permitted by law, Levli and its developers are not liable for any health decisions made based on information displayed in the app, or for any loss of data.</p>
           <p>The app is provided "as is" without warranties of any kind.</p>
         </Section>
 
@@ -78,11 +78,11 @@ export default function TermsPage() {
 
         <Section title="9. Contact">
           <p>For questions about these terms, contact us at:</p>
-          <p className="text-blue-600 dark:text-blue-400 font-medium mt-1">legal@dosely.app <span className="text-gray-400 dark:text-gray-500 text-xs">(placeholder — replace with your actual contact)</span></p>
+          <p className="text-blue-600 dark:text-blue-400 font-medium mt-1">legal@levli.app <span className="text-gray-400 dark:text-gray-500 text-xs">(placeholder — replace with your actual contact)</span></p>
         </Section>
 
         <div className="py-6 text-center">
-          <p className="text-xs text-gray-400 dark:text-gray-600">© 2026 Dosely · Placeholder terms and conditions</p>
+          <p className="text-xs text-gray-400 dark:text-gray-600">© 2026 Levli · Placeholder terms and conditions</p>
         </div>
       </div>
     </div>

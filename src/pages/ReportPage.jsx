@@ -109,7 +109,7 @@ export default function ReportPage() {
       y += 7;
     });
 
-    doc.save(`dosely-report-${new Date().toISOString().slice(0,10)}.pdf`);
+    doc.save(`levli-report-${new Date().toISOString().slice(0,10)}.pdf`);
     setExporting(false);
   };
 

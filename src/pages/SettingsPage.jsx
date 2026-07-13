@@ -58,7 +58,7 @@ export default function SettingsPage() {
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    a.href = url; a.download = `dosely-backup-${new Date().toISOString().slice(0,10)}.json`;
+    a.href = url; a.download = `levli-backup-${new Date().toISOString().slice(0,10)}.json`;
     a.click(); URL.revokeObjectURL(url);
     setBackupLoading(false);
   };
@@ -115,7 +115,7 @@ export default function SettingsPage() {
           <div className="bg-white dark:bg-gray-900 rounded-2xl px-4 shadow-sm border border-gray-100 dark:border-gray-800 divide-y divide-gray-100 dark:divide-white/[0.07]">
             <MenuItem icon={backupLoading ? <Loader2 size={18} className="animate-spin text-gray-400" /> : <Download size={18} className="text-gray-500 dark:text-gray-400" />} label="Backup Data" onPress={handleBackup} />
             <MenuItem icon={restoreLoading ? <Loader2 size={18} className="animate-spin text-gray-400" /> : <Upload size={18} className="text-gray-500 dark:text-gray-400" />} label="Restore Data" onPress={handleRestore} />
-            <MenuItem icon={<Mail size={18} className="text-gray-500 dark:text-gray-400" />} label="Contact Us" href="mailto:support@dosely.app" />
+            <MenuItem icon={<Mail size={18} className="text-gray-500 dark:text-gray-400" />} label="Contact Us" href="mailto:support@levli.app" />
           </div>
         </div>
 
@@ -131,7 +131,7 @@ export default function SettingsPage() {
         {/* Feedback */}
         <div className="px-4 mb-4">
           <div className="bg-white dark:bg-gray-900 rounded-2xl px-4 shadow-sm border border-gray-100 dark:border-gray-800">
-            <MenuItem icon={<MessageSquare size={18} className="text-gray-500 dark:text-gray-400" />} label="Leave feedback" href="mailto:feedback@dosely.app" />
+            <MenuItem icon={<MessageSquare size={18} className="text-gray-500 dark:text-gray-400" />} label="Leave feedback" href="mailto:feedback@levli.app" />
           </div>
         </div>
 
@@ -146,7 +146,7 @@ export default function SettingsPage() {
 
         <div className="py-6 text-center">
           <p className="text-xs text-gray-400 dark:text-gray-600">Version 1.0.0</p>
-          <p className="text-xs text-gray-400 dark:text-gray-600">© 2026 Dosely</p>
+          <p className="text-xs text-gray-400 dark:text-gray-600">© 2026 Levli</p>
         </div>
       </div>
     </div>

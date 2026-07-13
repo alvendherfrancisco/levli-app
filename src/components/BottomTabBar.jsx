@@ -48,7 +48,7 @@ export default function BottomTabBar() {
       {/* Desktop: left side rail */}
       <div className="hidden lg:flex flex-col fixed top-0 left-0 h-full w-56 bg-white dark:bg-gray-900 border-r border-gray-100 dark:border-gray-800 z-40 pt-8 pb-6 px-4">
         <div className="mb-8 px-2">
-          <span className="text-xl font-bold text-blue-600 dark:text-blue-400">Dosely</span>
+          <span className="text-xl font-bold text-blue-600 dark:text-blue-400">Levli</span>
         </div>
         <nav className="flex flex-col gap-1 flex-1">
           {tabs.map((tab) => {
