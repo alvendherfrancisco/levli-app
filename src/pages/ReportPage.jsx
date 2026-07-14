@@ -114,7 +114,7 @@ export default function ReportPage() {
   };
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-950 min-h-screen w-full">
+    <div className="bg-page-gradient min-h-screen w-full animate-fade-in">
       {/* Full-width header */}
       <div className="w-full flex items-center justify-between px-5 pt-6 pb-4 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 sticky top-0 z-30">
         <button onClick={() => navigate(-1)} className="flex items-center gap-1 text-blue-600">

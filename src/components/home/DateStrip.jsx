@@ -33,7 +33,7 @@ export default function DateStrip({ selectedDate, onSelectDate }) {
             onClick={() => onSelectDate && onSelectDate(d)}
             className={`flex flex-col items-center gap-0.5 px-3 py-2 rounded-2xl min-w-[52px] transition-all ${
               isSelected
-                ? "bg-blue-600 dark:bg-blue-500/80 text-white shadow-lg dark:[box-shadow:0_0_18px_4px_rgba(91,141,239,0.35)]"
+                ? "bg-blue-600 dark:bg-blue-500/80 text-white shadow-lg dark:[box-shadow:0_0_18px_4px_rgba(18,184,134,0.35)]"
                 : "text-gray-400 dark:text-[#9A9DAE]"
             }`}
           >
