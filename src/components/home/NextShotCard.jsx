@@ -26,8 +26,8 @@ export default function NextShotCard() {
   const circumference = 2 * Math.PI * 34;
 
   const isDue = daysLeft <= 0;
-  const ringColor = isDue ? "#22C55E" : "#12b886";
-  const ringGlow = isDue ? "0 0 14px 3px rgba(34,197,94,0.35)" : "0 0 14px 3px rgba(18,184,134,0.35)";
+  const ringColor = isDue ? "#22C55E" : "#5B8DEF";
+  const ringGlow = isDue ? "0 0 14px 3px rgba(34,197,94,0.35)" : "0 0 14px 3px rgba(91,141,239,0.35)";
 
   let daysLabel;
   if (isDue) daysLabel = "Today!";

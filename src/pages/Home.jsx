@@ -21,7 +21,7 @@ export default function Home() {
   const greeting = hour < 12 ? "Good Morning!" : hour < 18 ? "Good Afternoon!" : "Good Evening!";
 
   return (
-    <div className="bg-page-gradient min-h-screen w-full animate-fade-in">
+    <div className="bg-gray-50 dark:bg-gray-950 min-h-screen w-full">
       <div className="sticky top-0 z-30 bg-gray-50 dark:bg-gray-950 w-full flex items-center justify-between px-5 pt-6 pb-2">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{greeting}</h1>
         <Link to="/settings"><Settings size={24} className="text-gray-600 dark:text-gray-400" /></Link>
@@ -57,7 +57,7 @@ export default function Home() {
         <div className="mx-3 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
           <div className="flex items-start justify-between mb-2">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{background:"rgba(18,184,134,0.13)"}}>
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{background:"rgba(59,130,246,0.13)"}}>
                 <Syringe size={16} className="text-blue-600" />
               </div>
               <div>
@@ -78,7 +78,7 @@ export default function Home() {
       <button
         onClick={() => setShowShot(true)}
         className="fixed bottom-24 right-5 lg:right-8 bg-blue-600 dark:bg-blue-500 text-white rounded-2xl shadow-lg shadow-blue-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-blue-700 dark:hover:bg-blue-400 transition-colors text-sm px-5 py-3"
-      style={{ boxShadow: "0 4px 24px 4px rgba(18,184,134,0.35)" }}
+      style={{ boxShadow: "0 4px 24px 4px rgba(59,130,246,0.35)" }}
       >
         <Plus size={18} /> Add Shot
       </button>

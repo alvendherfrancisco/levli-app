@@ -13,7 +13,7 @@ export default function PrivacyPolicyPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-page-gradient min-h-screen w-full animate-fade-in">
+    <div className="bg-gray-50 dark:bg-gray-950 min-h-screen w-full">
       <div className="w-full flex items-center gap-3 px-5 pt-6 pb-4 bg-gray-50 dark:bg-gray-950 sticky top-0 z-30 border-b border-gray-100 dark:border-gray-800">
         <button onClick={() => navigate(-1)}><ChevronLeft size={24} className="text-gray-600 dark:text-gray-400" /></button>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Privacy Policy</h1>

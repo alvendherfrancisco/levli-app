@@ -6,7 +6,7 @@ export default function OnboardingScreen({ step, totalSteps, children, onContinu
   return (
     <div className="min-h-screen bg-black text-white flex items-start sm:items-center justify-center">
       {/* Centered card */}
-      <div className="w-full max-w-lg mx-auto flex flex-col h-screen sm:h-[85vh] sm:rounded-3xl sm:shadow-2xl sm:my-8 bg-black overflow-hidden animate-fade-in">
+      <div className="w-full max-w-lg mx-auto flex flex-col h-screen sm:h-[85vh] sm:rounded-3xl sm:shadow-2xl sm:my-8 bg-black overflow-hidden">
         {/* Progress bar */}
         <div className="px-6 pt-5">
           <div className="h-1 bg-gray-800 rounded-full overflow-hidden">

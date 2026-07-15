@@ -65,10 +65,10 @@ export function MiniHomeScreen() {
         {/* Mini progress ring */}
         <svg width="28" height="28" viewBox="0 0 28 28">
           <circle cx="14" cy="14" r="11" fill="none" stroke="#374151" strokeWidth="3" />
-          <circle cx="14" cy="14" r="11" fill="none" stroke="#12b886" strokeWidth="3"
+          <circle cx="14" cy="14" r="11" fill="none" stroke="#3b82f6" strokeWidth="3"
             strokeDasharray={`${2 * Math.PI * 11 * 0.65} ${2 * Math.PI * 11}`}
             strokeLinecap="round" transform="rotate(-90 14 14)" />
-          <text x="14" y="17" textAnchor="middle" fontSize="5.5" fill="#5fe9c4" fontWeight="bold">65%</text>
+          <text x="14" y="17" textAnchor="middle" fontSize="5.5" fill="#93c5fd" fontWeight="bold">65%</text>
         </svg>
       </Card>
 
@@ -244,9 +244,9 @@ export function MiniInsightsScreen() {
         </div>
         {/* Chart */}
         <svg viewBox={`0 0 ${W} ${H + 8}`} className="w-full" style={{ height: 44 }}>
-          <polyline points={polyline} fill="none" stroke="#12b886" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <polyline points={polyline} fill="none" stroke="#3b82f6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           {pts.map((v, i) => (
-            <circle key={i} cx={i * xStep} cy={v} r="1.5" fill="#12b886" />
+            <circle key={i} cx={i * xStep} cy={v} r="1.5" fill="#3b82f6" />
           ))}
         </svg>
       </Card>
@@ -260,11 +260,11 @@ export function MiniInsightsScreen() {
         <svg viewBox="0 0 140 36" className="w-full" style={{ height: 36 }}>
           <defs>
             <linearGradient id="mg" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#12b886" stopOpacity="0.25" />
-              <stop offset="100%" stopColor="#12b886" stopOpacity="0" />
+              <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.25" />
+              <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
             </linearGradient>
           </defs>
-          <path d="M0 30 L18 8 L30 20 L48 5 L60 17 L78 4 L90 14 L108 8 L120 12 L140 10" fill="none" stroke="#12b886" strokeWidth="1.5" strokeLinecap="round" />
+          <path d="M0 30 L18 8 L30 20 L48 5 L60 17 L78 4 L90 14 L108 8 L120 12 L140 10" fill="none" stroke="#3b82f6" strokeWidth="1.5" strokeLinecap="round" />
           <path d="M0 30 L18 8 L30 20 L48 5 L60 17 L78 4 L90 14 L108 8 L120 12 L140 10 L140 36 L0 36Z" fill="url(#mg)" />
         </svg>
         <div className="text-[5px] text-gray-400 text-center mt-0.5">Time vs Concentration (mg) · Tirzepatide</div>

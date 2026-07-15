@@ -172,7 +172,7 @@ export default function Insights() {
   const heightMissing = heightM === 0 && latestWeight != null;
 
   return (
-    <div className="bg-page-gradient min-h-screen w-full animate-fade-in">
+    <div className="bg-gray-50 dark:bg-gray-950 min-h-screen w-full">
       <div className="sticky top-0 z-30 bg-gray-50 dark:bg-gray-950 w-full flex items-center justify-between px-5 pt-6 pb-4">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Insights</h1>
         <Link to="/settings"><Settings size={22} className="text-gray-600 dark:text-gray-400" /></Link>
@@ -211,7 +211,7 @@ export default function Insights() {
               </p>
             </div>
             <div className="bg-blue-50 dark:bg-blue-500/10 rounded-xl p-2.5 text-center flex-1 min-w-0 border border-transparent dark:border-blue-500/15">
-              <Zap size={14} className="text-blue-500 dark:text-blue-400 mx-auto mb-1" style={{filter:"drop-shadow(0 0 6px rgba(18,184,134,0.4))"}} />
+              <Zap size={14} className="text-blue-500 dark:text-blue-400 mx-auto mb-1" style={{filter:"drop-shadow(0 0 6px rgba(59,130,246,0.4))"}} />
               <p className="text-gray-500 dark:text-[#9A9DAE] text-[11px]">Rate/Week</p>
               <p className="font-bold text-blue-600 dark:text-blue-400 text-sm">
                 {ratePerWeek != null
@@ -239,7 +239,7 @@ export default function Insights() {
                     formatter={(v) => [`${v} ${weightUnit}`, "Weight"]}
                     contentStyle={{ background: "rgba(20,22,32,0.95)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, color: "#E8E9F0" }}
                   />
-                  <Line type="monotone" dataKey="weight" stroke="#12b886" strokeWidth={2} dot={{ fill: "#12b886", r: 3 }} activeDot={{ r: 5 }} />
+                  <Line type="monotone" dataKey="weight" stroke="#3B6FE0" strokeWidth={2} dot={{ fill: "#3B6FE0", r: 3 }} activeDot={{ r: 5 }} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -257,7 +257,7 @@ export default function Insights() {
         {/* Progress Pictures Panel */}
         <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
           <div className="flex items-center gap-2 mb-1">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "rgba(18,184,134,0.13)" }}>
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "rgba(59,130,246,0.13)" }}>
               <Camera size={16} className="text-blue-500" />
             </div>
             <h3 className="font-bold text-gray-900 dark:text-white text-lg">Progress Pictures</h3>
@@ -266,7 +266,7 @@ export default function Insights() {
 
           {photosAsc.length > 0 && (
             <div className="grid grid-cols-3 gap-2 mb-4">
-              <div className="rounded-xl p-2.5 text-center" style={{ background: "rgba(18,184,134,0.1)", border: "1px solid rgba(18,184,134,0.15)" }}>
+              <div className="rounded-xl p-2.5 text-center" style={{ background: "rgba(59,130,246,0.1)", border: "1px solid rgba(59,130,246,0.15)" }}>
                 <Image size={14} className="text-blue-400 mx-auto mb-1" />
                 <p className="text-[11px] text-gray-500 dark:text-[#9A9DAE]">Total Photos</p>
                 <p className="font-bold text-blue-500 dark:text-blue-400 text-sm">{photosAsc.length}</p>
@@ -287,7 +287,7 @@ export default function Insights() {
           {photosAsc.length === 0 ? (
             <div className="space-y-4">
               <button onClick={openAddPhoto}
-                className="w-full flex items-center gap-3 rounded-xl p-4 text-left" style={{ background: "rgba(18,184,134,0.1)", border: "1px solid rgba(18,184,134,0.25)" }}>
+                className="w-full flex items-center gap-3 rounded-xl p-4 text-left" style={{ background: "rgba(59,130,246,0.1)", border: "1px solid rgba(59,130,246,0.25)" }}>
                 <Camera size={22} className="text-blue-500 flex-shrink-0" />
                 <p className="text-blue-500 font-medium text-sm">No progress pictures yet. Tap to add your first photo!</p>
               </button>
@@ -404,7 +404,7 @@ export default function Insights() {
                     formatter={(v) => [`${v} mg`, "Concentration"]}
                     contentStyle={{ background: "rgba(20,22,32,0.95)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, color: "#E8E9F0" }}
                   />
-                  <Area type="monotone" dataKey="level" stroke="#12b886" fill="#12b886" fillOpacity={0.1} strokeWidth={2} />
+                  <Area type="monotone" dataKey="level" stroke="#3B6FE0" fill="#3B6FE0" fillOpacity={0.1} strokeWidth={2} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
