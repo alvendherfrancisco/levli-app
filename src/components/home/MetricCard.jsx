@@ -11,6 +11,7 @@ const DARK_STYLES = {
   "bg-blue-100":    { bg: "rgba(59,130,246,0.13)",  color: "#60A5FA" },
   "bg-red-100":     { bg: "rgba(239,68,68,0.13)",   color: "#F87171" },
   "bg-purple-100":  { bg: "rgba(168,85,247,0.13)",  color: "#C084FC" },
+  "bg-indigo-100":  { bg: "rgba(99,102,241,0.13)",  color: "#818CF8" },
 };
 
 export default function MetricCard({ icon, label, value, unit, color, onAdd }) {

@@ -64,13 +64,13 @@ export default function History() {
         {/* Calendar */}
         <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between mb-4">
-            <button onClick={prevMonth}><ChevronLeft size={22} className="text-blue-500" /></button>
+            <button onClick={prevMonth}><ChevronLeft size={22} className="text-teal-500" /></button>
             <h2 className="text-lg font-bold text-gray-900 dark:text-white">{monthNames[month]} {year}</h2>
-            <button onClick={nextMonth}><ChevronRight size={22} className="text-blue-500" /></button>
+            <button onClick={nextMonth}><ChevronRight size={22} className="text-teal-500" /></button>
           </div>
           <div className="grid grid-cols-7 text-center mb-2">
             {["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map((d) => (
-              <span key={d} className="text-xs font-medium text-blue-500">{d}</span>
+              <span key={d} className="text-xs font-medium text-teal-500">{d}</span>
             ))}
           </div>
           <div className="grid grid-cols-7 gap-y-1 text-center">
@@ -83,7 +83,7 @@ export default function History() {
               return (
               <button key={day} onClick={() => setSelectedDay(day)}
                 className={`py-1.5 rounded-lg text-sm font-medium relative flex flex-col items-center ${
-                  isSelected ? "border-2 border-blue-500 text-blue-600 dark:bg-blue-500/10" : isToday ? "text-blue-600" : "text-gray-700 dark:text-gray-300"
+                  isSelected ? "border-2 border-teal-500 text-teal-600 dark:bg-teal-500/10" : isToday ? "text-teal-600" : "text-gray-700 dark:text-gray-300"
                 }`}>
                   {day}
                   {hasShot && <div className="w-2 h-2 bg-green-500 rounded-full mt-0.5" style={{boxShadow:"0 0 6px 2px rgba(74,222,128,0.5)"}} />}
@@ -127,9 +127,9 @@ export default function History() {
             {sideEffects ? (
               <p className="text-sm text-gray-700 dark:text-[#E8E9F0] bg-teal-50 dark:bg-teal-500/10 rounded-xl p-3 border border-transparent dark:border-teal-500/15">{sideEffects}</p>
             ) : (
-              <div className="bg-blue-50 dark:bg-blue-500/10 rounded-xl p-3 flex items-center gap-2 border border-transparent dark:border-blue-500/15">
-                <Info size={16} className="text-blue-500 dark:text-blue-400 flex-shrink-0" />
-                <p className="text-sm text-blue-700 dark:text-blue-300">Tap to add side effects for this day.</p>
+              <div className="bg-teal-50 dark:bg-teal-500/10 rounded-xl p-3 flex items-center gap-2 border border-transparent dark:border-teal-500/15">
+                <Info size={16} className="text-teal-500 dark:text-teal-400 flex-shrink-0" />
+                <p className="text-sm text-teal-700 dark:text-teal-300">Tap to add side effects for this day.</p>
               </div>
             )}
           </button>
@@ -137,7 +137,7 @@ export default function History() {
       </div>
 
       <button onClick={openNew}
-        className="fixed bottom-24 right-5 lg:right-8 bg-blue-600 text-white rounded-2xl shadow-lg shadow-blue-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-blue-700 transition-colors text-sm px-5 py-3">
+        className="fixed bottom-24 right-5 lg:right-8 bg-teal-600 text-white rounded-2xl shadow-lg shadow-teal-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-teal-700 transition-colors text-sm px-5 py-3">
         <Plus size={18} /> Add Shot
       </button>
 

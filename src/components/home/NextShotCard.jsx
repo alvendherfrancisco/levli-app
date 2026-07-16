@@ -11,9 +11,9 @@ export default function NextShotCard() {
     return (
       <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 mx-4 mb-4">
         <p className="text-sm text-gray-400 dark:text-[#9A9DAE] mb-2">Next Shot</p>
-        <div className="bg-blue-50 dark:bg-blue-500/10 rounded-xl p-3 flex items-start gap-2">
-          <Syringe size={18} className="text-blue-500 mt-0.5 flex-shrink-0" />
-          <p className="text-sm text-blue-700 dark:text-blue-300">No shots recorded yet. Add your first shot to start tracking your schedule.</p>
+        <div className="bg-indigo-50 dark:bg-indigo-500/10 rounded-xl p-3 flex items-start gap-2">
+          <Syringe size={18} className="text-indigo-500 mt-0.5 flex-shrink-0" />
+          <p className="text-sm text-indigo-700 dark:text-indigo-300">No shots recorded yet. Add your first shot to start tracking your schedule.</p>
         </div>
       </div>
     );
@@ -26,8 +26,8 @@ export default function NextShotCard() {
   const circumference = 2 * Math.PI * 34;
 
   const isDue = daysLeft <= 0;
-  const ringColor = isDue ? "#22C55E" : "#5B8DEF";
-  const ringGlow = isDue ? "0 0 14px 3px rgba(34,197,94,0.35)" : "0 0 14px 3px rgba(91,141,239,0.35)";
+  const ringColor = isDue ? "#22C55E" : "#14B8A6";
+  const ringGlow = isDue ? "0 0 14px 3px rgba(34,197,94,0.35)" : "0 0 14px 3px rgba(20,184,166,0.35)";
 
   let daysLabel;
   if (isDue) daysLabel = "Today!";
@@ -40,7 +40,7 @@ export default function NextShotCard() {
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-xl font-bold text-gray-900 dark:text-[#E8E9F0]">{nextDate}</h3>
-          <p className="text-sm font-medium text-blue-600 dark:text-blue-400 mt-0.5">{daysLabel}</p>
+          <p className="text-sm font-medium text-teal-600 dark:text-teal-400 mt-0.5">{daysLabel}</p>
           <div className="mt-2 border-t border-gray-100 dark:border-gray-800 pt-2">
             <p className="text-xs text-gray-400 dark:text-[#9A9DAE]">Last Dose</p>
             <p className="text-sm font-semibold text-gray-700 dark:text-[#E8E9F0]">{last.date} · {last.dose} mg</p>

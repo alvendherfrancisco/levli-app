@@ -109,7 +109,7 @@ export default function JournalEntryModal({ open, onClose, onSave, onDelete, ini
                 <button key={c} onClick={() => setCategory(c)}
                   className={`px-3 py-1.5 rounded-xl text-sm font-medium border transition-colors ${
                     category === c
-                      ? "bg-blue-100 dark:bg-blue-500/15 text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-500/30"
+                      ? "bg-teal-100 dark:bg-teal-500/15 text-teal-700 dark:text-teal-300 border-teal-300 dark:border-teal-500/30"
                       : "bg-white dark:bg-white/[0.05] text-gray-400 dark:text-[#9A9DAE] border-gray-200 dark:border-white/[0.08]"
                   }`}>
                   {c}
@@ -123,13 +123,13 @@ export default function JournalEntryModal({ open, onClose, onSave, onDelete, ini
             <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">Your thoughts</label>
             <textarea value={text} onChange={(e) => setText(e.target.value)}
               placeholder="Write your journal entry here..."
-              className="w-full border border-gray-200 dark:border-white/[0.1] bg-white dark:bg-white/[0.05] text-gray-900 dark:text-[#E8E9F0] placeholder-gray-400 dark:placeholder-[#9A9DAE] rounded-xl px-4 py-3 text-sm resize-none h-32 outline-none focus:border-blue-300 dark:focus:border-blue-500/50" />
+              className="w-full border border-gray-200 dark:border-white/[0.1] bg-white dark:bg-white/[0.05] text-gray-900 dark:text-[#E8E9F0] placeholder-gray-400 dark:placeholder-[#9A9DAE] rounded-xl px-4 py-3 text-sm resize-none h-32 outline-none focus:border-teal-300 dark:focus:border-teal-500/50" />
           </div>
         </div>
 
         <div className="px-5 pb-8 pt-2">
           <button onClick={handleSave} disabled={!text.trim()}
-            className="w-full py-3.5 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-50">
+            className="w-full py-3.5 bg-teal-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-50">
             <Save size={16} /> {initialEntry ? "Update Entry" : "Save Entry"}
           </button>
         </div>

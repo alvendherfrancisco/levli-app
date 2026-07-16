@@ -16,7 +16,7 @@ export default function ShotCard({ medication, dose, drugClass, drug_class, date
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-nowrap">
             <span className="font-semibold text-gray-900 dark:text-[#E8E9F0] truncate">{medication}</span>
-            <span className="text-blue-600 dark:text-blue-400 font-semibold whitespace-nowrap flex-shrink-0">{dose} mg</span>
+            <span className="text-teal-600 dark:text-teal-400 font-semibold whitespace-nowrap flex-shrink-0">{dose} mg</span>
             {/* Drug class badge: solid green in light, low-opacity tint in dark */}
             <span className="text-xs px-2 py-0.5 rounded-lg font-medium whitespace-nowrap flex-shrink-0 bg-green-100 text-green-700 dark:text-green-400 dark:border dark:border-green-500/20 dark:bg-transparent">
               {dc}

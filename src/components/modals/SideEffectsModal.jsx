@@ -91,7 +91,7 @@ export default function SideEffectsModal({ open, onClose, dayKey }) {
             <div className="flex gap-2">
               {SEVERITIES.map((s) => (
                 <button key={s} onClick={() => setSeverity(s)}
-                  className={`flex-1 py-2 rounded-xl text-sm font-medium border transition-colors ${severity === s ? "bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-500/30" : "bg-white dark:bg-white/[0.05] text-gray-500 dark:text-[#9A9DAE] border-gray-200 dark:border-white/[0.1]"}`}>
+                  className={`flex-1 py-2 rounded-xl text-sm font-medium border transition-colors ${severity === s ? "bg-teal-100 dark:bg-teal-500/20 text-teal-700 dark:text-teal-300 border-teal-300 dark:border-teal-500/30" : "bg-white dark:bg-white/[0.05] text-gray-500 dark:text-[#9A9DAE] border-gray-200 dark:border-white/[0.1]"}`}>
                   {s}
                 </button>
               ))}
@@ -99,7 +99,7 @@ export default function SideEffectsModal({ open, onClose, dayKey }) {
           </div>
 
           <button onClick={addChip}
-            className="w-full py-2.5 bg-white/[0.07] dark:bg-white/[0.07] text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-500/30 rounded-xl font-semibold text-sm hover:bg-blue-500/10 transition-colors">
+            className="w-full py-2.5 bg-white/[0.07] dark:bg-white/[0.07] text-teal-600 dark:text-teal-400 border border-teal-200 dark:border-teal-500/30 rounded-xl font-semibold text-sm hover:bg-teal-500/10 transition-colors">
             + Add to List
           </button>
 
@@ -118,11 +118,11 @@ export default function SideEffectsModal({ open, onClose, dayKey }) {
             <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">Additional Notes</label>
             <textarea value={notes} onChange={(e) => setNotes(e.target.value)}
               placeholder="Any other observations..."
-              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-sm resize-none h-20 outline-none focus:border-blue-300" />
+              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-sm resize-none h-20 outline-none focus:border-teal-300" />
           </div>
         </div>
         <div className="px-5 pb-8 pt-2">
-          <button onClick={handleSave} className="w-full py-3.5 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2">
+          <button onClick={handleSave} className="w-full py-3.5 bg-teal-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2">
             <Save size={16} /> Save
           </button>
         </div>

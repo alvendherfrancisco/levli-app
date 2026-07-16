@@ -127,7 +127,7 @@ export default function Onboarding() {
 function WelcomeStep() {
   return (
     <div className="flex flex-col items-center text-center flex-1">
-      <div className="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center mb-6 mt-4">
+      <div className="w-16 h-16 bg-teal-500 rounded-2xl flex items-center justify-center mb-6 mt-4">
         <Droplets size={32} className="text-white" />
       </div>
       <h1 className="text-3xl font-bold mb-3">Welcome to Levli</h1>
@@ -234,8 +234,8 @@ function NotificationStep({ onContinue }) {
         Levli gently reminds you when it's time to take your shots — so you never have to worry about forgetting again.
       </p>
       <div className="bg-gray-900 rounded-2xl p-6 mb-4 border border-gray-800">
-        <div className="w-14 h-14 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-          <Bell size={28} className="text-blue-400" />
+        <div className="w-14 h-14 bg-teal-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+          <Bell size={28} className="text-teal-400" />
         </div>
         <h3 className="text-lg font-semibold mb-2">Allow Notifications</h3>
         <p className="text-gray-400 text-sm">
@@ -248,14 +248,14 @@ function NotificationStep({ onContinue }) {
         </div>
       ) : (
         <button onClick={() => setEnabled(true)}
-          className="px-6 py-3 border border-blue-500 text-blue-400 rounded-xl text-sm font-medium flex items-center gap-2 mx-auto mb-4">
+          className="px-6 py-3 border border-teal-500 text-teal-400 rounded-xl text-sm font-medium flex items-center gap-2 mx-auto mb-4">
           <Bell size={16} /> Enable Notifications
         </button>
       )}
       <p className="text-gray-500 text-xs mb-6">You can adjust your notification preferences later in Settings.</p>
       <button
         onClick={onContinue}
-        className="w-full py-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold text-lg rounded-2xl transition-colors"
+        className="w-full py-4 bg-teal-500 hover:bg-teal-600 text-white font-semibold text-lg rounded-2xl transition-colors"
       >
         Continue
       </button>
@@ -270,7 +270,7 @@ function PersonalizeStep() {
       <p className="text-gray-400 text-base leading-relaxed mb-6">
         Answer a few quick questions to help us tailor Levli to your specific needs.
       </p>
-      <div className="w-32 h-32 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-3xl flex items-center justify-center mb-6 shadow-lg shadow-blue-500/30">
+      <div className="w-32 h-32 bg-gradient-to-br from-teal-400 to-teal-600 rounded-3xl flex items-center justify-center mb-6 shadow-lg shadow-teal-500/30">
         <Droplets size={64} className="text-white" />
       </div>
       <p className="text-gray-400 text-sm">Your answers will help us provide you with the best experience possible.</p>
@@ -281,7 +281,7 @@ function PersonalizeStep() {
 function FinalStep() {
   return (
     <div className="flex flex-col items-center text-center flex-1 justify-center">
-      <div className="w-20 h-20 bg-blue-500 rounded-3xl flex items-center justify-center mb-6">
+      <div className="w-20 h-20 bg-teal-500 rounded-3xl flex items-center justify-center mb-6">
         <Droplets size={40} className="text-white" />
       </div>
       <h1 className="text-3xl font-bold mb-3">You're All Set!</h1>

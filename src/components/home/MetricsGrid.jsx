@@ -30,8 +30,8 @@ export default function MetricsGrid({ dayKey }) {
 
   const allMetrics = [
     {
-      icon: <Scale size={14} className="text-yellow-600" />, label: "Weight",
-      value: weight != null ? String(weight) : "–", unit: weightUnit, color: "bg-yellow-100",
+      icon: <Scale size={14} className="text-teal-600" />, label: "Weight",
+      value: weight != null ? String(weight) : "–", unit: weightUnit, color: "bg-teal-100",
       onAdd: () => setMetricModal({ label: "Weight", unit: weightUnit, current: weight != null ? String(weight) : "", onSave: async (v) => { await saveWeight(dk, v); weight != null ? toast.success("Weight updated successfully!") : toast.success("Weight added successfully!"); } }),
     },
     {
@@ -45,8 +45,8 @@ export default function MetricsGrid({ dayKey }) {
       onAdd: () => setShowNutrition(true),
     },
     {
-      icon: <Leaf size={14} className="text-green-500" />, label: "Fiber",
-      value: nutrition.fiber, unit: "g", color: "bg-green-100",
+      icon: <Leaf size={14} className="text-indigo-500" />, label: "Fiber",
+      value: nutrition.fiber, unit: "g", color: "bg-indigo-100",
       onAdd: () => setShowNutrition(true),
     },
     {
@@ -55,18 +55,18 @@ export default function MetricsGrid({ dayKey }) {
       onAdd: () => setShowNutrition(true),
     },
     {
-      icon: <Droplets size={14} className="text-blue-500" />, label: "Water",
-      value: nutrition.water, unit: liquidUnit, color: "bg-blue-100",
+      icon: <Droplets size={14} className="text-indigo-500" />, label: "Water",
+      value: nutrition.water, unit: liquidUnit, color: "bg-indigo-100",
       onAdd: () => setShowNutrition(true),
     },
     {
-      icon: <Dumbbell size={14} className="text-red-400" />, label: "Exercise",
-      value: exercise != null ? String(exercise) : "0", unit: "min", color: "bg-red-100",
+      icon: <Dumbbell size={14} className="text-teal-600" />, label: "Exercise",
+      value: exercise != null ? String(exercise) : "0", unit: "min", color: "bg-teal-100",
       onAdd: () => setMetricModal({ label: "Exercise", unit: "min", current: exercise != null ? String(exercise) : "", onSave: async (v) => { await saveExercise(dk, v); exercise != null ? toast.success("Exercise updated successfully!") : toast.success("Exercise added successfully!"); } }),
     },
     {
-      icon: <Camera size={14} className="text-purple-500" />, label: "Progress",
-      value: photo ? "✓" : "–", unit: "pic", color: "bg-purple-100",
+      icon: <Camera size={14} className="text-amber-500" />, label: "Progress",
+      value: photo ? "✓" : "–", unit: "pic", color: "bg-amber-100",
       onAdd: () => setMetricModal({ label: "Progress", unit: "pic", current: photo || "–", dayKey: dk, onSave: async (v, newDayKey) => { await addProgressPhotoRecord(newDayKey || dk, v); toast.success("Progress photo added successfully!"); }, onDelete: async () => { await deleteLatestProgressPhoto(dk); toast.success("Progress photo deleted successfully!"); } }),
     },
   ];

@@ -152,9 +152,9 @@ export default function AddShotModal({ open, onClose, editingShot }) {
             <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">Date & Time</label>
             <div className="flex gap-3">
               <input type="date" value={date} onChange={(e) => setDate(e.target.value)}
-                className="flex-1 border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] dark:[color-scheme:dark] rounded-xl px-4 py-3 text-base outline-none focus:border-blue-300" />
+                className="flex-1 border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] dark:[color-scheme:dark] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
               <input type="time" value={time} onChange={(e) => setTime(e.target.value)}
-                className="flex-1 border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] dark:[color-scheme:dark] rounded-xl px-4 py-3 text-base outline-none focus:border-blue-300" />
+                className="flex-1 border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] dark:[color-scheme:dark] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
             </div>
           </div>
 
@@ -171,7 +171,7 @@ export default function AddShotModal({ open, onClose, editingShot }) {
                 <div className="absolute z-10 mt-1 w-full bg-white dark:bg-[#1e2130] border border-gray-200 dark:border-white/[0.08] rounded-xl shadow-lg">
                   {medications.map((m) => (
                     <button key={m} onClick={() => { setMedication(m); setShowMedDropdown(false); }}
-                      className={`w-full px-4 py-3 text-left text-sm dark:text-[#E8E9F0] ${medication === m ? "bg-blue-50 dark:bg-blue-500/20 text-blue-600 dark:text-blue-300 font-medium" : "hover:bg-gray-50 dark:hover:bg-white/[0.05]"}`}>
+                      className={`w-full px-4 py-3 text-left text-sm dark:text-[#E8E9F0] ${medication === m ? "bg-teal-50 dark:bg-teal-500/20 text-teal-600 dark:text-teal-300 font-medium" : "hover:bg-gray-50 dark:hover:bg-white/[0.05]"}`}>
                       {m}
                     </button>
                   ))}
@@ -193,13 +193,13 @@ export default function AddShotModal({ open, onClose, editingShot }) {
           {/* Injection Site */}
           <div>
             <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">Injection Site</label>
-            <div className="rounded-xl p-3 mb-2 flex items-start gap-2 bg-blue-50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-500/20">
-              <MapPin size={16} className="text-blue-500 dark:text-blue-400 mt-0.5 flex-shrink-0" />
+            <div className="rounded-xl p-3 mb-2 flex items-start gap-2 bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-100 dark:border-indigo-500/20">
+              <MapPin size={16} className="text-indigo-500 dark:text-indigo-400 mt-0.5 flex-shrink-0" />
               <div className="flex-1">
-                <p className="text-sm font-semibold text-blue-700 dark:text-blue-300">Recommended: {recommendedSite}</p>
-                <p className="text-xs text-blue-500 dark:text-blue-400/70">Based on your rotation history</p>
+                <p className="text-sm font-semibold text-indigo-700 dark:text-indigo-300">Recommended: {recommendedSite}</p>
+                <p className="text-xs text-indigo-500 dark:text-indigo-400/70">Based on your rotation history</p>
               </div>
-              <button onClick={() => setSite(recommendedSite)} className="text-blue-600 dark:text-blue-400 text-sm font-semibold">Use</button>
+              <button onClick={() => setSite(recommendedSite)} className="text-indigo-600 dark:text-indigo-400 text-sm font-semibold">Use</button>
             </div>
             <div className="relative">
               <button onClick={() => { setShowSiteDropdown(!showSiteDropdown); setShowMedDropdown(false); }}
@@ -214,7 +214,7 @@ export default function AddShotModal({ open, onClose, editingShot }) {
                 <div className="absolute z-10 mt-1 w-full bg-white dark:bg-[#1e2130] border border-gray-200 dark:border-white/[0.08] rounded-xl shadow-lg max-h-48 overflow-y-auto">
                   {injectionSites.map((s) => (
                     <button key={s} onClick={() => { setSite(s); setShowSiteDropdown(false); }}
-                      className={`w-full px-4 py-3 text-left text-sm dark:text-[#E8E9F0] ${site === s ? "bg-blue-50 dark:bg-blue-500/20 text-blue-600 dark:text-blue-300 font-medium" : "hover:bg-gray-50 dark:hover:bg-white/[0.05]"}`}>
+                      className={`w-full px-4 py-3 text-left text-sm dark:text-[#E8E9F0] ${site === s ? "bg-teal-50 dark:bg-teal-500/20 text-teal-600 dark:text-teal-300 font-medium" : "hover:bg-gray-50 dark:hover:bg-white/[0.05]"}`}>
                       {s}
                     </button>
                   ))}
@@ -225,9 +225,9 @@ export default function AddShotModal({ open, onClose, editingShot }) {
 
           {/* Pain Level */}
           <div>
-            <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">Pain Level: <span className="text-blue-600">{pain}/10</span></label>
+            <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">Pain Level: <span className="text-teal-600">{pain}/10</span></label>
             <div className="px-1">
-              <input type="range" min="0" max="10" value={pain} onChange={(e) => setPain(Number(e.target.value))} className="w-full accent-blue-600" />
+              <input type="range" min="0" max="10" value={pain} onChange={(e) => setPain(Number(e.target.value))} className="w-full accent-teal-600" />
               <div className="flex justify-between text-xs text-gray-400 mt-1">
                 <span>0 – No Pain</span><span>10 – Severe</span>
               </div>
@@ -239,13 +239,13 @@ export default function AddShotModal({ open, onClose, editingShot }) {
             <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">Notes (Optional)</label>
             <textarea value={notes} onChange={(e) => setNotes(e.target.value)}
               placeholder="Add any notes or side effects experienced"
-              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-sm resize-none h-24 outline-none focus:border-blue-300" />
+              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-sm resize-none h-24 outline-none focus:border-teal-300" />
           </div>
         </div>
 
         <div className="px-5 pb-8 pt-2">
           <button onClick={handleSave} disabled={saving}
-            className="w-full py-3.5 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-60">
+            className="w-full py-3.5 bg-teal-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-60">
             <Save size={16} /> {saving ? "Saving…" : editingShot ? "Update Shot" : "Save Shot"}
           </button>
         </div>

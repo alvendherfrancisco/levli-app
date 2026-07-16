@@ -27,14 +27,14 @@ export default function QuizScreen({ question, subtitle, options, multiSelect, p
               onClick={() => toggle(opt)}
               className={`w-full flex items-center justify-between px-4 py-4 rounded-xl border transition-all text-left ${
                 isSelected
-                  ? "border-blue-500 bg-blue-500/10 text-blue-400"
+                  ? "border-teal-500 bg-teal-500/10 text-teal-400"
                   : "border-gray-700 bg-gray-900 text-white"
               }`}
             >
               <span className="text-[15px] pr-3">{opt}</span>
               <div
                 className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
-                  isSelected ? "border-blue-500 bg-blue-500" : "border-gray-600"
+                  isSelected ? "border-teal-500 bg-teal-500" : "border-gray-600"
                 }`}
               >
                 {isSelected && (

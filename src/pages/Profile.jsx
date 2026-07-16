@@ -65,7 +65,7 @@ export default function Profile() {
       <button onClick={() => handleSave(fields)}
       disabled={saving[key]}
       className={`px-4 py-2.5 rounded-xl font-semibold text-sm transition-all min-w-[60px] flex items-center justify-center ${
-      saved[key] ? "bg-green-500 text-white" : "bg-blue-600 text-white"} disabled:opacity-60`
+      saved[key] ? "bg-green-500 text-white" : "bg-teal-600 text-white"} disabled:opacity-60`
       }>
         {saving[key] ? <Loader2 size={14} className="animate-spin" /> : saved[key] ? <Check size={16} /> : "Save"}
       </button>);
@@ -90,7 +90,7 @@ export default function Profile() {
       }}
       className={`px-5 py-2 text-sm font-medium transition-colors ${
       local[field] === opt ?
-      "bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300" :
+      "bg-teal-100 dark:bg-teal-900 text-teal-700 dark:text-teal-300" :
       "bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400"}`
       }>
             {opt}
@@ -111,12 +111,12 @@ export default function Profile() {
         {/* Profile Info */}
         <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
           <div className="flex items-center gap-2 mb-1">
-            <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
-              <User size={16} className="text-blue-600 dark:text-blue-400" />
+            <div className="w-8 h-8 rounded-lg bg-teal-100 dark:bg-teal-900 flex items-center justify-center">
+              <User size={16} className="text-teal-600 dark:text-teal-400" />
             </div>
             <h3 className="font-bold text-gray-900 dark:text-white text-lg">Profile Info</h3>
           </div>
-          <div className="border-b-2 border-blue-500 w-10 mb-4" />
+          <div className="border-b-2 border-teal-500 w-10 mb-4" />
 
           <label className="text-sm text-gray-700 dark:text-gray-300 font-medium block mb-2">Height</label>
           <div className="flex items-center gap-2 mb-1">
@@ -163,12 +163,12 @@ export default function Profile() {
         {/* Shot Preferences */}
         <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
           <div className="flex items-center gap-2 mb-1">
-            <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
-              <Syringe size={16} className="text-blue-600 dark:text-blue-400" />
+            <div className="w-8 h-8 rounded-lg bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
+              <Syringe size={16} className="text-indigo-600 dark:text-indigo-400" />
             </div>
             <h3 className="font-bold text-gray-900 dark:text-white text-lg">Shot Preferences</h3>
           </div>
-          <div className="border-b-2 border-blue-500 w-10 mb-4" />
+          <div className="border-b-2 border-teal-500 w-10 mb-4" />
 
           <label className="text-sm text-gray-700 dark:text-gray-300 font-medium block mb-2">Days Between Shots</label>
           <div className="flex items-center gap-2 mb-1">
@@ -187,12 +187,12 @@ export default function Profile() {
         {/* Measurement Units */}
         <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
           <div className="flex items-center gap-2 mb-1">
-            <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
-              <Lock size={16} className="text-blue-600 dark:text-blue-400" />
+            <div className="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-900 flex items-center justify-center">
+              <Lock size={16} className="text-amber-600 dark:text-amber-400" />
             </div>
             <h3 className="font-bold text-gray-900 dark:text-white text-lg">Measurement Units</h3>
           </div>
-          <div className="border-b-2 border-blue-500 w-10 mb-4" />
+          <div className="border-b-2 border-teal-500 w-10 mb-4" />
           <UnitToggle label="Liquid Unit" opt1="mL" opt2="oz" field="liquid_unit" />
           <UnitToggle label="Height Unit" opt1="cm" opt2="in" field="height_unit" />
           <UnitToggle label="Weight Unit" opt1="kg" opt2="lb" field="weight_unit" />

@@ -46,9 +46,9 @@ export default function Home() {
           {sideEffects ? (
             <p className="text-sm text-gray-700 dark:text-[#E8E9F0] bg-teal-50 dark:bg-teal-500/10 rounded-xl p-3 border border-transparent dark:border-teal-500/15">{sideEffects}</p>
           ) : (
-            <div className="bg-blue-50 dark:bg-blue-500/10 rounded-xl p-3 flex items-center gap-2 border border-transparent dark:border-blue-500/15">
-              <Info size={16} className="text-blue-500 dark:text-blue-400 flex-shrink-0" />
-              <p className="text-sm text-blue-700 dark:text-blue-300">Tap to add side effects.</p>
+            <div className="bg-teal-50 dark:bg-teal-500/10 rounded-xl p-3 flex items-center gap-2 border border-transparent dark:border-teal-500/15">
+              <Info size={16} className="text-teal-500 dark:text-teal-400 flex-shrink-0" />
+              <p className="text-sm text-teal-700 dark:text-teal-300">Tap to add side effects.</p>
             </div>
           )}
         </button>
@@ -57,28 +57,28 @@ export default function Home() {
         <div className="mx-3 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
           <div className="flex items-start justify-between mb-2">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{background:"rgba(59,130,246,0.13)"}}>
-                <Syringe size={16} className="text-blue-600" />
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{background:"rgba(99,102,241,0.13)"}}>
+                <Syringe size={16} className="text-indigo-600" />
               </div>
               <div>
                 <h3 className="font-bold text-gray-900 dark:text-white">Medication Levels</h3>
-                <p className="text-xs text-blue-500">Estimated medication levels in your system.</p>
+                <p className="text-xs text-indigo-500">Estimated medication levels in your system.</p>
               </div>
             </div>
-            <HelpCircle size={18} className="text-blue-400" />
+            <HelpCircle size={18} className="text-indigo-400" />
           </div>
-          <div className="border-b-2 border-blue-500 w-12 mb-3" />
-          <Link to="/insights" className="bg-blue-50 dark:bg-blue-500/10 rounded-xl p-3 flex items-center gap-2 block border border-transparent dark:border-blue-500/15">
-            <Info size={16} className="text-blue-500 dark:text-blue-400 flex-shrink-0" />
-            <p className="text-sm text-blue-700 dark:text-blue-300">View full medication level chart in Insights <ArrowRight size={12} className="inline" /></p>
+          <div className="border-b-2 border-indigo-500 w-12 mb-3" />
+          <Link to="/insights" className="bg-indigo-50 dark:bg-indigo-500/10 rounded-xl p-3 flex items-center gap-2 block border border-transparent dark:border-indigo-500/15">
+            <Info size={16} className="text-indigo-500 dark:text-indigo-400 flex-shrink-0" />
+            <p className="text-sm text-indigo-700 dark:text-indigo-300">View full medication level chart in Insights <ArrowRight size={12} className="inline" /></p>
           </Link>
         </div>
       </div>
 
       <button
         onClick={() => setShowShot(true)}
-        className="fixed bottom-24 right-5 lg:right-8 bg-blue-600 dark:bg-blue-500 text-white rounded-2xl shadow-lg shadow-blue-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-blue-700 dark:hover:bg-blue-400 transition-colors text-sm px-5 py-3"
-      style={{ boxShadow: "0 4px 24px 4px rgba(59,130,246,0.35)" }}
+        className="fixed bottom-24 right-5 lg:right-8 bg-teal-600 dark:bg-teal-500 text-white rounded-2xl shadow-lg shadow-teal-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-teal-700 dark:hover:bg-teal-400 transition-colors text-sm px-5 py-3"
+      style={{ boxShadow: "0 4px 24px 4px rgba(20,184,166,0.35)" }}
       >
         <Plus size={18} /> Add Shot
       </button>

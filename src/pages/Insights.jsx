@@ -182,10 +182,10 @@ export default function Insights() {
         {/* Weight Change Panel */}
         <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
           <div className="flex items-center gap-2 mb-1">
-            <TrendingDown size={18} className="text-blue-600" />
+            <TrendingDown size={18} className="text-teal-600" />
             <h3 className="font-bold text-gray-900 dark:text-white text-lg">Weight Change</h3>
           </div>
-          <div className="border-b-2 border-blue-500 w-12 mb-3" />
+          <div className="border-b-2 border-teal-500 w-12 mb-3" />
 
           {/* Range tabs */}
           <div className="flex items-center gap-1 mb-3 flex-wrap">
@@ -210,10 +210,10 @@ export default function Insights() {
                   : "—"}
               </p>
             </div>
-            <div className="bg-blue-50 dark:bg-blue-500/10 rounded-xl p-2.5 text-center flex-1 min-w-0 border border-transparent dark:border-blue-500/15">
-              <Zap size={14} className="text-blue-500 dark:text-blue-400 mx-auto mb-1" style={{filter:"drop-shadow(0 0 6px rgba(59,130,246,0.4))"}} />
+            <div className="bg-indigo-50 dark:bg-indigo-500/10 rounded-xl p-2.5 text-center flex-1 min-w-0 border border-transparent dark:border-indigo-500/15">
+              <Zap size={14} className="text-indigo-500 dark:text-indigo-400 mx-auto mb-1" style={{filter:"drop-shadow(0 0 6px rgba(99,102,241,0.4))"}} />
               <p className="text-gray-500 dark:text-[#9A9DAE] text-[11px]">Rate/Week</p>
-              <p className="font-bold text-blue-600 dark:text-blue-400 text-sm">
+              <p className="font-bold text-indigo-600 dark:text-indigo-400 text-sm">
                 {ratePerWeek != null
                   ? `${ratePerWeek >= 0 ? "-" : "+"}${Math.abs(ratePerWeek).toFixed(1)} ${weightUnit}`
                   : "—"}
@@ -239,7 +239,7 @@ export default function Insights() {
                     formatter={(v) => [`${v} ${weightUnit}`, "Weight"]}
                     contentStyle={{ background: "rgba(20,22,32,0.95)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, color: "#E8E9F0" }}
                   />
-                  <Line type="monotone" dataKey="weight" stroke="#3B6FE0" strokeWidth={2} dot={{ fill: "#3B6FE0", r: 3 }} activeDot={{ r: 5 }} />
+                  <Line type="monotone" dataKey="weight" stroke="#14B8A6" strokeWidth={2} dot={{ fill: "#14B8A6", r: 3 }} activeDot={{ r: 5 }} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -257,19 +257,19 @@ export default function Insights() {
         {/* Progress Pictures Panel */}
         <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
           <div className="flex items-center gap-2 mb-1">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "rgba(59,130,246,0.13)" }}>
-              <Camera size={16} className="text-blue-500" />
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "rgba(20,184,166,0.13)" }}>
+              <Camera size={16} className="text-teal-500" />
             </div>
             <h3 className="font-bold text-gray-900 dark:text-white text-lg">Progress Pictures</h3>
           </div>
-          <div className="border-b-2 border-blue-500 w-12 mb-3" />
+          <div className="border-b-2 border-teal-500 w-12 mb-3" />
 
           {photosAsc.length > 0 && (
             <div className="grid grid-cols-3 gap-2 mb-4">
-              <div className="rounded-xl p-2.5 text-center" style={{ background: "rgba(59,130,246,0.1)", border: "1px solid rgba(59,130,246,0.15)" }}>
-                <Image size={14} className="text-blue-400 mx-auto mb-1" />
+              <div className="rounded-xl p-2.5 text-center" style={{ background: "rgba(20,184,166,0.1)", border: "1px solid rgba(20,184,166,0.15)" }}>
+                <Image size={14} className="text-teal-400 mx-auto mb-1" />
                 <p className="text-[11px] text-gray-500 dark:text-[#9A9DAE]">Total Photos</p>
-                <p className="font-bold text-blue-500 dark:text-blue-400 text-sm">{photosAsc.length}</p>
+                <p className="font-bold text-teal-500 dark:text-teal-400 text-sm">{photosAsc.length}</p>
               </div>
               <div className="rounded-xl p-2.5 text-center" style={{ background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.15)" }}>
                 <Clock size={14} className="text-green-400 mx-auto mb-1" />
@@ -287,13 +287,13 @@ export default function Insights() {
           {photosAsc.length === 0 ? (
             <div className="space-y-4">
               <button onClick={openAddPhoto}
-                className="w-full flex items-center gap-3 rounded-xl p-4 text-left" style={{ background: "rgba(59,130,246,0.1)", border: "1px solid rgba(59,130,246,0.25)" }}>
-                <Camera size={22} className="text-blue-500 flex-shrink-0" />
-                <p className="text-blue-500 font-medium text-sm">No progress pictures yet. Tap to add your first photo!</p>
+                className="w-full flex items-center gap-3 rounded-xl p-4 text-left" style={{ background: "rgba(20,184,166,0.1)", border: "1px solid rgba(20,184,166,0.25)" }}>
+                <Camera size={22} className="text-teal-500 flex-shrink-0" />
+                <p className="text-teal-500 font-medium text-sm">No progress pictures yet. Tap to add your first photo!</p>
               </button>
               <button
                 onClick={openAddPhoto}
-                className="w-full py-3.5 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-blue-700 transition-colors text-sm">
+                className="w-full py-3.5 bg-teal-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-teal-700 transition-colors text-sm">
                 <Plus size={18} /> Add Picture
               </button>
             </div>
@@ -324,8 +324,8 @@ export default function Insights() {
                         onClick={() => openEditPhoto(prevDayPhoto)}
                       />
                       <div className="flex flex-col items-center gap-1 flex-shrink-0">
-                        <ArrowRight size={18} className="text-blue-500" />
-                        <span className="text-xs text-blue-400 whitespace-nowrap">{gapDays} days</span>
+                        <ArrowRight size={18} className="text-teal-500" />
+                        <span className="text-xs text-teal-400 whitespace-nowrap">{gapDays} days</span>
                       </div>
                     </>
                   )}
@@ -342,13 +342,13 @@ export default function Insights() {
               <div className="flex gap-3">
                 <button
                   onClick={openAddPhoto}
-                  className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-blue-700 transition-colors text-sm">
+                  className="flex-1 py-3 bg-teal-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-teal-700 transition-colors text-sm">
                   <Plus size={16} /> Add Photo
                 </button>
                 {photosAsc.length >= 2 && (
                   <button
                     onClick={() => setViewAllPhotos((v) => !v)}
-                    className="flex-1 py-3 bg-gray-100 dark:bg-white/[0.07] text-blue-600 dark:text-blue-400 rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-gray-200 dark:hover:bg-white/[0.12] transition-colors text-sm">
+                    className="flex-1 py-3 bg-gray-100 dark:bg-white/[0.07] text-teal-600 dark:text-teal-400 rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-gray-200 dark:hover:bg-white/[0.12] transition-colors text-sm">
                     {viewAllPhotos ? <><Minimize2 size={16} /> Collapse</> : <><Maximize2 size={16} /> View All</>}
                   </button>
                 )}
@@ -372,15 +372,15 @@ export default function Insights() {
         <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
           <div className="flex items-start justify-between mb-1">
             <div className="flex items-center gap-2">
-              <Syringe size={18} className="text-blue-600" />
+              <Syringe size={18} className="text-indigo-600" />
               <div>
                 <h3 className="font-bold text-gray-900 dark:text-white text-lg">Medication Levels</h3>
-                <p className="text-xs text-blue-500">Estimated concentration using pharmacokinetic decay model.</p>
+                <p className="text-xs text-indigo-500">Estimated concentration using pharmacokinetic decay model.</p>
               </div>
             </div>
-            <HelpCircle size={18} className="text-blue-400" />
+            <HelpCircle size={18} className="text-indigo-400" />
           </div>
-          <div className="border-b-2 border-blue-500 w-12 mb-3" />
+          <div className="border-b-2 border-indigo-500 w-12 mb-3" />
 
           <div className="flex items-center gap-2 mb-4">
             {Object.keys(MED_RANGES).map((r) => (
@@ -404,7 +404,7 @@ export default function Insights() {
                     formatter={(v) => [`${v} mg`, "Concentration"]}
                     contentStyle={{ background: "rgba(20,22,32,0.95)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, color: "#E8E9F0" }}
                   />
-                  <Area type="monotone" dataKey="level" stroke="#3B6FE0" fill="#3B6FE0" fillOpacity={0.1} strokeWidth={2} />
+                  <Area type="monotone" dataKey="level" stroke="#6366F1" fill="#6366F1" fillOpacity={0.1} strokeWidth={2} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -415,7 +415,7 @@ export default function Insights() {
           )}
           <p className="text-xs text-gray-400 dark:text-[#9A9DAE] text-center mt-2">Time vs Concentration (mg)</p>
           <div className="flex items-center justify-center gap-1.5 mt-1">
-            <div className="w-4 h-0.5 bg-blue-600 rounded" />
+            <div className="w-4 h-0.5 bg-indigo-600 rounded" />
             <span className="text-xs text-gray-500 dark:text-[#9A9DAE]">{shots[0]?.drug_class || "GLP-1"}</span>
           </div>
         </div>

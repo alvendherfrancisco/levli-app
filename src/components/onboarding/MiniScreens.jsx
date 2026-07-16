@@ -12,7 +12,7 @@ function Card({ children, className = "" }) {
 
 function MetricChip({ label, value, color = "blue" }) {
   const colors = {
-    blue: "text-blue-600",
+    blue: "text-teal-600",
     green: "text-green-600",
     orange: "text-orange-500",
     teal: "text-teal-600",
@@ -47,8 +47,8 @@ export function MiniHomeScreen() {
       {/* Date strip */}
       <div className="flex gap-0.5 justify-between">
         {days.map((d, i) => (
-          <div key={d.d} className={`flex-1 text-center py-1 rounded-lg ${i === 2 ? "bg-blue-600" : "bg-gray-100 border border-gray-200"}`}>
-            <div className={`text-[6px] ${i === 2 ? "text-blue-200" : "text-gray-500"}`}>{d.d}</div>
+          <div key={d.d} className={`flex-1 text-center py-1 rounded-lg ${i === 2 ? "bg-teal-600" : "bg-gray-100 border border-gray-200"}`}>
+            <div className={`text-[6px] ${i === 2 ? "text-teal-200" : "text-gray-500"}`}>{d.d}</div>
             <div className={`text-[8px] font-bold ${i === 2 ? "text-white" : "text-gray-700"}`}>{d.n}</div>
           </div>
         ))}
@@ -59,13 +59,13 @@ export function MiniHomeScreen() {
         <div>
           <div className="text-[6px] text-gray-500 mb-0.5">Next Shot</div>
           <div className="text-[9px] font-bold text-gray-900">Jul 07, 2026</div>
-          <div className="text-[6px] text-blue-600 mt-0.5">In 7 days</div>
+          <div className="text-[6px] text-teal-600 mt-0.5">In 7 days</div>
           <div className="text-[6px] text-gray-500 mt-0.5">Last: Jun 30 · 2.5 mg</div>
         </div>
         {/* Mini progress ring */}
         <svg width="28" height="28" viewBox="0 0 28 28">
           <circle cx="14" cy="14" r="11" fill="none" stroke="#374151" strokeWidth="3" />
-          <circle cx="14" cy="14" r="11" fill="none" stroke="#3b82f6" strokeWidth="3"
+          <circle cx="14" cy="14" r="11" fill="none" stroke="#14b8a6" strokeWidth="3"
             strokeDasharray={`${2 * Math.PI * 11 * 0.65} ${2 * Math.PI * 11}`}
             strokeLinecap="round" transform="rotate(-90 14 14)" />
           <text x="14" y="17" textAnchor="middle" fontSize="5.5" fill="#93c5fd" fontWeight="bold">65%</text>
@@ -113,7 +113,7 @@ export function MiniShotsScreen() {
       <div className="grid grid-cols-3 gap-1">
         <div className="bg-gray-50 border border-gray-200 rounded-lg p-1.5 text-center">
           <div className="text-[6px] text-gray-500">Total</div>
-          <div className="text-[10px] font-bold text-blue-600">12</div>
+          <div className="text-[10px] font-bold text-teal-600">12</div>
         </div>
         <div className="bg-gray-50 border border-gray-200 rounded-lg p-1.5 text-center">
           <div className="text-[6px] text-gray-500">Last Dose</div>
@@ -137,7 +137,7 @@ export function MiniShotsScreen() {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-1">
               <span className="text-[7px] font-semibold text-gray-900">{s.med}</span>
-              <span className="text-[7px] font-bold text-blue-600">{s.dose} mg</span>
+              <span className="text-[7px] font-bold text-teal-600">{s.dose} mg</span>
               <span className="text-[5px] px-1 py-[1px] rounded bg-green-50 border text-green-700 border-green-200">{s.dc}</span>
             </div>
             <div className="text-[6px] text-gray-500">{s.date} · {s.time}</div>
@@ -178,7 +178,7 @@ export function MiniCalendarScreen() {
           const hasShot = shotDays.includes(day);
           const isSelected = day === 30;
           return (
-            <div key={day} className={`flex flex-col items-center py-[1px] rounded-md ${isSelected ? "bg-blue-600" : ""}`}>
+            <div key={day} className={`flex flex-col items-center py-[1px] rounded-md ${isSelected ? "bg-teal-600" : ""}`}>
               <span className={`text-[6px] ${isSelected ? "text-white font-bold" : "text-gray-700"}`}>{day}</span>
               {hasShot && <div className={`w-1 h-1 rounded-full mt-[1px] ${isSelected ? "bg-white" : "bg-green-500"}`} />}
             </div>
@@ -194,7 +194,7 @@ export function MiniCalendarScreen() {
             <span className="text-[8px]">💉</span>
           </div>
           <div>
-            <div className="text-[7px] font-semibold text-gray-900">Zepbound® <span className="text-blue-600">2.5 mg</span></div>
+            <div className="text-[7px] font-semibold text-gray-900">Zepbound® <span className="text-teal-600">2.5 mg</span></div>
             <div className="text-[6px] text-gray-500">7:00 AM · Stomach – Upper Left</div>
           </div>
         </div>
@@ -233,9 +233,9 @@ export function MiniInsightsScreen() {
             <div className="text-[5px] text-gray-500">Weight Loss</div>
             <div className="text-[7px] font-bold text-green-600">-38.5 lb</div>
           </div>
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-1 text-center">
+          <div className="bg-teal-50 border border-teal-200 rounded-lg p-1 text-center">
             <div className="text-[5px] text-gray-500">Rate/Week</div>
-            <div className="text-[7px] font-bold text-blue-600">-1.5 lb</div>
+            <div className="text-[7px] font-bold text-teal-600">-1.5 lb</div>
           </div>
           <div className="bg-orange-50 border border-orange-200 rounded-lg p-1 text-center">
             <div className="text-[5px] text-gray-500">BMI</div>
@@ -244,9 +244,9 @@ export function MiniInsightsScreen() {
         </div>
         {/* Chart */}
         <svg viewBox={`0 0 ${W} ${H + 8}`} className="w-full" style={{ height: 44 }}>
-          <polyline points={polyline} fill="none" stroke="#3b82f6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <polyline points={polyline} fill="none" stroke="#14b8a6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           {pts.map((v, i) => (
-            <circle key={i} cx={i * xStep} cy={v} r="1.5" fill="#3b82f6" />
+            <circle key={i} cx={i * xStep} cy={v} r="1.5" fill="#14b8a6" />
           ))}
         </svg>
       </Card>
@@ -260,11 +260,11 @@ export function MiniInsightsScreen() {
         <svg viewBox="0 0 140 36" className="w-full" style={{ height: 36 }}>
           <defs>
             <linearGradient id="mg" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.25" />
-              <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
+              <stop offset="0%" stopColor="#14b8a6" stopOpacity="0.25" />
+              <stop offset="100%" stopColor="#14b8a6" stopOpacity="0" />
             </linearGradient>
           </defs>
-          <path d="M0 30 L18 8 L30 20 L48 5 L60 17 L78 4 L90 14 L108 8 L120 12 L140 10" fill="none" stroke="#3b82f6" strokeWidth="1.5" strokeLinecap="round" />
+          <path d="M0 30 L18 8 L30 20 L48 5 L60 17 L78 4 L90 14 L108 8 L120 12 L140 10" fill="none" stroke="#14b8a6" strokeWidth="1.5" strokeLinecap="round" />
           <path d="M0 30 L18 8 L30 20 L48 5 L60 17 L78 4 L90 14 L108 8 L120 12 L140 10 L140 36 L0 36Z" fill="url(#mg)" />
         </svg>
         <div className="text-[5px] text-gray-400 text-center mt-0.5">Time vs Concentration (mg) · Tirzepatide</div>
@@ -321,7 +321,7 @@ export function MiniProfileScreen() {
 
       {/* Avatar row */}
       <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl p-2">
-        <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0">
+        <div className="w-8 h-8 rounded-full bg-teal-600 flex items-center justify-center flex-shrink-0">
           <span className="text-[10px] font-bold text-white">JD</span>
         </div>
         <div>
@@ -335,7 +335,7 @@ export function MiniProfileScreen() {
         <div className="text-[6px] font-semibold text-gray-400 uppercase">Physical Info</div>
         <div className="grid grid-cols-2 gap-1">
           <div className="flex justify-between"><span className="text-[6px] text-gray-500">Height</span><span className="text-[6px] text-gray-900 font-medium">5 ft 6 in</span></div>
-          <div className="flex justify-between"><span className="text-[6px] text-gray-500">Goal Weight</span><span className="text-[6px] text-blue-600 font-medium">150 lb</span></div>
+          <div className="flex justify-between"><span className="text-[6px] text-gray-500">Goal Weight</span><span className="text-[6px] text-teal-600 font-medium">150 lb</span></div>
         </div>
       </Card>
 
@@ -353,7 +353,7 @@ export function MiniProfileScreen() {
           {[["Weight","lb"],["Height","in"],["Liquid","oz"]].map(([l,v]) => (
             <div key={l} className="text-center">
               <div className="text-[5px] text-gray-500">{l}</div>
-              <div className="text-[7px] font-bold text-blue-600">{v}</div>
+              <div className="text-[7px] font-bold text-teal-600">{v}</div>
             </div>
           ))}
         </div>

@@ -8,11 +8,11 @@ export default function ProgressPhotoCard({ photo, dateLabel, weightLabel, tag, 
         <p className="text-xs text-gray-400 dark:text-[#9A9DAE] mb-1">Same day</p>
       )}
       <div className={`relative w-full aspect-square rounded-xl overflow-hidden border-2 ${
-        tag === "latest" ? "border-green-500" : "border-gray-100 dark:border-white/[0.08]"
+        tag === "latest" ? "border-teal-500" : "border-gray-100 dark:border-white/[0.08]"
       }`}>
         <img src={photo.url} alt={`Progress ${photo.day_key}`} className="w-full h-full object-cover" />
         {tag === "latest" && (
-          <span className="absolute top-2 left-2 bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">Latest</span>
+          <span className="absolute top-2 left-2 bg-teal-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">Latest</span>
         )}
         {weightLabel && (
           <span className="absolute top-2 right-2 bg-black/60 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">{weightLabel}</span>

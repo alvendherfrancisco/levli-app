@@ -34,8 +34,8 @@ export default function Shots() {
         <div className="flex gap-2 px-4 mb-5 overflow-x-auto">
           <div className="bg-white dark:bg-gray-900 rounded-xl p-3 shadow-sm border border-gray-100 dark:border-gray-800 min-w-[120px]">
             <div className="flex items-center gap-1.5 mb-1">
-              <div className="w-6 h-6 rounded-lg bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
-                <Syringe size={12} className="text-blue-600 dark:text-blue-400" />
+              <div className="w-6 h-6 rounded-lg bg-teal-100 dark:bg-teal-900 flex items-center justify-center">
+                <Syringe size={12} className="text-teal-600 dark:text-teal-400" />
               </div>
               <span className="text-xs text-gray-400 dark:text-gray-500">Total Shots</span>
             </div>
@@ -70,7 +70,7 @@ export default function Shots() {
           <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-3">History</h2>
           {shotsLoading ? (
             <div className="flex justify-center py-12">
-              <Loader2 size={28} className="animate-spin text-blue-400" />
+              <Loader2 size={28} className="animate-spin text-teal-400" />
             </div>
           ) : shots.length === 0 ? (
             <div className="bg-white dark:bg-gray-900 rounded-xl p-6 text-center text-gray-400 dark:text-[#9A9DAE] border border-gray-100 dark:border-gray-800">
@@ -90,7 +90,7 @@ export default function Shots() {
       </div>
 
       <button onClick={openNew}
-        className="fixed bottom-24 right-5 lg:right-8 bg-blue-600 text-white rounded-2xl shadow-lg shadow-blue-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-blue-700 transition-colors text-sm px-5 py-3">
+        className="fixed bottom-24 right-5 lg:right-8 bg-teal-600 text-white rounded-2xl shadow-lg shadow-teal-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-teal-700 transition-colors text-sm px-5 py-3">
         <Plus size={18} /> Add Shot
       </button>
 

@@ -42,7 +42,7 @@ export default function ReportPage() {
 
     doc.setFont("helvetica", "bold"); doc.setFontSize(13);
     doc.text("Summary", 14, y); y += 2;
-    doc.setDrawColor(59, 111, 224); doc.setLineWidth(0.5); doc.line(14, y, 60, y); y += 6;
+    doc.setDrawColor(20, 184, 166); doc.setLineWidth(0.5); doc.line(14, y, 60, y); y += 6;
     doc.setFont("helvetica", "normal"); doc.setFontSize(10);
     const summaryRows = [
       ["Total Shots", shots.length],
@@ -117,12 +117,12 @@ export default function ReportPage() {
     <div className="bg-gray-50 dark:bg-gray-950 min-h-screen w-full">
       {/* Full-width header */}
       <div className="w-full flex items-center justify-between px-5 pt-6 pb-4 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 sticky top-0 z-30">
-        <button onClick={() => navigate(-1)} className="flex items-center gap-1 text-blue-600">
+        <button onClick={() => navigate(-1)} className="flex items-center gap-1 text-teal-600">
           <ChevronLeft size={22} /><span className="font-medium">Back</span>
         </button>
         <h1 className="text-lg font-bold text-gray-900 dark:text-white">Report</h1>
         <button onClick={handleExportPDF} disabled={exporting || shots.length === 0}
-          className="flex items-center gap-1 text-blue-600 disabled:opacity-40">
+          className="flex items-center gap-1 text-teal-600 disabled:opacity-40">
           {exporting ? <Loader2 size={18} className="animate-spin" /> : <Download size={20} />}
         </button>
       </div>
@@ -130,7 +130,7 @@ export default function ReportPage() {
       <div className="max-w-lg mx-auto px-4 py-4">
         <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 mb-4">
           <div className="flex items-center gap-2 mb-1">
-            <div className="w-2 h-6 bg-blue-600 rounded-full" />
+            <div className="w-2 h-6 bg-teal-600 rounded-full" />
             <h2 className="text-lg font-bold text-gray-900 dark:text-white">GLP-1 Shot History Report</h2>
           </div>
           <p className="text-xs text-gray-400 ml-4">Generated on {new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</p>
@@ -221,7 +221,7 @@ export default function ReportPage() {
 
         {shots.length > 0 && (
           <button onClick={handleExportPDF} disabled={exporting}
-            className="mt-4 w-full py-3.5 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-60">
+            className="mt-4 w-full py-3.5 bg-teal-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-60">
             {exporting ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
             {exporting ? "Generating PDF…" : "Export as PDF"}
           </button>

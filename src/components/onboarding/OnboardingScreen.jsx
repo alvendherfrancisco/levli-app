@@ -11,7 +11,7 @@ export default function OnboardingScreen({ step, totalSteps, children, onContinu
         <div className="px-6 pt-5">
           <div className="h-1 bg-gray-800 rounded-full overflow-hidden">
             <div
-              className="h-full bg-blue-500 rounded-full transition-all duration-300"
+              className="h-full bg-teal-500 rounded-full transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -27,7 +27,7 @@ export default function OnboardingScreen({ step, totalSteps, children, onContinu
           <div className="px-6 pb-10 pt-4">
             <button
               onClick={onContinue}
-              className="w-full py-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold text-lg rounded-2xl transition-colors"
+              className="w-full py-4 bg-teal-500 hover:bg-teal-600 text-white font-semibold text-lg rounded-2xl transition-colors"
             >
               {isLastStep ? "Get Started →" : "Continue"}
             </button>
