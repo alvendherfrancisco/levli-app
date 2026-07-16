@@ -2,12 +2,12 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, FileText } from "lucide-react";
 
-const Section = ({ title, children }) => (
-  <div className="bg-white dark:bg-gray-900 rounded-2xl p-5 border border-gray-100 dark:border-gray-800 mb-4">
+const Section = ({ title, children }) =>
+<div className="bg-white dark:bg-gray-900 rounded-2xl p-5 border border-gray-100 dark:border-gray-800 mb-4">
     <h2 className="text-base font-bold text-gray-900 dark:text-white mb-2">{title}</h2>
     <div className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed space-y-2">{children}</div>
-  </div>
-);
+  </div>;
+
 
 export default function TermsPage() {
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ export default function TermsPage() {
 
       <div className="max-w-lg mx-auto px-4 py-4">
         {/* Placeholder banner */}
-        <div className="bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-2xl p-4 mb-4 flex items-start gap-3">
+        <div className="bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-2xl p-4 mb-4 flex items-start gap-3 hidden">
           <FileText size={18} className="text-amber-500 dark:text-amber-400 flex-shrink-0 mt-0.5" />
           <p className="text-sm text-amber-700 dark:text-amber-300 leading-relaxed">
             <span className="font-bold">Placeholder — not final legal text.</span> These terms are a draft template and have not been reviewed by a legal professional. Replace with your actual terms before publishing.
@@ -85,6 +85,6 @@ export default function TermsPage() {
           <p className="text-xs text-gray-400 dark:text-gray-600">© 2026 Levli · Placeholder terms and conditions</p>
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 }
