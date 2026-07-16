@@ -21,12 +21,12 @@ export default function PrivacyPolicyPage() {
 
       <div className="max-w-lg mx-auto px-4 py-4">
         {/* Placeholder banner */}
-        <div className="bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-2xl p-4 mb-4 flex items-start gap-3 hidden">
-          <ShieldCheck size={18} className="text-amber-500 dark:text-amber-400 flex-shrink-0 mt-0.5" />
-          <p className="text-sm text-amber-700 dark:text-amber-300 leading-relaxed">
-            <span className="font-bold">Placeholder — not final legal text.</span> This policy is a draft template and has not been reviewed by a legal professional. Replace with your actual privacy policy before publishing.
-          </p>
-        </div>
+        
+
+
+
+
+        
 
         <p className="text-xs text-gray-400 dark:text-gray-500 mb-4">Last updated: June 30, 2026</p>
 
