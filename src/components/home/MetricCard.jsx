@@ -1,13 +1,17 @@
 import React from "react";
 import { Plus } from "lucide-react";
 
-// Accepts a Levli gradient icon component (e.g. SyringeIcon, ScaleIcon) as `icon`
+// Accepts either a Levli gradient icon component (e.g. SyringeIcon) or a JSX element as `icon`
 export default function MetricCard({ icon, label, value, unit, color, onAdd }) {
-  const Icon = icon;
+  const isComponent = typeof icon === "function" || (icon && typeof icon.type === "function");
   return (
     <div className="bg-white rounded-2xl p-2.5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 min-h-[88px] overflow-hidden flex flex-col">
       <div className="flex items-center justify-between mb-1.5">
-        {Icon ? <Icon size={28} /> : <div className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 ${color}`}>{icon}</div>}
+        {isComponent ? (
+          React.isValidElement(icon) ? icon : React.createElement(icon, { size: 28 })
+        ) : (
+          <div className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 ${color || ""}`}>{icon}</div>
+        )}
         <button
           onClick={onAdd}
           className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center hover:bg-indigo-100 active:scale-90 transition-all flex-shrink-0"
