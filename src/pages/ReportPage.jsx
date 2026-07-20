@@ -48,7 +48,7 @@ export default function ReportPage() {
 
     doc.setFont("helvetica", "bold"); doc.setFontSize(13);
     doc.text("Summary", 14, y); y += 2;
-    doc.setDrawColor(20, 184, 166); doc.setLineWidth(0.5); doc.line(14, y, 60, y); y += 6;
+    doc.setDrawColor(99, 102, 241); doc.setLineWidth(0.5); doc.line(14, y, 60, y); y += 6;
     doc.setFont("helvetica", "normal"); doc.setFontSize(10);
     const summaryRows = [
       ["Total Shots", shots.length],
@@ -124,32 +124,33 @@ export default function ReportPage() {
   };
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-950 min-h-screen w-full">
-      {/* Full-width header */}
-      <div className="w-full flex items-center justify-between px-5 pt-6 pb-4 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 sticky top-0 z-30">
-        <button onClick={() => navigate(-1)} className="flex items-center gap-1 text-teal-600">
-          <ChevronLeft size={22} /><span className="font-medium">Back</span>
+    <div className="bg-[#FAFAFA] min-h-screen w-full">
+      <div className="w-full flex items-center justify-between px-5 pt-6 pb-4 bg-[#FAFAFA] sticky top-0 z-30">
+        <button onClick={() => navigate(-1)} className="flex items-center gap-1 text-indigo-600 active:scale-95 transition-all">
+          <div className="w-9 h-9 rounded-full border border-gray-200 bg-white flex items-center justify-center"><ChevronLeft size={20} className="text-gray-500" /></div>
         </button>
-        <h1 className="text-lg font-bold text-gray-900 dark:text-white">Report</h1>
+        <h1 className="text-lg font-bold text-gray-800">Report</h1>
         <button onClick={handleExportPDF} disabled={exporting || shots.length === 0}
-          className="flex items-center gap-1 text-teal-600 disabled:opacity-40">
-          {exporting ? <Loader2 size={18} className="animate-spin" /> : <Download size={20} />}
+          className="flex items-center gap-1 text-indigo-600 disabled:opacity-40 active:scale-95 transition-all">
+          <div className="w-9 h-9 rounded-full border border-gray-200 bg-white flex items-center justify-center">
+            {exporting ? <Loader2 size={18} className="animate-spin text-indigo-500" /> : <Download size={18} className="text-indigo-500" />}
+          </div>
         </button>
       </div>
 
       <div className="max-w-lg mx-auto px-4 py-4">
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 mb-4">
+        <div className="bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 mb-4">
           <div className="flex items-center gap-2 mb-1">
-            <div className="w-2 h-6 bg-teal-600 rounded-full" />
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white">Shot History Summary</h2>
+            <div className="w-9 h-9 rounded-xl bg-indigo-100 flex items-center justify-center"><Download size={18} className="text-indigo-500" /></div>
+            <h2 className="text-lg font-bold text-gray-800">Shot History Summary</h2>
           </div>
-          <p className="text-xs text-gray-400 ml-4">Generated on {new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</p>
-          {firstDate !== "—" && <p className="text-xs text-gray-400 ml-4">Range: {firstDate} – {lastDate}</p>}
+          <p className="text-xs text-gray-400 ml-11">Generated on {new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</p>
+          {firstDate !== "—" && <p className="text-xs text-gray-400 ml-11">Range: {firstDate} – {lastDate}</p>}
         </div>
 
         {/* Summary */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 mb-4">
-          <h3 className="text-base font-bold text-gray-900 dark:text-white mb-3 pb-2 border-b border-gray-100 dark:border-gray-800">Summary</h3>
+        <div className="bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 mb-4">
+          <h3 className="text-base font-bold text-gray-800 mb-3 pb-2 border-b border-gray-100">Summary</h3>
           <div className="space-y-2">
             {[
               ["Total Shots", shots.length],
@@ -158,8 +159,8 @@ export default function ReportPage() {
               ["Shots with Pain", `${painShots.length} (${shots.length ? Math.round(painShots.length / shots.length * 100) : 0}%)`],
             ].map(([label, value]) => (
               <div key={label} className="flex justify-between items-center">
-                <span className="text-sm text-gray-500 dark:text-gray-400">{label}</span>
-                <span className="text-sm font-semibold text-gray-900 dark:text-white">{value}</span>
+                <span className="text-sm text-gray-500">{label}</span>
+                <span className="text-sm font-semibold text-gray-800">{value}</span>
               </div>
             ))}
           </div>
@@ -167,13 +168,13 @@ export default function ReportPage() {
 
         {/* Medications */}
         {Object.keys(medCounts).length > 0 && (
-          <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 mb-4">
-            <h3 className="text-base font-bold text-gray-900 dark:text-white mb-3 pb-2 border-b border-gray-100 dark:border-gray-800">Medications Used</h3>
+          <div className="bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 mb-4">
+            <h3 className="text-base font-bold text-gray-800 mb-3 pb-2 border-b border-gray-100">Medications Used</h3>
             <div className="space-y-2">
               {Object.entries(medCounts).map(([med, cnt]) => (
                 <div key={med} className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
-                  <span className="text-sm text-gray-500 dark:text-gray-400 break-words">{med}</span>
-                  <span className="text-sm font-semibold text-gray-900 dark:text-white whitespace-nowrap">{cnt} ({Math.round(cnt/shots.length*100)}%) • {medTotals[med].toFixed(1)} mg total</span>
+                  <span className="text-sm text-gray-500 break-words">{med}</span>
+                  <span className="text-sm font-semibold text-gray-800 whitespace-nowrap">{cnt} ({Math.round(cnt/shots.length*100)}%) • {medTotals[med].toFixed(1)} mg total</span>
                 </div>
               ))}
             </div>
@@ -182,13 +183,13 @@ export default function ReportPage() {
 
         {/* Sites */}
         {topSites.length > 0 && (
-          <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 mb-4">
-            <h3 className="text-base font-bold text-gray-900 dark:text-white mb-3 pb-2 border-b border-gray-100 dark:border-gray-800">Top Injection Sites</h3>
+          <div className="bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 mb-4">
+            <h3 className="text-base font-bold text-gray-800 mb-3 pb-2 border-b border-gray-100">Top Injection Sites</h3>
             <div className="space-y-2">
               {topSites.map(([site, cnt]) => (
                 <div key={site} className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
-                  <span className="text-sm text-gray-500 dark:text-gray-400 break-words">{site}</span>
-                  <span className="text-sm font-semibold text-gray-900 dark:text-white whitespace-nowrap">{cnt} ({Math.round(cnt/shots.length*100)}%)</span>
+                  <span className="text-sm text-gray-500 break-words">{site}</span>
+                  <span className="text-sm font-semibold text-gray-800 whitespace-nowrap">{cnt} ({Math.round(cnt/shots.length*100)}%)</span>
                 </div>
               ))}
             </div>
@@ -196,29 +197,29 @@ export default function ReportPage() {
         )}
 
         {/* Table */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
-          <h3 className="text-base font-bold text-gray-900 dark:text-white mb-3 pb-2 border-b border-gray-100 dark:border-gray-800">Detailed Shot History</h3>
+        <div className="bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80">
+          <h3 className="text-base font-bold text-gray-800 mb-3 pb-2 border-b border-gray-100">Detailed Shot History</h3>
           {shots.length === 0 ? (
             <p className="text-sm text-gray-400 text-center py-4">No shots recorded yet.</p>
           ) : (
             <div className="overflow-x-auto -mx-1">
               <table className="w-full text-xs">
                 <thead>
-                  <tr className="bg-gray-50 dark:bg-gray-800">
-                    <th className="text-left p-1.5 sm:p-2 text-gray-500 dark:text-gray-400 font-medium whitespace-nowrap">Date</th>
-                    <th className="text-left p-1.5 sm:p-2 text-gray-500 dark:text-gray-400 font-medium">Med</th>
-                    <th className="text-left p-1.5 sm:p-2 text-gray-500 dark:text-gray-400 font-medium">Dose</th>
-                    <th className="text-left p-1.5 sm:p-2 text-gray-500 dark:text-gray-400 font-medium">Site</th>
-                    <th className="text-left p-1.5 sm:p-2 text-gray-500 dark:text-gray-400 font-medium">Pain</th>
+                  <tr className="bg-gray-50">
+                    <th className="text-left p-1.5 sm:p-2 text-gray-500 font-medium whitespace-nowrap">Date</th>
+                    <th className="text-left p-1.5 sm:p-2 text-gray-500 font-medium">Med</th>
+                    <th className="text-left p-1.5 sm:p-2 text-gray-500 font-medium">Dose</th>
+                    <th className="text-left p-1.5 sm:p-2 text-gray-500 font-medium">Site</th>
+                    <th className="text-left p-1.5 sm:p-2 text-gray-500 font-medium">Pain</th>
                   </tr>
                 </thead>
                 <tbody>
                   {sortedShots.map((s, i) => (
-                    <tr key={s.id} className={i % 2 === 1 ? "bg-gray-50 dark:bg-gray-800" : ""}>
-                      <td className="p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 whitespace-nowrap">{s.date}</td>
-                      <td className="p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 max-w-[80px] truncate">{s.medication}</td>
-                      <td className="p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 whitespace-nowrap">{s.dose}mg</td>
-                      <td className="p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 max-w-[80px] truncate">{s.site}</td>
+                    <tr key={s.id} className={i % 2 === 1 ? "bg-gray-50" : ""}>
+                      <td className="p-1.5 sm:p-2 text-gray-700 whitespace-nowrap">{s.date}</td>
+                      <td className="p-1.5 sm:p-2 text-gray-700 max-w-[80px] truncate">{s.medication}</td>
+                      <td className="p-1.5 sm:p-2 text-gray-700 whitespace-nowrap">{s.dose}mg</td>
+                      <td className="p-1.5 sm:p-2 text-gray-700 max-w-[80px] truncate">{s.site}</td>
                       <td className={`p-1.5 sm:p-2 font-medium whitespace-nowrap ${s.pain === 0 ? "text-green-600" : s.pain <= 3 ? "text-yellow-600" : "text-red-600"}`}>{s.pain}</td>
                     </tr>
                   ))}
@@ -228,12 +229,12 @@ export default function ReportPage() {
           )}
         </div>
 
-        <p className="text-xs text-gray-400 dark:text-gray-500 italic px-1 mb-1">This summary is a record of entries you logged. It is not a medical document and is not a substitute for advice from your prescriber.</p>
-        <p className="text-[10px] text-gray-300 dark:text-gray-600 px-1 mb-3">Calculation version: {REPORT_CALCULATION_VERSION} | {PK_CALCULATION_VERSION}</p>
+        <p className="text-xs text-gray-400 italic px-1 mb-1">This summary is a record of entries you logged. It is not a medical document and is not a substitute for advice from your prescriber.</p>
+        <p className="text-[10px] text-gray-300 px-1 mb-3">Calculation version: {REPORT_CALCULATION_VERSION} | {PK_CALCULATION_VERSION}</p>
 
         {shots.length > 0 && (
           <button onClick={handleExportPDF} disabled={exporting}
-            className="mt-4 w-full py-3.5 bg-teal-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-60">
+            className="mt-4 w-full py-3.5 bg-indigo-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-60 active:scale-95 transition-all shadow-lg shadow-indigo-600/20">
             {exporting ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
             {exporting ? "Generating PDF…" : "Export as PDF"}
           </button>
