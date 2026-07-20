@@ -102,7 +102,10 @@ export default function SettingsPage() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <Bell size={18} className="text-gray-500 dark:text-gray-400" />
-                <span className="text-sm text-gray-700 dark:text-gray-300">Push Notifications</span>
+                <div>
+                  <span className="text-sm text-gray-700 dark:text-gray-300 block">Push Notifications</span>
+                  <span className="text-[11px] text-gray-400 dark:text-gray-500">Saves your permission; reminders are not active yet.</span>
+                </div>
               </div>
               <Toggle value={notifEnabled} onChange={handleNotifications} />
             </div>

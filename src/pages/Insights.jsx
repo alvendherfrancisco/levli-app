@@ -6,31 +6,42 @@ import AddMetricModal from "@/components/modals/AddMetricModal";
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { useAppState } from "@/lib/AppState";
 import { parseShotDate, todayKey } from "@/lib/dateUtils";
+import { HALF_LIFE_DAYS, isInvestigational } from "@/lib/medicationData";
 import { toast } from "sonner";
 
-// Half-lives in days per drug class
-const HALF_LIFE = { Semaglutide: 7, Tirzepatide: 5, Liraglutide: 1, Retatrutide: 6, "GLP-1": 7 };
+const CLASS_COLORS = { Semaglutide: "#14B8A6", Tirzepatide: "#6366F1", Liraglutide: "#F59E0B" };
 
+// Builds one curve per drug class (never summed across classes). Investigational
+// classes are excluded so no curve is shown for unapproved products.
 function buildMedLevelData(shots, days) {
-  if (!shots.length) return [];
+  if (!shots.length) return { data: [], classes: [], disabled: false };
   const now = new Date(); now.setHours(0,0,0,0);
   const mNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const classesSet = new Set();
+  shots.forEach((s) => { if (s.drug_class || s.drugClass) classesSet.add(s.drug_class || s.drugClass); });
+  const classes = [...classesSet].filter((c) => !isInvestigational(c) && HALF_LIFE_DAYS[c]);
+  if (!classes.length) return { data: [], classes: [], disabled: true };
   const points = [];
   for (let i = days; i >= 0; i--) {
     const t = new Date(now); t.setDate(t.getDate() - i);
-    let level = 0;
-    shots.forEach((s) => {
-      const sd = parseShotDate(s.date);
-      if (!sd) return;
-      const halfLife = HALF_LIFE[s.drug_class || s.drugClass] || 7;
-      const daysSince = (t - sd) / 86400000;
-      if (daysSince >= 0 && daysSince < halfLife * 7) {
-        level += (s.dose || 0) * Math.pow(0.5, daysSince / halfLife);
-      }
+    const point = { day: `${mNames[t.getMonth()]} ${t.getDate()}` };
+    classes.forEach((cls) => {
+      let level = 0;
+      shots.forEach((s) => {
+        if ((s.drug_class || s.drugClass) !== cls) return;
+        const sd = parseShotDate(s.date);
+        if (!sd) return;
+        const halfLife = HALF_LIFE_DAYS[cls];
+        const daysSince = (t - sd) / 86400000;
+        if (daysSince >= 0 && daysSince < halfLife * 7) {
+          level += (s.dose || 0) * Math.pow(0.5, daysSince / halfLife);
+        }
+      });
+      point[cls] = Math.round(level * 100) / 100;
     });
-    points.push({ day: `${mNames[t.getMonth()]} ${t.getDate()}`, level: Math.round(level * 100) / 100 });
+    points.push(point);
   }
-  return points;
+  return { data: points, classes, disabled: false };
 }
 
 /**
@@ -68,7 +79,7 @@ export default function Insights() {
   const [photoModal, setPhotoModal] = useState(null); // { mode: "add", dayKey } | { mode: "edit", id, dayKey, url }
   const weightUnit = profile?.weight_unit || "lb";
 
-  const medData = useMemo(() => buildMedLevelData(shots, MED_RANGES[medRange]), [shots, medRange]);
+  const medLevel = useMemo(() => buildMedLevelData(shots, MED_RANGES[medRange]), [shots, medRange]);
   const weightData = useMemo(() => buildWeightData(weightHistory, WEIGHT_RANGES[weightRange]), [weightHistory, weightRange]);
 
   const formatPhotoDate = (isoDate) => {
@@ -375,7 +386,7 @@ export default function Insights() {
               <Syringe size={18} className="text-indigo-600" />
               <div>
                 <h3 className="font-bold text-gray-900 dark:text-white text-lg">Medication Levels</h3>
-                <p className="text-xs text-indigo-500">Estimated concentration using pharmacokinetic decay model.</p>
+                <p className="text-xs text-indigo-500">Illustrative relative-exposure estimate (not a blood-level measurement).</p>
               </div>
             </div>
             <HelpCircle size={18} className="text-indigo-400" />
@@ -394,30 +405,45 @@ export default function Insights() {
           </div>
 
           {shots.length > 0 ? (
-            <div className="h-48">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={medData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(150,150,150,0.15)" />
-                  <XAxis dataKey="day" tick={{ fontSize: 10 }} stroke="#999" interval={Math.floor(medData.length / 5)} />
-                  <YAxis tick={{ fontSize: 10 }} stroke="#999" width={36} />
-                  <Tooltip
-                    formatter={(v) => [`${v} mg`, "Concentration"]}
-                    contentStyle={{ background: "rgba(20,22,32,0.95)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, color: "#E8E9F0" }}
-                  />
-                  <Area type="monotone" dataKey="level" stroke="#6366F1" fill="#6366F1" fillOpacity={0.1} strokeWidth={2} />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
+            medLevel.disabled ? (
+              <div className="h-48 flex items-center justify-center bg-gray-50 dark:bg-white/[0.03] rounded-xl px-4">
+                <p className="text-sm text-gray-400 dark:text-[#9A9DAE] text-center">Exposure estimation is not available for this medication. This appears for investigational or unsupported products.</p>
+              </div>
+            ) : (
+              <div className="h-48">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={medLevel.data}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(150,150,150,0.15)" />
+                    <XAxis dataKey="day" tick={{ fontSize: 10 }} stroke="#999" interval={Math.floor(medLevel.data.length / 5)} />
+                    <YAxis tick={{ fontSize: 10 }} stroke="#999" width={36} />
+                    <Tooltip
+                      formatter={(v, name) => [`${v} relative units`, name]}
+                      contentStyle={{ background: "rgba(20,22,32,0.95)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, color: "#E8E9F0" }}
+                    />
+                    {medLevel.classes.map((cls) => (
+                      <Area key={cls} type="monotone" dataKey={cls} stroke={CLASS_COLORS[cls] || "#6366F1"} fill={CLASS_COLORS[cls] || "#6366F1"} fillOpacity={0.08} strokeWidth={2} />
+                    ))}
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            )
           ) : (
             <div className="h-48 flex items-center justify-center bg-gray-50 dark:bg-white/[0.03] rounded-xl">
-              <p className="text-sm text-gray-400 dark:text-[#9A9DAE]">Log your first shot to see medication levels here.</p>
+              <p className="text-sm text-gray-400 dark:text-[#9A9DAE]">Log your first shot to see relative exposure here.</p>
             </div>
           )}
-          <p className="text-xs text-gray-400 dark:text-[#9A9DAE] text-center mt-2">Time vs Concentration (mg)</p>
-          <div className="flex items-center justify-center gap-1.5 mt-1">
-            <div className="w-4 h-0.5 bg-indigo-600 rounded" />
-            <span className="text-xs text-gray-500 dark:text-[#9A9DAE]">{shots[0]?.drug_class || "GLP-1"}</span>
-          </div>
+          <p className="text-xs text-gray-400 dark:text-[#9A9DAE] text-center mt-2">Time vs modelled relative exposure (illustrative)</p>
+          <p className="text-[11px] text-gray-400 dark:text-[#9A9DAE] text-center mt-1 px-2">Illustrative estimate only — not a blood-level measurement. Do not use it to adjust your dose. Confirm any decisions with your prescriber.</p>
+          {!medLevel.disabled && medLevel.classes.length > 0 && (
+            <div className="flex items-center justify-center gap-3 mt-2 flex-wrap">
+              {medLevel.classes.map((cls) => (
+                <div key={cls} className="flex items-center gap-1.5">
+                  <div className="w-4 h-0.5 rounded" style={{ background: CLASS_COLORS[cls] || "#6366F1" }} />
+                  <span className="text-xs text-gray-500 dark:text-[#9A9DAE]">{cls}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

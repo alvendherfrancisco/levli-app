@@ -62,7 +62,7 @@ export default function Home() {
               </div>
               <div>
                 <h3 className="font-bold text-gray-900 dark:text-white">Medication Levels</h3>
-                <p className="text-xs text-indigo-500">Estimated medication levels in your system.</p>
+                <p className="text-xs text-indigo-500">Illustrative estimate of relative medication exposure (not a blood-level measurement).</p>
               </div>
             </div>
             <HelpCircle size={18} className="text-indigo-400" />

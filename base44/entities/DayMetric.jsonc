@@ -8,6 +8,10 @@
     "weight": {
       "type": "number"
     },
+    "weight_unit": {
+      "type": "string",
+      "description": "Unit the weight value was logged in (kg or lb). Stored per-entry to prevent history corruption on unit change."
+    },
     "calories": {
       "type": "number"
     },

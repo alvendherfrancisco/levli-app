@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { X, Save, MapPin, Star, ChevronDown, Trash2 } from "lucide-react";
 import { useAppState } from "@/lib/AppState";
 import { formatShotDate } from "@/lib/dateUtils";
+import { MEDICATIONS, DRUG_CLASS, isInvestigational } from "@/lib/medicationData";
+import { detectDuplicateActiveIngredient } from "@/lib/drugSafety";
 import { toast } from "sonner";
 
-const medications = ["Zepbound®", "Mounjaro®", "Tirzepatide", "Wegovy®", "Ozempic®", "Semaglutide", "Retatrutide", "Saxenda®", "Liraglutide"];
+// Medication list + DRUG_CLASS imported from medicationData (single source of truth)
 const injectionSites = [
   "Stomach – Upper Left", "Stomach – Upper Right", "Stomach – Lower Left", "Stomach – Lower Right",
   "Thigh – Left", "Thigh – Right", "Upper Arm – Left", "Upper Arm – Right",
 ];
-const DRUG_CLASS = { "Ozempic®": "Semaglutide", "Wegovy®": "Semaglutide", "Mounjaro®": "Tirzepatide", "Zepbound®": "Tirzepatide", "Tirzepatide": "Tirzepatide", "Semaglutide": "Semaglutide", "Retatrutide": "Retatrutide", "Saxenda®": "Liraglutide", "Liraglutide": "Liraglutide" };
+// DRUG_CLASS imported from medicationData
 
 const pad = (n) => String(n).padStart(2, "0");
 
@@ -21,7 +23,9 @@ function toInputTime(d) {
 }
 
 export default function AddShotModal({ open, onClose, editingShot }) {
-  const { addShot, updateShot, deleteShot, profile, getRecommendedSite } = useAppState();
+  const { addShot, updateShot, deleteShot, profile, getRecommendedSite, shots } = useAppState();
+  const confirmedDupRef = useRef(false);
+  const [duplicateWarning, setDuplicateWarning] = useState(null);
 
   const defaultMed = profile?.default_medication || "Ozempic®";
   const now = new Date();
@@ -74,6 +78,8 @@ export default function AddShotModal({ open, onClose, editingShot }) {
         setTime(toInputTime(n));
       }
       setError("");
+      confirmedDupRef.current = false;
+      setDuplicateWarning(null);
     }
   }, [open, editingShot]);
 
@@ -85,8 +91,17 @@ export default function AddShotModal({ open, onClose, editingShot }) {
       setError("Please enter a valid dose (0.1 – 100 mg).");
       return;
     }
+    // Duplicate active-ingredient check (new shots only, non-blocking)
+    if (!editingShot && !confirmedDupRef.current) {
+      const dup = detectDuplicateActiveIngredient(medication, shots);
+      if (dup.duplicate) {
+        setDuplicateWarning(dup);
+        return;
+      }
+    }
     setSaving(true);
     setError("");
+    setDuplicateWarning(null);
     const d = new Date(date + "T" + time);
     const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
     const formattedDate = `${months[d.getMonth()]} ${String(d.getDate()).padStart(2,"0")}, ${d.getFullYear()}`;
@@ -169,10 +184,10 @@ export default function AddShotModal({ open, onClose, editingShot }) {
               </button>
               {showMedDropdown && (
                 <div className="absolute z-10 mt-1 w-full bg-white dark:bg-[#1e2130] border border-gray-200 dark:border-white/[0.08] rounded-xl shadow-lg">
-                  {medications.map((m) => (
+                  {MEDICATIONS.map((m) => (
                     <button key={m} onClick={() => { setMedication(m); setShowMedDropdown(false); }}
                       className={`w-full px-4 py-3 text-left text-sm dark:text-[#E8E9F0] ${medication === m ? "bg-teal-50 dark:bg-teal-500/20 text-teal-600 dark:text-teal-300 font-medium" : "hover:bg-gray-50 dark:hover:bg-white/[0.05]"}`}>
-                      {m}
+                      {m}{isInvestigational(m) ? <span className="text-xs text-amber-600 dark:text-amber-400 ml-2">(investigational — not approved)</span> : null}
                     </button>
                   ))}
                 </div>
@@ -242,6 +257,17 @@ export default function AddShotModal({ open, onClose, editingShot }) {
               className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-sm resize-none h-24 outline-none focus:border-teal-300" />
           </div>
         </div>
+
+        {duplicateWarning && (
+          <div className="mx-5 mb-3 text-sm text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-500/10 rounded-xl px-3 py-2 border border-amber-200 dark:border-amber-500/20">
+            <p className="font-semibold">Possible duplicate active ingredient</p>
+            <p className="mt-1">You logged {duplicateWarning.existingBrand} ({duplicateWarning.generic}) on {duplicateWarning.lastDoseDate}. Logging two forms of the same active ingredient may duplicate your dose. Confirm this is intended or contact your prescriber.</p>
+            <div className="flex gap-2 mt-2">
+              <button onClick={() => { confirmedDupRef.current = true; handleSave(); }} className="px-3 py-1.5 rounded-lg bg-amber-600 text-white text-xs font-semibold">Save anyway</button>
+              <button onClick={() => setDuplicateWarning(null)} className="px-3 py-1.5 rounded-lg bg-white dark:bg-white/10 text-gray-600 dark:text-gray-300 text-xs font-semibold border border-gray-200 dark:border-white/10">Cancel</button>
+            </div>
+          </div>
+        )}
 
         <div className="px-5 pb-8 pt-2">
           <button onClick={handleSave} disabled={saving}

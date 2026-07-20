@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { X, Save, Trash2 } from "lucide-react";
 import { useAppState } from "@/lib/AppState";
+import { getRecentMedication } from "@/lib/medicationData";
+import RedFlagBanner from "@/components/RedFlagBanner";
 import { toast } from "sonner";
 
 const MOODS = [
@@ -28,7 +30,7 @@ export default function JournalEntryModal({ open, onClose, onSave, onDelete, ini
   const [text, setText] = useState("");
   const [mood, setMood] = useState(MOODS[0]);
   const [category, setCategory] = useState("General Note");
-  const { darkMode } = useAppState();
+  const { darkMode, shots } = useAppState();
 
   useEffect(() => {
     if (open) {
@@ -46,6 +48,8 @@ export default function JournalEntryModal({ open, onClose, onSave, onDelete, ini
   }, [open, initialEntry]);
 
   if (!open) return null;
+
+  const recentMed = getRecentMedication(shots, null);
 
   const handleSave = async () => {
     if (!text.trim()) return;
@@ -126,6 +130,10 @@ export default function JournalEntryModal({ open, onClose, onSave, onDelete, ini
               className="w-full border border-gray-200 dark:border-white/[0.1] bg-white dark:bg-white/[0.05] text-gray-900 dark:text-[#E8E9F0] placeholder-gray-400 dark:placeholder-[#9A9DAE] rounded-xl px-4 py-3 text-sm resize-none h-32 outline-none focus:border-teal-300 dark:focus:border-teal-500/50" />
           </div>
         </div>
+
+        {category === "Side Effect" && text.trim() && (
+          <div className="px-5 pb-3"><RedFlagBanner text={text} medication={recentMed} /></div>
+        )}
 
         <div className="px-5 pb-8 pt-2">
           <button onClick={handleSave} disabled={!text.trim()}

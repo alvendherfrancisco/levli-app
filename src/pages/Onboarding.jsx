@@ -82,7 +82,7 @@ export default function Onboarding() {
             "Managing nausea and other side effects",
             "Anxiety about self-injecting",
             "Adapting to appetite changes",
-            "Finding the optimal injection timing",
+            "Logging my injection times",
             "Tracking progress effectively",
             "Managing medication costs",
           ]}
@@ -112,7 +112,7 @@ export default function Onboarding() {
             "Once weekly (standard dosing)",
             "Every two weeks",
             "Once monthly",
-            "Currently dose escalating",
+            "Logging my current dose stage (as directed by my prescriber)",
             "Irregular schedule due to side effects",
           ]}
           onAnswerChange={(answers) => handleQuizAnswer("frequency", answers)}
@@ -132,7 +132,7 @@ function WelcomeStep() {
       </div>
       <h1 className="text-3xl font-bold mb-3">Welcome to Levli</h1>
       <p className="text-gray-400 text-base leading-relaxed mb-6">
-        The ultimate companion for your GLP-1 medication journey. Track shots, monitor progress, and achieve your health goals with confidence.
+        A companion app for logging your GLP-1 medication journey. Track shots, progress, and notes to share with your healthcare provider.
       </p>
       <PhoneMockup>
         <MiniHomeScreen />
@@ -146,7 +146,7 @@ function NeverMissStep() {
     <div className="flex flex-col items-center text-center flex-1">
       <h1 className="text-3xl font-bold mb-3">Never Miss a Shot Again</h1>
       <p className="text-gray-400 text-base leading-relaxed mb-4">
-        Smart reminders and detailed shot logs ensure perfect adherence to your medication schedule. Your doctor will love the complete records.
+        Log your shots and keep a complete record you can share with your healthcare provider. (Reminders are not active yet.)
       </p>
       <PhoneMockup>
         <MiniShotsScreen />
@@ -160,7 +160,7 @@ function VisualizeStep() {
     <div className="flex flex-col items-center text-center flex-1">
       <h1 className="text-3xl font-bold mb-3">Visualize Your Success</h1>
       <p className="text-gray-400 text-base leading-relaxed mb-4">
-        Watch your weight loss journey unfold with beautiful charts and progress tracking.
+        Track your weight entries over time with charts and progress photos.
       </p>
       <PhoneMockup>
         <MiniInsightsScreen />
@@ -174,7 +174,7 @@ function MedicationTrackingStep() {
     <div className="flex flex-col items-center text-center flex-1">
       <h1 className="text-3xl font-bold mb-3">Advanced Medication Tracking</h1>
       <p className="text-gray-400 text-base leading-relaxed mb-4">
-        Monitor estimated medication levels in your system with scientific precision.
+        See an illustrative chart of relative medication exposure over time. This is a rough estimate, not a precise measurement.
       </p>
       <PhoneMockup>
         <MiniInsightsScreen />
@@ -231,7 +231,7 @@ function NotificationStep({ onContinue }) {
     <div className="flex flex-col items-center text-center flex-1">
       <h1 className="text-3xl font-bold mb-3">Never Miss a Shot Again</h1>
       <p className="text-gray-400 text-base leading-relaxed mb-6">
-        Levli gently reminds you when it's time to take your shots — so you never have to worry about forgetting again.
+        Allowing notifications lets Levli send you reminders in the future. Reminders are not active yet — you can still log your shots and review them any time.
       </p>
       <div className="bg-gray-900 rounded-2xl p-6 mb-4 border border-gray-800">
         <div className="w-14 h-14 bg-teal-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -239,7 +239,7 @@ function NotificationStep({ onContinue }) {
         </div>
         <h3 className="text-lg font-semibold mb-2">Allow Notifications</h3>
         <p className="text-gray-400 text-sm">
-          To make the most of Levli, please allow notifications so we can remind you when it's time to take your medications.
+          Allowing notifications now means Levli can send you reminders once that feature launches. You can adjust this later in Settings.
         </p>
       </div>
       {enabled ? (

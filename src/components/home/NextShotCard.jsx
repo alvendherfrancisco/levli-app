@@ -2,10 +2,13 @@ import React from "react";
 import { Syringe } from "lucide-react";
 import { useAppState } from "@/lib/AppState";
 import { addDaysToShotDate, daysUntilShotDate } from "@/lib/dateUtils";
+import { getDosingInterval, getMissedDoseRule } from "@/lib/medicationData";
 
 export default function NextShotCard() {
   const { shots, profile } = useAppState();
-  const daysBetween = parseInt(profile?.days_between || "7") || 7;
+  const lastMed = shots[0]?.medication;
+  const daysBetween = (lastMed && getDosingInterval(lastMed)) || parseInt(profile?.days_between || "7") || 7;
+  const missedRule = lastMed ? getMissedDoseRule(lastMed) : null;
 
   if (shots.length === 0) {
     return (
@@ -26,6 +29,9 @@ export default function NextShotCard() {
   const circumference = 2 * Math.PI * 34;
 
   const isDue = daysLeft <= 0;
+  const daysLate = Math.max(0, -daysLeft);
+  const isLate = daysLeft < 0;
+  const isRetitration = missedRule && missedRule.retitrationDays && daysLate > missedRule.retitrationDays;
   const ringColor = isDue ? "#22C55E" : "#14B8A6";
   const ringGlow = isDue ? "0 0 14px 3px rgba(34,197,94,0.35)" : "0 0 14px 3px rgba(20,184,166,0.35)";
 
@@ -35,6 +41,7 @@ export default function NextShotCard() {
   else daysLabel = `In ${daysLeft}d`;
 
   return (
+    <>
     <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 mx-4 mb-4">
       <p className="text-sm text-gray-400 dark:text-[#9A9DAE] mb-1">Next Shot</p>
       <div className="flex items-center justify-between">
@@ -67,5 +74,14 @@ export default function NextShotCard() {
         </div>
       </div>
     </div>
+    {isLate && missedRule && (
+      <div className={`mx-4 mb-4 rounded-2xl p-3 border ${isRetitration ? "bg-red-50 dark:bg-red-500/10 border-red-200 dark:border-red-500/20" : "bg-amber-50 dark:bg-amber-500/10 border-amber-200 dark:border-amber-500/20"}`}>
+        <p className={`text-sm font-semibold ${isRetitration ? "text-red-700 dark:text-red-300" : "text-amber-700 dark:text-amber-300"}`}>
+          {isRetitration ? "Late dose — contact your prescriber" : `Scheduled dose is ${daysLate} day${daysLate === 1 ? "" : "s"} late`}
+        </p>
+        <p className="text-xs mt-1 text-gray-600 dark:text-[#9A9DAE]">{missedRule.advice}</p>
+      </div>
+    )}
+    </>
   );
 }

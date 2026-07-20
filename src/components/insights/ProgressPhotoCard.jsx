@@ -1,4 +1,5 @@
 import React from "react";
+import SafeImage from "@/components/SafeImage";
 
 // tag: "latest" | "same-day" | null
 export default function ProgressPhotoCard({ photo, dateLabel, weightLabel, tag, onClick }) {
@@ -10,7 +11,7 @@ export default function ProgressPhotoCard({ photo, dateLabel, weightLabel, tag, 
       <div className={`relative w-full aspect-square rounded-xl overflow-hidden border-2 ${
         tag === "latest" ? "border-teal-500" : "border-gray-100 dark:border-white/[0.08]"
       }`}>
-        <img src={photo.url} alt={`Progress ${photo.day_key}`} className="w-full h-full object-cover" />
+        <SafeImage src={photo.url} alt={`Progress ${photo.day_key}`} className="w-full h-full object-cover" />
         {tag === "latest" && (
           <span className="absolute top-2 left-2 bg-teal-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">Latest</span>
         )}

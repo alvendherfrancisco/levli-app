@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { X, Save, ChevronDown } from "lucide-react";
 import { useAppState } from "@/lib/AppState";
 import { todayKey } from "@/lib/dateUtils";
+import { getRecentMedication } from "@/lib/medicationData";
+import RedFlagBanner from "@/components/RedFlagBanner";
 import { toast } from "sonner";
 
 const SIDE_EFFECT_OPTIONS = [
@@ -15,7 +17,7 @@ const SEVERITIES = ["Mild", "Moderate", "Severe"];
 
 export default function SideEffectsModal({ open, onClose, dayKey }) {
   const dk = dayKey || todayKey();
-  const { getSideEffects, saveSideEffects } = useAppState();
+  const { getSideEffects, saveSideEffects, shots } = useAppState();
   const [chips, setChips] = useState([]);
   const [notes, setNotes] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
@@ -39,6 +41,9 @@ export default function SideEffectsModal({ open, onClose, dayKey }) {
     setShowDropdown(false);
     setSelectedEffect(null);
   };
+
+  const recentMed = getRecentMedication(shots, dk);
+  const combinedText = [...chips, notes.trim()].filter(Boolean).join(" ");
 
   const handleSave = async () => {
     try {
@@ -121,6 +126,8 @@ export default function SideEffectsModal({ open, onClose, dayKey }) {
               className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-sm resize-none h-20 outline-none focus:border-teal-300" />
           </div>
         </div>
+        {combinedText && <div className="px-5 pb-3"><RedFlagBanner text={combinedText} medication={recentMed} /></div>}
+
         <div className="px-5 pb-8 pt-2">
           <button onClick={handleSave} className="w-full py-3.5 bg-teal-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2">
             <Save size={16} /> Save

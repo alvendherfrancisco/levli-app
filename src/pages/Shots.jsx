@@ -5,6 +5,7 @@ import ShotCard from "@/components/shots/ShotCard";
 import AddShotModal from "@/components/modals/AddShotModal";
 import { useAppState } from "@/lib/AppState";
 import { addDaysToShotDate, daysAgoLabel } from "@/lib/dateUtils";
+import { getDosingInterval } from "@/lib/medicationData";
 
 export default function Shots() {
   const [showShot, setShowShot] = useState(false);
@@ -12,8 +13,8 @@ export default function Shots() {
   const { shots, shotsLoading, profile } = useAppState();
   const navigate = useNavigate();
 
-  const daysBetween = parseInt(profile?.days_between || "7") || 7;
   const last = shots[0] || null;
+  const daysBetween = (last && getDosingInterval(last.medication)) || parseInt(profile?.days_between || "7") || 7;
   const nextDate = last ? addDaysToShotDate(last.date, daysBetween) : null;
 
   const openEdit = (shot) => { setEditingShot(shot); setShowShot(true); };

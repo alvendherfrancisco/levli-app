@@ -3,6 +3,7 @@ import { X, Camera, Image, Trash2, Save, Loader2 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
 import CameraCapture from "@/components/modals/CameraCapture";
+import SafeImage from "@/components/SafeImage";
 
 function numericOnly(value) {
   let v = value.replace(/[^0-9.]/g, "");
@@ -88,8 +89,9 @@ function ProgressModal({ open, onClose, value, dayKey, onSave, onDelete }) {
   const uploadFile = async (file) => {
     setUploading(true);
     try {
-      const { file_url } = await base44.integrations.Core.UploadFile({ file });
-      setImgUrl(file_url);
+      // Private storage: returns a file_uri (not a public URL).
+      const { file_uri } = await base44.integrations.Core.UploadPrivateFile({ file });
+      setImgUrl(file_uri);
     } finally {
       setUploading(false);
     }
@@ -122,7 +124,7 @@ function ProgressModal({ open, onClose, value, dayKey, onSave, onDelete }) {
                 <p className="text-sm">Uploading...</p>
               </div>
             ) : imgUrl ? (
-              <img src={imgUrl} alt="Progress" className="w-full object-cover max-h-64" />
+              <SafeImage src={imgUrl} alt="Progress" className="w-full object-cover max-h-64" />
             ) : (
               <div className="flex flex-col items-center gap-3 py-12 text-gray-300 dark:text-white/20">
                 <Camera size={48} />

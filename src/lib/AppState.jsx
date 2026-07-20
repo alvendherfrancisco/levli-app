@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { base44 } from "@/api/base44Client";
 import { toDayKey, todayKey } from "@/lib/dateUtils";
+import { convertWeight } from "@/lib/units";
 import { seedDemoDataIfNeeded } from "@/lib/seedDemoData";
 
 const AppStateContext = createContext(null);
@@ -147,8 +148,14 @@ export function AppStateProvider({ children }) {
   const getSideEffects = (dayKey) => dayMetrics[dayKey]?.side_effects || "";
   const saveSideEffects = (dayKey, text) => saveDayMetric(dayKey, { side_effects: text });
 
-  const getWeight = (dayKey) => dayMetrics[dayKey]?.weight || null;
-  const saveWeight = (dayKey, val) => saveDayMetric(dayKey, { weight: parseFloat(val) || null });
+  const displayWeightUnit = profile?.weight_unit || "lb";
+  const getWeight = (dayKey) => {
+    const m = dayMetrics[dayKey];
+    if (!m || m.weight == null) return null;
+    const storedUnit = m.weight_unit || displayWeightUnit;
+    return convertWeight(m.weight, storedUnit, displayWeightUnit);
+  };
+  const saveWeight = (dayKey, val) => saveDayMetric(dayKey, { weight: parseFloat(val) || null, weight_unit: displayWeightUnit });
 
   const getExercise = (dayKey) => dayMetrics[dayKey]?.exercise_min ?? null;
   const saveExercise = (dayKey, val) => saveDayMetric(dayKey, { exercise_min: parseFloat(val) || 0 });
@@ -271,9 +278,10 @@ export function AppStateProvider({ children }) {
 
   // ── Computed helpers ───────────────────────────────────────────────────────
   /** Returns all weight entries sorted by date asc: [{date: "YYYY-MM-DD", weight}] */
+  const wDisplayUnit = profile?.weight_unit || "lb";
   const weightHistory = Object.entries(dayMetrics)
     .filter(([, m]) => m.weight != null)
-    .map(([key, m]) => ({ date: key, weight: m.weight }))
+    .map(([key, m]) => ({ date: key, weight: convertWeight(m.weight, m.weight_unit || wDisplayUnit, wDisplayUnit) }))
     .sort((a, b) => a.date.localeCompare(b.date));
 
   /** Injection site rotation recommendation */

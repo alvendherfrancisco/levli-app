@@ -9,13 +9,16 @@ export default function ReportPage() {
   const { shots } = useAppState();
   const [exporting, setExporting] = useState(false);
 
-  const totalDose = shots.reduce((s, sh) => s + (parseFloat(sh.dose) || 0), 0);
-  const avgDose = shots.length ? (totalDose / shots.length).toFixed(1) : "0.0";
   const painShots = shots.filter((s) => s.pain > 0);
-  const avgPain = painShots.length ? (painShots.reduce((a, s) => a + s.pain, 0) / painShots.length).toFixed(1) : "0.0";
+  const avgPain = shots.length ? (shots.reduce((a, s) => a + s.pain, 0) / shots.length).toFixed(1) : "0.0";
+  const avgPainWhenReported = painShots.length ? (painShots.reduce((a, s) => a + s.pain, 0) / painShots.length).toFixed(1) : "0.0";
 
   const medCounts = {};
-  shots.forEach((s) => { medCounts[s.medication] = (medCounts[s.medication] || 0) + 1; });
+  const medTotals = {};
+  shots.forEach((s) => {
+    medCounts[s.medication] = (medCounts[s.medication] || 0) + 1;
+    medTotals[s.medication] = (medTotals[s.medication] || 0) + (parseFloat(s.dose) || 0);
+  });
 
   const siteCounts = {};
   shots.forEach((s) => { siteCounts[s.site] = (siteCounts[s.site] || 0) + 1; });
@@ -33,7 +36,7 @@ export default function ReportPage() {
     let y = 20;
 
     doc.setFontSize(18); doc.setFont("helvetica", "bold");
-    doc.text("GLP-1 Shot History Report", 14, y); y += 8;
+    doc.text("Shot History Summary", 14, y); y += 8;
     doc.setFontSize(10); doc.setFont("helvetica", "normal");
     doc.setTextColor(120);
     doc.text(`Generated: ${new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}`, 14, y); y += 5;
@@ -46,9 +49,8 @@ export default function ReportPage() {
     doc.setFont("helvetica", "normal"); doc.setFontSize(10);
     const summaryRows = [
       ["Total Shots", shots.length],
-      ["Total Dose", `${totalDose.toFixed(1)} mg`],
-      ["Average Dose", `${avgDose} mg`],
-      ["Average Pain Level", `${avgPain}/10`],
+      ["Average Pain (all shots)", `${avgPain}/10`],
+      ["Average Pain (when reported)", `${avgPainWhenReported}/10`],
       ["Shots with Pain", `${painShots.length} (${shots.length ? Math.round(painShots.length / shots.length * 100) : 0}%)`],
       ["Period Covered", firstDate !== "—" && lastDate !== "—" ? `${firstDate} – ${lastDate}` : "—"],
     ];
@@ -65,7 +67,7 @@ export default function ReportPage() {
       doc.setFont("helvetica", "normal"); doc.setFontSize(10);
       Object.entries(medCounts).forEach(([med, cnt]) => {
         doc.setTextColor(120); doc.text(med, 14, y);
-        doc.setTextColor(0); doc.text(`${cnt} (${Math.round(cnt/shots.length*100)}%)`, 100, y);
+        doc.setTextColor(0); doc.text(`${cnt} (${Math.round(cnt/shots.length*100)}%) • ${medTotals[med].toFixed(1)} mg total`, 100, y);
         y += 6;
       });
       y += 4;
@@ -109,6 +111,9 @@ export default function ReportPage() {
       y += 7;
     });
 
+    if (y > 270) { doc.addPage(); y = 20; }
+    doc.setFont("helvetica", "italic"); doc.setFontSize(8); doc.setTextColor(150);
+    doc.text("This summary is a record of entries you logged. It is not a medical document and is not a substitute for advice from your prescriber.", 14, y + 4, { maxWidth: pageW - 28 });
     doc.save(`levli-report-${new Date().toISOString().slice(0,10)}.pdf`);
     setExporting(false);
   };
@@ -131,7 +136,7 @@ export default function ReportPage() {
         <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 mb-4">
           <div className="flex items-center gap-2 mb-1">
             <div className="w-2 h-6 bg-teal-600 rounded-full" />
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white">GLP-1 Shot History Report</h2>
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white">Shot History Summary</h2>
           </div>
           <p className="text-xs text-gray-400 ml-4">Generated on {new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</p>
           {firstDate !== "—" && <p className="text-xs text-gray-400 ml-4">Range: {firstDate} – {lastDate}</p>}
@@ -143,9 +148,8 @@ export default function ReportPage() {
           <div className="space-y-2">
             {[
               ["Total Shots", shots.length],
-              ["Total Dose", `${totalDose.toFixed(1)} mg`],
-              ["Average Dose", `${avgDose} mg`],
-              ["Average Pain Level", `${avgPain}/10`],
+              ["Average Pain (all shots)", `${avgPain}/10`],
+              ["Average Pain (when reported)", `${avgPainWhenReported}/10`],
               ["Shots with Pain", `${painShots.length} (${shots.length ? Math.round(painShots.length / shots.length * 100) : 0}%)`],
             ].map(([label, value]) => (
               <div key={label} className="flex justify-between items-center">
@@ -164,7 +168,7 @@ export default function ReportPage() {
               {Object.entries(medCounts).map(([med, cnt]) => (
                 <div key={med} className="flex justify-between items-center">
                   <span className="text-sm text-gray-500 dark:text-gray-400">{med}</span>
-                  <span className="text-sm font-semibold text-gray-900 dark:text-white">{cnt} ({Math.round(cnt/shots.length*100)}%)</span>
+                  <span className="text-sm font-semibold text-gray-900 dark:text-white">{cnt} ({Math.round(cnt/shots.length*100)}%) • {medTotals[med].toFixed(1)} mg total</span>
                 </div>
               ))}
             </div>
@@ -218,6 +222,8 @@ export default function ReportPage() {
             </div>
           )}
         </div>
+
+        <p className="text-xs text-gray-400 dark:text-gray-500 italic px-1 mb-3">This summary is a record of entries you logged. It is not a medical document and is not a substitute for advice from your prescriber.</p>
 
         {shots.length > 0 && (
           <button onClick={handleExportPDF} disabled={exporting}
