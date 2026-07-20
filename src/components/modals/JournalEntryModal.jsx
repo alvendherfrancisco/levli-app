@@ -30,7 +30,7 @@ export default function JournalEntryModal({ open, onClose, onSave, onDelete, ini
   const [text, setText] = useState("");
   const [mood, setMood] = useState(MOODS[0]);
   const [category, setCategory] = useState("General Note");
-  const { darkMode, shots } = useAppState();
+  const { shots } = useAppState();
 
   useEffect(() => {
     if (open) {
@@ -66,14 +66,14 @@ export default function JournalEntryModal({ open, onClose, onSave, onDelete, ini
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="relative bg-white dark:bg-[#0f1117] rounded-t-3xl sm:rounded-3xl w-full sm:max-w-[520px] max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom sm:mx-4 dark:shadow-[0_-8px_40px_rgba(0,0,0,0.5)]">
+      <div className="relative bg-white rounded-t-3xl sm:rounded-3xl w-full sm:max-w-[520px] max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom sm:mx-4 shadow-2xl">
         <div className="flex justify-center pt-3 pb-1">
-          <div className="w-10 h-1 bg-gray-300 dark:bg-white/20 rounded-full" />
+          <div className="w-10 h-1 bg-gray-300 rounded-full" />
         </div>
         <div className="flex items-center justify-between px-5 pb-4">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-[#E8E9F0]">{initialEntry ? "Edit Entry" : "New Journal Entry"}</h2>
+          <h2 className="text-xl font-bold text-gray-800">{initialEntry ? "Edit Entry" : "New Journal Entry"}</h2>
           <div className="flex items-center gap-3">
-            {onDelete && <button onClick={onDelete}><Trash2 size={20} className="text-red-400" /></button>}
+            {onDelete && <button onClick={onDelete}><Trash2 size={20} className="text-orange-400" /></button>}
             <button onClick={onClose}><X size={22} className="text-gray-400" /></button>
           </div>
         </div>
@@ -81,23 +81,20 @@ export default function JournalEntryModal({ open, onClose, onSave, onDelete, ini
         <div className="px-5 pb-4 space-y-4">
           {/* Mood */}
           <div>
-            <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">How are you feeling?</label>
+            <label className="text-sm font-semibold text-gray-600 mb-2 block">How are you feeling?</label>
             <div className="flex flex-wrap gap-2">
               {MOODS.map((m) => {
                 const isActive = mood.label === m.label;
-                const activeStyle = darkMode && isActive
-                  ? { background: m.darkBg, borderColor: m.darkBorder, color: m.darkText }
-                  : {};
                 return (
-                  <button key={m.label} onClick={() => setMood(m)}
-                    style={activeStyle}
-                    className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium border transition-colors ${
-                      isActive && !darkMode
+                  <button
+                    key={m.label}
+                    onClick={() => setMood(m)}
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium border-2 transition-all active:scale-95 ${
+                      isActive
                         ? m.lightCls
-                        : isActive && darkMode
-                        ? "border-transparent"
-                        : "bg-white dark:bg-white/[0.05] text-gray-400 dark:text-[#9A9DAE] border-gray-200 dark:border-white/[0.08]"
-                    }`}>
+                        : "bg-white text-gray-500 border-gray-200 hover:border-gray-300"
+                    }`}
+                  >
                     {m.emoji} {m.label.replace("Feeling ", "")}
                   </button>
                 );
@@ -107,14 +104,14 @@ export default function JournalEntryModal({ open, onClose, onSave, onDelete, ini
 
           {/* Category */}
           <div>
-            <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">Category</label>
+            <label className="text-sm font-semibold text-gray-600 mb-2 block">Category</label>
             <div className="flex flex-wrap gap-2">
               {CATEGORIES.map((c) => (
                 <button key={c} onClick={() => setCategory(c)}
-                  className={`px-3 py-1.5 rounded-xl text-sm font-medium border transition-colors ${
+                  className={`px-3.5 py-2 rounded-xl text-sm font-medium border-2 transition-all active:scale-95 ${
                     category === c
-                      ? "bg-teal-100 dark:bg-teal-500/15 text-teal-700 dark:text-teal-300 border-teal-300 dark:border-teal-500/30"
-                      : "bg-white dark:bg-white/[0.05] text-gray-400 dark:text-[#9A9DAE] border-gray-200 dark:border-white/[0.08]"
+                      ? "bg-indigo-50 text-indigo-600 border-indigo-500"
+                      : "bg-white text-gray-500 border-gray-200 hover:border-gray-300"
                   }`}>
                   {c}
                 </button>
@@ -124,10 +121,10 @@ export default function JournalEntryModal({ open, onClose, onSave, onDelete, ini
 
           {/* Text */}
           <div>
-            <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">Your thoughts</label>
+            <label className="text-sm font-semibold text-gray-600 mb-2 block">Your thoughts</label>
             <textarea value={text} onChange={(e) => setText(e.target.value)}
               placeholder="Write your journal entry here..."
-              className="w-full border border-gray-200 dark:border-white/[0.1] bg-white dark:bg-white/[0.05] text-gray-900 dark:text-[#E8E9F0] placeholder-gray-400 dark:placeholder-[#9A9DAE] rounded-xl px-4 py-3 text-sm resize-none h-32 outline-none focus:border-teal-300 dark:focus:border-teal-500/50" />
+              className="w-full border-2 border-gray-200 bg-white text-gray-800 placeholder-gray-400 rounded-xl px-4 py-3 text-sm resize-none h-32 outline-none focus:border-indigo-500 transition-colors" />
           </div>
         </div>
 
@@ -137,7 +134,7 @@ export default function JournalEntryModal({ open, onClose, onSave, onDelete, ini
 
         <div className="px-5 pb-8 pt-2">
           <button onClick={handleSave} disabled={!text.trim()}
-            className="w-full py-3.5 bg-teal-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-50">
+            className="w-full py-3.5 bg-indigo-600 text-white rounded-full font-semibold flex items-center justify-center gap-2 disabled:opacity-50 active:scale-95 transition-all shadow-lg shadow-indigo-600/20">
             <Save size={16} /> {initialEntry ? "Update Entry" : "Save Entry"}
           </button>
         </div>

@@ -209,15 +209,15 @@ export default function Insights() {
   const heightMissing = heightM === 0 && latestWeight != null;
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-950 min-h-screen w-full">
-      <div className="sticky top-0 z-30 bg-gray-50 dark:bg-gray-950 w-full flex items-center justify-between px-5 pt-6 pb-4">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Insights</h1>
-        <Link to="/settings"><Settings size={22} className="text-gray-600 dark:text-gray-400" /></Link>
+    <div className="bg-[#FAFAFA] min-h-screen w-full">
+      <div className="sticky top-0 z-30 bg-[#FAFAFA] w-full flex items-center justify-between px-5 pt-6 pb-4">
+        <h1 className="text-2xl font-bold text-gray-800">Insights</h1>
+        <Link to="/settings"><div className="w-9 h-9 rounded-full border border-gray-200 bg-white flex items-center justify-center active:scale-95 transition-all"><Settings size={18} className="text-gray-500" /></div></Link>
       </div>
 
       <div className="max-w-3xl mx-auto">
         {/* Weight Change Panel */}
-        <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+        <div className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 overflow-hidden">
           <div className="flex items-center gap-2 mb-1">
             <TrendingDown size={18} className="text-teal-600" />
             <h3 className="font-bold text-gray-900 dark:text-white text-lg">Weight Change</h3>
@@ -300,7 +300,7 @@ export default function Insights() {
         </div>
 
         {/* Progress Pictures Panel */}
-        <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
+        <div className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80">
           <div className="flex items-center gap-2 mb-1">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "rgba(20,184,166,0.13)" }}>
               <Camera size={16} className="text-teal-500" />
@@ -384,7 +384,7 @@ export default function Insights() {
         </div>
 
         {/* Medication Exposure Panel */}
-        <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
+        <div className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80">
           <div className="flex items-start justify-between mb-1">
             <div className="flex items-center gap-2">
               <Syringe size={18} className="text-indigo-600" />
