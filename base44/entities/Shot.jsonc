@@ -4,18 +4,8 @@
     "medication": {
       "type": "string"
     },
-    "medication_id": {
-      "type": "string",
-      "description": "Optional link to a Medication regimen record"
-    },
     "dose": {
-      "type": "number",
-      "description": "Dose in the unit specified by dose_unit (stored value is always converted to mg for mg-based medications)"
-    },
-    "dose_unit": {
-      "type": "string",
-      "description": "Unit the dose was logged in (mg, mcg, units, IU, mL, MBq, sprays, tablets)",
-      "default": "mg"
+      "type": "number"
     },
     "drug_class": {
       "type": "string",
@@ -29,10 +19,6 @@
       "type": "string",
       "description": "Route of administration (subcutaneous, intramuscular, oral_tablet, nasal, etc.)"
     },
-    "device_type": {
-      "type": "string",
-      "description": "Device used (prefilled_syringe, single_dose_pen, multidose_pen, vial_syringe, pump, patch, other)"
-    },
     "date": {
       "type": "string"
     },
@@ -41,73 +27,13 @@
     },
     "site": {
       "type": "string",
-      "description": "Injection or application site (for injectable/topical/patch routes)"
+      "description": "Injection site (for injectable routes only)"
     },
     "pain": {
       "type": "number"
     },
     "notes": {
       "type": "string"
-    },
-    "infusion_duration_min": {
-      "type": "number",
-      "description": "IV infusion duration in minutes (intravenous_infusion route only)"
-    },
-    "clinic_location": {
-      "type": "string",
-      "description": "Clinic or hospital name (IV infusion, implant, clinician-administered routes)"
-    },
-    "premedication_given": {
-      "type": "boolean",
-      "description": "Whether premedication was administered (IV infusion route)"
-    },
-    "spray_count": {
-      "type": "number",
-      "description": "Number of sprays (nasal route)"
-    },
-    "nostril": {
-      "type": "string",
-      "description": "Which nostril(s) \u2014 left, right, both (nasal route)"
-    },
-    "priming_done": {
-      "type": "boolean",
-      "description": "Whether the device was primed before use (nasal/pump routes)"
-    },
-    "taken_with_food": {
-      "type": "boolean",
-      "description": "Whether the dose was taken with food (oral routes \u2014 data capture only, no guidance)"
-    },
-    "patch_application_date": {
-      "type": "string",
-      "format": "date",
-      "description": "Date patch was applied (transdermal route)"
-    },
-    "topical_body_area": {
-      "type": "string",
-      "description": "Body area where topical was applied (topical routes)"
-    },
-    "topical_notes": {
-      "type": "string",
-      "description": "Application notes (topical routes)"
-    },
-    "pump_rate": {
-      "type": "string",
-      "description": "Pump delivery rate (pump_infusion route)"
-    },
-    "site_change_date": {
-      "type": "string",
-      "format": "date",
-      "description": "Date infusion set/site was last changed (pump_infusion route)"
-    },
-    "reconstitution_date": {
-      "type": "string",
-      "format": "date",
-      "description": "Date the product was reconstituted (reconstituted_vial route)"
-    },
-    "in_use_expiry": {
-      "type": "string",
-      "format": "date",
-      "description": "In-use/beyond-use expiry date (reconstituted or multidose products)"
     }
   },
   "required": [

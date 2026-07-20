@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { X, Save, ChevronDown, ExternalLink, AlertTriangle } from "lucide-react";
+import { X, Save, ChevronDown } from "lucide-react";
 import { useAppState } from "@/lib/AppState";
 import { todayKey } from "@/lib/dateUtils";
 import { getRecentMedication } from "@/lib/medicationData";
-import { ROUTE_LABELS } from "@/lib/medicationCatalogue";
 import RedFlagBanner from "@/components/RedFlagBanner";
 import { toast } from "sonner";
 
@@ -15,58 +14,49 @@ const SIDE_EFFECT_OPTIONS = [
   { label: "Stomach pain", emoji: "😖" }, { label: "Heartburn", emoji: "🔥" },
 ];
 const SEVERITIES = ["Mild", "Moderate", "Severe"];
-const SEVERITY_MAP = { Mild: "mild", Moderate: "moderate", Severe: "severe" };
-
-// Official government reporting links (no drafted content)
-const REPORTING_LINKS = [
-  { label: "MHRA Yellow Card (UK)", url: "https://yellowcard.mhra.gov.uk" },
-  { label: "FDA MedWatch (US)", url: "https://www.fda.gov/safety/medwatch-fda-safety-information-and-adverse-event-reporting-program" },
-];
 
 export default function SideEffectsModal({ open, onClose, dayKey }) {
   const dk = dayKey || todayKey();
-  const { getSideEffects, getAdverseEventsForDay, addAdverseEvent, deleteAdverseEvent, shots } = useAppState();
-  const [selectedEffect, setSelectedEffect] = useState(null);
-  const [severity, setSeverity] = useState("Mild");
+  const { getSideEffects, saveSideEffects, shots } = useAppState();
+  const [chips, setChips] = useState([]);
   const [notes, setNotes] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
-
-  const recentMed = getRecentMedication(shots, dk);
-  const existingEvents = getAdverseEventsForDay(dk);
-  const legacyText = getSideEffects(dk); // preserved for display of old data
+  const [selectedEffect, setSelectedEffect] = useState(null);
+  const [severity, setSeverity] = useState("Mild");
 
   useEffect(() => {
     if (open) {
-      setNotes("");
-      setSelectedEffect(null);
-      setShowDropdown(false);
+      const existing = getSideEffects(dk);
+      setNotes(existing || "");
+      setChips([]);
     }
   }, [open, dk]);
 
   if (!open) return null;
 
-  const handleAddEvent = async () => {
+  const addChip = () => {
     if (!selectedEffect) return;
-    try {
-      await addAdverseEvent({
-        symptom: selectedEffect.label,
-        severity: SEVERITY_MAP[severity] || "mild",
-        onset_date: dk,
-        day_key: dk,
-        medication_name: recentMed || "",
-        notes: notes.trim() || "",
-        resolved: false,
-      });
-      toast.success("Side effect logged");
-      setSelectedEffect(null);
-      setNotes("");
-      setShowDropdown(false);
-    } catch (err) {
-      toast.error("Failed to log side effect");
-    }
+    const chip = `${selectedEffect.emoji} ${selectedEffect.label} (${severity})`;
+    if (!chips.includes(chip)) setChips([...chips, chip]);
+    setShowDropdown(false);
+    setSelectedEffect(null);
   };
 
-  const combinedText = existingEvents.map((e) => `${e.symptom} (${e.severity})`).join(" ") + (notes.trim() ? " " + notes.trim() : "");
+  const recentMed = getRecentMedication(shots, dk);
+  const combinedText = [...chips, notes.trim()].filter(Boolean).join(" ");
+
+  const handleSave = async () => {
+    try {
+      const parts = [];
+      if (chips.length) parts.push(chips.join(", "));
+      if (notes.trim()) parts.push(notes.trim());
+      await saveSideEffects(dk, parts.join(" | "));
+      toast.success("Side effects saved successfully!");
+      setTimeout(() => onClose(), 500);
+    } catch (err) {
+      toast.error("Failed to save side effects");
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
@@ -77,36 +67,7 @@ export default function SideEffectsModal({ open, onClose, dayKey }) {
           <h2 className="text-xl font-bold dark:text-[#E8E9F0]">Side Effects</h2>
           <button onClick={onClose}><X size={22} className="text-gray-400" /></button>
         </div>
-
-        {recentMed && (
-          <p className="px-5 text-xs text-gray-400 mb-3">Most recent medication: <span className="font-medium">{recentMed}</span></p>
-        )}
-
         <div className="px-5 pb-4 space-y-4">
-          {/* Existing events for this day */}
-          {existingEvents.length > 0 && (
-            <div>
-              <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Logged for this day</p>
-              <div className="flex flex-wrap gap-2">
-                {existingEvents.map((e) => (
-                  <span key={e.id} className="flex items-center gap-1 bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/25 rounded-full px-3 py-1 text-sm">
-                    {e.symptom} ({e.severity})
-                    <button onClick={async () => { await deleteAdverseEvent(e.id); toast.success("Removed"); }}
-                      className="ml-1 text-teal-400 hover:text-teal-300 dark:hover:text-teal-200">×</button>
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Legacy free-text (preserved, read-only if present) */}
-          {legacyText && existingEvents.length === 0 && (
-            <div className="bg-gray-50 dark:bg-white/[0.04] rounded-xl p-3">
-              <p className="text-xs text-gray-400 mb-1">Previously logged (free text):</p>
-              <p className="text-sm text-gray-600 dark:text-[#E8E9F0]">{legacyText}</p>
-            </div>
-          )}
-
           {/* Dropdown */}
           <div>
             <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">Select Side Effect</label>
@@ -142,7 +103,22 @@ export default function SideEffectsModal({ open, onClose, dayKey }) {
             </div>
           </div>
 
-          {/* Notes */}
+          <button onClick={addChip}
+            className="w-full py-2.5 bg-white/[0.07] dark:bg-white/[0.07] text-teal-600 dark:text-teal-400 border border-teal-200 dark:border-teal-500/30 rounded-xl font-semibold text-sm hover:bg-teal-500/10 transition-colors">
+            + Add to List
+          </button>
+
+          {chips.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {chips.map((c, i) => (
+                <span key={i} className="flex items-center gap-1 bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/25 rounded-full px-3 py-1 text-sm">
+                  {c}
+                  <button onClick={() => setChips(chips.filter((_, j) => j !== i))} className="ml-1 text-teal-400 hover:text-teal-300 dark:hover:text-teal-200">×</button>
+                </span>
+              ))}
+            </div>
+          )}
+
           <div>
             <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">Additional Notes</label>
             <textarea value={notes} onChange={(e) => setNotes(e.target.value)}
@@ -150,28 +126,11 @@ export default function SideEffectsModal({ open, onClose, dayKey }) {
               className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-sm resize-none h-20 outline-none focus:border-teal-300" />
           </div>
         </div>
-
         {combinedText && <div className="px-5 pb-3"><RedFlagBanner text={combinedText} medication={recentMed} /></div>}
 
-        {/* Reporting links */}
-        <div className="px-5 pb-3">
-          <div className="bg-gray-50 dark:bg-white/[0.04] rounded-xl p-3">
-            <p className="text-xs font-semibold text-gray-500 dark:text-[#9A9DAE] mb-2">Official reporting resources</p>
-            <div className="space-y-1.5">
-              {REPORTING_LINKS.map((link) => (
-                <a key={link.url} href={link.url} target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-teal-600 dark:text-teal-400 hover:underline">
-                  <ExternalLink size={14} /> {link.label}
-                </a>
-              ))}
-            </div>
-          </div>
-        </div>
-
         <div className="px-5 pb-8 pt-2">
-          <button onClick={handleAddEvent} disabled={!selectedEffect}
-            className="w-full py-3.5 bg-teal-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-50">
-            <Save size={16} /> Log Side Effect
+          <button onClick={handleSave} className="w-full py-3.5 bg-teal-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2">
+            <Save size={16} /> Save
           </button>
         </div>
       </div>

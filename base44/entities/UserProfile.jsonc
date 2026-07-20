@@ -33,27 +33,6 @@
     },
     "onboarding_completed": {
       "type": "boolean"
-    },
-    "birthdate": {
-      "type": "string",
-      "format": "date",
-      "description": "User's date of birth (used for paediatric account detection)"
-    },
-    "gdpr_consent_version": {
-      "type": "string",
-      "description": "Version of the privacy policy the user consented to"
-    },
-    "gdpr_consent_date": {
-      "type": "string",
-      "description": "ISO timestamp of GDPR Art. 9 special-category data consent"
-    },
-    "parental_consent_given": {
-      "type": "boolean",
-      "description": "Whether parental consent was provided for a minor account"
-    },
-    "parental_consent_date": {
-      "type": "string",
-      "description": "ISO timestamp of parental consent"
     }
   },
   "name": "UserProfile",

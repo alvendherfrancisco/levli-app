@@ -6,42 +6,21 @@ import AddMetricModal from "@/components/modals/AddMetricModal";
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { useAppState } from "@/lib/AppState";
 import { parseShotDate, todayKey } from "@/lib/dateUtils";
-import { HALF_LIFE_DAYS, isInvestigational, getHalfLife, getDosingInterval } from "@/lib/medicationData";
-import { doseToMg } from "@/lib/units";
+import { HALF_LIFE_DAYS, isInvestigational } from "@/lib/medicationData";
 import { toast } from "sonner";
 
 const CLASS_COLORS = { Semaglutide: "#14B8A6", Tirzepatide: "#6366F1", Liraglutide: "#F59E0B" };
 
 // Builds one curve per drug class (never summed across classes). Investigational
-// classes are excluded. Uses brand- and route-aware half-lives. Doses are
-// converted to mg for mass-based units so curves are comparable.
+// classes are excluded so no curve is shown for unapproved products.
 function buildMedLevelData(shots, days) {
-  if (!shots.length) return { data: [], classes: [], disabled: false, ssInfo: [] };
+  if (!shots.length) return { data: [], classes: [], disabled: false };
   const now = new Date(); now.setHours(0,0,0,0);
   const mNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   const classesSet = new Set();
   shots.forEach((s) => { if (s.drug_class || s.drugClass) classesSet.add(s.drug_class || s.drugClass); });
-  // Filter to classes that have at least one shot with an established half-life
-  const classes = [...classesSet].filter((c) => {
-    if (isInvestigational(c)) return false;
-    return shots.some((s) => (s.drug_class || s.drugClass) === c && getHalfLife(s.medication, s.route) != null);
-  });
-  if (!classes.length) return { data: [], classes: [], disabled: true, ssInfo: [] };
-
-  // Steady-state and accumulation info per class
-  const ssInfo = classes.map((cls) => {
-    const classShots = shots.filter((s) => (s.drug_class || s.drugClass) === cls);
-    const med = classShots[0]?.medication;
-    const route = classShots[0]?.route;
-    const tHalf = getHalfLife(med, route);
-    if (tHalf == null) return null;
-    const interval = getDosingInterval(med) || (tHalf > 3 ? 7 : 1);
-    const k = Math.LN2 / tHalf;
-    const accRatio = 1 / (1 - Math.exp(-k * interval));
-    const ssDays = Math.ceil(tHalf * 5); // ~99% steady state
-    return { cls, tHalf, interval, accRatio: accRatio.toFixed(2), ssDays };
-  }).filter(Boolean);
-
+  const classes = [...classesSet].filter((c) => !isInvestigational(c) && HALF_LIFE_DAYS[c]);
+  if (!classes.length) return { data: [], classes: [], disabled: true };
   const points = [];
   for (let i = days; i >= 0; i--) {
     const t = new Date(now); t.setDate(t.getDate() - i);
@@ -52,29 +31,17 @@ function buildMedLevelData(shots, days) {
         if ((s.drug_class || s.drugClass) !== cls) return;
         const sd = parseShotDate(s.date);
         if (!sd) return;
-        const halfLife = getHalfLife(s.medication, s.route) || HALF_LIFE_DAYS[cls];
-        if (!halfLife) return;
+        const halfLife = HALF_LIFE_DAYS[cls];
         const daysSince = (t - sd) / 86400000;
         if (daysSince >= 0 && daysSince < halfLife * 7) {
-          const doseMg = doseToMg(s.dose, s.dose_unit) ?? s.dose;
-          level += doseMg * Math.pow(0.5, daysSince / halfLife);
+          level += (s.dose || 0) * Math.pow(0.5, daysSince / halfLife);
         }
       });
       point[cls] = Math.round(level * 100) / 100;
     });
     points.push(point);
   }
-  return { data: points, classes, disabled: false, ssInfo };
-}
-
-// 7-day rolling average of weight data
-function rollingAverage(data, window = 7) {
-  return data.map((d, i) => {
-    const start = Math.max(0, i - window + 1);
-    const slice = data.slice(start, i + 1);
-    const avg = slice.reduce((a, x) => a + x.weight, 0) / slice.length;
-    return { ...d, rollingAvg: Math.round(avg * 10) / 10 };
-  });
+  return { data: points, classes, disabled: false };
 }
 
 /**
@@ -113,8 +80,7 @@ export default function Insights() {
   const weightUnit = profile?.weight_unit || "lb";
 
   const medLevel = useMemo(() => buildMedLevelData(shots, MED_RANGES[medRange]), [shots, medRange]);
-  const weightDataRaw = useMemo(() => buildWeightData(weightHistory, WEIGHT_RANGES[weightRange]), [weightHistory, weightRange]);
-  const weightData = useMemo(() => rollingAverage(weightDataRaw, 7), [weightDataRaw]);
+  const weightData = useMemo(() => buildWeightData(weightHistory, WEIGHT_RANGES[weightRange]), [weightHistory, weightRange]);
 
   const formatPhotoDate = (isoDate) => {
     const [y, m, d] = isoDate.split("-").map(Number);
@@ -175,13 +141,6 @@ export default function Insights() {
   // weightData is oldest→newest; loss = first weight minus last weight
   const weightLoss = weightData.length >= 2
     ? weightData[0].weight - weightData[weightData.length - 1].weight
-    : null;
-
-  // Percentage weight change: [(baseline − current) / baseline] × 100
-  const baselineWeight = weightData.length >= 2 ? weightData[0].weight : null;
-  const currentWeight = weightData.length >= 2 ? weightData[weightData.length - 1].weight : null;
-  const pctWeightChange = (baselineWeight && baselineWeight > 0)
-    ? (((baselineWeight - currentWeight) / baselineWeight) * 100).toFixed(1)
     : null;
 
   // Use actual elapsed time between first and last entry for rate
@@ -256,14 +215,11 @@ export default function Insights() {
             <div className="bg-green-50 dark:bg-green-500/10 rounded-xl p-2.5 text-center flex-1 min-w-0 border border-transparent dark:border-green-500/15">
               <TrendingDown size={14} className="text-green-500 dark:text-green-400 mx-auto mb-1" style={{filter:"drop-shadow(0 0 6px rgba(34,197,94,0.4))"}} />
               <p className="text-gray-500 dark:text-[#9A9DAE] text-[11px]">Weight Loss</p>
-                <p className="font-bold text-green-600 dark:text-green-400 text-sm">
-                  {weightLoss != null
-                    ? `${weightLoss >= 0 ? "-" : "+"}${Math.abs(weightLoss).toFixed(1)} ${weightUnit}`
-                    : "—"}
-                </p>
-                {pctWeightChange != null && (
-                  <p className="text-[10px] text-green-500/80 dark:text-green-400/70">{pctWeightChange >= 0 ? "−" : "+"}{Math.abs(pctWeightChange)}%</p>
-                )}
+              <p className="font-bold text-green-600 dark:text-green-400 text-sm">
+                {weightLoss != null
+                  ? `${weightLoss >= 0 ? "-" : "+"}${Math.abs(weightLoss).toFixed(1)} ${weightUnit}`
+                  : "—"}
+              </p>
             </div>
             <div className="bg-indigo-50 dark:bg-indigo-500/10 rounded-xl p-2.5 text-center flex-1 min-w-0 border border-transparent dark:border-indigo-500/15">
               <Zap size={14} className="text-indigo-500 dark:text-indigo-400 mx-auto mb-1" style={{filter:"drop-shadow(0 0 6px rgba(99,102,241,0.4))"}} />
@@ -280,7 +236,6 @@ export default function Insights() {
               <p className="font-bold text-orange-600 dark:text-orange-400 text-sm">
                 {bmi || (heightMissing ? <span className="text-[10px] font-medium">Add height in Profile</span> : "—")}
               </p>
-              {bmi && <p className="text-[9px] text-gray-400 dark:text-gray-500 mt-0.5">Screening tool, not diagnostic</p>}
             </div>
           </div>
 
@@ -292,11 +247,10 @@ export default function Insights() {
                   <XAxis dataKey="date" tick={{ fontSize: 10 }} stroke="#999" interval="preserveStartEnd" />
                   <YAxis tick={{ fontSize: 10 }} stroke="#999" domain={["auto", "auto"]} width={36} />
                   <Tooltip
-                    formatter={(v, name) => [`${v} ${weightUnit}`, name === "rollingAvg" ? "7-day avg" : "Weight"]}
+                    formatter={(v) => [`${v} ${weightUnit}`, "Weight"]}
                     contentStyle={{ background: "rgba(20,22,32,0.95)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, color: "#E8E9F0" }}
                   />
-                  <Line type="monotone" dataKey="weight" stroke="#14B8A6" strokeWidth={1.5} dot={{ fill: "#14B8A6", r: 2 }} activeDot={{ r: 4 }} opacity={0.6} />
-                  <Line type="monotone" dataKey="rollingAvg" stroke="#6366F1" strokeWidth={2.5} dot={false} activeDot={{ r: 4 }} />
+                  <Line type="monotone" dataKey="weight" stroke="#14B8A6" strokeWidth={2} dot={{ fill: "#14B8A6", r: 3 }} activeDot={{ r: 5 }} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -480,18 +434,6 @@ export default function Insights() {
           )}
           <p className="text-xs text-gray-400 dark:text-[#9A9DAE] text-center mt-2">Time vs modelled relative exposure (illustrative)</p>
           <p className="text-[11px] text-gray-400 dark:text-[#9A9DAE] text-center mt-1 px-2">Illustrative estimate only — not a blood-level measurement. Do not use it to adjust your dose. Confirm any decisions with your prescriber.</p>
-          {!medLevel.disabled && medLevel.ssInfo.length > 0 && (
-            <div className="mt-2 bg-indigo-50 dark:bg-indigo-500/10 rounded-xl p-3 border border-transparent dark:border-indigo-500/15 space-y-1">
-              {medLevel.ssInfo.map((s) => (
-                <div key={s.cls} className="flex flex-wrap gap-x-4 gap-y-0.5 text-xs">
-                  <span className="text-gray-600 dark:text-[#E8E9F0] font-medium">{s.cls}</span>
-                  <span className="text-gray-500 dark:text-[#9A9DAE]">~{s.ssDays}d to ~99% steady state</span>
-                  <span className="text-gray-500 dark:text-[#9A9DAE]">Accumulation ratio ≈ {s.accRatio}×</span>
-                </div>
-              ))}
-              <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-1">Steady-state and accumulation are model estimates from the half-life and dosing interval. Clinical response may differ.</p>
-            </div>
-          )}
           {!medLevel.disabled && medLevel.classes.length > 0 && (
             <div className="flex items-center justify-center gap-3 mt-2 flex-wrap">
               {medLevel.classes.map((cls) => (

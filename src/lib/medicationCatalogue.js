@@ -1071,34 +1071,6 @@ export const MEDICATION_CATALOGUE = [
 ];
 
 // ═════════════════════════════════════════════════════════════════════════
-// SOURCE METADATA — ensures every entry has provenance fields.
-// Values are left empty / "needs_sourcing" until a clinician or pharmacist
-// links the authoritative source. No URLs or versions are fabricated.
-// ═════════════════════════════════════════════════════════════════════════
-const NEEDS_SOURCING = {
-  source_url: "",
-  source_document_version: "",
-  source_organisation: "",
-  source_access_date: "",
-  sourcing_status: "needs_sourcing",
-};
-
-MEDICATION_CATALOGUE.forEach((m) => {
-  if (!m.sources) m.sources = { ...NEEDS_SOURCING };
-});
-
-export function getSources(name) {
-  const entry = NAME_TO_ENTRY[name];
-  if (!entry || !entry.sources) return { ...NEEDS_SOURCING };
-  return entry.sources;
-}
-
-export function isSourced(name) {
-  const s = getSources(name);
-  return s.sourcing_status !== "needs_sourcing" && !!s.source_url;
-}
-
-// ═════════════════════════════════════════════════════════════════════════
 // INDEX BUILDERS — create flat lookup maps from the catalogue
 // ═════════════════════════════════════════════════════════════════════════
 
