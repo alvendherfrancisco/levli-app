@@ -18,7 +18,7 @@ export default function History() {
   const [showShot, setShowShot] = useState(false);
   const [showSideEffects, setShowSideEffects] = useState(false);
   const [editingShot, setEditingShot] = useState(null);
-  const { shots, getSideEffects } = useAppState();
+  const { shots, getSideEffects, adverseEventsByDay } = useAppState();
 
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const firstDayOfWeek = new Date(year, month, 1).getDay();
@@ -49,6 +49,7 @@ export default function History() {
     : null;
   const selectedShots = selectedDay ? (shotDayMap[selectedDay] || []) : [];
   const sideEffects = selectedDayKey ? getSideEffects(selectedDayKey) : "";
+  const dayAdverseEvents = selectedDayKey ? (adverseEventsByDay[selectedDayKey] || []) : [];
 
   const openEdit = (shot) => { setEditingShot(shot); setShowShot(true); };
   const openNew = () => { setEditingShot(null); setShowShot(true); };
@@ -124,8 +125,19 @@ export default function History() {
               </div>
               <span className="font-semibold text-gray-700 dark:text-gray-300">Side effects</span>
             </div>
-            {sideEffects ? (
-              <p className="text-sm text-gray-700 dark:text-[#E8E9F0] bg-teal-50 dark:bg-teal-500/10 rounded-xl p-3 border border-transparent dark:border-teal-500/15">{sideEffects}</p>
+            {sideEffects || dayAdverseEvents.length > 0 ? (
+              <div className="bg-teal-50 dark:bg-teal-500/10 rounded-xl p-3 border border-transparent dark:border-teal-500/15">
+                {dayAdverseEvents.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mb-2">
+                    {dayAdverseEvents.map((e) => (
+                      <span key={e.id} className="text-xs bg-teal-500/10 text-teal-600 dark:text-teal-400 rounded-full px-2 py-0.5 border border-teal-500/20">
+                        {e.symptom} <span className="opacity-60">({e.severity})</span>
+                      </span>
+                    ))}
+                  </div>
+                )}
+                {sideEffects && <p className="text-sm text-gray-700 dark:text-[#E8E9F0]">{sideEffects}</p>}
+              </div>
             ) : (
               <div className="bg-teal-50 dark:bg-teal-500/10 rounded-xl p-3 flex items-center gap-2 border border-transparent dark:border-teal-500/15">
                 <Info size={16} className="text-teal-500 dark:text-teal-400 flex-shrink-0" />

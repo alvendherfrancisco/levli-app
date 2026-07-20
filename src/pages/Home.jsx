@@ -13,9 +13,10 @@ export default function Home() {
   const [showShot, setShowShot] = useState(false);
   const [showSideEffects, setShowSideEffects] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const { getSideEffects } = useAppState();
+  const { getSideEffects, adverseEventsByDay } = useAppState();
   const dk = toDayKey(selectedDate);
   const sideEffects = getSideEffects(dk);
+  const dayAdverseEvents = adverseEventsByDay[dk] || [];
 
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "Good Morning!" : hour < 18 ? "Good Afternoon!" : "Good Evening!";
@@ -43,8 +44,19 @@ export default function Home() {
             </div>
             <span className="font-semibold text-gray-700 dark:text-gray-300">Side effects</span>
           </div>
-          {sideEffects ? (
-            <p className="text-sm text-gray-700 dark:text-[#E8E9F0] bg-teal-50 dark:bg-teal-500/10 rounded-xl p-3 border border-transparent dark:border-teal-500/15">{sideEffects}</p>
+          {sideEffects || dayAdverseEvents.length > 0 ? (
+            <div className="bg-teal-50 dark:bg-teal-500/10 rounded-xl p-3 border border-transparent dark:border-teal-500/15">
+              {dayAdverseEvents.length > 0 && (
+                <div className="flex flex-wrap gap-1 mb-2">
+                  {dayAdverseEvents.map((e) => (
+                    <span key={e.id} className="text-xs bg-teal-500/10 text-teal-600 dark:text-teal-400 rounded-full px-2 py-0.5 border border-teal-500/20">
+                      {e.symptom} <span className="opacity-60">({e.severity})</span>
+                    </span>
+                  ))}
+                </div>
+              )}
+              {sideEffects && <p className="text-sm text-gray-700 dark:text-[#E8E9F0]">{sideEffects}</p>}
+            </div>
           ) : (
             <div className="bg-teal-50 dark:bg-teal-500/10 rounded-xl p-3 flex items-center gap-2 border border-transparent dark:border-teal-500/15">
               <Info size={16} className="text-teal-500 dark:text-teal-400 flex-shrink-0" />
@@ -61,7 +73,7 @@ export default function Home() {
                 <Syringe size={16} className="text-indigo-600" />
               </div>
               <div>
-                <h3 className="font-bold text-gray-900 dark:text-white">Medication Levels</h3>
+                <h3 className="font-bold text-gray-900 dark:text-white">Modelled Medication Exposure</h3>
                 <p className="text-xs text-indigo-500">Illustrative estimate of relative medication exposure (not a blood-level measurement).</p>
               </div>
             </div>
@@ -70,7 +82,7 @@ export default function Home() {
           <div className="border-b-2 border-indigo-500 w-12 mb-3" />
           <Link to="/insights" className="bg-indigo-50 dark:bg-indigo-500/10 rounded-xl p-3 flex items-center gap-2 block border border-transparent dark:border-indigo-500/15">
             <Info size={16} className="text-indigo-500 dark:text-indigo-400 flex-shrink-0" />
-            <p className="text-sm text-indigo-700 dark:text-indigo-300">View full medication level chart in Insights <ArrowRight size={12} className="inline" /></p>
+            <p className="text-sm text-indigo-700 dark:text-indigo-300">View full exposure chart in Insights <ArrowRight size={12} className="inline" /></p>
           </Link>
         </div>
 

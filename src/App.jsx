@@ -28,6 +28,8 @@ import SettingsPage from '@/pages/SettingsPage';
 import ReportPage from '@/pages/ReportPage';
 import PrivacyPolicyPage from '@/pages/PrivacyPolicyPage';
 import TermsPage from '@/pages/TermsPage';
+import MyMedications from '@/pages/MyMedications';
+import InventoryPage from '@/pages/InventoryPage';
 
 // Layout
 import AppLayout from '@/components/AppLayout';
@@ -79,6 +81,8 @@ const AuthenticatedApp = () => {
         <Route element={<AppLayout />}>
           <Route path="/" element={<HomeOrOnboarding />} />
           <Route path="/shots" element={<Shots />} />
+          <Route path="/medications" element={<MyMedications />} />
+          <Route path="/inventory" element={<InventoryPage />} />
           <Route path="/history" element={<History />} />
           <Route path="/insights" element={<Insights />} />
           <Route path="/journal" element={<Journal />} />

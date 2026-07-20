@@ -1,0 +1,42 @@
+{
+  "type": "object",
+  "properties": {
+    "inventory_id": {
+      "type": "string",
+      "description": "Reference to the Inventory record this log relates to (optional)"
+    },
+    "product_name": {
+      "type": "string"
+    },
+    "logged_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "temperature_excursion": {
+      "type": "boolean",
+      "description": "Whether a temperature excursion was observed (flag only \u2014 no guidance content)"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "product_name",
+    "logged_date"
+  ],
+  "name": "StorageLog",
+  "rls": {
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "type": "object",
+  "properties": {
+    "grantee_email": {
+      "type": "string",
+      "description": "Email of the account granted access"
+    },
+    "grantee_user_id": {
+      "type": "string",
+      "description": "User ID of the grantee once they register (filled in on first access)"
+    },
+    "scope": {
+      "type": "string",
+      "enum": [
+        "read",
+        "read_write"
+      ],
+      "description": "Access scope granted to the proxy/caregiver"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "active",
+        "revoked"
+      ],
+      "default": "pending"
+    },
+    "granted_date": {
+      "type": "string",
+      "description": "ISO timestamp when access was granted"
+    },
+    "revoked_date": {
+      "type": "string",
+      "description": "ISO timestamp when access was revoked"
+    },
+    "relationship": {
+      "type": "string",
+      "description": "Relationship to account holder (e.g. parent, spouse, caregiver)"
+    }
+  },
+  "required": [
+    "grantee_email",
+    "scope"
+  ],
+  "name": "ProxyAccess",
+  "rls": {
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}

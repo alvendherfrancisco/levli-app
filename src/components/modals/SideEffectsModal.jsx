@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { X, Save, ChevronDown } from "lucide-react";
+import { X, Save, ChevronDown, ExternalLink } from "lucide-react";
 import { useAppState } from "@/lib/AppState";
-import { todayKey } from "@/lib/dateUtils";
+import { todayKey, toDayKey } from "@/lib/dateUtils";
 import { getRecentMedication } from "@/lib/medicationData";
-import RedFlagBanner from "@/components/RedFlagBanner";
+import { classifyRedFlag, RED_FLAG_WORDING, RED_FLAG_DISCLAIMER } from "@/lib/redFlags";
 import { toast } from "sonner";
 
 const SIDE_EFFECT_OPTIONS = [
@@ -13,50 +13,89 @@ const SIDE_EFFECT_OPTIONS = [
   { label: "Dizziness", emoji: "💫" }, { label: "Injection site pain", emoji: "💉" },
   { label: "Stomach pain", emoji: "😖" }, { label: "Heartburn", emoji: "🔥" },
 ];
-const SEVERITIES = ["Mild", "Moderate", "Severe"];
+const SEVERITIES = ["mild", "moderate", "severe", "emergency"];
+
+const PHARMACOVIGILANCE_LINKS = [
+  { label: "UK — MHRA Yellow Card", url: "https://yellowcard.mhra.gov.uk/" },
+  { label: "US — FDA MedWatch", url: "https://www.fda.gov/safety/medwatch-fda-safety-information-and-adverse-event-reporting-program" },
+];
+
+// Map free-text side-effect entries (legacy) to structured AdverseEvent fields
+function classifyCategory(symptom) {
+  const lower = (symptom || "").toLowerCase();
+  if (/nausea|vomit|diarrh|constipat|stomach|heartburn/.test(lower)) return "gastrointestinal";
+  if (/headache|dizz/.test(lower)) return "neurological";
+  if (/injection site/.test(lower)) return "dermatological";
+  return "other";
+}
 
 export default function SideEffectsModal({ open, onClose, dayKey }) {
   const dk = dayKey || todayKey();
-  const { getSideEffects, saveSideEffects, shots } = useAppState();
-  const [chips, setChips] = useState([]);
-  const [notes, setNotes] = useState("");
-  const [showDropdown, setShowDropdown] = useState(false);
+  const { getSideEffects, saveSideEffects, shots, adverseEvents, addAdverseEvent, deleteAdverseEvent } = useAppState();
   const [selectedEffect, setSelectedEffect] = useState(null);
-  const [severity, setSeverity] = useState("Mild");
+  const [severity, setSeverity] = useState("mild");
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [notes, setNotes] = useState("");
+
+  // Existing structured events for this day
+  const dayEvents = (adverseEvents || []).filter((e) => (e.day_key || (e.onset_date ? toDayKey(new Date(e.onset_date)) : "")) === dk);
 
   useEffect(() => {
     if (open) {
-      const existing = getSideEffects(dk);
-      setNotes(existing || "");
-      setChips([]);
+      // Legacy free-text is still displayed (read-only) for entries logged before migration.
+      setNotes("");
+      setSelectedEffect(null);
+      setShowDropdown(false);
     }
   }, [open, dk]);
 
   if (!open) return null;
 
-  const addChip = () => {
-    if (!selectedEffect) return;
-    const chip = `${selectedEffect.emoji} ${selectedEffect.label} (${severity})`;
-    if (!chips.includes(chip)) setChips([...chips, chip]);
-    setShowDropdown(false);
-    setSelectedEffect(null);
-  };
-
   const recentMed = getRecentMedication(shots, dk);
-  const combinedText = [...chips, notes.trim()].filter(Boolean).join(" ");
 
-  const handleSave = async () => {
+  const addEffect = async () => {
+    if (!selectedEffect) return;
+    const symptom = `${selectedEffect.emoji} ${selectedEffect.label}`;
+    const { tier } = classifyRedFlag(symptom, recentMed);
     try {
-      const parts = [];
-      if (chips.length) parts.push(chips.join(", "));
-      if (notes.trim()) parts.push(notes.trim());
-      await saveSideEffects(dk, parts.join(" | "));
-      toast.success("Side effects saved successfully!");
-      setTimeout(() => onClose(), 500);
+      await addAdverseEvent({
+        medication_name: recentMed || "",
+        symptom,
+        symptom_category: classifyCategory(selectedEffect.label),
+        severity,
+        onset_date: dk,
+        onset_time: "",
+        resolved: false,
+        user_attribution: true,
+        red_flag_tier: tier || "none",
+        day_key: dk,
+        notes: "",
+      });
+      toast.success("Side effect recorded");
+      setSelectedEffect(null);
+      setShowDropdown(false);
+      setSeverity("mild");
     } catch (err) {
-      toast.error("Failed to save side effects");
+      toast.error("Failed to save side effect");
     }
   };
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteAdverseEvent(id);
+      toast.success("Side effect removed");
+    } catch (err) {
+      toast.error("Failed to remove");
+    }
+  };
+
+  // Combined text for red-flag banner (structured + legacy + notes)
+  const combinedText = [
+    ...dayEvents.map((e) => e.symptom),
+    notes.trim(),
+  ].filter(Boolean).join(" ");
+
+  const legacyText = getSideEffects(dk);
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
@@ -96,29 +135,39 @@ export default function SideEffectsModal({ open, onClose, dayKey }) {
             <div className="flex gap-2">
               {SEVERITIES.map((s) => (
                 <button key={s} onClick={() => setSeverity(s)}
-                  className={`flex-1 py-2 rounded-xl text-sm font-medium border transition-colors ${severity === s ? "bg-teal-100 dark:bg-teal-500/20 text-teal-700 dark:text-teal-300 border-teal-300 dark:border-teal-500/30" : "bg-white dark:bg-white/[0.05] text-gray-500 dark:text-[#9A9DAE] border-gray-200 dark:border-white/[0.1]"}`}>
+                  className={`flex-1 py-2 rounded-xl text-sm font-medium border capitalize transition-colors ${severity === s ? "bg-teal-100 dark:bg-teal-500/20 text-teal-700 dark:text-teal-300 border-teal-300 dark:border-teal-500/30" : "bg-white dark:bg-white/[0.05] text-gray-500 dark:text-[#9A9DAE] border-gray-200 dark:border-white/[0.1]"}`}>
                   {s}
                 </button>
               ))}
             </div>
           </div>
 
-          <button onClick={addChip}
-            className="w-full py-2.5 bg-white/[0.07] dark:bg-white/[0.07] text-teal-600 dark:text-teal-400 border border-teal-200 dark:border-teal-500/30 rounded-xl font-semibold text-sm hover:bg-teal-500/10 transition-colors">
+          <button onClick={addEffect} disabled={!selectedEffect}
+            className="w-full py-2.5 bg-teal-600/10 dark:bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-200 dark:border-teal-500/30 rounded-xl font-semibold text-sm hover:bg-teal-500/20 transition-colors disabled:opacity-50">
             + Add to List
           </button>
 
-          {chips.length > 0 && (
+          {/* Today's structured side effects */}
+          {dayEvents.length > 0 && (
             <div className="flex flex-wrap gap-2">
-              {chips.map((c, i) => (
-                <span key={i} className="flex items-center gap-1 bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/25 rounded-full px-3 py-1 text-sm">
-                  {c}
-                  <button onClick={() => setChips(chips.filter((_, j) => j !== i))} className="ml-1 text-teal-400 hover:text-teal-300 dark:hover:text-teal-200">×</button>
+              {dayEvents.map((e) => (
+                <span key={e.id} className="flex items-center gap-1 bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/25 rounded-full px-3 py-1 text-sm">
+                  {e.symptom} <span className="text-xs opacity-60">({e.severity})</span>
+                  <button onClick={() => handleDelete(e.id)} className="ml-1 text-teal-400 hover:text-teal-300 dark:hover:text-teal-200">×</button>
                 </span>
               ))}
             </div>
           )}
 
+          {/* Legacy free-text (read-only display for pre-migration entries) */}
+          {legacyText && (
+            <div>
+              <label className="text-xs text-gray-400 dark:text-gray-500 mb-1 block">Previously logged (read-only)</label>
+              <p className="text-sm text-gray-700 dark:text-[#E8E9F0] bg-gray-50 dark:bg-white/[0.05] rounded-xl p-3 border border-gray-100 dark:border-white/[0.08]">{legacyText}</p>
+            </div>
+          )}
+
+          {/* Additional notes */}
           <div>
             <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">Additional Notes</label>
             <textarea value={notes} onChange={(e) => setNotes(e.target.value)}
@@ -126,11 +175,42 @@ export default function SideEffectsModal({ open, onClose, dayKey }) {
               className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-sm resize-none h-20 outline-none focus:border-teal-300" />
           </div>
         </div>
-        {combinedText && <div className="px-5 pb-3"><RedFlagBanner text={combinedText} medication={recentMed} /></div>}
+
+        {combinedText && (
+          <div className="px-5 pb-3">
+            {(() => {
+              const { tier } = classifyRedFlag(combinedText, recentMed);
+              if (tier === "none") return null;
+              const isEmergency = tier === "emergency";
+              return (
+                <div className={`rounded-xl p-3 border ${isEmergency ? "bg-red-50 dark:bg-red-500/10 border-red-200 dark:border-red-500/20" : "bg-amber-50 dark:bg-amber-500/10 border-amber-200 dark:border-amber-500/20"}`}>
+                  <p className={`text-sm font-semibold ${isEmergency ? "text-red-700 dark:text-red-300" : "text-amber-700 dark:text-amber-300"}`}>
+                    {isEmergency ? "This may need urgent attention" : "Consider contacting your clinician"}
+                  </p>
+                  <p className="text-xs mt-1 text-gray-700 dark:text-[#E8E9F0]">{RED_FLAG_WORDING[tier]}</p>
+                  <p className="text-[11px] mt-1 text-gray-500 dark:text-[#9A9DAE]">{RED_FLAG_DISCLAIMER}</p>
+                </div>
+              );
+            })()}
+          </div>
+        )}
+
+        {/* Pharmacovigilance resource links — public government pages only */}
+        <div className="px-5 pb-3">
+          <p className="text-xs text-gray-400 dark:text-gray-500 mb-2">You can report adverse events to official reporting systems:</p>
+          <div className="flex flex-wrap gap-2">
+            {PHARMACOVIGILANCE_LINKS.map((link) => (
+              <a key={link.url} href={link.url} target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-1 text-xs text-teal-600 dark:text-teal-400 border border-teal-200 dark:border-teal-500/30 rounded-lg px-3 py-1.5 hover:bg-teal-50 dark:hover:bg-teal-500/10">
+                {link.label} <ExternalLink size={12} />
+              </a>
+            ))}
+          </div>
+        </div>
 
         <div className="px-5 pb-8 pt-2">
-          <button onClick={handleSave} className="w-full py-3.5 bg-teal-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2">
-            <Save size={16} /> Save
+          <button onClick={onClose} className="w-full py-3.5 bg-teal-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2">
+            <Save size={16} /> Done
           </button>
         </div>
       </div>

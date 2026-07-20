@@ -1,13 +1,40 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { ChevronLeft, Moon, Lock, Mail, Bell, Database, FileText, MessageSquare, ChevronRight, Download, Upload, Loader2, LogOut } from "lucide-react";
+import { ChevronLeft, Moon, Lock, Mail, Bell, Database, FileText, MessageSquare, ChevronRight, Download, Upload, Loader2, LogOut, UserPlus, X } from "lucide-react";
 import { useAppState } from "@/lib/AppState";
 import { useAuth } from "@/lib/AuthContext";
+import { base44 } from "@/api/base44Client";
 
 export default function SettingsPage() {
   const navigate = useNavigate();
-  const { darkMode, setDarkMode, profile, setProfile, shots, journalEntries, dayMetrics, resetState } = useAppState();
+  const { darkMode, setDarkMode, profile, setProfile, shots, journalEntries, dayMetrics, resetState, proxyAccess, addProxyAccess, revokeProxyAccess } = useAppState();
   const { logout } = useAuth();
+  const [proxyEmail, setProxyEmail] = useState("");
+  const [proxyScope, setProxyScope] = useState("read");
+  const [proxySaving, setProxySaving] = useState(false);
+
+  const handleGrantProxy = async () => {
+    if (!proxyEmail.trim()) { alert("Enter an email address"); return; }
+    setProxySaving(true);
+    try {
+      await addProxyAccess({
+        grantee_email: proxyEmail.trim(),
+        scope: proxyScope,
+        status: "pending",
+        granted_date: new Date().toISOString(),
+      });
+      setProxyEmail("");
+      alert("Access granted. The recipient will be able to view your data once they register with this email.");
+    } catch (err) {
+      alert("Failed to grant access");
+    }
+    setProxySaving(false);
+  };
+
+  const handleRevoke = async (id) => {
+    if (!confirm("Revoke access for this proxy?")) return;
+    await revokeProxyAccess(id);
+  };
 
   const handleLogout = () => {
     resetState();
@@ -63,17 +90,36 @@ export default function SettingsPage() {
     setBackupLoading(false);
   };
 
-  const handleRestore = () => {
+  const handleRestore = async () => {
     const input = document.createElement("input");
     input.type = "file"; input.accept = ".json";
     input.onchange = async (e) => {
       setRestoreLoading(true);
       const file = e.target.files[0];
       if (!file) { setRestoreLoading(false); return; }
-      const text = await file.text();
-      const data = JSON.parse(text);
-      if (data.profile) await setProfile({ ...profile, ...data.profile });
-      alert("Profile restored. Shot and journal data restore requires a full reimport — contact support for bulk import assistance.");
+      try {
+        const text = await file.text();
+        const data = JSON.parse(text);
+        if (data.profile) await setProfile({ ...profile, ...data.profile });
+        // Restore shots
+        if (data.shots && Array.isArray(data.shots) && data.shots.length) {
+          await base44.entities.Shot.bulkCreate(data.shots.map((s) => ({
+            medication: s.medication, dose: s.dose, drug_class: s.drug_class, molecular_class: s.molecular_class,
+            route: s.route, device_type: s.device_type, dose_unit: s.dose_unit, medication_id: s.medication_id,
+            date: s.date, time: s.time, site: s.site, pain: s.pain, notes: s.notes,
+            reconstitution_date: s.reconstitution_date, in_use_expiry: s.in_use_expiry,
+          })));
+        }
+        // Restore journal entries
+        if (data.journalEntries && Array.isArray(data.journalEntries) && data.journalEntries.length) {
+          await base44.entities.JournalEntry.bulkCreate(data.journalEntries.map((j) => ({
+            text: j.text, date: j.date, time: j.time, mood: j.mood, mood_color: j.mood_color, category: j.category,
+          })));
+        }
+        alert("Restore complete. Please reload the app to see your restored data.");
+      } catch (err) {
+        alert("Restore failed: " + (err.message || "invalid file"));
+      }
       setRestoreLoading(false);
     };
     input.click();
@@ -128,6 +174,44 @@ export default function SettingsPage() {
           <div className="bg-white dark:bg-gray-900 rounded-2xl px-4 shadow-sm border border-gray-100 dark:border-gray-800 divide-y divide-gray-100 dark:divide-white/[0.07]">
             <MenuItem icon={<FileText size={18} className="text-gray-500 dark:text-gray-400" />} label="Privacy Policy" to="/privacy" />
             <MenuItem icon={<FileText size={18} className="text-gray-500 dark:text-gray-400" />} label="Terms and Conditions" to="/terms" />
+          </div>
+        </div>
+
+        {/* Proxy / Caregiver Access */}
+        <div className="px-4 mb-4">
+          <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase mb-2 px-1">Caregiver Access</p>
+          <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 space-y-3">
+            <p className="text-xs text-gray-400 dark:text-gray-500">Grant scoped, revocable access to a caregiver or family member so they can view your logs.</p>
+            <div className="flex gap-2">
+              <input type="email" value={proxyEmail} onChange={(e) => setProxyEmail(e.target.value)} placeholder="caregiver@email.com"
+                className="flex-1 border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-3 py-2 text-sm outline-none focus:border-teal-300" />
+              <select value={proxyScope} onChange={(e) => setProxyScope(e.target.value)}
+                className="border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-3 py-2 text-sm outline-none">
+                <option value="read">Read only</option>
+                <option value="read_write">Read & write</option>
+              </select>
+            </div>
+            <button onClick={handleGrantProxy} disabled={proxySaving}
+              className="w-full py-2.5 bg-teal-600 text-white rounded-xl font-semibold text-sm flex items-center justify-center gap-2 disabled:opacity-60">
+              <UserPlus size={16} /> {proxySaving ? "Granting…" : "Grant Access"}
+            </button>
+            {proxyAccess.length > 0 && (
+              <div className="space-y-2 pt-2 border-t border-gray-100 dark:border-white/[0.08]">
+                {proxyAccess.map((p) => (
+                  <div key={p.id} className="flex items-center justify-between text-sm">
+                    <div>
+                      <span className="text-gray-700 dark:text-gray-300">{p.grantee_email}</span>
+                      <span className="text-xs text-gray-400 ml-2">{p.scope} · {p.status}</span>
+                    </div>
+                    {p.status !== "revoked" && (
+                      <button onClick={() => handleRevoke(p.id)} className="text-red-500 flex items-center gap-1 text-xs">
+                        <X size={14} /> Revoke
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 

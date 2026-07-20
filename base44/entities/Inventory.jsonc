@@ -1,0 +1,80 @@
+{
+  "type": "object",
+  "properties": {
+    "product_name": {
+      "type": "string",
+      "description": "Brand or generic name of the tracked product"
+    },
+    "medication_id": {
+      "type": "string",
+      "description": "Optional reference to a Medication regimen record"
+    },
+    "lot_number": {
+      "type": "string"
+    },
+    "expiry_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "starting_quantity": {
+      "type": "number",
+      "description": "Initial usable quantity (doses, units, or volume)"
+    },
+    "remaining_quantity": {
+      "type": "number",
+      "description": "Current remaining quantity (decremented on each logged shot)"
+    },
+    "quantity_unit": {
+      "type": "string",
+      "description": "Unit for quantity (doses, mg, mL, units, etc.)",
+      "default": "doses"
+    },
+    "storage_location": {
+      "type": "string",
+      "description": "Where the product is stored (e.g. refrigerator, room temperature)"
+    },
+    "opened_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the container was first opened"
+    },
+    "in_use_expiry": {
+      "type": "string",
+      "format": "date",
+      "description": "Beyond-use date after opening or reconstitution"
+    },
+    "expiry_warning_days": {
+      "type": "number",
+      "description": "Show an expiry warning this many days before expiry (configurable)",
+      "default": 14
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "depleted",
+        "expired",
+        "archived"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "product_name"
+  ],
+  "name": "Inventory",
+  "rls": {
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}

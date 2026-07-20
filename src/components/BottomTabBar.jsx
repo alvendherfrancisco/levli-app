@@ -1,10 +1,12 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Home, Syringe, CalendarDays, BarChart3, ClipboardList, User } from "lucide-react";
+import { Home, Syringe, CalendarDays, BarChart3, ClipboardList, User, Pill, Package } from "lucide-react";
 
 const tabs = [
   { path: "/", label: "Home", icon: Home },
   { path: "/shots", label: "Shots", icon: Syringe },
+  { path: "/medications", label: "Meds", icon: Pill },
+  { path: "/inventory", label: "Stock", icon: Package },
   { path: "/history", label: "History", icon: CalendarDays },
   { path: "/insights", label: "Insights", icon: BarChart3 },
   { path: "/journal", label: "Journal", icon: ClipboardList },
@@ -18,7 +20,7 @@ export default function BottomTabBar() {
     <>
       {/* Mobile: bottom bar */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 pb-safe z-40">
-        <div className="flex items-center justify-around px-2 py-2">
+        <div className="flex items-center justify-around px-1 py-2 overflow-x-auto">
           {tabs.map((tab) => {
             const isActive = location.pathname === tab.path;
             const Icon = tab.icon;
@@ -26,7 +28,7 @@ export default function BottomTabBar() {
               <Link
                 key={tab.path}
                 to={tab.path}
-                className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-full transition-all ${
+                className={`flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-full transition-all flex-shrink-0 ${
                   isActive
                     ? "bg-teal-50 dark:bg-teal-500/15 text-teal-600 dark:text-teal-400"
                     : "text-gray-400 dark:text-[#9A9DAE]"
@@ -34,11 +36,11 @@ export default function BottomTabBar() {
                 style={isActive ? { textShadow: undefined } : undefined}
               >
                 <Icon
-                  size={22}
+                  size={20}
                   strokeWidth={isActive ? 2.2 : 1.8}
                   style={isActive ? { filter: "drop-shadow(0 0 6px rgba(20,184,166,0.5))" } : undefined}
                 />
-                {isActive && <span className="text-[11px] font-semibold">{tab.label}</span>}
+                {isActive && <span className="text-[10px] font-semibold">{tab.label}</span>}
               </Link>
             );
           })}

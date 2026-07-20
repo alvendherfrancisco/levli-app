@@ -71,29 +71,61 @@ export const DOSING_INTERVAL_DAYS = (() => {
   return map;
 })();
 
-// ── Half-lives in days (per generic, primary route) ────────────────────────
-// "not established" medications (investigational, cosmetic) are excluded.
-export const HALF_LIFE_DAYS = (() => {
-  const map = {};
+// ── Half-life lookup (brand- and route-specific) ───────────────────────────
+// Keys by brand/product name first, falling back to generic name, then route.
+// This prevents collapsing different formulations of the same active ingredient
+// (e.g. Byetta vs Bydureon) into one half-life value.
+const HALF_LIFE_INDEX = (() => {
+  // key: `${genericName}|${brand}|${route}` → value (days)
+  // also: `${genericName}|${route}` → generic fallback
+  // also: `${genericName}` → first-route fallback (legacy compatibility)
+  const byKey = {};
+  const byGeneric = {};
   MEDICATION_CATALOGUE.forEach((m) => {
     if (!m.half_life_days) return;
     if (m.capability?.research_only || m.capability?.cosmetic_only) return;
     if (m.capability?.supports_pk_estimation === false) return;
     const routes = Object.keys(m.half_life_days);
+    let firstNumeric = null;
     for (const r of routes) {
       const val = m.half_life_days[r];
       if (typeof val === "number") {
-        map[m.generic_name] = val;
-        break;
-      }
-      if (val && typeof val === "object") {
-        const firstBrand = Object.keys(val)[0];
-        if (firstBrand) { map[m.generic_name] = val[firstBrand]; break; }
+        byKey[`${m.generic_name}||${r}`] = val;
+        if (firstNumeric === null) firstNumeric = val;
+      } else if (val && typeof val === "object") {
+        for (const [brand, v] of Object.entries(val)) {
+          byKey[`${m.generic_name}|${brand}|${r}`] = v;
+          if (firstNumeric === null) firstNumeric = v;
+        }
       }
     }
+    if (firstNumeric !== null) byGeneric[m.generic_name] = firstNumeric;
   });
-  return map;
+  return { byKey, byGeneric };
 })();
+
+// Legacy flat map (generic → first-route half-life) kept for backward compat.
+export const HALF_LIFE_DAYS = HALF_LIFE_INDEX.byGeneric;
+
+/**
+ * Returns the half-life in days for a specific medication brand and route.
+ * Falls back to generic if no brand-specific value exists.
+ * Returns null if not established / not supported.
+ */
+export function getHalfLifeDays(medication, route) {
+  const entry = NAME_TO_ENTRY[medication];
+  if (!entry) return HALF_LIFE_INDEX.byGeneric[medication] || null;
+  if (entry.capability?.research_only || entry.capability?.cosmetic_only) return null;
+  if (entry.capability?.supports_pk_estimation === false) return null;
+  const r = route || (entry.routes && entry.routes[0]) || "";
+  if (r && HALF_LIFE_INDEX.byKey[`${entry.generic_name}|${medication}|${r}`] != null) {
+    return HALF_LIFE_INDEX.byKey[`${entry.generic_name}|${medication}|${r}`];
+  }
+  if (r && HALF_LIFE_INDEX.byKey[`${entry.generic_name}||${r}`] != null) {
+    return HALF_LIFE_INDEX.byKey[`${entry.generic_name}||${r}`];
+  }
+  return HALF_LIFE_INDEX.byGeneric[entry.generic_name] || null;
+}
 
 // ── Per-brand max maintenance dose in mg ───────────────────────────────────
 export const DOSE_MAX = (() => {

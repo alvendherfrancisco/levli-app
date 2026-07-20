@@ -6,6 +6,7 @@ import AddShotModal from "@/components/modals/AddShotModal";
 import { useAppState } from "@/lib/AppState";
 import { addDaysToShotDate, daysAgoLabel } from "@/lib/dateUtils";
 import { getDosingInterval } from "@/lib/medicationData";
+import { calcAdherence } from "@/lib/adherence";
 
 export default function Shots() {
   const [showShot, setShowShot] = useState(false);
@@ -16,6 +17,10 @@ export default function Shots() {
   const last = shots[0] || null;
   const daysBetween = (last && getDosingInterval(last.medication)) || parseInt(profile?.days_between || "7") || 7;
   const nextDate = last ? addDaysToShotDate(last.date, daysBetween) : null;
+
+  // Adherence for the most recent medication over the last 90 days
+  const lastMed = last?.medication;
+  const adherence = lastMed ? calcAdherence(shots, lastMed, 90) : { logged: 0, scheduled: 0, adherencePct: null };
 
   const openEdit = (shot) => { setEditingShot(shot); setShowShot(true); };
   const openNew = () => { setEditingShot(null); setShowShot(true); };
@@ -51,7 +56,7 @@ export default function Shots() {
             </div>
             {last ? (
               <>
-                <p className="text-xl font-bold text-gray-900 dark:text-white">{last.dose} mg</p>
+                <p className="text-xl font-bold text-gray-900 dark:text-white">{last.dose} {last.dose_unit || "mg"}</p>
                 <p className="text-xs text-gray-400 dark:text-gray-500">{daysAgoLabel(last.date)}</p>
               </>
             ) : <p className="text-sm text-gray-400 dark:text-gray-500">No shots yet</p>}
@@ -65,6 +70,18 @@ export default function Shots() {
             </div>
             {nextDate ? <p className="text-lg font-bold text-gray-900 dark:text-white">{nextDate}</p> : <p className="text-sm text-gray-400 dark:text-gray-500">—</p>}
           </div>
+          {adherence.adherencePct != null && (
+            <div className="bg-white dark:bg-gray-900 rounded-xl p-3 shadow-sm border border-gray-100 dark:border-gray-800 min-w-[120px]">
+              <div className="flex items-center gap-1.5 mb-1">
+                <div className="w-6 h-6 rounded-lg bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
+                  <CalendarCheck size={12} className="text-indigo-600 dark:text-indigo-400" />
+                </div>
+                <span className="text-xs text-gray-400 dark:text-gray-500">90d Adherence</span>
+              </div>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">{adherence.adherencePct}%</p>
+              <p className="text-xs text-gray-400 dark:text-gray-500">{adherence.logged}/{adherence.scheduled} doses</p>
+            </div>
+          )}
         </div>
 
         <div className="px-4 pb-32">

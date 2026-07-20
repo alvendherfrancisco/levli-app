@@ -1168,3 +1168,21 @@ export function isUnapproved(name) {
   const usStatus = entry.approval?.US?.status;
   return usStatus === "unapproved" || usStatus === "investigational";
 }
+
+// ── Clinical content provenance ─────────────────────────────────────────────
+// Every catalogue entry must carry source-provenance fields for auditability.
+// Values are blank / "needs sourcing" until a qualified clinician or pharmacist
+// fills them in from a Tier-1 controlling source. They are NEVER fabricated.
+const SOURCE_DEFAULTS = {
+  source_url: "",
+  source_document_version: "",
+  source_organisation: "",
+  source_access_date: "",
+  source_status: "needs_sourcing",
+};
+
+MEDICATION_CATALOGUE.forEach((m) => {
+  Object.keys(SOURCE_DEFAULTS).forEach((k) => {
+    if (m[k] === undefined) m[k] = SOURCE_DEFAULTS[k];
+  });
+});

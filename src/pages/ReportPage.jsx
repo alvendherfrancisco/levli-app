@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { ChevronLeft, Download, Loader2 } from "lucide-react";
 import { useAppState } from "@/lib/AppState";
 import { parseShotDate } from "@/lib/dateUtils";
+import { PK_CALCULATION_VERSION } from "@/lib/pkCalculations";
+
+const REPORT_CALCULATION_VERSION = "report-v1";
 
 export default function ReportPage() {
   const navigate = useNavigate();
@@ -114,6 +117,8 @@ export default function ReportPage() {
     if (y > 270) { doc.addPage(); y = 20; }
     doc.setFont("helvetica", "italic"); doc.setFontSize(8); doc.setTextColor(150);
     doc.text("This summary is a record of entries you logged. It is not a medical document and is not a substitute for advice from your prescriber.", 14, y + 4, { maxWidth: pageW - 28 });
+    y += 8;
+    doc.text(`Calculation version: ${REPORT_CALCULATION_VERSION} | ${PK_CALCULATION_VERSION}`, 14, y + 4, { maxWidth: pageW - 28 });
     doc.save(`levli-report-${new Date().toISOString().slice(0,10)}.pdf`);
     setExporting(false);
   };
@@ -223,7 +228,8 @@ export default function ReportPage() {
           )}
         </div>
 
-        <p className="text-xs text-gray-400 dark:text-gray-500 italic px-1 mb-3">This summary is a record of entries you logged. It is not a medical document and is not a substitute for advice from your prescriber.</p>
+        <p className="text-xs text-gray-400 dark:text-gray-500 italic px-1 mb-1">This summary is a record of entries you logged. It is not a medical document and is not a substitute for advice from your prescriber.</p>
+        <p className="text-[10px] text-gray-300 dark:text-gray-600 px-1 mb-3">Calculation version: {REPORT_CALCULATION_VERSION} | {PK_CALCULATION_VERSION}</p>
 
         {shots.length > 0 && (
           <button onClick={handleExportPDF} disabled={exporting}
