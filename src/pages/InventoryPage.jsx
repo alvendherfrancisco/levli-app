@@ -88,11 +88,11 @@ export default function InventoryPage() {
           <div className="space-y-3">
             {itemsWithStatus.map((i) => (
               <div key={i.id} className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
-                <div className="flex items-start justify-between">
-                  <button onClick={() => openEdit(i)} className="flex-1 text-left">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="font-bold text-gray-900 dark:text-white">{i.product_name}</span>
-                      {i.status !== "active" && <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-500/10 text-gray-500">{i.status}</span>}
+                <div className="flex items-start justify-between gap-2">
+                  <button onClick={() => openEdit(i)} className="flex-1 text-left min-w-0">
+                    <div className="flex items-center gap-2 mb-1 flex-wrap">
+                      <span className="font-bold text-gray-900 dark:text-white break-words">{i.product_name}</span>
+                      {i.status !== "active" && <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-500/10 text-gray-500 whitespace-nowrap flex-shrink-0">{i.status}</span>}
                     </div>
                     <div className="space-y-1 text-sm text-gray-500 dark:text-[#9A9DAE]">
                       {i.remaining_quantity != null && i.starting_quantity != null && (
@@ -110,7 +110,7 @@ export default function InventoryPage() {
                       {i.storage_location && <div className="text-xs">Stored: {i.storage_location}</div>}
                     </div>
                   </button>
-                  <div className="flex flex-col gap-2 items-end">
+                  <div className="flex flex-col gap-2 items-end flex-shrink-0">
                     <button onClick={() => openEdit(i)} className="text-gray-400 hover:text-teal-600"><ChevronRight size={20} /></button>
                     <button onClick={() => openStorageLog(i)} className="text-gray-400 hover:text-amber-500"><Thermometer size={16} /></button>
                     <button onClick={() => handleDelete(i.id)} className="text-gray-400 hover:text-red-500"><Trash2 size={16} /></button>

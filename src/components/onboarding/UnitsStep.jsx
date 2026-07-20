@@ -9,7 +9,7 @@ const GROUPS = [
 export default function UnitsStep({ units, setUnits }) {
   return (
     <div className="flex-1">
-      <h1 className="text-3xl font-bold leading-tight mb-2">Measurement Preferences</h1>
+      <h1 className="text-2xl sm:text-3xl font-bold leading-tight mb-2">Measurement Preferences</h1>
       <p className="text-gray-400 text-sm mb-6">Choose the units you'd like to use throughout the app.</p>
       <div className="space-y-5">
         {GROUPS.map((group) => (

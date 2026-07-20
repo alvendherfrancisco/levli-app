@@ -168,8 +168,8 @@ function WelcomeStep() {
       <div className="w-16 h-16 bg-teal-500 rounded-2xl flex items-center justify-center mb-6 mt-4">
         <Droplets size={32} className="text-white" />
       </div>
-      <h1 className="text-3xl font-bold mb-3">Welcome to Levli</h1>
-      <p className="text-gray-400 text-base leading-relaxed mb-6">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-3">Welcome to Levli</h1>
+      <p className="text-gray-400 text-sm sm:text-base leading-relaxed mb-6">
         A companion app for logging your medication journey. Track shots, progress, and notes to share with your healthcare provider.
       </p>
       <PhoneMockup>
@@ -182,8 +182,8 @@ function WelcomeStep() {
 function NeverMissStep() {
   return (
     <div className="flex flex-col items-center text-center flex-1">
-      <h1 className="text-3xl font-bold mb-3">Never Miss a Shot Again</h1>
-      <p className="text-gray-400 text-base leading-relaxed mb-4">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-3">Never Miss a Shot Again</h1>
+      <p className="text-gray-400 text-sm sm:text-base leading-relaxed mb-4">
         Log your shots and keep a complete record you can share with your healthcare provider. (Reminders are not active yet.)
       </p>
       <PhoneMockup>
@@ -196,8 +196,8 @@ function NeverMissStep() {
 function VisualizeStep() {
   return (
     <div className="flex flex-col items-center text-center flex-1">
-      <h1 className="text-3xl font-bold mb-3">Visualize Your Success</h1>
-      <p className="text-gray-400 text-base leading-relaxed mb-4">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-3">Visualize Your Success</h1>
+      <p className="text-gray-400 text-sm sm:text-base leading-relaxed mb-4">
         Track your weight entries over time with charts and progress photos.
       </p>
       <PhoneMockup>
@@ -210,8 +210,8 @@ function VisualizeStep() {
 function MedicationTrackingStep() {
   return (
     <div className="flex flex-col items-center text-center flex-1">
-      <h1 className="text-3xl font-bold mb-3">Advanced Medication Tracking</h1>
-      <p className="text-gray-400 text-base leading-relaxed mb-4">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-3">Advanced Medication Tracking</h1>
+      <p className="text-gray-400 text-sm sm:text-base leading-relaxed mb-4">
         See an illustrative chart of relative medication exposure over time. This is a rough estimate, not a precise measurement.
       </p>
       <PhoneMockup>
@@ -224,8 +224,8 @@ function MedicationTrackingStep() {
 function HistoryCalendarStep() {
   return (
     <div className="flex flex-col items-center text-center flex-1">
-      <h1 className="text-3xl font-bold mb-3">Complete History & Calendar</h1>
-      <p className="text-gray-400 text-base leading-relaxed mb-4">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-3">Complete History & Calendar</h1>
+      <p className="text-gray-400 text-sm sm:text-base leading-relaxed mb-4">
         Navigate your entire medication journey. View any day's shots, weight, nutrition, and side effects at a glance.
       </p>
       <PhoneMockup>
@@ -238,8 +238,8 @@ function HistoryCalendarStep() {
 function JournalStep() {
   return (
     <div className="flex flex-col items-center text-center flex-1">
-      <h1 className="text-3xl font-bold mb-3">Your Personal Health Journal</h1>
-      <p className="text-gray-400 text-base leading-relaxed mb-4">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-3">Your Personal Health Journal</h1>
+      <p className="text-gray-400 text-sm sm:text-base leading-relaxed mb-4">
         Document symptoms, celebrate victories, and track how you feel.
       </p>
       <PhoneMockup>
@@ -252,8 +252,8 @@ function JournalStep() {
 function ReportsStep() {
   return (
     <div className="flex flex-col items-center text-center flex-1">
-      <h1 className="text-3xl font-bold mb-3">Your Health Profile</h1>
-      <p className="text-gray-400 text-base leading-relaxed mb-4">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-3">Your Health Profile</h1>
+      <p className="text-gray-400 text-sm sm:text-base leading-relaxed mb-4">
         Set up your profile with physical stats, medication preferences, and measurement units — everything tailored to you.
       </p>
       <PhoneMockup>
@@ -267,8 +267,8 @@ function NotificationStep({ onContinue }) {
   const [enabled, setEnabled] = React.useState(false);
   return (
     <div className="flex flex-col items-center text-center flex-1">
-      <h1 className="text-3xl font-bold mb-3">Never Miss a Shot Again</h1>
-      <p className="text-gray-400 text-base leading-relaxed mb-6">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-3">Never Miss a Shot Again</h1>
+      <p className="text-gray-400 text-sm sm:text-base leading-relaxed mb-6">
         Allowing notifications lets Levli send you reminders in the future. Reminders are not active yet — you can still log your shots and review them any time.
       </p>
       <div className="bg-gray-900 rounded-2xl p-6 mb-4 border border-gray-800">
@@ -301,8 +301,8 @@ function NotificationStep({ onContinue }) {
 function PersonalizeStep() {
   return (
     <div className="flex flex-col items-center text-center flex-1">
-      <h1 className="text-3xl font-bold mb-3">Let's Personalize Your Experience</h1>
-      <p className="text-gray-400 text-base leading-relaxed mb-6">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-3">Let's Personalize Your Experience</h1>
+      <p className="text-gray-400 text-sm sm:text-base leading-relaxed mb-6">
         Answer a few quick questions to help us tailor Levli to your specific needs.
       </p>
       <div className="w-32 h-32 bg-gradient-to-br from-teal-400 to-teal-600 rounded-3xl flex items-center justify-center mb-6 shadow-lg shadow-teal-500/30">
@@ -319,7 +319,7 @@ function ConsentStep({ consented, setConsented }) {
       <div className="w-16 h-16 bg-teal-500 rounded-2xl flex items-center justify-center mb-6 mt-4">
         <ShieldCheck size={32} className="text-white" />
       </div>
-      <h1 className="text-3xl font-bold mb-3">Your Health Data Consent</h1>
+      <h1 className="text-2xl sm:text-3xl font-bold mb-3">Your Health Data Consent</h1>
       <p className="text-gray-400 text-sm leading-relaxed mb-6 text-left">
         Levli stores health information you log — including medications, doses, side effects, weight, and journal entries. Under GDPR, health data is a "special category" (Article 9) that requires your explicit consent.
       </p>
@@ -341,7 +341,7 @@ function BirthdateStep({ birthdate, setBirthdate }) {
       <div className="w-16 h-16 bg-teal-500 rounded-2xl flex items-center justify-center mb-6 mt-4">
         <Calendar size={32} className="text-white" />
       </div>
-      <h1 className="text-3xl font-bold mb-3">Your Date of Birth</h1>
+      <h1 className="text-2xl sm:text-3xl font-bold mb-3">Your Date of Birth</h1>
       <p className="text-gray-400 text-sm leading-relaxed mb-6 text-left">
         We use your date of birth to determine whether this account requires parental consent. If you are under 18, a parent or guardian must consent on your behalf.
       </p>
@@ -358,7 +358,7 @@ function ParentalConsentStep({ guardianName, setGuardianName }) {
       <div className="w-16 h-16 bg-teal-500 rounded-2xl flex items-center justify-center mb-6 mt-4">
         <User size={32} className="text-white" />
       </div>
-      <h1 className="text-3xl font-bold mb-3">Parental Consent Required</h1>
+      <h1 className="text-2xl sm:text-3xl font-bold mb-3">Parental Consent Required</h1>
       <p className="text-gray-400 text-sm leading-relaxed mb-6 text-left">
         You appear to be under 18. A parent or legal guardian must provide consent for you to use Levli with health data tracking.
       </p>
@@ -377,8 +377,8 @@ function FinalStep() {
       <div className="w-20 h-20 bg-teal-500 rounded-3xl flex items-center justify-center mb-6">
         <Droplets size={40} className="text-white" />
       </div>
-      <h1 className="text-3xl font-bold mb-3">You're All Set!</h1>
-      <p className="text-gray-400 text-base leading-relaxed">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-3">You're All Set!</h1>
+      <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
         Your personalized medication tracking experience is ready. Let's start your journey to better health.
       </p>
     </div>

@@ -61,7 +61,7 @@ export default function History() {
         <Link to="/settings"><Settings size={22} className="text-gray-600 dark:text-gray-400" /></Link>
       </div>
 
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-3xl mx-auto pb-4">
         {/* Calendar */}
         <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between mb-4">

@@ -171,9 +171,9 @@ export default function ReportPage() {
             <h3 className="text-base font-bold text-gray-900 dark:text-white mb-3 pb-2 border-b border-gray-100 dark:border-gray-800">Medications Used</h3>
             <div className="space-y-2">
               {Object.entries(medCounts).map(([med, cnt]) => (
-                <div key={med} className="flex justify-between items-center">
-                  <span className="text-sm text-gray-500 dark:text-gray-400">{med}</span>
-                  <span className="text-sm font-semibold text-gray-900 dark:text-white">{cnt} ({Math.round(cnt/shots.length*100)}%) • {medTotals[med].toFixed(1)} mg total</span>
+                <div key={med} className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
+                  <span className="text-sm text-gray-500 dark:text-gray-400 break-words">{med}</span>
+                  <span className="text-sm font-semibold text-gray-900 dark:text-white whitespace-nowrap">{cnt} ({Math.round(cnt/shots.length*100)}%) • {medTotals[med].toFixed(1)} mg total</span>
                 </div>
               ))}
             </div>
@@ -186,9 +186,9 @@ export default function ReportPage() {
             <h3 className="text-base font-bold text-gray-900 dark:text-white mb-3 pb-2 border-b border-gray-100 dark:border-gray-800">Top Injection Sites</h3>
             <div className="space-y-2">
               {topSites.map(([site, cnt]) => (
-                <div key={site} className="flex justify-between items-center">
-                  <span className="text-sm text-gray-500 dark:text-gray-400">{site}</span>
-                  <span className="text-sm font-semibold text-gray-900 dark:text-white">{cnt} ({Math.round(cnt/shots.length*100)}%)</span>
+                <div key={site} className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
+                  <span className="text-sm text-gray-500 dark:text-gray-400 break-words">{site}</span>
+                  <span className="text-sm font-semibold text-gray-900 dark:text-white whitespace-nowrap">{cnt} ({Math.round(cnt/shots.length*100)}%)</span>
                 </div>
               ))}
             </div>
@@ -201,25 +201,25 @@ export default function ReportPage() {
           {shots.length === 0 ? (
             <p className="text-sm text-gray-400 text-center py-4">No shots recorded yet.</p>
           ) : (
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto -mx-1">
               <table className="w-full text-xs">
                 <thead>
                   <tr className="bg-gray-50 dark:bg-gray-800">
-                    <th className="text-left p-2 text-gray-500 dark:text-gray-400 font-medium">Date</th>
-                    <th className="text-left p-2 text-gray-500 dark:text-gray-400 font-medium">Med</th>
-                    <th className="text-left p-2 text-gray-500 dark:text-gray-400 font-medium">Dose</th>
-                    <th className="text-left p-2 text-gray-500 dark:text-gray-400 font-medium">Site</th>
-                    <th className="text-left p-2 text-gray-500 dark:text-gray-400 font-medium">Pain</th>
+                    <th className="text-left p-1.5 sm:p-2 text-gray-500 dark:text-gray-400 font-medium whitespace-nowrap">Date</th>
+                    <th className="text-left p-1.5 sm:p-2 text-gray-500 dark:text-gray-400 font-medium">Med</th>
+                    <th className="text-left p-1.5 sm:p-2 text-gray-500 dark:text-gray-400 font-medium">Dose</th>
+                    <th className="text-left p-1.5 sm:p-2 text-gray-500 dark:text-gray-400 font-medium">Site</th>
+                    <th className="text-left p-1.5 sm:p-2 text-gray-500 dark:text-gray-400 font-medium">Pain</th>
                   </tr>
                 </thead>
                 <tbody>
                   {sortedShots.map((s, i) => (
                     <tr key={s.id} className={i % 2 === 1 ? "bg-gray-50 dark:bg-gray-800" : ""}>
-                      <td className="p-2 text-gray-700 dark:text-gray-300">{s.date}</td>
-                      <td className="p-2 text-gray-700 dark:text-gray-300">{s.medication}</td>
-                      <td className="p-2 text-gray-700 dark:text-gray-300">{s.dose}mg</td>
-                      <td className="p-2 text-gray-700 dark:text-gray-300 max-w-[90px] truncate">{s.site}</td>
-                      <td className={`p-2 font-medium ${s.pain === 0 ? "text-green-600" : s.pain <= 3 ? "text-yellow-600" : "text-red-600"}`}>{s.pain}</td>
+                      <td className="p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 whitespace-nowrap">{s.date}</td>
+                      <td className="p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 max-w-[80px] truncate">{s.medication}</td>
+                      <td className="p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 whitespace-nowrap">{s.dose}mg</td>
+                      <td className="p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 max-w-[80px] truncate">{s.site}</td>
+                      <td className={`p-1.5 sm:p-2 font-medium whitespace-nowrap ${s.pain === 0 ? "text-green-600" : s.pain <= 3 ? "text-yellow-600" : "text-red-600"}`}>{s.pain}</td>
                     </tr>
                   ))}
                 </tbody>

@@ -182,11 +182,11 @@ export default function SettingsPage() {
           <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase mb-2 px-1">Caregiver Access</p>
           <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 space-y-3">
             <p className="text-xs text-gray-400 dark:text-gray-500">Grant scoped, revocable access to a caregiver or family member so they can view your logs.</p>
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2">
               <input type="email" value={proxyEmail} onChange={(e) => setProxyEmail(e.target.value)} placeholder="caregiver@email.com"
-                className="flex-1 border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-3 py-2 text-sm outline-none focus:border-teal-300" />
+                className="flex-1 border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-3 py-2 text-sm outline-none focus:border-teal-300 min-w-0" />
               <select value={proxyScope} onChange={(e) => setProxyScope(e.target.value)}
-                className="border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-3 py-2 text-sm outline-none">
+                className="border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-3 py-2 text-sm outline-none sm:w-auto">
                 <option value="read">Read only</option>
                 <option value="read_write">Read & write</option>
               </select>
@@ -198,10 +198,10 @@ export default function SettingsPage() {
             {proxyAccess.length > 0 && (
               <div className="space-y-2 pt-2 border-t border-gray-100 dark:border-white/[0.08]">
                 {proxyAccess.map((p) => (
-                  <div key={p.id} className="flex items-center justify-between text-sm">
-                    <div>
-                      <span className="text-gray-700 dark:text-gray-300">{p.grantee_email}</span>
-                      <span className="text-xs text-gray-400 ml-2">{p.scope} · {p.status}</span>
+                  <div key={p.id} className="flex items-center justify-between text-sm gap-2">
+                    <div className="min-w-0">
+                      <span className="text-gray-700 dark:text-gray-300 truncate block">{p.grantee_email}</span>
+                      <span className="text-xs text-gray-400">{p.scope} · {p.status}</span>
                     </div>
                     {p.status !== "revoked" && (
                       <button onClick={() => handleRevoke(p.id)} className="text-red-500 flex items-center gap-1 text-xs">

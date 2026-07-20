@@ -23,7 +23,7 @@ export default function DateStrip({ selectedDate, onSelectDate }) {
   const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
   return (
-    <div className="flex items-center justify-center gap-3 py-3">
+    <div className="flex items-center justify-center gap-1.5 sm:gap-3 py-3 px-3">
       {days.map((d) => {
         const isSelected = d.getDate() === selected.getDate() && d.getMonth() === selected.getMonth() && d.getFullYear() === selected.getFullYear();
         const hasShot = shotDayKeys.has(toDayKey(d));
@@ -31,15 +31,15 @@ export default function DateStrip({ selectedDate, onSelectDate }) {
           <button
             key={d.getTime()}
             onClick={() => onSelectDate && onSelectDate(d)}
-            className={`flex flex-col items-center gap-0.5 px-3 py-2 rounded-2xl min-w-[52px] transition-all ${
+            className={`flex flex-col items-center gap-0.5 px-2 sm:px-3 py-2 rounded-2xl flex-1 min-w-0 max-w-[64px] transition-all ${
               isSelected
                 ? "bg-teal-600 dark:bg-teal-500/80 text-white shadow-lg dark:[box-shadow:0_0_18px_4px_rgba(20,184,166,0.35)]"
                 : "text-gray-400 dark:text-[#9A9DAE]"
             }`}
           >
-            <span className="text-[11px] font-medium">{dayNames[d.getDay()]}</span>
-            <span className={`text-lg font-bold ${isSelected ? "text-white" : "text-gray-600 dark:text-[#E8E9F0]"}`}>{d.getDate()}</span>
-            <span className={`text-[11px] ${isSelected ? "text-teal-200 dark:text-teal-200" : "text-gray-400 dark:text-[#9A9DAE]"}`}>{monthNames[d.getMonth()]}</span>
+            <span className="text-[10px] sm:text-[11px] font-medium">{dayNames[d.getDay()]}</span>
+            <span className={`text-base sm:text-lg font-bold ${isSelected ? "text-white" : "text-gray-600 dark:text-[#E8E9F0]"}`}>{d.getDate()}</span>
+            <span className={`text-[10px] sm:text-[11px] ${isSelected ? "text-teal-200 dark:text-teal-200" : "text-gray-400 dark:text-[#9A9DAE]"}`}>{monthNames[d.getMonth()]}</span>
             {hasShot && (
               <div
                 className="w-1.5 h-1.5 rounded-full bg-green-400 mt-0.5"

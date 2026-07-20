@@ -102,7 +102,7 @@ export default function InventoryModal({ open, onClose, editing }) {
               className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
             <datalist id="med-list">{MEDICATIONS.map((m) => <option key={m} value={m} />)}</datalist>
           </Field>
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <Field label="Lot number">
               <input type="text" value={lotNumber} onChange={(e) => setLotNumber(e.target.value)}
                 className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
@@ -112,7 +112,7 @@ export default function InventoryModal({ open, onClose, editing }) {
                 className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] dark:[color-scheme:dark] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
             </Field>
           </div>
-          <div className="flex gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <Field label="Starting quantity">
               <input type="number" min="0" step="1" value={startingQuantity} onChange={(e) => setStartingQuantity(e.target.value)}
                 className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
@@ -132,7 +132,7 @@ export default function InventoryModal({ open, onClose, editing }) {
             <input type="text" value={storageLocation} onChange={(e) => setStorageLocation(e.target.value)} placeholder="e.g. Refrigerator"
               className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
           </Field>
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <Field label="Opened date">
               <input type="date" value={openedDate} onChange={(e) => setOpenedDate(e.target.value)}
                 className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] dark:[color-scheme:dark] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />

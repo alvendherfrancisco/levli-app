@@ -236,29 +236,29 @@ export default function Insights() {
           </div>
 
           {/* Summary chips */}
-          <div className="flex flex-row gap-2 mb-4">
-            <div className="bg-green-50 dark:bg-green-500/10 rounded-xl p-2.5 text-center flex-1 min-w-0 border border-transparent dark:border-green-500/15">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
+            <div className="bg-green-50 dark:bg-green-500/10 rounded-xl p-2.5 text-center min-w-0 border border-transparent dark:border-green-500/15">
               <TrendingDown size={14} className="text-green-500 dark:text-green-400 mx-auto mb-1" style={{filter:"drop-shadow(0 0 6px rgba(34,197,94,0.4))"}} />
               <p className="text-gray-500 dark:text-[#9A9DAE] text-[11px]">Weight Loss</p>
               <p className="font-bold text-green-600 dark:text-green-400 text-sm">
                 {weightLoss != null ? `${weightLoss >= 0 ? "-" : "+"}${Math.abs(weightLoss).toFixed(1)} ${weightUnit}` : "—"}
               </p>
             </div>
-            <div className="bg-indigo-50 dark:bg-indigo-500/10 rounded-xl p-2.5 text-center flex-1 min-w-0 border border-transparent dark:border-indigo-500/15">
+            <div className="bg-indigo-50 dark:bg-indigo-500/10 rounded-xl p-2.5 text-center min-w-0 border border-transparent dark:border-indigo-500/15">
               <Zap size={14} className="text-indigo-500 dark:text-indigo-400 mx-auto mb-1" style={{filter:"drop-shadow(0 0 6px rgba(99,102,241,0.4))"}} />
               <p className="text-gray-500 dark:text-[#9A9DAE] text-[11px]">% Change</p>
               <p className="font-bold text-indigo-600 dark:text-indigo-400 text-sm">
                 {pctWeightChange != null ? `${pctWeightChange >= 0 ? "-" : "+"}${Math.abs(pctWeightChange)}%` : "—"}
               </p>
             </div>
-            <div className="bg-purple-50 dark:bg-purple-500/10 rounded-xl p-2.5 text-center flex-1 min-w-0 border border-transparent dark:border-purple-500/15">
+            <div className="bg-purple-50 dark:bg-purple-500/10 rounded-xl p-2.5 text-center min-w-0 border border-transparent dark:border-purple-500/15">
               <Clock size={14} className="text-purple-500 dark:text-purple-400 mx-auto mb-1" />
               <p className="text-gray-500 dark:text-[#9A9DAE] text-[11px]">Rate/Week</p>
               <p className="font-bold text-purple-600 dark:text-purple-400 text-sm">
                 {ratePerWeek != null ? `${ratePerWeek >= 0 ? "-" : "+"}${Math.abs(ratePerWeek).toFixed(1)} ${weightUnit}` : "—"}
               </p>
             </div>
-            <div className="bg-orange-50 dark:bg-orange-500/10 rounded-xl p-2.5 text-center flex-1 min-w-0 border border-transparent dark:border-orange-500/15">
+            <div className="bg-orange-50 dark:bg-orange-500/10 rounded-xl p-2.5 text-center min-w-0 border border-transparent dark:border-orange-500/15">
               <Gauge size={14} className="text-orange-500 dark:text-orange-400 mx-auto mb-1" style={{filter:"drop-shadow(0 0 6px rgba(249,115,22,0.4))"}} />
               <p className="text-gray-500 dark:text-[#9A9DAE] text-[11px]">Current BMI</p>
               <p className="font-bold text-orange-600 dark:text-orange-400 text-sm">
@@ -351,13 +351,13 @@ export default function Insights() {
                   ))}
                 </div>
               ) : (
-                <div className="flex items-center justify-center gap-2 sm:gap-3">
+                <div className="flex items-center justify-center gap-1.5 sm:gap-3">
                   {prevDayPhoto && (
                     <>
                       <ProgressPhotoCard photo={prevDayPhoto} dateLabel={formatPhotoDate(prevDayPhoto.day_key)} weightLabel={getWeightLabel(prevDayPhoto.day_key)} tag={null} onClick={() => openEditPhoto(prevDayPhoto)} />
-                      <div className="flex flex-col items-center gap-1 flex-shrink-0">
-                        <ArrowRight size={18} className="text-teal-500" />
-                        <span className="text-xs text-teal-400 whitespace-nowrap">{gapDays} days</span>
+                      <div className="flex flex-col items-center gap-0.5 flex-shrink-0">
+                        <ArrowRight size={16} sm={18} className="text-teal-500" />
+                        <span className="text-[10px] sm:text-xs text-teal-400 whitespace-nowrap">{gapDays}d</span>
                       </div>
                     </>
                   )}
@@ -397,7 +397,7 @@ export default function Insights() {
           </div>
           <div className="border-b-2 border-indigo-500 w-12 mb-3" />
 
-          <div className="flex items-center gap-2 mb-4">
+          <div className="flex items-center gap-2 mb-4 flex-wrap">
             {Object.keys(MED_RANGES).map((r) => (
               <button key={r} onClick={() => setMedRange(r)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${

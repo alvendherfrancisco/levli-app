@@ -37,19 +37,19 @@ export default function Shots() {
 
       <div className="max-w-3xl mx-auto">
         {/* Summary cards */}
-        <div className="flex gap-2 px-4 mb-5 overflow-x-auto">
-          <div className="bg-white dark:bg-gray-900 rounded-xl p-3 shadow-sm border border-gray-100 dark:border-gray-800 min-w-[120px]">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 px-4 mb-5">
+          <div className="bg-white dark:bg-gray-900 rounded-xl p-3 shadow-sm border border-gray-100 dark:border-gray-800">
             <div className="flex items-center gap-1.5 mb-1">
-              <div className="w-6 h-6 rounded-lg bg-teal-100 dark:bg-teal-900 flex items-center justify-center">
+              <div className="w-6 h-6 rounded-lg bg-teal-100 dark:bg-teal-900 flex items-center justify-center flex-shrink-0">
                 <Syringe size={12} className="text-teal-600 dark:text-teal-400" />
               </div>
               <span className="text-xs text-gray-400 dark:text-gray-500">Total Shots</span>
             </div>
             <p className="text-2xl font-bold text-gray-900 dark:text-white">{shots.length}</p>
           </div>
-          <div className="bg-white dark:bg-gray-900 rounded-xl p-3 shadow-sm border border-gray-100 dark:border-gray-800 min-w-[120px]">
+          <div className="bg-white dark:bg-gray-900 rounded-xl p-3 shadow-sm border border-gray-100 dark:border-gray-800">
             <div className="flex items-center gap-1.5 mb-1">
-              <div className="w-6 h-6 rounded-lg bg-yellow-100 dark:bg-yellow-900 flex items-center justify-center">
+              <div className="w-6 h-6 rounded-lg bg-yellow-100 dark:bg-yellow-900 flex items-center justify-center flex-shrink-0">
                 <Clock size={12} className="text-yellow-600 dark:text-yellow-400" />
               </div>
               <span className="text-xs text-gray-400 dark:text-gray-500">Last Dose</span>
@@ -61,9 +61,9 @@ export default function Shots() {
               </>
             ) : <p className="text-sm text-gray-400 dark:text-gray-500">No shots yet</p>}
           </div>
-          <div className="bg-white dark:bg-gray-900 rounded-xl p-3 shadow-sm border border-gray-100 dark:border-gray-800 min-w-[120px]">
+          <div className="bg-white dark:bg-gray-900 rounded-xl p-3 shadow-sm border border-gray-100 dark:border-gray-800">
             <div className="flex items-center gap-1.5 mb-1">
-              <div className="w-6 h-6 rounded-lg bg-green-100 dark:bg-green-900 flex items-center justify-center">
+              <div className="w-6 h-6 rounded-lg bg-green-100 dark:bg-green-900 flex items-center justify-center flex-shrink-0">
                 <CalendarCheck size={12} className="text-green-600 dark:text-green-400" />
               </div>
               <span className="text-xs text-gray-400 dark:text-gray-500">Next Shot</span>
@@ -71,9 +71,9 @@ export default function Shots() {
             {nextDate ? <p className="text-lg font-bold text-gray-900 dark:text-white">{nextDate}</p> : <p className="text-sm text-gray-400 dark:text-gray-500">—</p>}
           </div>
           {adherence.adherencePct != null && (
-            <div className="bg-white dark:bg-gray-900 rounded-xl p-3 shadow-sm border border-gray-100 dark:border-gray-800 min-w-[120px]">
+            <div className="bg-white dark:bg-gray-900 rounded-xl p-3 shadow-sm border border-gray-100 dark:border-gray-800">
               <div className="flex items-center gap-1.5 mb-1">
-                <div className="w-6 h-6 rounded-lg bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
+                <div className="w-6 h-6 rounded-lg bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center flex-shrink-0">
                   <CalendarCheck size={12} className="text-indigo-600 dark:text-indigo-400" />
                 </div>
                 <span className="text-xs text-gray-400 dark:text-gray-500">90d Adherence</span>

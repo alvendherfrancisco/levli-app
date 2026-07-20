@@ -82,7 +82,7 @@ export default function JournalEntryModal({ open, onClose, onSave, onDelete, ini
           {/* Mood */}
           <div>
             <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">How are you feeling?</label>
-            <div className="flex gap-2 overflow-x-auto pb-1">
+            <div className="flex flex-wrap gap-2">
               {MOODS.map((m) => {
                 const isActive = mood.label === m.label;
                 const activeStyle = darkMode && isActive
@@ -91,7 +91,7 @@ export default function JournalEntryModal({ open, onClose, onSave, onDelete, ini
                 return (
                   <button key={m.label} onClick={() => setMood(m)}
                     style={activeStyle}
-                    className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium border transition-colors ${
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium border transition-colors ${
                       isActive && !darkMode
                         ? m.lightCls
                         : isActive && darkMode

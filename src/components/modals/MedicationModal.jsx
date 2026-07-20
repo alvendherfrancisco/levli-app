@@ -104,7 +104,7 @@ export default function MedicationModal({ open, onClose, editing }) {
               className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
             <datalist id="med-list">{MEDICATIONS.map((m) => <option key={m} value={m} />)}</datalist>
           </Field>
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <Field label="Prescribed dose">
               <input type="number" min="0" step="0.25" value={prescribedDose} onChange={(e) => setPrescribedDose(e.target.value)}
                 className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
@@ -124,7 +124,7 @@ export default function MedicationModal({ open, onClose, editing }) {
             <input type="text" value={indication} onChange={(e) => setIndication(e.target.value)} placeholder="e.g. Type 2 diabetes"
               className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
           </Field>
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <Field label="Start date">
               <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)}
                 className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] dark:[color-scheme:dark] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
@@ -139,7 +139,7 @@ export default function MedicationModal({ open, onClose, editing }) {
               className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
             <p className="text-xs text-gray-400 mt-1">Enter only what your prescriber told you. Levli does not generate titration schedules.</p>
           </Field>
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <Field label="Prescriber name">
               <input type="text" value={prescriberName} onChange={(e) => setPrescriberName(e.target.value)}
                 className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />

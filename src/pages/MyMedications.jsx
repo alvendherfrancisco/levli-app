@@ -51,12 +51,12 @@ export default function MyMedications() {
           <div className="space-y-3">
             {medications.map((m) => (
               <div key={m.id} className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
-                <div className="flex items-start justify-between">
-                  <button onClick={() => openEdit(m)} className="flex-1 text-left">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="font-bold text-gray-900 dark:text-white text-lg">{m.medication_name}</span>
+                <div className="flex items-start justify-between gap-2">
+                  <button onClick={() => openEdit(m)} className="flex-1 text-left min-w-0">
+                    <div className="flex items-center gap-2 mb-1 flex-wrap">
+                      <span className="font-bold text-gray-900 dark:text-white text-base sm:text-lg break-words">{m.medication_name}</span>
                       {m.status && (
-                        <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${statusColors[m.status] || statusColors.active}`}>{m.status}</span>
+                        <span className={`text-xs px-2 py-0.5 rounded-full font-medium whitespace-nowrap flex-shrink-0 ${statusColors[m.status] || statusColors.active}`}>{m.status}</span>
                       )}
                     </div>
                     <div className="space-y-1 text-sm text-gray-500 dark:text-[#9A9DAE]">
@@ -68,7 +68,7 @@ export default function MyMedications() {
                       {m.prescriber_name && <div className="flex items-center gap-2"><User size={14} className="text-gray-400" /> {m.prescriber_name}</div>}
                     </div>
                   </button>
-                  <div className="flex flex-col gap-2 items-end">
+                  <div className="flex flex-col gap-2 items-end flex-shrink-0">
                     <button onClick={() => openEdit(m)} className="text-gray-400 hover:text-teal-600"><ChevronRight size={20} /></button>
                     <button onClick={() => handleDelete(m.id)} className="text-gray-400 hover:text-red-500"><Trash2 size={16} /></button>
                   </div>

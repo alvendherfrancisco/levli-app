@@ -28,7 +28,7 @@ export default function Home() {
         <Link to="/settings"><Settings size={24} className="text-gray-600 dark:text-gray-400" /></Link>
       </div>
 
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-3xl mx-auto pb-6">
         <DateStrip selectedDate={selectedDate} onSelectDate={setSelectedDate} />
         <NextShotCard />
         <MetricsGrid dayKey={dk} />

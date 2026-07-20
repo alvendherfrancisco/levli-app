@@ -119,25 +119,25 @@ export default function Profile() {
           <div className="border-b-2 border-teal-500 w-10 mb-4" />
 
           <label className="text-sm text-gray-700 dark:text-gray-300 font-medium block mb-2">Height</label>
-          <div className="flex items-center gap-2 mb-1">
+          <div className="flex items-center gap-2 mb-1 flex-wrap">
             {heightUnit === "cm" ?
-            <div className={`flex-1 border rounded-xl px-3 py-2.5 flex items-center bg-white dark:bg-gray-800 ${errors.height_ft ? "border-red-400" : "border-gray-200 dark:border-gray-700"}`}>
+            <div className={`flex-1 border rounded-xl px-3 py-2.5 flex items-center bg-white dark:bg-gray-800 min-w-[120px] ${errors.height_ft ? "border-red-400" : "border-gray-200 dark:border-gray-700"}`}>
                 <input type="text" inputMode="decimal" value={local.height_ft || ""} placeholder="0.0"
               onChange={(e) => setLocal({ ...local, height_ft: numericOnly(e.target.value) })}
-              className="w-full outline-none text-base bg-transparent text-gray-900 dark:text-white" />
+              className="w-full outline-none text-base bg-transparent text-gray-900 dark:text-white min-w-0" />
                 <span className="text-gray-400 text-sm ml-1">cm</span>
               </div> :
             <>
-                <div className={`flex-1 border rounded-xl px-3 py-2.5 flex items-center bg-white dark:bg-gray-800 ${errors.height_ft ? "border-red-400" : "border-gray-200 dark:border-gray-700"}`}>
+                <div className={`flex-1 border rounded-xl px-3 py-2.5 flex items-center bg-white dark:bg-gray-800 min-w-[80px] ${errors.height_ft ? "border-red-400" : "border-gray-200 dark:border-gray-700"}`}>
                   <input type="text" inputMode="decimal" value={local.height_ft || ""} placeholder="0"
                 onChange={(e) => setLocal({ ...local, height_ft: numericOnly(e.target.value, { allowDecimal: false }) })}
-                className="w-full outline-none text-base bg-transparent text-gray-900 dark:text-white" />
+                className="w-full outline-none text-base bg-transparent text-gray-900 dark:text-white min-w-0" />
                   <span className="text-gray-400 text-sm ml-1">ft</span>
                 </div>
-                <div className={`flex-1 border rounded-xl px-3 py-2.5 flex items-center bg-white dark:bg-gray-800 ${errors.height_in ? "border-red-400" : "border-gray-200 dark:border-gray-700"}`}>
+                <div className={`flex-1 border rounded-xl px-3 py-2.5 flex items-center bg-white dark:bg-gray-800 min-w-[80px] ${errors.height_in ? "border-red-400" : "border-gray-200 dark:border-gray-700"}`}>
                   <input type="text" inputMode="decimal" value={local.height_in || ""} placeholder="0.0"
                 onChange={(e) => setLocal({ ...local, height_in: numericOnly(e.target.value, { max: 11.9 }) })}
-                className="w-full outline-none text-base bg-transparent text-gray-900 dark:text-white" />
+                className="w-full outline-none text-base bg-transparent text-gray-900 dark:text-white min-w-0" />
                   <span className="text-gray-400 text-sm ml-1">in</span>
                 </div>
               </>

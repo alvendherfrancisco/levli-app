@@ -62,10 +62,10 @@ export default function Journal() {
       </div>
 
       {/* Category filter chips */}
-      <div className="max-w-3xl mx-auto px-4 mb-3 flex gap-2 overflow-x-auto pb-1">
+      <div className="max-w-3xl mx-auto px-4 mb-3 flex flex-wrap gap-2">
         {ALL_CATEGORIES.map((cat) =>
         <button key={cat} onClick={() => setFilterCat(cat)}
-        className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 border transition-colors ${
+        className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap border transition-colors ${
         filterCat === cat ? "bg-teal-600 text-white border-teal-600" : "bg-white dark:bg-gray-900 text-gray-500 dark:text-[#9A9DAE] border-gray-200 dark:border-gray-700"}`
         }>
             {cat}

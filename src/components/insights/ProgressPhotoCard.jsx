@@ -4,7 +4,7 @@ import SafeImage from "@/components/SafeImage";
 // tag: "latest" | "same-day" | null
 export default function ProgressPhotoCard({ photo, dateLabel, weightLabel, tag, onClick }) {
   return (
-    <button onClick={onClick} className="flex flex-col items-center flex-shrink-0 text-left w-24 sm:w-[140px]">
+    <button onClick={onClick} className="flex flex-col items-center flex-shrink-0 text-left w-20 sm:w-[140px] min-w-0">
       {tag === "same-day" && (
         <p className="text-xs text-gray-400 dark:text-[#9A9DAE] mb-1">Same day</p>
       )}
