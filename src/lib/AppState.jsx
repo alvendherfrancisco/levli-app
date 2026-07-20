@@ -6,6 +6,14 @@ import { seedDemoDataIfNeeded } from "@/lib/seedDemoData";
 
 const AppStateContext = createContext(null);
 
+const ALL_ROUTE_FIELDS = [
+  "route", "molecular_class", "dose_unit", "device_type", "medication_id",
+  "infusion_duration_min", "clinic_location", "premedication_given",
+  "spray_count", "nostril", "priming_done", "taken_with_food",
+  "patch_application_date", "topical_body_area", "topical_notes",
+  "pump_rate", "site_change_date", "reconstitution_date", "in_use_expiry",
+];
+
 const DEFAULT_PROFILE = {
   height_ft: "5", height_in: "8", goal_weight: "160", days_between: "7",
   liquid_unit: "oz", height_unit: "in", weight_unit: "lb",
@@ -18,6 +26,10 @@ export function AppStateProvider({ children }) {
   const [dayMetrics, setDayMetrics] = useState({}); // key: day_key → record
   const [progressPhotosList, setProgressPhotosList] = useState([]); // all ProgressPhoto records, sorted asc by created_date
   const [journalEntries, setJournalEntries] = useState([]);
+  const [medications, setMedications] = useState([]);
+  const [adverseEvents, setAdverseEvents] = useState([]);
+  const [inventory, setInventory] = useState([]);
+  const [proxyAccess, setProxyAccess] = useState([]);
   const [profile, setProfileState] = useState(DEFAULT_PROFILE);
   const [profileId, setProfileId] = useState(null);
   const [darkMode, setDarkModeState] = useState(false);
@@ -37,6 +49,10 @@ export function AppStateProvider({ children }) {
       loadProfile();
       loadDayMetrics();
       loadProgressPhotos();
+      loadMedications();
+      loadAdverseEvents();
+      loadInventory();
+      loadProxyAccess();
     })();
   }, []);
 
@@ -83,9 +99,37 @@ export function AppStateProvider({ children }) {
     setProgressPhotosList(data);
   };
 
+  const loadMedications = async () => {
+    try {
+      const data = await base44.entities.Medication.list("-created_date", 200);
+      setMedications(data);
+    } catch { setMedications([]); }
+  };
+
+  const loadAdverseEvents = async () => {
+    try {
+      const data = await base44.entities.AdverseEvent.list("-onset_date", 500);
+      setAdverseEvents(data);
+    } catch { setAdverseEvents([]); }
+  };
+
+  const loadInventory = async () => {
+    try {
+      const data = await base44.entities.Inventory.list("-created_date", 200);
+      setInventory(data);
+    } catch { setInventory([]); }
+  };
+
+  const loadProxyAccess = async () => {
+    try {
+      const data = await base44.entities.ProxyAccess.list("-created_date", 100);
+      setProxyAccess(data);
+    } catch { setProxyAccess([]); }
+  };
+
   // ── Shots CRUD ─────────────────────────────────────────────────────────────
   const addShot = async (shot) => {
-    const rec = await base44.entities.Shot.create({
+    const payload = {
       medication: shot.medication,
       dose: shot.dose,
       drug_class: shot.drugClass || "GLP-1",
@@ -94,14 +138,36 @@ export function AppStateProvider({ children }) {
       site: shot.site,
       pain: shot.pain,
       notes: shot.notes || "",
+    };
+    // Persist route, molecular class, dose unit, and all route-specific fields
+    ALL_ROUTE_FIELDS.forEach((f) => {
+      if (shot[f] !== undefined && shot[f] !== null && shot[f] !== "") {
+        payload[f] = shot[f];
+      }
     });
+    const rec = await base44.entities.Shot.create(payload);
     setShots((prev) => [rec, ...prev].sort((a, b) => new Date(b.date) - new Date(a.date)));
+    // Decrement linked inventory if present
+    if (rec.medication_id) await decrementInventoryForShot(rec);
     return rec;
   };
 
   const updateShot = async (id, updates) => {
     const rec = await base44.entities.Shot.update(id, updates);
     setShots((prev) => prev.map((s) => s.id === id ? { ...s, ...rec } : s));
+  };
+
+  // Decrement remaining_quantity on the inventory item linked to a shot's medication
+  const decrementInventoryForShot = async (shot) => {
+    if (!shot.medication_id) return;
+    const item = inventory.find((i) => i.medication_id === shot.medication_id && i.remaining_quantity > 0);
+    if (!item) return;
+    try {
+      const updated = await base44.entities.Inventory.update(item.id, {
+        remaining_quantity: Math.max(0, item.remaining_quantity - 1),
+      });
+      setInventory((prev) => prev.map((i) => i.id === item.id ? { ...i, ...updated } : i));
+    } catch { /* non-blocking */ }
   };
 
   const deleteShot = async (id) => {
@@ -234,6 +300,73 @@ export function AppStateProvider({ children }) {
     setJournalEntries((prev) => prev.filter((e) => e.id !== id));
   };
 
+  // ── Medication (regimen) CRUD ───────────────────────────────────────────────
+  const addMedication = async (med) => {
+    const rec = await base44.entities.Medication.create(med);
+    setMedications((prev) => [rec, ...prev]);
+    return rec;
+  };
+  const updateMedication = async (id, updates) => {
+    const rec = await base44.entities.Medication.update(id, updates);
+    setMedications((prev) => prev.map((m) => m.id === id ? { ...m, ...rec } : m));
+  };
+  const deleteMedication = async (id) => {
+    await base44.entities.Medication.delete(id);
+    setMedications((prev) => prev.filter((m) => m.id !== id));
+  };
+
+  // ── AdverseEvent CRUD ───────────────────────────────────────────────────────
+  const addAdverseEvent = async (ev) => {
+    const rec = await base44.entities.AdverseEvent.create(ev);
+    setAdverseEvents((prev) => [rec, ...prev]);
+    return rec;
+  };
+  const updateAdverseEvent = async (id, updates) => {
+    const rec = await base44.entities.AdverseEvent.update(id, updates);
+    setAdverseEvents((prev) => prev.map((e) => e.id === id ? { ...e, ...rec } : e));
+  };
+  const deleteAdverseEvent = async (id) => {
+    await base44.entities.AdverseEvent.delete(id);
+    setAdverseEvents((prev) => prev.filter((e) => e.id !== id));
+  };
+  const getAdverseEventsForDay = (dayKey) => adverseEvents.filter((e) => e.day_key === dayKey);
+
+  // ── Inventory CRUD ─────────────────────────────────────────────────────────
+  const addInventoryItem = async (item) => {
+    const rec = await base44.entities.Inventory.create({
+      remaining_quantity: item.starting_quantity,
+      ...item,
+    });
+    setInventory((prev) => [rec, ...prev]);
+    return rec;
+  };
+  const updateInventoryItem = async (id, updates) => {
+    const rec = await base44.entities.Inventory.update(id, updates);
+    setInventory((prev) => prev.map((i) => i.id === id ? { ...i, ...rec } : i));
+  };
+  const deleteInventoryItem = async (id) => {
+    await base44.entities.Inventory.delete(id);
+    setInventory((prev) => prev.filter((i) => i.id !== id));
+  };
+
+  // ── ProxyAccess CRUD ───────────────────────────────────────────────────────
+  const addProxyAccess = async (pa) => {
+    const rec = await base44.entities.ProxyAccess.create(pa);
+    setProxyAccess((prev) => [rec, ...prev]);
+    return rec;
+  };
+  const revokeProxyAccess = async (id) => {
+    const rec = await base44.entities.ProxyAccess.update(id, {
+      status: "revoked",
+      revoked_date: new Date().toISOString(),
+    });
+    setProxyAccess((prev) => prev.map((p) => p.id === id ? { ...p, ...rec } : p));
+  };
+  const deleteProxyAccess = async (id) => {
+    await base44.entities.ProxyAccess.delete(id);
+    setProxyAccess((prev) => prev.filter((p) => p.id !== id));
+  };
+
   // ── Profile ────────────────────────────────────────────────────────────────
   const setProfile = async (updater) => {
     const next = typeof updater === "function" ? updater(profile) : { ...profile, ...updater };
@@ -265,6 +398,10 @@ export function AppStateProvider({ children }) {
     setDayMetrics({});
     setProgressPhotosList([]);
     setJournalEntries([]);
+    setMedications([]);
+    setAdverseEvents([]);
+    setInventory([]);
+    setProxyAccess([]);
     setProfileState(DEFAULT_PROFILE);
     setProfileId(null);
     setDarkModeState(false);
@@ -313,6 +450,14 @@ export function AppStateProvider({ children }) {
       addProgressPhotoRecord, updateProgressPhotoRecord, deleteProgressPhotoRecord, deleteLatestProgressPhoto,
       // Journal
       journalEntries, addJournalEntry, updateJournalEntry, deleteJournalEntry,
+      // Medications (regimen)
+      medications, loadMedications, addMedication, updateMedication, deleteMedication,
+      // Adverse events
+      adverseEvents, loadAdverseEvents, addAdverseEvent, updateAdverseEvent, deleteAdverseEvent, getAdverseEventsForDay,
+      // Inventory
+      inventory, loadInventory, addInventoryItem, updateInventoryItem, deleteInventoryItem,
+      // Proxy access
+      proxyAccess, loadProxyAccess, addProxyAccess, revokeProxyAccess, deleteProxyAccess,
       // Profile
       profile, setProfile,
       // Derived

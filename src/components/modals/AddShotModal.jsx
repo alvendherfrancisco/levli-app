@@ -5,7 +5,9 @@ import { formatShotDate } from "@/lib/dateUtils";
 import { MEDICATIONS, DRUG_CLASS, isInvestigational, getDoseMax, getMedicationRoutes, getPrimaryRoute, getMolecularClass } from "@/lib/medicationData";
 import { ROUTE_LABELS } from "@/lib/medicationCatalogue";
 import { getCapabilityProfile, getCapabilityWarning, getMolecularClassLabel } from "@/lib/capabilityProfile";
+import { isDosingProhibited } from "@/lib/capabilityProfile";
 import { detectDuplicateActiveIngredient } from "@/lib/drugSafety";
+import { DOSE_UNITS, doseStep, doseToMg } from "@/lib/units";
 import { toast } from "sonner";
 
 // Routes that require injection site selection
@@ -33,7 +35,7 @@ function toInputTime(d) {
 }
 
 export default function AddShotModal({ open, onClose, editingShot }) {
-  const { addShot, updateShot, deleteShot, profile, getRecommendedSite, shots } = useAppState();
+  const { addShot, updateShot, deleteShot, profile, getRecommendedSite, shots, medications } = useAppState();
   const confirmedDupRef = useRef(false);
   const [duplicateWarning, setDuplicateWarning] = useState(null);
 
@@ -43,6 +45,8 @@ export default function AddShotModal({ open, onClose, editingShot }) {
   const [pain, setPain] = useState(0);
   const [medication, setMedication] = useState(defaultMed);
   const [dose, setDose] = useState("2.50");
+  const [doseUnit, setDoseUnit] = useState("mg");
+  const [medicationId, setMedicationId] = useState("");
   const [site, setSite] = useState("");
   const [notes, setNotes] = useState("");
   const [date, setDate] = useState(toInputDate(now));
@@ -53,6 +57,27 @@ export default function AddShotModal({ open, onClose, editingShot }) {
   const [route, setRoute] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  // Route-specific data-capture fields
+  const [deviceType, setDeviceType] = useState("");
+  const [infusionDuration, setInfusionDuration] = useState("");
+  const [clinicLocation, setClinicLocation] = useState("");
+  const [premedicationGiven, setPremedicationGiven] = useState(false);
+  const [sprayCount, setSprayCount] = useState("");
+  const [nostril, setNostril] = useState("");
+  const [primingDone, setPrimingDone] = useState(false);
+  const [takenWithFood, setTakenWithFood] = useState(false);
+  const [patchSite, setPatchSite] = useState("");
+  const [patchApplicationDate, setPatchApplicationDate] = useState("");
+  const [topicalBodyArea, setTopicalBodyArea] = useState("");
+  const [topicalNotes, setTopicalNotes] = useState("");
+  const [pumpRate, setPumpRate] = useState("");
+  const [siteChangeDate, setSiteChangeDate] = useState("");
+  const [reconstitutionDate, setReconstitutionDate] = useState("");
+  const [inUseExpiry, setInUseExpiry] = useState("");
+
+  // When a medication is selected, adopt its dose_unit if a Medication record exists
+  const linkedMed = medications.find((m) => m.medication_name === medication);
+  const effectiveDoseUnit = linkedMed?.dose_unit || doseUnit;
 
   const medRoutes = getMedicationRoutes(medication);
   const caps = getCapabilityProfile(medication);
@@ -66,19 +91,35 @@ export default function AddShotModal({ open, onClose, editingShot }) {
     if (open) {
       if (editingShot) {
         setMedication(editingShot.medication || defaultMed);
-        setDose(String(editingShot.dose || "2.50"));
+        setDose(String(editingShot.dose ?? "2.50"));
+        setDoseUnit(editingShot.dose_unit || "mg");
+        setMedicationId(editingShot.medication_id || "");
         setSite(editingShot.site || recommendedSite);
         setRoute(editingShot.route || getPrimaryRoute(editingShot.medication || defaultMed));
         setNotes(editingShot.notes || "");
         setPain(editingShot.pain ?? 0);
-        // parse date/time back to input format
+        setDeviceType(editingShot.device_type || "");
+        setInfusionDuration(editingShot.infusion_duration_min != null ? String(editingShot.infusion_duration_min) : "");
+        setClinicLocation(editingShot.clinic_location || "");
+        setPremedicationGiven(!!editingShot.premedication_given);
+        setSprayCount(editingShot.spray_count != null ? String(editingShot.spray_count) : "");
+        setNostril(editingShot.nostril || "");
+        setPrimingDone(!!editingShot.priming_done);
+        setTakenWithFood(!!editingShot.taken_with_food);
+        setPatchSite(editingShot.site || "");
+        setPatchApplicationDate(editingShot.patch_application_date || "");
+        setTopicalBodyArea(editingShot.topical_body_area || "");
+        setTopicalNotes(editingShot.topical_notes || "");
+        setPumpRate(editingShot.pump_rate || "");
+        setSiteChangeDate(editingShot.site_change_date || "");
+        setReconstitutionDate(editingShot.reconstitution_date || "");
+        setInUseExpiry(editingShot.in_use_expiry || "");
         try {
           const months = { Jan:0, Feb:1, Mar:2, Apr:3, May:4, Jun:5, Jul:6, Aug:7, Sep:8, Oct:9, Nov:10, Dec:11 };
           const parts = editingShot.date.replace(",", "").split(" ");
           const d = new Date(parseInt(parts[2]), months[parts[0]], parseInt(parts[1]));
           setDate(toInputDate(d));
         } catch { setDate(toInputDate(now)); }
-        // parse time "6:00 AM" → "06:00"
         try {
           const [timePart, ampm] = editingShot.time.split(" ");
           let [h, m] = timePart.split(":").map(Number);
@@ -90,10 +131,28 @@ export default function AddShotModal({ open, onClose, editingShot }) {
         const n = new Date();
         setMedication(defaultMed);
         setDose("2.50");
+        setDoseUnit(linkedMed?.dose_unit || "mg");
+        setMedicationId("");
         setSite(recommendedSite);
         setRoute(getPrimaryRoute(defaultMed));
         setNotes("");
         setPain(0);
+        setDeviceType("");
+        setInfusionDuration("");
+        setClinicLocation("");
+        setPremedicationGiven(false);
+        setSprayCount("");
+        setNostril("");
+        setPrimingDone(false);
+        setTakenWithFood(false);
+        setPatchSite("");
+        setPatchApplicationDate("");
+        setTopicalBodyArea("");
+        setTopicalNotes("");
+        setPumpRate("");
+        setSiteChangeDate("");
+        setReconstitutionDate("");
+        setInUseExpiry("");
         setDate(toInputDate(n));
         setTime(toInputTime(n));
       }
@@ -107,14 +166,19 @@ export default function AddShotModal({ open, onClose, editingShot }) {
 
   const handleSave = async () => {
     const doseNum = parseFloat(dose);
-    const maxDose = getDoseMax(medication);
     if (isNaN(doseNum) || doseNum <= 0) {
-      setError("Please enter a valid dose (mg).");
+      setError("Please enter a valid dose.");
       return;
     }
-    if (doseNum > maxDose) {
-      setError(`That dose exceeds the typical maximum for ${medication} (${maxDose} mg). Check the label or confirm with your prescriber.`);
-      return;
+    // Unit-aware dose-max check (skip if dosing calculations are prohibited)
+    if (!isDosingProhibited(medication)) {
+      const maxDose = getDoseMax(medication);
+      const doseInMg = doseToMg(doseNum, effectiveDoseUnit);
+      // Only compare mass-based units (mg/mcg) to the mg-based max
+      if (doseInMg != null && doseInMg > maxDose) {
+        setError(`That dose exceeds the typical maximum for ${medication} (${maxDose} mg). Check the label or confirm with your prescriber.`);
+        return;
+      }
     }
     // Duplicate active-ingredient check (new shots only, non-blocking)
     if (!editingShot && !confirmedDupRef.current) {
@@ -138,18 +202,72 @@ export default function AddShotModal({ open, onClose, editingShot }) {
       medication, dose: doseNum, drugClass: DRUG_CLASS[medication] || "GLP-1",
       molecularClass: getMolecularClass(medication),
       route: route || getPrimaryRoute(medication),
+      dose_unit: effectiveDoseUnit,
       date: formattedDate, time: formattedTime,
       site: isInjectable ? site : "",
       pain: pain || 0, notes,
     };
+    // Route-specific data-capture fields
+    if (medicationId) payload.medication_id = medicationId;
+    if (deviceType) payload.device_type = deviceType;
+    if (route === "intravenous_infusion") {
+      if (infusionDuration) payload.infusion_duration_min = parseFloat(infusionDuration);
+      if (clinicLocation) payload.clinic_location = clinicLocation;
+      payload.premedication_given = premedicationGiven;
+    }
+    if (route === "nasal") {
+      if (sprayCount) payload.spray_count = parseInt(sprayCount);
+      if (nostril) payload.nostril = nostril;
+      payload.priming_done = primingDone;
+    }
+    if (route === "oral_tablet" || route === "oral_capsule") {
+      payload.taken_with_food = takenWithFood;
+    }
+    if (route === "transdermal") {
+      if (patchSite) payload.site = patchSite;
+      if (patchApplicationDate) payload.patch_application_date = patchApplicationDate;
+    }
+    if (route === "topical_cream" || route === "topical_serum" || route === "topical_gel") {
+      if (topicalBodyArea) payload.topical_body_area = topicalBodyArea;
+      if (topicalNotes) payload.topical_notes = topicalNotes;
+      if (topicalBodyArea) payload.site = topicalBodyArea;
+    }
+    if (route === "pump_infusion") {
+      if (pumpRate) payload.pump_rate = pumpRate;
+      if (siteChangeDate) payload.site_change_date = siteChangeDate;
+    }
+    if (route === "reconstituted_vial") {
+      if (reconstitutionDate) payload.reconstitution_date = reconstitutionDate;
+      if (inUseExpiry) payload.in_use_expiry = inUseExpiry;
+    }
+    if (route === "implant") {
+      if (clinicLocation) payload.clinic_location = clinicLocation;
+    }
     try {
       if (editingShot) {
-        await updateShot(editingShot.id, {
+        const update = {
           medication: payload.medication, dose: payload.dose, drug_class: payload.drugClass,
-          molecular_class: payload.molecularClass, route: payload.route,
+          molecular_class: payload.molecularClass, route: payload.route, dose_unit: payload.dose_unit,
           date: payload.date, time: payload.time, site: payload.site,
           pain: payload.pain, notes: payload.notes,
-        });
+        };
+        if (payload.medication_id) update.medication_id = payload.medication_id;
+        if (payload.device_type) update.device_type = payload.device_type;
+        if (payload.infusion_duration_min != null) update.infusion_duration_min = payload.infusion_duration_min;
+        if (payload.clinic_location) update.clinic_location = payload.clinic_location;
+        if (payload.premedication_given !== undefined) update.premedication_given = payload.premedication_given;
+        if (payload.spray_count != null) update.spray_count = payload.spray_count;
+        if (payload.nostril) update.nostril = payload.nostril;
+        if (payload.priming_done !== undefined) update.priming_done = payload.priming_done;
+        if (payload.taken_with_food !== undefined) update.taken_with_food = payload.taken_with_food;
+        if (payload.patch_application_date) update.patch_application_date = payload.patch_application_date;
+        if (payload.topical_body_area) update.topical_body_area = payload.topical_body_area;
+        if (payload.topical_notes) update.topical_notes = payload.topical_notes;
+        if (payload.pump_rate) update.pump_rate = payload.pump_rate;
+        if (payload.site_change_date) update.site_change_date = payload.site_change_date;
+        if (payload.reconstitution_date) update.reconstitution_date = payload.reconstitution_date;
+        if (payload.in_use_expiry) update.in_use_expiry = payload.in_use_expiry;
+        await updateShot(editingShot.id, update);
         toast.success("Shot updated successfully!");
       } else {
         await addShot(payload);
@@ -259,15 +377,36 @@ export default function AddShotModal({ open, onClose, editingShot }) {
             </div>
           </div>
 
-          {/* Dose */}
+          {/* Dose — unit-aware */}
           <div>
-            <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1 block">Dose (mg)</label>
-            <div className="border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] rounded-xl px-4 py-3 flex items-center">
-              <input type="number" value={dose} min="0.1" max={getDoseMax(medication)} step="0.25"
+            <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1 block">Dose</label>
+            <div className="border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] rounded-xl px-4 py-3 flex items-center gap-2">
+              <input type="number" value={dose} min="0.001" step={doseStep(effectiveDoseUnit)}
                 onChange={(e) => setDose(e.target.value)} className="flex-1 outline-none text-base bg-transparent dark:text-[#E8E9F0]" />
-              <span className="text-gray-400 text-sm">mg</span>
+              <select value={effectiveDoseUnit} onChange={(e) => setDoseUnit(e.target.value)}
+                className="text-sm bg-transparent outline-none text-gray-500 dark:text-gray-400 cursor-pointer">
+                {DOSE_UNITS.map((u) => <option key={u} value={u} className="dark:bg-[#1e2130]">{u}</option>)}
+              </select>
             </div>
-            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Typical max for {medication}: {getDoseMax(medication)} mg</p>
+            {!isDosingProhibited(medication) && (
+              <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Typical max for {medication}: {getDoseMax(medication)} mg</p>
+            )}
+          </div>
+
+          {/* Device type */}
+          <div>
+            <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1 block">Device Type (Optional)</label>
+            <select value={deviceType} onChange={(e) => setDeviceType(e.target.value)}
+              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none">
+              <option value="" className="dark:bg-[#1e2130]">— None —</option>
+              <option value="prefilled_syringe" className="dark:bg-[#1e2130]">Prefilled syringe</option>
+              <option value="single_dose_pen" className="dark:bg-[#1e2130]">Single-dose pen</option>
+              <option value="multidose_pen" className="dark:bg-[#1e2130]">Multidose pen</option>
+              <option value="vial_syringe" className="dark:bg-[#1e2130]">Vial + syringe</option>
+              <option value="pump" className="dark:bg-[#1e2130]">Pump</option>
+              <option value="patch" className="dark:bg-[#1e2130]">Patch</option>
+              <option value="other" className="dark:bg-[#1e2130]">Other</option>
+            </select>
           </div>
 
           {/* Injection Site — only for injectable routes */}
@@ -303,6 +442,121 @@ export default function AddShotModal({ open, onClose, editingShot }) {
               )}
             </div>
           </div>
+          )}
+
+          {/* Route-specific data-capture fields (data only, no guidance text) */}
+          {route === "intravenous_infusion" && (
+            <>
+              <div>
+                <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1 block">Infusion Duration (min)</label>
+                <input type="number" value={infusionDuration} min="1" step="1"
+                  onChange={(e) => setInfusionDuration(e.target.value)} placeholder="e.g. 30"
+                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+              </div>
+              <div>
+                <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1 block">Clinic / Location</label>
+                <input type="text" value={clinicLocation} onChange={(e) => setClinicLocation(e.target.value)} placeholder="e.g. Daycare Unit"
+                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+              </div>
+              <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
+                <input type="checkbox" checked={premedicationGiven} onChange={(e) => setPremedicationGiven(e.target.checked)} className="w-4 h-4 accent-teal-600" />
+                Premedication given
+              </label>
+            </>
+          )}
+          {route === "nasal" && (
+            <>
+              <div>
+                <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1 block">Spray Count</label>
+                <input type="number" value={sprayCount} min="1" step="1"
+                  onChange={(e) => setSprayCount(e.target.value)} placeholder="e.g. 1"
+                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+              </div>
+              <div>
+                <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">Nostril</label>
+                <div className="flex gap-2">
+                  {["left", "right", "both"].map((n) => (
+                    <button key={n} onClick={() => setNostril(nostril === n ? "" : n)}
+                      className={`flex-1 py-2 rounded-xl text-sm font-medium border capitalize ${nostril === n ? "bg-teal-100 dark:bg-teal-500/20 text-teal-700 dark:text-teal-300 border-teal-300 dark:border-teal-500/30" : "bg-white dark:bg-white/[0.05] text-gray-500 dark:text-[#9A9DAE] border-gray-200 dark:border-white/[0.1]"}`}>
+                      {n}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
+                <input type="checkbox" checked={primingDone} onChange={(e) => setPrimingDone(e.target.checked)} className="w-4 h-4 accent-teal-600" />
+                Device primed before use
+              </label>
+            </>
+          )}
+          {(route === "oral_tablet" || route === "oral_capsule") && (
+            <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
+              <input type="checkbox" checked={takenWithFood} onChange={(e) => setTakenWithFood(e.target.checked)} className="w-4 h-4 accent-teal-600" />
+              Taken with food
+            </label>
+          )}
+          {route === "transdermal" && (
+            <>
+              <div>
+                <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1 block">Patch Site</label>
+                <input type="text" value={patchSite} onChange={(e) => setPatchSite(e.target.value)} placeholder="e.g. Upper arm – Left"
+                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+              </div>
+              <div>
+                <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1 block">Application Date</label>
+                <input type="date" value={patchApplicationDate} onChange={(e) => setPatchApplicationDate(e.target.value)}
+                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] dark:[color-scheme:dark] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+              </div>
+            </>
+          )}
+          {(route === "topical_cream" || route === "topical_serum" || route === "topical_gel") && (
+            <>
+              <div>
+                <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1 block">Body Area</label>
+                <input type="text" value={topicalBodyArea} onChange={(e) => setTopicalBodyArea(e.target.value)} placeholder="e.g. Face, left cheek"
+                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+              </div>
+              <div>
+                <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1 block">Application Notes</label>
+                <textarea value={topicalNotes} onChange={(e) => setTopicalNotes(e.target.value)} placeholder="e.g. Morning routine"
+                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-sm resize-none h-20 outline-none focus:border-teal-300" />
+              </div>
+            </>
+          )}
+          {route === "pump_infusion" && (
+            <>
+              <div>
+                <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1 block">Pump Rate</label>
+                <input type="text" value={pumpRate} onChange={(e) => setPumpRate(e.target.value)} placeholder="e.g. 0.5 units/hr"
+                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+              </div>
+              <div>
+                <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1 block">Site Change Date</label>
+                <input type="date" value={siteChangeDate} onChange={(e) => setSiteChangeDate(e.target.value)}
+                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] dark:[color-scheme:dark] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+              </div>
+            </>
+          )}
+          {route === "reconstituted_vial" && (
+            <div className="flex gap-3">
+              <div className="flex-1">
+                <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1 block">Reconstitution Date</label>
+                <input type="date" value={reconstitutionDate} onChange={(e) => setReconstitutionDate(e.target.value)}
+                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] dark:[color-scheme:dark] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+              </div>
+              <div className="flex-1">
+                <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1 block">In-Use Expiry</label>
+                <input type="date" value={inUseExpiry} onChange={(e) => setInUseExpiry(e.target.value)}
+                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] dark:[color-scheme:dark] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+              </div>
+            </div>
+          )}
+          {route === "implant" && (
+            <div>
+              <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1 block">Clinic / Insertion Location</label>
+              <input type="text" value={clinicLocation} onChange={(e) => setClinicLocation(e.target.value)} placeholder="e.g. Clinic name"
+                className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+            </div>
           )}
 
           {/* Pain Level */}

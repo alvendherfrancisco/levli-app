@@ -71,8 +71,13 @@ export const DOSING_INTERVAL_DAYS = (() => {
   return map;
 })();
 
-// ── Half-lives in days (per generic, primary route) ────────────────────────
-// "not established" medications (investigational, cosmetic) are excluded.
+// ── Half-life lookup (brand- and route-aware) ───────────────────────────────
+// Keys by the specific brand+route when the catalogue provides brand-specific
+// values (e.g. Byetta vs Bydureon have different half-lives). Falls back to
+// generic name, then to the primary route's value.
+//
+// HALF_LIFE_DAYS (flat map keyed by generic) is kept for backward compat but
+// callers should prefer getHalfLife(medication, route).
 export const HALF_LIFE_DAYS = (() => {
   const map = {};
   MEDICATION_CATALOGUE.forEach((m) => {
@@ -94,6 +99,23 @@ export const HALF_LIFE_DAYS = (() => {
   });
   return map;
 })();
+
+/** Brand- and route-aware half-life in days. Returns null if not established. */
+export function getHalfLife(medication, route) {
+  const entry = NAME_TO_ENTRY[medication];
+  if (!entry || !entry.half_life_days) return null;
+  if (entry.capability?.research_only || entry.capability?.cosmetic_only) return null;
+  if (entry.capability?.supports_pk_estimation === false) return null;
+  const r = route || entry.routes[0];
+  const val = entry.half_life_days[r] ?? entry.half_life_days[entry.routes[0]];
+  if (val == null) return null;
+  if (typeof val === "number") return val;
+  if (typeof val === "object") {
+    // Brand-specific: look up the exact brand, fall back to first brand
+    return val[medication] ?? Object.values(val)[0] ?? null;
+  }
+  return null;
+}
 
 // ── Per-brand max maintenance dose in mg ───────────────────────────────────
 export const DOSE_MAX = (() => {

@@ -1,0 +1,72 @@
+{
+  "type": "object",
+  "properties": {
+    "product_name": {
+      "type": "string",
+      "description": "Medication or product name"
+    },
+    "medication_id": {
+      "type": "string",
+      "description": "Optional link to a Medication regimen record"
+    },
+    "lot_number": {
+      "type": "string"
+    },
+    "expiry_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "starting_quantity": {
+      "type": "number",
+      "description": "Initial number of doses or units in the container"
+    },
+    "remaining_quantity": {
+      "type": "number",
+      "description": "Remaining doses or units (decremented automatically when shots are logged against this product)"
+    },
+    "quantity_unit": {
+      "type": "string",
+      "description": "Unit for quantities (doses, pens, vials, mL, etc.)",
+      "default": "doses"
+    },
+    "storage_location": {
+      "type": "string",
+      "description": "Where the product is stored (e.g. refrigerator, room temperature)"
+    },
+    "opened_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "in_use_expiry": {
+      "type": "string",
+      "format": "date",
+      "description": "In-use expiry date after opening/reconstitution"
+    },
+    "temperature_excursion": {
+      "type": "boolean",
+      "description": "Whether a temperature excursion has been logged for this product"
+    },
+    "excursion_notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "product_name",
+    "starting_quantity"
+  ],
+  "name": "Inventory",
+  "rls": {
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}

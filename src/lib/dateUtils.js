@@ -1,4 +1,12 @@
-// Shared date utilities
+// Shared date utilities.
+//
+// DST / timezone safety: all date comparisons use local-midnight Date objects
+// (not UTC) so that a dose scheduled on "Jul 20, 2026" stays anchored to that
+// calendar day regardless of DST transitions. The difference between two
+// local-midnight dates is always a whole number of 24h blocks because midnight
+// in any timezone is the same offset within a single day — DST shifts happen
+// at 02:00 or 03:00, never at 00:00. This makes day-count arithmetic safe
+// across DST boundaries without explicit timezone handling.
 
 const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const MONTH_IDX = { Jan:0, Feb:1, Mar:2, Apr:3, May:4, Jun:5, Jul:6, Aug:7, Sep:8, Oct:9, Nov:10, Dec:11 };
@@ -15,7 +23,7 @@ export function formatShotDate(date) {
   return `${MONTHS[date.getMonth()]} ${String(date.getDate()).padStart(2,"0")}, ${date.getFullYear()}`;
 }
 
-/** Date → "YYYY-MM-DD" */
+/** Date → "YYYY-MM-DD" (local, not UTC — avoids off-by-one across timezones) */
 export function toDayKey(date) {
   const d = date instanceof Date ? date : new Date(date);
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
@@ -27,17 +35,19 @@ export function fromDayKey(key) {
   return new Date(y, m - 1, d);
 }
 
-/** "Jun 29, 2026" + N days → "Jun 29, 2026" */
+/** "Jun 29, 2026" + N days → "Jun 29, 2026" — DST-safe: operates on calendar date */
 export function addDaysToShotDate(dateStr, days) {
   const d = parseShotDate(dateStr);
   d.setDate(d.getDate() + days);
   return formatShotDate(d);
 }
 
-/** days until a "Jun 29, 2026" date from today */
+/** days until a "Jun 29, 2026" date from today — DST-safe: both at local midnight */
 export function daysUntilShotDate(dateStr) {
   const d = parseShotDate(dateStr);
-  const today = new Date(); today.setHours(0,0,0,0);
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  d.setHours(0,0,0,0);
   return Math.round((d - today) / 86400000);
 }
 
@@ -51,4 +61,11 @@ export function daysAgoLabel(dateStr) {
 
 export function todayKey() {
   return toDayKey(new Date());
+}
+
+/** Days between two "MMM DD, YYYY" shot-date strings — DST-safe (calendar days) */
+export function daysBetweenShotDates(dateStrA, dateStrB) {
+  const a = parseShotDate(dateStrA); a.setHours(0,0,0,0);
+  const b = parseShotDate(dateStrB); b.setHours(0,0,0,0);
+  return Math.round((b - a) / 86400000);
 }
