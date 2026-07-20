@@ -1,12 +1,10 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Home, Syringe, CalendarDays, BarChart3, ClipboardList, User, Pill, Package } from "lucide-react";
+import { Home, Syringe, CalendarDays, BarChart3, ClipboardList, User } from "lucide-react";
 
 const tabs = [
   { path: "/", label: "Home", icon: Home },
   { path: "/shots", label: "Shots", icon: Syringe },
-  { path: "/medications", label: "Meds", icon: Pill },
-  { path: "/inventory", label: "Stock", icon: Package },
   { path: "/history", label: "History", icon: CalendarDays },
   { path: "/insights", label: "Insights", icon: BarChart3 },
   { path: "/journal", label: "Journal", icon: ClipboardList },
@@ -20,8 +18,8 @@ export default function BottomTabBar() {
     <>
       {/* Mobile: floating bottom bar */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 pb-safe">
-        <div className="mx-2.5 mb-2.5 bg-white rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.08)] border border-gray-100">
-          <div className="flex items-stretch justify-around px-1 py-1.5">
+        <div className="mx-3 mb-3 bg-white rounded-2xl shadow-[0_8px_32px_rgba(99,102,241,0.10)] border border-gray-100/80">
+          <div className="flex items-stretch justify-around px-1.5 py-2">
             {tabs.map((tab) => {
               const isActive = location.pathname === tab.path;
               const Icon = tab.icon;
@@ -29,21 +27,21 @@ export default function BottomTabBar() {
                 <Link
                   key={tab.path}
                   to={tab.path}
-                  className="flex flex-col items-center justify-center gap-0.5 px-0.5 py-1.5 rounded-xl transition-all flex-1 min-w-0 active:scale-90"
+                  className="flex flex-col items-center justify-center gap-1 px-1 py-1 rounded-xl transition-all flex-1 min-w-0 active:scale-90"
                 >
                   <div
-                    className={`w-8 h-8 rounded-xl flex items-center justify-center transition-all ${
-                      isActive ? "bg-indigo-600" : "bg-transparent"
+                    className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 ${
+                      isActive ? "bg-indigo-600 shadow-md shadow-indigo-600/25" : "bg-transparent"
                     }`}
                   >
                     <Icon
-                      size={18}
+                      size={19}
                       strokeWidth={isActive ? 2.4 : 1.8}
                       className={isActive ? "text-white" : "text-gray-400"}
                     />
                   </div>
                   <span
-                    className={`text-[9px] font-medium leading-none truncate ${
+                    className={`text-[9px] font-medium leading-none truncate transition-colors ${
                       isActive ? "text-indigo-600" : "text-gray-400"
                     }`}
                   >
@@ -84,6 +82,9 @@ export default function BottomTabBar() {
             );
           })}
         </nav>
+        <div className="px-3 pt-4 border-t border-gray-100">
+          <p className="text-[10px] text-gray-300 leading-relaxed">Your data stays yours — always private to you.</p>
+        </div>
       </div>
     </>
   );

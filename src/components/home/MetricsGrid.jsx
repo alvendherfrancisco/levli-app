@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import MetricCard from "@/components/home/MetricCard";
-import { Scale, Flame, Beef, Leaf, Cookie, Droplets, Dumbbell, Camera } from "lucide-react";
 import { useAppState } from "@/lib/AppState";
 import AddNutritionModal from "@/components/modals/AddNutritionModal";
 import AddMetricModal from "@/components/modals/AddMetricModal";
 import { todayKey } from "@/lib/dateUtils";
-import { useToast } from "@/hooks/useToast";
 import { toast } from "sonner";
+import { ScaleIcon, NutritionIcon, DropletIcon as WaterIcon, HeartIcon as ExerciseIcon } from "@/components/onboarding/LevliIcons";
+import { Flame, Beef, Cookie, Camera } from "lucide-react";
 
 export default function MetricsGrid({ dayKey }) {
   const dk = dayKey || todayKey();
@@ -30,42 +30,42 @@ export default function MetricsGrid({ dayKey }) {
 
   const allMetrics = [
     {
-      icon: <Scale size={14} className="text-teal-600" />, label: "Weight",
-      value: weight != null ? String(weight) : "–", unit: weightUnit, color: "bg-teal-100",
+      icon: ScaleIcon, label: "Weight",
+      value: weight != null ? String(weight) : "–", unit: weightUnit,
       onAdd: () => setMetricModal({ label: "Weight", unit: weightUnit, current: weight != null ? String(weight) : "", onSave: async (v) => { await saveWeight(dk, v); weight != null ? toast.success("Weight updated successfully!") : toast.success("Weight added successfully!"); } }),
     },
     {
-      icon: <Flame size={14} className="text-orange-500" />, label: "Calories",
+      icon: <Flame size={28} className="text-orange-500" />, label: "Calories",
       value: nutrition.calories, unit: "kcal", color: "bg-orange-100",
       onAdd: () => setShowNutrition(true),
     },
     {
-      icon: <Beef size={14} className="text-teal-500" />, label: "Protein",
+      icon: <Beef size={28} className="text-teal-500" />, label: "Protein",
       value: nutrition.protein, unit: "g", color: "bg-teal-100",
       onAdd: () => setShowNutrition(true),
     },
     {
-      icon: <Leaf size={14} className="text-indigo-500" />, label: "Fiber",
-      value: nutrition.fiber, unit: "g", color: "bg-indigo-100",
+      icon: NutritionIcon, label: "Fiber",
+      value: nutrition.fiber, unit: "g",
       onAdd: () => setShowNutrition(true),
     },
     {
-      icon: <Cookie size={14} className="text-amber-500" />, label: "Carbs",
+      icon: <Cookie size={28} className="text-amber-500" />, label: "Carbs",
       value: nutrition.carbs, unit: "g", color: "bg-amber-100",
       onAdd: () => setShowNutrition(true),
     },
     {
-      icon: <Droplets size={14} className="text-indigo-500" />, label: "Water",
-      value: nutrition.water, unit: liquidUnit, color: "bg-indigo-100",
+      icon: WaterIcon, label: "Water",
+      value: nutrition.water, unit: liquidUnit,
       onAdd: () => setShowNutrition(true),
     },
     {
-      icon: <Dumbbell size={14} className="text-teal-600" />, label: "Exercise",
-      value: exercise != null ? String(exercise) : "0", unit: "min", color: "bg-teal-100",
+      icon: ExerciseIcon, label: "Exercise",
+      value: exercise != null ? String(exercise) : "0", unit: "min",
       onAdd: () => setMetricModal({ label: "Exercise", unit: "min", current: exercise != null ? String(exercise) : "", onSave: async (v) => { await saveExercise(dk, v); exercise != null ? toast.success("Exercise updated successfully!") : toast.success("Exercise added successfully!"); } }),
     },
     {
-      icon: <Camera size={14} className="text-amber-500" />, label: "Progress",
+      icon: <Camera size={28} className="text-amber-500" />, label: "Progress",
       value: photo ? "✓" : "–", unit: "pic", color: "bg-amber-100",
       onAdd: () => setMetricModal({ label: "Progress", unit: "pic", current: photo || "–", dayKey: dk, onSave: async (v, newDayKey) => { await addProgressPhotoRecord(newDayKey || dk, v); toast.success("Progress photo added successfully!"); }, onDelete: async () => { await deleteLatestProgressPhoto(dk); toast.success("Progress photo deleted successfully!"); } }),
     },

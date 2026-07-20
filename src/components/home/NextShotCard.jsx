@@ -1,5 +1,6 @@
 import React from "react";
 import { Syringe } from "lucide-react";
+import { SyringeIcon } from "@/components/onboarding/LevliIcons";
 import { useAppState } from "@/lib/AppState";
 import { addDaysToShotDate, daysUntilShotDate } from "@/lib/dateUtils";
 import { getDosingInterval, getMissedDoseRule } from "@/lib/medicationData";
@@ -14,7 +15,10 @@ export default function NextShotCard() {
   if (shots.length === 0) {
     return (
       <div className="bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 mx-4 mb-4">
-        <p className="text-sm text-gray-400 mb-2">Next Shot</p>
+        <div className="flex items-center gap-2 mb-3">
+          <SyringeIcon size={36} />
+          <p className="text-sm font-semibold text-gray-600">Next shot</p>
+        </div>
         <div className="bg-indigo-50 rounded-xl p-3 flex items-start gap-2 border border-indigo-100/50">
           <Syringe size={18} className="text-indigo-500 mt-0.5 flex-shrink-0" />
           <p className="text-sm text-indigo-600">
@@ -46,13 +50,19 @@ export default function NextShotCard() {
   return (
     <>
       <div className="bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 mx-4 mb-4">
-        <p className="text-sm text-gray-400 mb-1">Next Shot</p>
+        <div className="flex items-center gap-2 mb-3">
+          <SyringeIcon size={36} />
+          <div>
+            <p className="text-xs text-gray-400">Next shot</p>
+            <p className="text-sm font-semibold text-gray-600">{last.medication}</p>
+          </div>
+        </div>
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-xl font-bold text-gray-800">{nextDate}</h3>
             <p className="text-sm font-medium text-indigo-600 mt-0.5">{daysLabel}</p>
             <div className="mt-2 border-t border-gray-100 pt-2">
-              <p className="text-xs text-gray-400">Last Dose</p>
+              <p className="text-xs text-gray-400">Last dose</p>
               <p className="text-sm font-semibold text-gray-600">
                 {last.date} · {last.dose} {last.dose_unit || "mg"}
               </p>

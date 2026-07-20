@@ -1,18 +1,20 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Settings, Plus, BookOpen, Clock, Heart, FileText, AlertTriangle, Zap, Star } from "lucide-react";
+import { Settings, Plus, Clock, Heart, FileText, AlertTriangle } from "lucide-react";
 import JournalEntryModal from "@/components/modals/JournalEntryModal";
 import { useAppState } from "@/lib/AppState";
 import { toast } from "sonner";
+import { MascotEmptyState } from "@/components/levli/LevliUI";
+import { MoodIcon, NutritionIcon, HeartIcon, JournalIcon, SparkleIcon } from "@/components/onboarding/LevliIcons";
 
 const CATEGORY_CONFIG = {
-  Mood:          { icon: <Heart size={20} className="text-teal-500" />, tint: "bg-teal-100" },
-  "General Note": { icon: <FileText size={20} className="text-indigo-500" />, tint: "bg-indigo-100" },
-  "Side Effect":  { icon: <AlertTriangle size={20} className="text-orange-500" />, tint: "bg-orange-100" },
-  Energy:       { icon: <Zap size={20} className="text-amber-500" />, tint: "bg-amber-100" },
-  Milestone:    { icon: <Star size={20} className="text-orange-500" />, tint: "bg-orange-100" },
-  Food:         { icon: <FileText size={20} className="text-orange-500" />, tint: "bg-orange-100" },
-  Exercise:     { icon: <Zap size={20} className="text-teal-500" />, tint: "bg-teal-100" },
+  Mood:          { icon: <MoodIcon size={36} />, tint: "" },
+  "General Note": { icon: <JournalIcon size={36} />, tint: "" },
+  "Side Effect":  { icon: <AlertTriangle size={24} className="text-orange-500" />, tint: "bg-orange-100" },
+  Energy:       { icon: <SparkleIcon size={28} />, tint: "" },
+  Milestone:    { icon: <HeartIcon size={36} />, tint: "" },
+  Food:         { icon: <NutritionIcon size={36} />, tint: "" },
+  Exercise:     { icon: <HeartIcon size={36} />, tint: "" },
 };
 const ALL_CATEGORIES = ["All", "Mood", "General Note", "Side Effect", "Energy", "Milestone", "Food", "Exercise"];
 
@@ -79,19 +81,14 @@ export default function Journal() {
       <div className="max-w-3xl mx-auto">
         {filtered.length === 0 ? (
           <div className="px-4">
-            <div className="bg-white rounded-2xl p-8 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 text-center">
-              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 bg-teal-100">
-                <BookOpen size={28} className="text-teal-500" />
-              </div>
-              <h3 className="text-lg font-bold text-gray-800 mb-2">No journal entries yet</h3>
-              <p className="text-sm text-gray-400 mb-5">Record your thoughts, symptoms, and medication experiences.</p>
+            <MascotEmptyState title="No entries yet" subtitle="Record your thoughts, mood, and how you're feeling.">
               <button
                 onClick={openNew}
                 className="px-6 py-3.5 bg-indigo-600 text-white rounded-full font-semibold flex items-center gap-2 mx-auto shadow-lg shadow-indigo-600/20 active:scale-95 transition-all"
               >
-                <Plus size={18} /> Add Journal Entry
+                <Plus size={18} /> Add entry
               </button>
-            </div>
+            </MascotEmptyState>
           </div>
         ) : (
           <div className="px-4 space-y-3 pb-28">

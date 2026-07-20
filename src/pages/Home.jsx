@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Settings, Plus, Info, HelpCircle, Wind, ArrowRight } from "lucide-react";
+import { Settings, Plus, Info, ArrowRight } from "lucide-react";
 import DateStrip from "@/components/home/DateStrip";
 import NextShotCard from "@/components/home/NextShotCard";
 import MetricsGrid from "@/components/home/MetricsGrid";
@@ -8,19 +8,26 @@ import AddShotModal from "@/components/modals/AddShotModal";
 import SideEffectsModal from "@/components/modals/SideEffectsModal";
 import { useAppState } from "@/lib/AppState";
 import { toDayKey } from "@/lib/dateUtils";
-import { AmbientHeaderBg } from "@/components/levli/LevliUI";
+import { AmbientHeaderBg, WarmCallout } from "@/components/levli/LevliUI";
+import { PillIcon, PackageIcon, ReportIcon, MoodIcon, SyringeIcon } from "@/components/onboarding/LevliIcons";
 
 export default function Home() {
   const [showShot, setShowShot] = useState(false);
   const [showSideEffects, setShowSideEffects] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const { getSideEffects, adverseEventsByDay } = useAppState();
+  const { getSideEffects, adverseEventsByDay, shots } = useAppState();
   const dk = toDayKey(selectedDate);
   const sideEffects = getSideEffects(dk);
   const dayAdverseEvents = adverseEventsByDay[dk] || [];
 
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+
+  const quickActions = [
+    { to: "/medications", icon: <PillIcon size={40} />, label: "Medications" },
+    { to: "/inventory", icon: <PackageIcon size={40} />, label: "Stock" },
+    { to: "/report", icon: <ReportIcon size={40} />, label: "Report" },
+  ];
 
   return (
     <div className="bg-[#FAFAFA] min-h-screen w-full relative">
@@ -36,19 +43,31 @@ export default function Home() {
 
       <div className="max-w-3xl mx-auto pb-6 relative z-10">
         <DateStrip selectedDate={selectedDate} onSelectDate={setSelectedDate} />
+
+        {/* Quick actions */}
+        <div className="px-4 mb-4">
+          <div className="grid grid-cols-3 gap-2">
+            {quickActions.map((a) => (
+              <Link key={a.to} to={a.to}
+                className="bg-white rounded-2xl p-3 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 flex flex-col items-center gap-1.5 active:scale-[0.97] transition-transform">
+                {a.icon}
+                <span className="text-xs font-medium text-gray-500">{a.label}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+
         <NextShotCard />
         <MetricsGrid dayKey={dk} />
 
-        {/* Side Effects card */}
+        {/* Side effects card */}
         <button
           onClick={() => setShowSideEffects(true)}
           className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 w-[calc(100%-2rem)] text-left active:scale-[0.99] transition-transform"
         >
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center">
-              <Wind size={16} className="text-teal-500" />
-            </div>
-            <span className="font-semibold text-gray-700 text-sm">Side effects</span>
+            <MoodIcon size={32} />
+            <span className="font-semibold text-gray-700 text-sm">How are you feeling?</span>
           </div>
           {sideEffects || dayAdverseEvents.length > 0 ? (
             <div className="bg-teal-50 rounded-xl p-3 border border-teal-100/50">
@@ -66,40 +85,38 @@ export default function Home() {
           ) : (
             <div className="bg-teal-50 rounded-xl p-3 flex items-center gap-2 border border-teal-100/50">
               <Info size={16} className="text-teal-500 flex-shrink-0" />
-              <p className="text-sm text-teal-600">Tap to add side effects.</p>
+              <p className="text-sm text-teal-600">Tap to log how you're feeling today.</p>
             </div>
           )}
         </button>
 
-        {/* Medication Exposure card */}
+        {/* Medication levels card */}
         <div className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80">
           <div className="flex items-start justify-between mb-2">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center">
-                <HelpCircle size={16} className="text-indigo-500" />
-              </div>
+              <SyringeIcon size={32} />
               <div>
-                <h3 className="font-bold text-gray-800 text-sm">Modelled Medication Exposure</h3>
-                <p className="text-xs text-indigo-400">Illustrative estimate of relative medication exposure (not a blood-level measurement).</p>
+                <h3 className="font-bold text-gray-800 text-sm">Medication levels</h3>
+                <p className="text-xs text-gray-400">Estimated levels in your system.</p>
               </div>
             </div>
           </div>
           <Link to="/insights" className="bg-indigo-50 rounded-xl p-3 flex items-center gap-2 block border border-indigo-100/50 active:scale-[0.99] transition-transform">
             <Info size={16} className="text-indigo-500 flex-shrink-0" />
-            <p className="text-sm text-indigo-600">View full exposure chart in Insights <ArrowRight size={12} className="inline" /></p>
+            <p className="text-sm text-indigo-600">See full chart in Insights <ArrowRight size={12} className="inline" /></p>
           </Link>
         </div>
 
-        <p className="text-[11px] text-gray-400 text-center px-4 mb-4">
-          Levli is a personal logbook, not medical advice. Do not use it to adjust your dose — consult your prescriber.
-        </p>
+        <WarmCallout tone="indigo">
+          Levli is your personal logbook, not medical advice. Do not use it to adjust your dose — talk to your prescriber for decisions about your treatment.
+        </WarmCallout>
       </div>
 
       <button
         onClick={() => setShowShot(true)}
         className="fixed bottom-24 right-5 lg:right-8 bg-indigo-600 text-white rounded-full shadow-lg shadow-indigo-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-indigo-700 active:scale-95 transition-all text-sm px-5 py-3"
       >
-        <Plus size={18} /> Add Shot
+        <Plus size={18} /> Log shot
       </button>
 
       <AddShotModal open={showShot} onClose={() => setShowShot(false)} />

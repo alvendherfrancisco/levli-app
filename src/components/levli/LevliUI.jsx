@@ -152,3 +152,113 @@ export function SectionHeading({ children, className = "" }) {
     </div>
   );
 }
+
+// ── Staggered fade-in list ──────────────────────────────────────────────────
+export function StaggerItem({ children, delay = 0, className = "" }) {
+  return (
+    <div
+      className={`animate-onb-scale ${className}`}
+      style={{ animationDelay: `${delay}ms`, animationFillMode: "backwards" }}
+    >
+      {children}
+    </div>
+  );
+}
+
+// ── Mascot empty state ───────────────────────────────────────────────────────
+import { DropletMascot } from "@/components/onboarding/LevliIcons";
+export function MascotEmptyState({ title, subtitle, children }) {
+  return (
+    <div className="bg-white rounded-2xl p-8 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 text-center relative overflow-hidden">
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="w-48 h-48 rounded-full blur-3xl opacity-30" style={{ background: "radial-gradient(circle, rgba(99,102,241,0.2), transparent 70%)" }} />
+      </div>
+      <div className="relative z-10">
+        <DropletMascot size={72} className="mx-auto mb-4 animate-onb-bounce" />
+        {title && <h3 className="text-lg font-bold text-gray-800 mb-1">{title}</h3>}
+        {subtitle && <p className="text-sm text-gray-400 mb-5">{subtitle}</p>}
+        {children}
+      </div>
+    </div>
+  );
+}
+
+// ── Warm callout banner (reassuring tone) ──────────────────────────────────
+export function WarmCallout({ icon, title, children, tone = "indigo" }) {
+  const tones = {
+    indigo: "bg-indigo-50 border-indigo-100/50",
+    teal: "bg-teal-50 border-teal-100/50",
+    green: "bg-green-50 border-green-100/50",
+    amber: "bg-amber-50 border-amber-100/50",
+    orange: "bg-orange-50 border-orange-100/50",
+  };
+  const textTones = {
+    indigo: "text-indigo-600",
+    teal: "text-teal-600",
+    green: "text-green-600",
+    amber: "text-amber-600",
+    orange: "text-orange-600",
+  };
+  return (
+    <div className={`rounded-2xl p-3.5 border flex items-start gap-3 ${tones[tone]}`}>
+      {icon && <div className="flex-shrink-0 mt-0.5">{icon}</div>}
+      <div>
+        {title && <p className={`text-sm font-semibold ${textTones[tone]}`}>{title}</p>}
+        <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{children}</p>
+      </div>
+    </div>
+  );
+}
+
+// ── Gradient chart tooltip (dark rounded pill) ───────────────────────────────
+export function ChartTooltip({ active, payload, label, unit = "", valueLabels }) {
+  if (!active || !payload || !payload.length) return null;
+  return (
+    <div className="bg-gray-800/95 backdrop-blur-sm rounded-2xl px-3.5 py-2 shadow-xl border border-white/10">
+      {label && <p className="text-white/60 text-[10px] font-medium mb-1">{label}</p>}
+      {payload.map((entry, i) => (
+        <p key={i} className="text-white text-xs font-semibold">
+          {valueLabels?.[entry.name] || entry.name}: {entry.value}{unit}
+        </p>
+      ))}
+    </div>
+  );
+}
+
+// ── Gradient defs for recharts ───────────────────────────────────────────────
+export function ChartGradients({ idPrefix = "levli" }) {
+  return (
+    <defs>
+      <linearGradient id={`${idPrefix}-indigo`} x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stopColor="#6366F1" stopOpacity={0.25} />
+        <stop offset="100%" stopColor="#6366F1" stopOpacity={0.02} />
+      </linearGradient>
+      <linearGradient id={`${idPrefix}-teal`} x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stopColor="#14B8A6" stopOpacity={0.25} />
+        <stop offset="100%" stopColor="#14B8A6" stopOpacity={0.02} />
+      </linearGradient>
+      <linearGradient id={`${idPrefix}-orange`} x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stopColor="#F97316" stopOpacity={0.25} />
+        <stop offset="100%" stopColor="#F97316" stopOpacity={0.02} />
+      </linearGradient>
+      <linearGradient id={`${idPrefix}-purple`} x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stopColor="#8B5CF6" stopOpacity={0.22} />
+        <stop offset="100%" stopColor="#8B5CF6" stopOpacity={0.02} />
+      </linearGradient>
+    </defs>
+  );
+}
+
+// ── Floating Add Button ──────────────────────────────────────────────────────
+export function FloatingAddButton({ onClick, label = "Add" }) {
+  return (
+    <button
+      onClick={onClick}
+      className="fixed bottom-24 right-5 lg:right-8 bg-indigo-600 text-white rounded-full shadow-lg shadow-indigo-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-indigo-700 active:scale-95 transition-all text-sm px-5 py-3"
+    >
+      <Plus size={18} /> {label}
+    </button>
+  );
+}
+
+import { Plus } from "lucide-react";

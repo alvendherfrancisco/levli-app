@@ -183,6 +183,76 @@ export function InjectionSiteIcon({ size = 48, className }) {
   );
 }
 
+// ── Package (inventory) ───────────────────────────────────────────────────
+export function PackageIcon({ size = 48, className }) {
+  const gid = useGid("pkg");
+  return (
+    <SvgIcon size={size} className={className}>
+      <defs><Grad id={gid} from="#6366F1" to="#14B8A6" /></defs>
+      <rect x="8" y="16" width="32" height="24" rx="6" fill={`url(#${gid})`} />
+      <path d="M16 16 L 20 8 L 28 8 L 32 16" stroke="white" strokeWidth="2" strokeOpacity="0.4" fill="none" strokeLinejoin="round" />
+      <line x1="8" y1="24" x2="40" y2="24" stroke="white" strokeWidth="1.5" strokeOpacity="0.25" />
+      <circle cx="24" cy="30" r="2.5" fill="white" fillOpacity="0.7" />
+    </SvgIcon>
+  );
+}
+
+// ── Journal (notebook) ─────────────────────────────────────────────────────
+export function JournalIcon({ size = 48, className }) {
+  const gid = useGid("jrnl");
+  return (
+    <SvgIcon size={size} className={className}>
+      <defs><Grad id={gid} from="#6366F1" to="#3B82F6" /></defs>
+      <rect x="10" y="8" width="28" height="32" rx="6" fill={`url(#${gid})`} />
+      <rect x="10" y="8" width="6" height="32" rx="3" fill="white" fillOpacity="0.2" />
+      <line x1="22" y1="18" x2="32" y2="18" stroke="white" strokeWidth="2" strokeLinecap="round" strokeOpacity="0.7" />
+      <line x1="22" y1="24" x2="32" y2="24" stroke="white" strokeWidth="2" strokeLinecap="round" strokeOpacity="0.5" />
+      <line x1="22" y1="30" x2="28" y2="30" stroke="white" strokeWidth="2" strokeLinecap="round" strokeOpacity="0.5" />
+    </SvgIcon>
+  );
+}
+
+// ── Clock (history) ────────────────────────────────────────────────────────
+export function ClockIcon({ size = 48, className }) {
+  const gid = useGid("clk");
+  return (
+    <SvgIcon size={size} className={className}>
+      <defs><Grad id={gid} from="#14B8A6" to="#3B82F6" /></defs>
+      <circle cx="24" cy="24" r="18" fill={`url(#${gid})`} />
+      <path d="M24 14 L 24 24 L 32 28" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+    </SvgIcon>
+  );
+}
+
+// ── Document (report) ──────────────────────────────────────────────────────
+export function ReportIcon({ size = 48, className }) {
+  const gid = useGid("rpt");
+  return (
+    <SvgIcon size={size} className={className}>
+      <defs><Grad id={gid} from="#6366F1" to="#14B8A6" /></defs>
+      <rect x="12" y="8" width="24" height="32" rx="5" fill={`url(#${gid})`} />
+      <line x1="17" y1="16" x2="31" y2="16" stroke="white" strokeWidth="2" strokeLinecap="round" strokeOpacity="0.6" />
+      <line x1="17" y1="22" x2="31" y2="22" stroke="white" strokeWidth="2" strokeLinecap="round" strokeOpacity="0.6" />
+      <line x1="17" y1="28" x2="25" y2="28" stroke="white" strokeWidth="2" strokeLinecap="round" strokeOpacity="0.6" />
+    </SvgIcon>
+  );
+}
+
+// ── Droplet mascot small (for empty states) ────────────────────────────────
+export function DropletMascot({ size = 80, className }) {
+  const gid = useGid("masc");
+  return (
+    <svg width={size} height={size} viewBox="0 0 80 80" fill="none" className={className} xmlns="http://www.w3.org/2000/svg">
+      <defs><Grad id={gid} from="#6366F1" to="#14B8A6" /></defs>
+      <path d="M40 10 C 40 10, 22 30, 22 48 a18 18 0 0 0 36 0 C 58 30, 40 10, 40 10Z" fill={`url(#${gid})`} />
+      <path d="M40 22 C 40 22, 28 38, 28 48 a12 12 0 0 0 24 0" fill="white" fillOpacity="0.15" />
+      <circle cx="33" cy="44" r="2.5" fill="white" />
+      <circle cx="47" cy="44" r="2.5" fill="white" />
+      <path d="M34 52 Q 40 58 46 52" stroke="white" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+    </svg>
+  );
+}
+
 // ── Sparkle ────────────────────────────────────────────────────────────────
 export function SparkleIcon({ size = 16, className }) {
   const gid = useGid("spark");
