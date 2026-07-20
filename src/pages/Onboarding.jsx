@@ -1,18 +1,30 @@
 import React, { useState } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import OnboardingScreen from "@/components/onboarding/OnboardingScreen";
-import PhoneMockup from "@/components/onboarding/PhoneMockup";
-import QuizScreen from "@/components/onboarding/QuizScreen";
-import UnitsStep from "@/components/onboarding/UnitsStep";
-import { Bell, Droplets, ShieldCheck, Calendar, User } from "lucide-react";
+import {
+  WelcomeIllustration,
+  EmpathyIllustration,
+  MedicationIllustration,
+  ScheduleIllustration,
+  TrackingIllustration,
+  PrivacyIllustration,
+  CompletionIllustration,
+} from "@/components/onboarding/OnboardingIllustrations";
+import {
+  PillIcon,
+  MoodIcon,
+  HeartIcon,
+  ScaleIcon,
+  NutritionIcon,
+  InjectionSiteIcon,
+} from "@/components/onboarding/LevliIcons";
 import { useAppState } from "@/lib/AppState";
-import { MiniHomeScreen, MiniShotsScreen, MiniInsightsScreen, MiniCalendarScreen, MiniJournalScreen, MiniProfileScreen } from "@/components/onboarding/MiniScreens";
 import { MEDICATIONS } from "@/lib/medicationData";
+import { Check } from "lucide-react";
 
-const TOTAL_STEPS = 18;
+const TOTAL_STEPS = 7;
 const PRIVACY_POLICY_VERSION = "1.0";
 
-// Check if a birthdate indicates a minor (under 18)
 function isMinor(birthdate) {
   if (!birthdate) return false;
   const [y, m, d] = birthdate.split("-").map(Number);
@@ -24,362 +36,424 @@ function isMinor(birthdate) {
   return age < 18;
 }
 
+const MED_OPTIONS = [
+  { label: "Mounjaro®", generic: "Tirzepatide" },
+  { label: "Wegovy®", generic: "Semaglutide" },
+  { label: "Ozempic®", generic: "Semaglutide" },
+  { label: "Zepbound®", generic: "Tirzepatide" },
+  { label: "Saxenda®", generic: "Liraglutide" },
+  { label: "Rybelsus®", generic: "Semaglutide" },
+  { label: "Other", generic: null },
+];
+
+const FREQUENCY_OPTIONS = [
+  { label: "Once weekly", days: "7" },
+  { label: "Every two weeks", days: "14" },
+  { label: "Once monthly", days: "30" },
+  { label: "Daily", days: "1" },
+  { label: "Irregular schedule", days: "7" },
+];
+
+const DAYS = ["S", "M", "T", "W", "T", "F", "S"];
+
+const TRACKING_OPTIONS = [
+  { key: "symptoms", label: "Symptoms", desc: "Note how you're feeling day to day", Icon: MoodIcon },
+  { key: "mood", label: "Mood", desc: "Track emotional wellbeing", Icon: HeartIcon },
+  { key: "weight", label: "Weight", desc: "Monitor progress over time", Icon: ScaleIcon },
+  { key: "nutrition", label: "Nutrition", desc: "Log meals, water, and protein", Icon: NutritionIcon },
+  { key: "sites", label: "Injection sites", desc: "Rotate with confidence", Icon: InjectionSiteIcon },
+];
+
+const UNIT_GROUPS = [
+  { key: "weight_unit", label: "Weight", options: [{ value: "lb", label: "lb" }, { value: "kg", label: "kg" }] },
+  { key: "height_unit", label: "Height", options: [{ value: "in", label: "ft / in" }, { value: "cm", label: "cm" }] },
+  { key: "liquid_unit", label: "Liquids", options: [{ value: "oz", label: "oz" }, { value: "mL", label: "mL" }] },
+];
+
 export default function Onboarding() {
   const [step, setStep] = useState(0);
   const navigate = useNavigate();
   const { setProfile, profile, recordConsent, recordParentalConsent } = useAppState();
-  const [quizAnswers, setQuizAnswers] = useState({});
+
+  const [selectedMeds, setSelectedMeds] = useState([]);
+  const [doseAmount, setDoseAmount] = useState("");
+  const [frequency, setFrequency] = useState(null);
+  const [shotDay, setShotDay] = useState(null);
+  const [tracking, setTracking] = useState([]);
   const [units, setUnits] = useState({ weight_unit: "lb", height_unit: "in", liquid_unit: "oz" });
-  const [birthdate, setBirthdate] = useState("");
   const [gdprConsented, setGdprConsented] = useState(false);
+  const [birthdate, setBirthdate] = useState("");
   const [parentalConsentName, setParentalConsentName] = useState("");
 
   if (profile?.onboarding_completed) {
     return <Navigate to="/" replace />;
   }
 
-  const handleQuizAnswer = (questionKey, answers) => {
-    setQuizAnswers((prev) => ({ ...prev, [questionKey]: answers }));
-  };
+  const canContinue = (() => {
+    if (step === 2) return selectedMeds.length > 0;
+    if (step === 3) return frequency !== null;
+    if (step === 5) return gdprConsented && birthdate;
+    return true;
+  })();
 
   const next = async () => {
-    // Block on consent step if not consented
-    if (step === 9 && !gdprConsented) return;
-    // Block on birthdate step if empty
-    if (step === 10 && !birthdate) return;
-    // Block on parental consent step if minor and no guardian name
-    if (step === 11 && isMinor(birthdate) && !parentalConsentName.trim()) return;
-
-    // Skip parental consent step (11) for non-minors
-    let nextStep = step + 1;
-    if (step === 10 && !isMinor(birthdate)) nextStep = 12;
-
-    if (nextStep < TOTAL_STEPS) {
-      setStep(nextStep);
-    } else {
-      // Record consents
-      if (gdprConsented) await recordConsent(PRIVACY_POLICY_VERSION);
-      if (isMinor(birthdate) && parentalConsentName.trim()) await recordParentalConsent(parentalConsentName);
-
-      // Derive default medication from quiz answer
-      const medAnswers = quizAnswers["medication"] || [];
-      let defaultMed = "Ozempic®";
-      if (medAnswers.length && MEDICATIONS.includes(medAnswers[0])) {
-        defaultMed = medAnswers[0];
-      } else if (medAnswers.some(a => a.includes("Tirzepatide"))) defaultMed = "Zepbound®";
-      else if (medAnswers.some(a => a.includes("Semaglutide"))) defaultMed = "Ozempic®";
-
-      const freqAnswers = quizAnswers["frequency"] || [];
-      let daysBetween = "7";
-      if (freqAnswers.some(a => a.includes("two weeks"))) daysBetween = "14";
-      else if (freqAnswers.some(a => a.includes("monthly"))) daysBetween = "30";
-
-      await setProfile({ ...profile, default_medication: defaultMed, days_between: daysBetween, ...units, birthdate, onboarding_completed: true });
-      navigate("/");
+    if (step < TOTAL_STEPS - 1) {
+      setStep(step + 1);
+      return;
     }
+    // Completion — record consents + save profile (preserves all original logic)
+    if (gdprConsented) await recordConsent(PRIVACY_POLICY_VERSION);
+    if (isMinor(birthdate) && parentalConsentName.trim()) await recordParentalConsent(parentalConsentName);
+
+    const realMeds = selectedMeds.filter((m) => m !== "Other");
+    let defaultMed = "Ozempic®";
+    if (realMeds.length && MEDICATIONS.includes(realMeds[0])) {
+      defaultMed = realMeds[0];
+    } else if (realMeds.some((m) => MED_OPTIONS.find((o) => o.label === m)?.generic === "Tirzepatide")) {
+      defaultMed = "Zepbound®";
+    }
+
+    const freqOption = FREQUENCY_OPTIONS.find((f) => f.label === frequency);
+    const daysBetween = freqOption ? freqOption.days : "7";
+
+    await setProfile({
+      ...profile,
+      default_medication: defaultMed,
+      days_between: daysBetween,
+      ...units,
+      birthdate,
+      onboarding_completed: true,
+    });
+    navigate("/");
   };
 
+  const back = () => {
+    if (step > 0) setStep(step - 1);
+  };
+
+  const ctaLabel =
+    step === 0 ? "Get started" :
+    step === 5 ? "Allow & continue" :
+    step === 6 ? "Go to Home" : "Next";
+
+  const secondaryAction =
+    step === 0
+      ? { label: "I already have an account", onClick: () => navigate("/login") }
+      : null;
+
   return (
-    <OnboardingScreen step={step} totalSteps={TOTAL_STEPS} onContinue={next} hideButton={step === 7}>
+    <OnboardingScreen
+      step={step}
+      totalSteps={TOTAL_STEPS}
+      onContinue={next}
+      onBack={back}
+      ctaLabel={ctaLabel}
+      canContinue={canContinue}
+      secondaryAction={secondaryAction}
+    >
       {step === 0 && <WelcomeStep />}
-      {step === 1 && <NeverMissStep />}
-      {step === 2 && <VisualizeStep />}
-      {step === 3 && <MedicationTrackingStep />}
-      {step === 4 && <HistoryCalendarStep />}
-      {step === 5 && <JournalStep />}
-      {step === 6 && <ReportsStep />}
-      {step === 7 && <NotificationStep onContinue={next} />}
-      {step === 8 && <PersonalizeStep />}
-      {step === 9 && (
-        <ConsentStep consented={gdprConsented} setConsented={setGdprConsented} />
-      )}
-      {step === 10 && (
-        <BirthdateStep birthdate={birthdate} setBirthdate={setBirthdate} />
-      )}
-      {step === 11 && isMinor(birthdate) && (
-        <ParentalConsentStep guardianName={parentalConsentName} setGuardianName={setParentalConsentName} />
-      )}
-      {step === 12 && (
-        <QuizScreen
-          question="What results matter most to you?"
-          subtitle="Select all that apply to personalize your experience"
-          multiSelect
-          options={[
-            "Achieving my weight management goals",
-            "Never missing my doses",
-            "Tracking and managing side effects",
-            "Properly rotating injection sites",
-            "Understanding my medication exposure",
-            "Sharing progress with my healthcare provider",
-            "Tracking my nutrition and hydration",
-          ]}
+      {step === 1 && <EmpathyStep />}
+      {step === 2 && <MedicationStep selectedMeds={selectedMeds} setSelectedMeds={setSelectedMeds} />}
+      {step === 3 && (
+        <ScheduleStep
+          doseAmount={doseAmount}
+          setDoseAmount={setDoseAmount}
+          frequency={frequency}
+          setFrequency={setFrequency}
+          shotDay={shotDay}
+          setShotDay={setShotDay}
         />
       )}
-      {step === 13 && (
-        <QuizScreen
-          question="What challenges do you face?"
-          subtitle="Select all that apply so we can help you succeed"
-          multiSelect
-          options={[
-            "Forgetting to take my doses",
-            "Managing nausea and other side effects",
-            "Anxiety about self-injecting",
-            "Adapting to appetite changes",
-            "Logging my injection times",
-            "Tracking progress effectively",
-            "Managing medication costs",
-          ]}
+      {step === 4 && (
+        <TrackingStep tracking={tracking} setTracking={setTracking} units={units} setUnits={setUnits} />
+      )}
+      {step === 5 && (
+        <PrivacyStep
+          gdprConsented={gdprConsented}
+          setGdprConsented={setGdprConsented}
+          birthdate={birthdate}
+          setBirthdate={setBirthdate}
+          parentalConsentName={parentalConsentName}
+          setParentalConsentName={setParentalConsentName}
         />
       )}
-      {step === 14 && (
-        <QuizScreen
-          question="Which medication are you taking?"
-          subtitle="Select all that apply"
-          multiSelect
-          options={MEDICATIONS.slice(0, 24)}
-          onAnswerChange={(answers) => handleQuizAnswer("medication", answers)}
-        />
-      )}
-      {step === 15 && (
-        <QuizScreen
-          question="How often do you take your medication?"
-          subtitle="Select all that apply"
-          multiSelect
-          options={[
-            "Once weekly",
-            "Every two weeks",
-            "Once monthly",
-            "Daily",
-            "Logging my current dose stage (as directed by my prescriber)",
-            "Irregular schedule due to side effects",
-          ]}
-          onAnswerChange={(answers) => handleQuizAnswer("frequency", answers)}
-        />
-      )}
-      {step === 16 && <UnitsStep units={units} setUnits={setUnits} />}
-      {step === 17 && <FinalStep />}
+      {step === 6 && <CompletionStep />}
     </OnboardingScreen>
   );
 }
 
+// ── Step components ─────────────────────────────────────────────────────────
+
 function WelcomeStep() {
   return (
-    <div className="flex flex-col items-center text-center flex-1">
-      <div className="w-16 h-16 bg-teal-500 rounded-2xl flex items-center justify-center mb-6 mt-4">
-        <Droplets size={32} className="text-white" />
-      </div>
-      <h1 className="text-2xl sm:text-3xl font-bold mb-3">Welcome to Levli</h1>
-      <p className="text-gray-400 text-sm sm:text-base leading-relaxed mb-6">
-        A companion app for logging your medication journey. Track shots, progress, and notes to share with your healthcare provider.
+    <div className="flex flex-col items-center text-center flex-1 justify-center">
+      <WelcomeIllustration />
+      <h1 className="text-2xl sm:text-[28px] font-bold text-gray-800 mt-5 mb-3 leading-tight px-2">
+        You're starting a journey — we're here for it.
+      </h1>
+      <p className="text-gray-500 text-sm sm:text-base leading-relaxed px-3">
+        Levli helps you track your shots, symptoms, and progress, so you can feel more in control, one day at a time.
       </p>
-      <PhoneMockup>
-        <MiniHomeScreen />
-      </PhoneMockup>
     </div>
   );
 }
 
-function NeverMissStep() {
-  return (
-    <div className="flex flex-col items-center text-center flex-1">
-      <h1 className="text-2xl sm:text-3xl font-bold mb-3">Never Miss a Shot Again</h1>
-      <p className="text-gray-400 text-sm sm:text-base leading-relaxed mb-4">
-        Log your shots and keep a complete record you can share with your healthcare provider. (Reminders are not active yet.)
-      </p>
-      <PhoneMockup>
-        <MiniShotsScreen />
-      </PhoneMockup>
-    </div>
-  );
-}
-
-function VisualizeStep() {
-  return (
-    <div className="flex flex-col items-center text-center flex-1">
-      <h1 className="text-2xl sm:text-3xl font-bold mb-3">Visualize Your Success</h1>
-      <p className="text-gray-400 text-sm sm:text-base leading-relaxed mb-4">
-        Track your weight entries over time with charts and progress photos.
-      </p>
-      <PhoneMockup>
-        <MiniInsightsScreen />
-      </PhoneMockup>
-    </div>
-  );
-}
-
-function MedicationTrackingStep() {
-  return (
-    <div className="flex flex-col items-center text-center flex-1">
-      <h1 className="text-2xl sm:text-3xl font-bold mb-3">Advanced Medication Tracking</h1>
-      <p className="text-gray-400 text-sm sm:text-base leading-relaxed mb-4">
-        See an illustrative chart of relative medication exposure over time. This is a rough estimate, not a precise measurement.
-      </p>
-      <PhoneMockup>
-        <MiniInsightsScreen />
-      </PhoneMockup>
-    </div>
-  );
-}
-
-function HistoryCalendarStep() {
-  return (
-    <div className="flex flex-col items-center text-center flex-1">
-      <h1 className="text-2xl sm:text-3xl font-bold mb-3">Complete History & Calendar</h1>
-      <p className="text-gray-400 text-sm sm:text-base leading-relaxed mb-4">
-        Navigate your entire medication journey. View any day's shots, weight, nutrition, and side effects at a glance.
-      </p>
-      <PhoneMockup>
-        <MiniCalendarScreen />
-      </PhoneMockup>
-    </div>
-  );
-}
-
-function JournalStep() {
-  return (
-    <div className="flex flex-col items-center text-center flex-1">
-      <h1 className="text-2xl sm:text-3xl font-bold mb-3">Your Personal Health Journal</h1>
-      <p className="text-gray-400 text-sm sm:text-base leading-relaxed mb-4">
-        Document symptoms, celebrate victories, and track how you feel.
-      </p>
-      <PhoneMockup>
-        <MiniJournalScreen />
-      </PhoneMockup>
-    </div>
-  );
-}
-
-function ReportsStep() {
-  return (
-    <div className="flex flex-col items-center text-center flex-1">
-      <h1 className="text-2xl sm:text-3xl font-bold mb-3">Your Health Profile</h1>
-      <p className="text-gray-400 text-sm sm:text-base leading-relaxed mb-4">
-        Set up your profile with physical stats, medication preferences, and measurement units — everything tailored to you.
-      </p>
-      <PhoneMockup>
-        <MiniProfileScreen />
-      </PhoneMockup>
-    </div>
-  );
-}
-
-function NotificationStep({ onContinue }) {
-  const [enabled, setEnabled] = React.useState(false);
-  return (
-    <div className="flex flex-col items-center text-center flex-1">
-      <h1 className="text-2xl sm:text-3xl font-bold mb-3">Never Miss a Shot Again</h1>
-      <p className="text-gray-400 text-sm sm:text-base leading-relaxed mb-6">
-        Allowing notifications lets Levli send you reminders in the future. Reminders are not active yet — you can still log your shots and review them any time.
-      </p>
-      <div className="bg-gray-900 rounded-2xl p-6 mb-4 border border-gray-800">
-        <div className="w-14 h-14 bg-teal-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-          <Bell size={28} className="text-teal-400" />
-        </div>
-        <h3 className="text-lg font-semibold mb-2">Allow Notifications</h3>
-        <p className="text-gray-400 text-sm">
-          Allowing notifications now means Levli can send you reminders once that feature launches. You can adjust this later in Settings.
-        </p>
-      </div>
-      {enabled ? (
-        <div className="px-6 py-3 bg-green-500/20 text-green-400 rounded-xl text-sm font-medium flex items-center gap-2 mx-auto border border-green-500/40 mb-4">
-          <Bell size={16} /> Notifications Enabled ✓
-        </div>
-      ) : (
-        <button onClick={() => setEnabled(true)}
-          className="px-6 py-3 border border-teal-500 text-teal-400 rounded-xl text-sm font-medium flex items-center gap-2 mx-auto mb-4">
-          <Bell size={16} /> Enable Notifications
-        </button>
-      )}
-      <p className="text-gray-500 text-xs mb-6">You can adjust your notification preferences later in Settings.</p>
-      <button onClick={onContinue} className="w-full py-4 bg-teal-500 hover:bg-teal-600 text-white font-semibold text-lg rounded-2xl transition-colors">
-        Continue
-      </button>
-    </div>
-  );
-}
-
-function PersonalizeStep() {
-  return (
-    <div className="flex flex-col items-center text-center flex-1">
-      <h1 className="text-2xl sm:text-3xl font-bold mb-3">Let's Personalize Your Experience</h1>
-      <p className="text-gray-400 text-sm sm:text-base leading-relaxed mb-6">
-        Answer a few quick questions to help us tailor Levli to your specific needs.
-      </p>
-      <div className="w-32 h-32 bg-gradient-to-br from-teal-400 to-teal-600 rounded-3xl flex items-center justify-center mb-6 shadow-lg shadow-teal-500/30">
-        <Droplets size={64} className="text-white" />
-      </div>
-      <p className="text-gray-400 text-sm">Your answers will help us provide you with the best experience possible.</p>
-    </div>
-  );
-}
-
-function ConsentStep({ consented, setConsented }) {
-  return (
-    <div className="flex flex-col items-center text-center flex-1">
-      <div className="w-16 h-16 bg-teal-500 rounded-2xl flex items-center justify-center mb-6 mt-4">
-        <ShieldCheck size={32} className="text-white" />
-      </div>
-      <h1 className="text-2xl sm:text-3xl font-bold mb-3">Your Health Data Consent</h1>
-      <p className="text-gray-400 text-sm leading-relaxed mb-6 text-left">
-        Levli stores health information you log — including medications, doses, side effects, weight, and journal entries. Under GDPR, health data is a "special category" (Article 9) that requires your explicit consent.
-      </p>
-      <p className="text-gray-400 text-sm leading-relaxed mb-6 text-left">
-        By proceeding, you consent to Levli processing your health data to provide and improve your tracking experience. You can delete your data at any time. See our Privacy Policy for details.
-      </p>
-      <label className="flex items-start gap-3 cursor-pointer w-full bg-gray-900 rounded-2xl p-4 border border-gray-800 text-left mb-4">
-        <input type="checkbox" checked={consented} onChange={(e) => setConsented(e.target.checked)} className="w-5 h-5 mt-0.5 accent-teal-500 flex-shrink-0" />
-        <span className="text-sm text-white">I consent to Levli processing my special-category health data as described in the Privacy Policy.</span>
-      </label>
-      {!consented && <p className="text-xs text-amber-500 mb-4">You must consent to proceed.</p>}
-    </div>
-  );
-}
-
-function BirthdateStep({ birthdate, setBirthdate }) {
-  return (
-    <div className="flex flex-col items-center text-center flex-1">
-      <div className="w-16 h-16 bg-teal-500 rounded-2xl flex items-center justify-center mb-6 mt-4">
-        <Calendar size={32} className="text-white" />
-      </div>
-      <h1 className="text-2xl sm:text-3xl font-bold mb-3">Your Date of Birth</h1>
-      <p className="text-gray-400 text-sm leading-relaxed mb-6 text-left">
-        We use your date of birth to determine whether this account requires parental consent. If you are under 18, a parent or guardian must consent on your behalf.
-      </p>
-      <input type="date" value={birthdate} onChange={(e) => setBirthdate(e.target.value)}
-        className="w-full border border-gray-700 bg-gray-900 text-white rounded-xl px-4 py-3 text-base outline-none focus:border-teal-500 dark:[color-scheme:dark]" />
-      {!birthdate && <p className="text-xs text-amber-500 mt-3">Please enter your date of birth to continue.</p>}
-    </div>
-  );
-}
-
-function ParentalConsentStep({ guardianName, setGuardianName }) {
-  return (
-    <div className="flex flex-col items-center text-center flex-1">
-      <div className="w-16 h-16 bg-teal-500 rounded-2xl flex items-center justify-center mb-6 mt-4">
-        <User size={32} className="text-white" />
-      </div>
-      <h1 className="text-2xl sm:text-3xl font-bold mb-3">Parental Consent Required</h1>
-      <p className="text-gray-400 text-sm leading-relaxed mb-6 text-left">
-        You appear to be under 18. A parent or legal guardian must provide consent for you to use Levli with health data tracking.
-      </p>
-      <p className="text-gray-400 text-sm leading-relaxed mb-4 text-left">Please enter the full name of the parent or guardian consenting on your behalf:</p>
-      <input type="text" value={guardianName} onChange={(e) => setGuardianName(e.target.value)} placeholder="Parent / guardian full name"
-        className="w-full border border-gray-700 bg-gray-900 text-white rounded-xl px-4 py-3 text-base outline-none focus:border-teal-500" />
-      {!guardianName.trim() && <p className="text-xs text-amber-500 mt-3">Guardian name is required to proceed.</p>}
-      <p className="text-gray-500 text-xs mt-4">By entering their name, your guardian confirms they consent to Levli processing your health data under GDPR Article 9.</p>
-    </div>
-  );
-}
-
-function FinalStep() {
+function EmpathyStep() {
   return (
     <div className="flex flex-col items-center text-center flex-1 justify-center">
-      <div className="w-20 h-20 bg-teal-500 rounded-3xl flex items-center justify-center mb-6">
-        <Droplets size={40} className="text-white" />
+      <EmpathyIllustration />
+      <h1 className="text-2xl sm:text-[28px] font-bold text-gray-800 mt-5 mb-3 leading-tight px-2">
+        GLP-1 journeys aren't always linear.
+      </h1>
+      <p className="text-gray-500 text-sm sm:text-base leading-relaxed px-3">
+        Good days, hard days, plateaus — Levli helps you notice the patterns, so you're never guessing alone.
+      </p>
+    </div>
+  );
+}
+
+function MedicationStep({ selectedMeds, setSelectedMeds }) {
+  const toggle = (med) => {
+    setSelectedMeds((prev) =>
+      prev.includes(med) ? prev.filter((m) => m !== med) : [...prev, med]
+    );
+  };
+  return (
+    <div className="flex flex-col flex-1">
+      <MedicationIllustration />
+      <div className="text-center mt-3 mb-5">
+        <h1 className="text-2xl sm:text-[28px] font-bold text-gray-800 mb-2 leading-tight px-2">
+          Which medication are you on?
+        </h1>
+        <p className="text-gray-500 text-sm">This helps us tailor your dose schedule and inventory reminders.</p>
       </div>
-      <h1 className="text-2xl sm:text-3xl font-bold mb-3">You're All Set!</h1>
-      <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
-        Your personalized medication tracking experience is ready. Let's start your journey to better health.
+      <div className="flex flex-wrap gap-2 justify-center">
+        {MED_OPTIONS.map((opt) => {
+          const selected = selectedMeds.includes(opt.label);
+          return (
+            <button
+              key={opt.label}
+              onClick={() => toggle(opt.label)}
+              className={`flex items-center gap-1.5 pl-2.5 pr-3.5 py-2.5 rounded-full border-2 text-sm font-medium transition-all active:scale-95 ${
+                selected
+                  ? "border-indigo-600 bg-indigo-50 text-indigo-700"
+                  : "border-gray-200 bg-white text-gray-600 hover:border-gray-300"
+              }`}
+            >
+              <PillIcon size={20} />
+              {opt.label}
+              {selected && <Check size={14} className="text-indigo-600 ml-0.5" strokeWidth={3} />}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function ScheduleStep({ doseAmount, setDoseAmount, frequency, setFrequency, shotDay, setShotDay }) {
+  return (
+    <div className="flex flex-col flex-1">
+      <ScheduleIllustration />
+      <div className="text-center mt-3 mb-4">
+        <h1 className="text-2xl sm:text-[28px] font-bold text-gray-800 mb-2 leading-tight px-2">
+          Let's set your shot schedule.
+        </h1>
+        <p className="text-gray-500 text-sm px-2">
+          We'll gently remind you — no more wondering "did I already take it this week?"
+        </p>
+      </div>
+      {/* Dose amount */}
+      <div className="mb-4">
+        <label className="text-sm font-semibold text-gray-600 mb-2 block">Your dose (optional)</label>
+        <input
+          type="text"
+          value={doseAmount}
+          onChange={(e) => setDoseAmount(e.target.value)}
+          placeholder="e.g. 0.5 mg"
+          className="w-full border-2 border-gray-200 bg-white rounded-xl px-4 py-3 text-base text-gray-700 outline-none focus:border-indigo-500 transition-colors"
+        />
+      </div>
+      {/* Frequency */}
+      <div className="mb-4">
+        <label className="text-sm font-semibold text-gray-600 mb-2 block">How often?</label>
+        <div className="flex flex-wrap gap-2">
+          {FREQUENCY_OPTIONS.map((opt) => (
+            <button
+              key={opt.label}
+              onClick={() => setFrequency(opt.label)}
+              className={`px-3.5 py-2.5 rounded-xl border-2 text-sm font-medium transition-all active:scale-95 ${
+                frequency === opt.label
+                  ? "border-indigo-600 bg-indigo-50 text-indigo-700"
+                  : "border-gray-200 bg-white text-gray-600 hover:border-gray-300"
+              }`}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      </div>
+      {/* Day of week */}
+      <div>
+        <label className="text-sm font-semibold text-gray-600 mb-2 block">Preferred day</label>
+        <div className="flex gap-1.5 justify-between">
+          {DAYS.map((d, i) => (
+            <button
+              key={i}
+              onClick={() => setShotDay(i)}
+              className={`w-10 h-10 rounded-full text-sm font-medium transition-all active:scale-95 ${
+                shotDay === i
+                  ? "bg-indigo-600 text-white"
+                  : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+              }`}
+            >
+              {d}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TrackingStep({ tracking, setTracking, units, setUnits }) {
+  const toggle = (key) => {
+    setTracking((prev) => (prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]));
+  };
+  return (
+    <div className="flex flex-col flex-1">
+      <TrackingIllustration />
+      <div className="text-center mt-3 mb-4">
+        <h1 className="text-2xl sm:text-[28px] font-bold text-gray-800 mb-2 leading-tight px-2">
+          What would you like to keep an eye on?
+        </h1>
+        <p className="text-gray-500 text-sm px-2">
+          Log symptoms, mood, weight, or injection sites — as much or as little as feels right for you.
+        </p>
+      </div>
+      <div className="grid grid-cols-1 gap-2 mb-4">
+        {TRACKING_OPTIONS.map((opt) => {
+          const selected = tracking.includes(opt.key);
+          return (
+            <button
+              key={opt.key}
+              onClick={() => toggle(opt.key)}
+              className={`flex items-center gap-3 p-3 rounded-2xl border-2 text-left transition-all active:scale-[0.98] ${
+                selected
+                  ? "border-indigo-600 bg-indigo-50"
+                  : "border-gray-200 bg-white hover:border-gray-300"
+              }`}
+            >
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0">
+                <opt.Icon size={32} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className={`text-sm font-semibold ${selected ? "text-indigo-700" : "text-gray-700"}`}>
+                  {opt.label}
+                </p>
+                <p className="text-xs text-gray-400">{opt.desc}</p>
+              </div>
+              {selected && <Check size={18} className="text-indigo-600 flex-shrink-0" strokeWidth={3} />}
+            </button>
+          );
+        })}
+      </div>
+      {/* Units */}
+      <div className="border-t border-gray-100 pt-4">
+        <p className="text-sm font-semibold text-gray-600 mb-3">Measurement preferences</p>
+        <div className="space-y-2.5">
+          {UNIT_GROUPS.map((group) => (
+            <div key={group.key} className="flex items-center justify-between">
+              <span className="text-sm text-gray-500">{group.label}</span>
+              <div className="flex gap-2">
+                {group.options.map((opt) => (
+                  <button
+                    key={opt.value}
+                    onClick={() => setUnits((prev) => ({ ...prev, [group.key]: opt.value }))}
+                    className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                      units[group.key] === opt.value
+                        ? "bg-indigo-600 text-white"
+                        : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PrivacyStep({ gdprConsented, setGdprConsented, birthdate, setBirthdate, parentalConsentName, setParentalConsentName }) {
+  const minor = isMinor(birthdate);
+  return (
+    <div className="flex flex-col flex-1">
+      <PrivacyIllustration />
+      <div className="text-center mt-3 mb-4">
+        <h1 className="text-2xl sm:text-[28px] font-bold text-gray-800 mb-2 leading-tight px-2">
+          Your data stays yours.
+        </h1>
+        <p className="text-gray-500 text-sm leading-relaxed px-3">
+          Everything you log is private to you. Levli is a personal tracking companion — it doesn't replace your care team, and it never shares your journey without your say-so.
+        </p>
+      </div>
+      {/* GDPR consent */}
+      <label className="flex items-start gap-3 cursor-pointer bg-gray-50 rounded-2xl p-3.5 border border-gray-100 mb-3">
+        <input
+          type="checkbox"
+          checked={gdprConsented}
+          onChange={(e) => setGdprConsented(e.target.checked)}
+          className="w-5 h-5 mt-0.5 accent-indigo-600 flex-shrink-0"
+        />
+        <span className="text-sm text-gray-600">
+          I consent to Levli processing my special-category health data as described in the Privacy Policy.
+        </span>
+      </label>
+      {/* Birthdate */}
+      <div className="mb-3">
+        <label className="text-sm font-semibold text-gray-600 mb-2 block">Date of birth</label>
+        <input
+          type="date"
+          value={birthdate}
+          onChange={(e) => setBirthdate(e.target.value)}
+          className="w-full border-2 border-gray-200 bg-white rounded-xl px-4 py-3 text-base text-gray-700 outline-none focus:border-indigo-500 transition-colors"
+        />
+      </div>
+      {/* Parental consent (if minor) */}
+      {minor && (
+        <div className="mb-3">
+          <label className="text-sm font-semibold text-gray-600 mb-2 block">Parent / guardian name</label>
+          <input
+            type="text"
+            value={parentalConsentName}
+            onChange={(e) => setParentalConsentName(e.target.value)}
+            placeholder="Full name"
+            className="w-full border-2 border-gray-200 bg-white rounded-xl px-4 py-3 text-base text-gray-700 outline-none focus:border-indigo-500 transition-colors"
+          />
+          <p className="text-xs text-gray-400 mt-1.5">
+            A parent or guardian must consent for you to use Levli with health data tracking.
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function CompletionStep() {
+  return (
+    <div className="flex flex-col items-center text-center flex-1 justify-center">
+      <div className="animate-onb-bounce">
+        <CompletionIllustration />
+      </div>
+      <h1 className="text-2xl sm:text-[28px] font-bold text-gray-800 mt-5 mb-3 leading-tight px-2">
+        You're all set.
+      </h1>
+      <p className="text-gray-500 text-sm sm:text-base leading-relaxed px-3">
+        Your Home is ready — next shot, mood, and progress, all in one calm place.
       </p>
     </div>
   );
