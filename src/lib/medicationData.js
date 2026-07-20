@@ -39,6 +39,25 @@ export const HALF_LIFE_DAYS = {
   // Retatrutide: investigational — no validated value; PK disabled
 };
 
+// Per-brand max maintenance dose in mg, sourced from FDA USPI labeling.
+// Used for dosing guardrails in the Add Shot modal.
+export const DOSE_MAX = {
+  "Ozempic®": 2,
+  "Wegovy®": 2.4,
+  "Semaglutide": 2.4,
+  "Mounjaro®": 15,
+  "Zepbound®": 15,
+  "Tirzepatide": 15,
+  "Saxenda®": 3.0,
+  "Liraglutide": 3.0,
+  // Retatrutide: investigational — no approved max; use safety cap
+  "Retatrutide": 20,
+};
+
+export function getDoseMax(medication) {
+  return DOSE_MAX[medication] || 100;
+}
+
 export const INVESTIGATIONAL = new Set(["Retatrutide"]);
 
 export function isInvestigational(medicationOrClass) {

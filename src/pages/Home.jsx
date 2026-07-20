@@ -73,6 +73,10 @@ export default function Home() {
             <p className="text-sm text-indigo-700 dark:text-indigo-300">View full medication level chart in Insights <ArrowRight size={12} className="inline" /></p>
           </Link>
         </div>
+
+        <p className="text-[11px] text-gray-400 dark:text-gray-500 text-center px-4 mb-4">
+          Levli is a personal logbook, not medical advice. Do not use it to adjust your dose — consult your prescriber.
+        </p>
       </div>
 
       <button

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { X, Save, MapPin, Star, ChevronDown, Trash2 } from "lucide-react";
 import { useAppState } from "@/lib/AppState";
 import { formatShotDate } from "@/lib/dateUtils";
-import { MEDICATIONS, DRUG_CLASS, isInvestigational } from "@/lib/medicationData";
+import { MEDICATIONS, DRUG_CLASS, isInvestigational, getDoseMax } from "@/lib/medicationData";
 import { detectDuplicateActiveIngredient } from "@/lib/drugSafety";
 import { toast } from "sonner";
 
@@ -87,8 +87,13 @@ export default function AddShotModal({ open, onClose, editingShot }) {
 
   const handleSave = async () => {
     const doseNum = parseFloat(dose);
-    if (isNaN(doseNum) || doseNum <= 0 || doseNum > 100) {
-      setError("Please enter a valid dose (0.1 – 100 mg).");
+    const maxDose = getDoseMax(medication);
+    if (isNaN(doseNum) || doseNum <= 0) {
+      setError("Please enter a valid dose (mg).");
+      return;
+    }
+    if (doseNum > maxDose) {
+      setError(`That dose exceeds the typical maximum for ${medication} (${maxDose} mg). Check the label or confirm with your prescriber.`);
       return;
     }
     // Duplicate active-ingredient check (new shots only, non-blocking)
@@ -199,10 +204,11 @@ export default function AddShotModal({ open, onClose, editingShot }) {
           <div>
             <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1 block">Dose (mg)</label>
             <div className="border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] rounded-xl px-4 py-3 flex items-center">
-              <input type="number" value={dose} min="0.1" max="100" step="0.25"
+              <input type="number" value={dose} min="0.1" max={getDoseMax(medication)} step="0.25"
                 onChange={(e) => setDose(e.target.value)} className="flex-1 outline-none text-base bg-transparent dark:text-[#E8E9F0]" />
               <span className="text-gray-400 text-sm">mg</span>
             </div>
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Typical max for {medication}: {getDoseMax(medication)} mg</p>
           </div>
 
           {/* Injection Site */}

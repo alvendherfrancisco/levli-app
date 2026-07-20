@@ -90,6 +90,10 @@ export default function Shots() {
         </div>
       </div>
 
+      <p className="text-[11px] text-gray-400 dark:text-gray-500 text-center px-4 pb-32">
+        Levli is a personal logbook, not medical advice. Consult your prescriber for dosing decisions.
+      </p>
+
       <button onClick={openNew}
         className="fixed bottom-24 right-5 lg:right-8 bg-teal-600 text-white rounded-2xl shadow-lg shadow-teal-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-teal-700 transition-colors text-sm px-5 py-3">
         <Plus size={18} /> Add Shot
