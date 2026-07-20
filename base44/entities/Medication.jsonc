@@ -1,0 +1,96 @@
+{
+  "type": "object",
+  "properties": {
+    "medication_name": {
+      "type": "string",
+      "description": "Brand or generic name from the catalogue"
+    },
+    "catalogue_id": {
+      "type": "string",
+      "description": "Reference to the medication catalogue entry ID"
+    },
+    "generic_name": {
+      "type": "string",
+      "description": "Generic active ingredient"
+    },
+    "molecular_class": {
+      "type": "string",
+      "description": "Molecular classification (peptide, peptide_analogue, protein, monoclonal_antibody, small_molecule, etc.)"
+    },
+    "route": {
+      "type": "string",
+      "description": "Route of administration for this medication entry"
+    },
+    "prescribed_dose": {
+      "type": "number",
+      "description": "Currently prescribed dose in mg (or other unit as specified)"
+    },
+    "dose_unit": {
+      "type": "string",
+      "description": "Unit of the prescribed dose (mg, mcg, units, IU, etc.)",
+      "default": "mg"
+    },
+    "frequency": {
+      "type": "string",
+      "description": "Dosing frequency as entered (e.g., 'once weekly', 'twice daily')"
+    },
+    "indication": {
+      "type": "string",
+      "description": "Treatment indication as prescribed"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "planned_end_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "titration_stage": {
+      "type": "string",
+      "description": "Current titration stage label (as directed by prescriber)"
+    },
+    "prescriber_name": {
+      "type": "string"
+    },
+    "prescriber_contact": {
+      "type": "string"
+    },
+    "regimen_source": {
+      "type": "string",
+      "description": "Source of regimen data (user-entered, clinician-entered, imported)",
+      "default": "user-entered"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "paused",
+        "discontinued",
+        "switched"
+      ],
+      "default": "active"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "medication_name"
+  ],
+  "name": "Medication",
+  "rls": {
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}

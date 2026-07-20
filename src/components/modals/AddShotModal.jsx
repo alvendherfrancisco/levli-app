@@ -2,16 +2,26 @@ import React, { useState, useEffect, useRef } from "react";
 import { X, Save, MapPin, Star, ChevronDown, Trash2 } from "lucide-react";
 import { useAppState } from "@/lib/AppState";
 import { formatShotDate } from "@/lib/dateUtils";
-import { MEDICATIONS, DRUG_CLASS, isInvestigational, getDoseMax } from "@/lib/medicationData";
+import { MEDICATIONS, DRUG_CLASS, isInvestigational, getDoseMax, getMedicationRoutes, getPrimaryRoute, getMolecularClass } from "@/lib/medicationData";
+import { ROUTE_LABELS } from "@/lib/medicationCatalogue";
+import { getCapabilityProfile, getCapabilityWarning, getMolecularClassLabel } from "@/lib/capabilityProfile";
 import { detectDuplicateActiveIngredient } from "@/lib/drugSafety";
 import { toast } from "sonner";
 
-// Medication list + DRUG_CLASS imported from medicationData (single source of truth)
+// Routes that require injection site selection
+const INJECTABLE_ROUTES = ["subcutaneous", "intramuscular", "intradermal"];
+
+// Injection site options for subcutaneous injections
 const injectionSites = [
   "Stomach – Upper Left", "Stomach – Upper Right", "Stomach – Lower Left", "Stomach – Lower Right",
   "Thigh – Left", "Thigh – Right", "Upper Arm – Left", "Upper Arm – Right",
 ];
-// DRUG_CLASS imported from medicationData
+
+// IM injection sites
+const imSites = [
+  "Deltoid – Left", "Deltoid – Right", "Vastus Lateralis – Left", "Vastus Lateralis – Right",
+  "Gluteal – Left", "Gluteal – Right",
+];
 
 const pad = (n) => String(n).padStart(2, "0");
 
@@ -39,8 +49,16 @@ export default function AddShotModal({ open, onClose, editingShot }) {
   const [time, setTime] = useState(toInputTime(now));
   const [showMedDropdown, setShowMedDropdown] = useState(false);
   const [showSiteDropdown, setShowSiteDropdown] = useState(false);
+  const [showRouteDropdown, setShowRouteDropdown] = useState(false);
+  const [route, setRoute] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+
+  const medRoutes = getMedicationRoutes(medication);
+  const caps = getCapabilityProfile(medication);
+  const capabilityWarning = getCapabilityWarning(medication);
+  const isInjectable = INJECTABLE_ROUTES.includes(route || getPrimaryRoute(medication));
+  const siteOptions = route === "intramuscular" ? imSites : injectionSites;
 
   const recommendedSite = getRecommendedSite();
 
@@ -50,6 +68,7 @@ export default function AddShotModal({ open, onClose, editingShot }) {
         setMedication(editingShot.medication || defaultMed);
         setDose(String(editingShot.dose || "2.50"));
         setSite(editingShot.site || recommendedSite);
+        setRoute(editingShot.route || getPrimaryRoute(editingShot.medication || defaultMed));
         setNotes(editingShot.notes || "");
         setPain(editingShot.pain ?? 0);
         // parse date/time back to input format
@@ -72,6 +91,7 @@ export default function AddShotModal({ open, onClose, editingShot }) {
         setMedication(defaultMed);
         setDose("2.50");
         setSite(recommendedSite);
+        setRoute(getPrimaryRoute(defaultMed));
         setNotes("");
         setPain(0);
         setDate(toInputDate(n));
@@ -116,12 +136,17 @@ export default function AddShotModal({ open, onClose, editingShot }) {
     const formattedTime = `${h}:${pad(m)} ${ampm}`;
     const payload = {
       medication, dose: doseNum, drugClass: DRUG_CLASS[medication] || "GLP-1",
-      date: formattedDate, time: formattedTime, site, pain: pain || 0, notes,
+      molecularClass: getMolecularClass(medication),
+      route: route || getPrimaryRoute(medication),
+      date: formattedDate, time: formattedTime,
+      site: isInjectable ? site : "",
+      pain: pain || 0, notes,
     };
     try {
       if (editingShot) {
         await updateShot(editingShot.id, {
           medication: payload.medication, dose: payload.dose, drug_class: payload.drugClass,
+          molecular_class: payload.molecularClass, route: payload.route,
           date: payload.date, time: payload.time, site: payload.site,
           pain: payload.pain, notes: payload.notes,
         });
@@ -166,6 +191,13 @@ export default function AddShotModal({ open, onClose, editingShot }) {
 
         {error && <p className="mx-5 mb-3 text-sm text-red-500 dark:text-red-400 bg-red-50 dark:bg-red-500/10 rounded-xl px-3 py-2">{error}</p>}
 
+        {capabilityWarning && (
+          <div className="mx-5 mb-3 text-sm text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-500/10 rounded-xl px-3 py-2 border border-amber-200 dark:border-amber-500/20">
+            <p className="font-semibold text-xs">⚠ {isInvestigational(medication) ? "Not an approved medicine" : "Capability notice"}</p>
+            <p className="mt-1 text-xs">{capabilityWarning}</p>
+          </div>
+        )}
+
         <div className="px-5 pb-4 space-y-5">
           {/* Date & Time */}
           <div>
@@ -182,17 +214,44 @@ export default function AddShotModal({ open, onClose, editingShot }) {
           <div>
             <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">Medication</label>
             <div className="relative">
-              <button onClick={() => { setShowMedDropdown(!showMedDropdown); setShowSiteDropdown(false); }}
+              <button onClick={() => { setShowMedDropdown(!showMedDropdown); setShowSiteDropdown(false); setShowRouteDropdown(false); }}
                 className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 flex items-center justify-between text-left">
-                <span className="text-base">{medication}</span>
+                <div>
+                  <span className="text-base block">{medication}</span>
+                  <span className="text-xs text-gray-400 dark:text-gray-500">{getMolecularClassLabel(medication)}</span>
+                </div>
                 <ChevronDown size={18} className="text-gray-400" />
               </button>
               {showMedDropdown && (
-                <div className="absolute z-10 mt-1 w-full bg-white dark:bg-[#1e2130] border border-gray-200 dark:border-white/[0.08] rounded-xl shadow-lg">
+                <div className="absolute z-10 mt-1 w-full bg-white dark:bg-[#1e2130] border border-gray-200 dark:border-white/[0.08] rounded-xl shadow-lg max-h-64 overflow-y-auto">
                   {MEDICATIONS.map((m) => (
-                    <button key={m} onClick={() => { setMedication(m); setShowMedDropdown(false); }}
+                    <button key={m} onClick={() => { setMedication(m); setRoute(getPrimaryRoute(m)); setShowMedDropdown(false); }}
                       className={`w-full px-4 py-3 text-left text-sm dark:text-[#E8E9F0] ${medication === m ? "bg-teal-50 dark:bg-teal-500/20 text-teal-600 dark:text-teal-300 font-medium" : "hover:bg-gray-50 dark:hover:bg-white/[0.05]"}`}>
-                      {m}{isInvestigational(m) ? <span className="text-xs text-amber-600 dark:text-amber-400 ml-2">(investigational — not approved)</span> : null}
+                      <span className="block">{m}</span>
+                      <span className="text-xs text-gray-400 dark:text-gray-500 block">{getMolecularClassLabel(m)}</span>
+                      {isInvestigational(m) ? <span className="text-xs text-amber-600 dark:text-amber-400">investigational — not approved</span> : null}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Route */}
+          <div>
+            <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">Route</label>
+            <div className="relative">
+              <button onClick={() => { setShowRouteDropdown(!showRouteDropdown); setShowMedDropdown(false); setShowSiteDropdown(false); }}
+                className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 flex items-center justify-between text-left">
+                <span className="text-base">{ROUTE_LABELS[route] || route || "Select route"}</span>
+                <ChevronDown size={18} className="text-gray-400" />
+              </button>
+              {showRouteDropdown && (
+                <div className="absolute z-10 mt-1 w-full bg-white dark:bg-[#1e2130] border border-gray-200 dark:border-white/[0.08] rounded-xl shadow-lg">
+                  {medRoutes.map((r) => (
+                    <button key={r} onClick={() => { setRoute(r); setShowRouteDropdown(false); }}
+                      className={`w-full px-4 py-3 text-left text-sm dark:text-[#E8E9F0] ${route === r ? "bg-teal-50 dark:bg-teal-500/20 text-teal-600 dark:text-teal-300 font-medium" : "hover:bg-gray-50 dark:hover:bg-white/[0.05]"}`}>
+                      {ROUTE_LABELS[r] || r}
                     </button>
                   ))}
                 </div>
@@ -211,7 +270,8 @@ export default function AddShotModal({ open, onClose, editingShot }) {
             <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Typical max for {medication}: {getDoseMax(medication)} mg</p>
           </div>
 
-          {/* Injection Site */}
+          {/* Injection Site — only for injectable routes */}
+          {isInjectable && (
           <div>
             <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">Injection Site</label>
             <div className="rounded-xl p-3 mb-2 flex items-start gap-2 bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-100 dark:border-indigo-500/20">
@@ -223,7 +283,7 @@ export default function AddShotModal({ open, onClose, editingShot }) {
               <button onClick={() => setSite(recommendedSite)} className="text-indigo-600 dark:text-indigo-400 text-sm font-semibold">Use</button>
             </div>
             <div className="relative">
-              <button onClick={() => { setShowSiteDropdown(!showSiteDropdown); setShowMedDropdown(false); }}
+              <button onClick={() => { setShowSiteDropdown(!showSiteDropdown); setShowMedDropdown(false); setShowRouteDropdown(false); }}
                 className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 flex items-center justify-between text-left">
                 <div className="flex items-center gap-2">
                   <Star size={16} className="text-amber-400" />
@@ -233,7 +293,7 @@ export default function AddShotModal({ open, onClose, editingShot }) {
               </button>
               {showSiteDropdown && (
                 <div className="absolute z-10 mt-1 w-full bg-white dark:bg-[#1e2130] border border-gray-200 dark:border-white/[0.08] rounded-xl shadow-lg max-h-48 overflow-y-auto">
-                  {injectionSites.map((s) => (
+                  {siteOptions.map((s) => (
                     <button key={s} onClick={() => { setSite(s); setShowSiteDropdown(false); }}
                       className={`w-full px-4 py-3 text-left text-sm dark:text-[#E8E9F0] ${site === s ? "bg-teal-50 dark:bg-teal-500/20 text-teal-600 dark:text-teal-300 font-medium" : "hover:bg-gray-50 dark:hover:bg-white/[0.05]"}`}>
                       {s}
@@ -243,6 +303,7 @@ export default function AddShotModal({ open, onClose, editingShot }) {
               )}
             </div>
           </div>
+          )}
 
           {/* Pain Level */}
           <div>

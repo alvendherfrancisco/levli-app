@@ -1,0 +1,106 @@
+{
+  "type": "object",
+  "properties": {
+    "medication_name": {
+      "type": "string",
+      "description": "Medication associated with this event"
+    },
+    "symptom": {
+      "type": "string",
+      "description": "Symptom or adverse event description (structured term or free text)"
+    },
+    "symptom_category": {
+      "type": "string",
+      "description": "Ontology category (e.g., gastrointestinal, neurological, dermatological, cardiovascular, psychiatric)"
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "mild",
+        "moderate",
+        "severe",
+        "emergency"
+      ],
+      "description": "User-reported severity"
+    },
+    "onset_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "onset_time": {
+      "type": "string"
+    },
+    "duration": {
+      "type": "string",
+      "description": "Duration of the symptom (e.g., '2 hours', '3 days', 'ongoing')"
+    },
+    "resolution_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "resolved": {
+      "type": "boolean",
+      "default": false
+    },
+    "relationship_to_dose": {
+      "type": "string",
+      "description": "Temporal relationship to last dose (e.g., 'within 24h', '2-3 days after', 'unrelated timing')"
+    },
+    "user_attribution": {
+      "type": "boolean",
+      "description": "Whether the user attributes this to the medication. Temporal association only \u2014 not causality."
+    },
+    "red_flag_tier": {
+      "type": "string",
+      "enum": [
+        "none",
+        "emergency",
+        "urgent",
+        "routine"
+      ],
+      "description": "Classified red-flag tier (deterministic, class-gated, non-diagnostic)"
+    },
+    "actions_taken": {
+      "type": "string",
+      "description": "Actions the user took (e.g., 'contacted GP', 'went to A&E', 'monitored at home')"
+    },
+    "healthcare_contact": {
+      "type": "boolean",
+      "description": "Whether the user contacted a healthcare professional"
+    },
+    "outcome": {
+      "type": "string",
+      "description": "Outcome description"
+    },
+    "reportability_status": {
+      "type": "string",
+      "description": "Whether this may be reportable to MHRA Yellow Card, FDA MedWatch, etc. (informational only)"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "day_key": {
+      "type": "string",
+      "description": "YYYY-MM-DD for the day this event was logged"
+    }
+  },
+  "required": [
+    "symptom",
+    "onset_date"
+  ],
+  "name": "AdverseEvent",
+  "rls": {
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}

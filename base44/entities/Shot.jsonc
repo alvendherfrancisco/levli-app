@@ -8,7 +8,16 @@
       "type": "number"
     },
     "drug_class": {
-      "type": "string"
+      "type": "string",
+      "description": "Generic active ingredient (derived from catalogue)"
+    },
+    "molecular_class": {
+      "type": "string",
+      "description": "Molecular classification (peptide, peptide_analogue, protein, monoclonal_antibody, small_molecule, etc.)"
+    },
+    "route": {
+      "type": "string",
+      "description": "Route of administration (subcutaneous, intramuscular, oral_tablet, nasal, etc.)"
     },
     "date": {
       "type": "string"
@@ -17,7 +26,8 @@
       "type": "string"
     },
     "site": {
-      "type": "string"
+      "type": "string",
+      "description": "Injection site (for injectable routes only)"
     },
     "pain": {
       "type": "number"
@@ -30,8 +40,7 @@
     "medication",
     "dose",
     "date",
-    "time",
-    "site"
+    "time"
   ],
   "name": "Shot",
   "rls": {

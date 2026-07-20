@@ -1,64 +1,126 @@
-// Centralized medication data — single source of truth for brand/generic mapping,
-// dosing intervals, half-lives, investigational flags, and missed-dose rules.
-// Values sourced from FDA USPI / EMA EPAR clinical pharmacology sections for approved
-// products. Investigational products have no validated PK parameters here.
+// Centralized medication data — single source of truth.
+// All data is derived from the comprehensive medication catalogue
+// (medicationCatalogue.js) which includes molecular classification,
+// routes, approval status, capability profiles, and PK parameters.
+//
+// This module re-exports the flat maps that existing code depends on,
+// sourced from the catalogue for maintainability.
 
 import { parseShotDate, fromDayKey } from "@/lib/dateUtils";
+import {
+  MEDICATION_CATALOGUE,
+  NAME_TO_ENTRY,
+  ALL_MEDICATION_NAMES,
+  ROUTES,
+} from "@/lib/medicationCatalogue";
 
-// Brand → generic active ingredient
-export const DRUG_CLASS = {
-  "Ozempic®": "Semaglutide",
-  "Wegovy®": "Semaglutide",
-  "Semaglutide": "Semaglutide",
-  "Mounjaro®": "Tirzepatide",
-  "Zepbound®": "Tirzepatide",
-  "Tirzepatide": "Tirzepatide",
-  "Retatrutide": "Retatrutide",
-  "Saxenda®": "Liraglutide",
-  "Liraglutide": "Liraglutide",
-};
+// ── Brand/generic → generic active ingredient (DRUG_CLASS) ─────────────────
+// Built from catalogue: every brand name and generic name maps to the generic.
+export const DRUG_CLASS = (() => {
+  const map = {};
+  MEDICATION_CATALOGUE.forEach((m) => {
+    map[m.generic_name] = m.generic_name;
+    if (m.brand_names) m.brand_names.forEach((b) => { map[b] = m.generic_name; });
+  });
+  return map;
+})();
 
-export const MEDICATIONS = [
-  "Zepbound®", "Mounjaro®", "Tirzepatide", "Wegovy®", "Ozempic®",
-  "Semaglutide", "Retatrutide", "Saxenda®", "Liraglutide",
-];
+// ── Displayable medication names ───────────────────────────────────────────
+// Flat list of brand + generic names for dropdowns.
+// Filtered to approved + investigational (exclude cosmetic-only and unapproved
+// research peptides from the default list; they can be accessed via search).
+export const MEDICATIONS = (() => {
+  const names = [];
+  MEDICATION_CATALOGUE.forEach((m) => {
+    const usStatus = m.approval?.US?.status;
+    // Skip cosmetic-only and unapproved research peptides from the main list
+    if (m.capability?.cosmetic_only) return;
+    if (m.capability?.research_only && usStatus === "unapproved") return;
+    if (m.brand_names?.length) {
+      m.brand_names.forEach((b) => names.push(b));
+    } else {
+      names.push(m.generic_name);
+    }
+  });
+  return names;
+})();
 
-// Per-generic dosing interval in days (label-sourced for approved products).
-export const DOSING_INTERVAL_DAYS = {
-  "Semaglutide": 7,
-  "Tirzepatide": 7,
-  "Liraglutide": 1, // Saxenda is daily
-  // Retatrutide: investigational — no schedule
-};
+// Extended list including ALL entries (for an "all medications" view)
+export const ALL_MEDICATIONS = ALL_MEDICATION_NAMES;
 
-// Half-lives in days, sourced from USPI clinical pharmacology.
-export const HALF_LIFE_DAYS = {
-  "Semaglutide": 7,
-  "Tirzepatide": 5,
-  "Liraglutide": 0.5, // ~13h per Saxenda USPI
-  // Retatrutide: investigational — no validated value; PK disabled
-};
+// ── Per-generic dosing interval in days ───────────────────────────────────
+// Extracted from the catalogue's dosing_interval_days map (first route).
+export const DOSING_INTERVAL_DAYS = (() => {
+  const map = {};
+  MEDICATION_CATALOGUE.forEach((m) => {
+    if (!m.dosing_interval_days) return;
+    const routes = Object.keys(m.dosing_interval_days);
+    for (const r of routes) {
+      const val = m.dosing_interval_days[r];
+      if (typeof val === "number") {
+        map[m.generic_name] = val;
+        break;
+      }
+      // If it's a brand-specific object, take the first brand's value
+      if (val && typeof val === "object") {
+        const firstBrand = Object.keys(val)[0];
+        if (firstBrand) { map[m.generic_name] = val[firstBrand]; break; }
+      }
+    }
+  });
+  return map;
+})();
 
-// Per-brand max maintenance dose in mg, sourced from FDA USPI labeling.
-// Used for dosing guardrails in the Add Shot modal.
-export const DOSE_MAX = {
-  "Ozempic®": 2,
-  "Wegovy®": 2.4,
-  "Semaglutide": 2.4,
-  "Mounjaro®": 15,
-  "Zepbound®": 15,
-  "Tirzepatide": 15,
-  "Saxenda®": 3.0,
-  "Liraglutide": 3.0,
-  // Retatrutide: investigational — no approved max; use safety cap
-  "Retatrutide": 20,
-};
+// ── Half-lives in days (per generic, primary route) ────────────────────────
+// "not established" medications (investigational, cosmetic) are excluded.
+export const HALF_LIFE_DAYS = (() => {
+  const map = {};
+  MEDICATION_CATALOGUE.forEach((m) => {
+    if (!m.half_life_days) return;
+    if (m.capability?.research_only || m.capability?.cosmetic_only) return;
+    if (m.capability?.supports_pk_estimation === false) return;
+    const routes = Object.keys(m.half_life_days);
+    for (const r of routes) {
+      const val = m.half_life_days[r];
+      if (typeof val === "number") {
+        map[m.generic_name] = val;
+        break;
+      }
+      if (val && typeof val === "object") {
+        const firstBrand = Object.keys(val)[0];
+        if (firstBrand) { map[m.generic_name] = val[firstBrand]; break; }
+      }
+    }
+  });
+  return map;
+})();
+
+// ── Per-brand max maintenance dose in mg ───────────────────────────────────
+export const DOSE_MAX = (() => {
+  const map = {};
+  MEDICATION_CATALOGUE.forEach((m) => {
+    if (!m.dose_max) return;
+    Object.entries(m.dose_max).forEach(([brand, max]) => { map[brand] = max; });
+  });
+  return map;
+})();
 
 export function getDoseMax(medication) {
   return DOSE_MAX[medication] || 100;
 }
 
-export const INVESTIGATIONAL = new Set(["Retatrutide"]);
+// ── Investigational / unapproved set ────────────────────────────────────────
+export const INVESTIGATIONAL = (() => {
+  const set = new Set();
+  MEDICATION_CATALOGUE.forEach((m) => {
+    const usStatus = m.approval?.US?.status;
+    if (usStatus === "investigational" || usStatus === "unapproved" || usStatus === "discontinued") {
+      set.add(m.generic_name);
+      if (m.brand_names) m.brand_names.forEach((b) => set.add(b));
+    }
+  });
+  return set;
+})();
 
 export function isInvestigational(medicationOrClass) {
   if (!medicationOrClass) return false;
@@ -70,31 +132,51 @@ export function getDosingInterval(medication) {
   return DOSING_INTERVAL_DAYS[generic] || null;
 }
 
-// Missed-dose rules for approved GLP-1s (label-sourced).
-export const MISSED_DOSE_RULES = {
-  "Semaglutide": {
-    weekly: true,
-    retitrationDays: 5,
-    advice: "If more than 5 days have passed, skip this dose and contact your prescriber — you may need to restart the dose escalation.",
-  },
-  "Tirzepatide": {
-    weekly: true,
-    retitrationDays: 5,
-    advice: "If more than 5 days have passed, take it as soon as you remember and contact your prescriber; you may need to restart titration.",
-  },
-  "Liraglutide": {
-    weekly: false,
-    retitrationDays: 0,
-    advice: "If you miss a daily dose, skip it and take the next dose at the usual time — do not take a double dose.",
-  },
-};
+// ── Missed-dose rules (per generic, primary route) ─────────────────────────
+export const MISSED_DOSE_RULES = (() => {
+  const map = {};
+  MEDICATION_CATALOGUE.forEach((m) => {
+    if (!m.missed_dose) return;
+    if (m.capability?.supports_missed_dose_guidance === false) return;
+    const routes = Object.keys(m.missed_dose);
+    for (const r of routes) {
+      const rule = m.missed_dose[r];
+      if (rule && typeof rule.advice === "string") {
+        map[m.generic_name] = rule;
+        break;
+      }
+    }
+  });
+  return map;
+})();
 
 export function getMissedDoseRule(medication) {
   const generic = DRUG_CLASS[medication] || medication;
   return MISSED_DOSE_RULES[generic] || null;
 }
 
-// Returns the most relevant medication for a given day (most recent shot on or before dayKey).
+// ── Route helpers ─────────────────────────────────────────────────────────
+export function getMedicationRoutes(medication) {
+  const entry = NAME_TO_ENTRY[medication];
+  return entry?.routes || [];
+}
+
+export function getPrimaryRoute(medication) {
+  const routes = getMedicationRoutes(medication);
+  return routes[0] || ROUTES.SC;
+}
+
+// ── Molecular class ────────────────────────────────────────────────────────
+export function getMolecularClass(medication) {
+  return NAME_TO_ENTRY[medication]?.molecular_class || null;
+}
+
+// ── Approval status ───────────────────────────────────────────────────────
+export function getApprovalStatus(medication, jurisdiction = "US") {
+  return NAME_TO_ENTRY[medication]?.approval?.[jurisdiction] || null;
+}
+
+// ── Returns the most relevant medication for a given day ───────────────────
 export function getRecentMedication(shots, dayKey) {
   if (!shots || !shots.length) return null;
   if (!dayKey) return shots[0].medication;
