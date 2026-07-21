@@ -1,15 +1,12 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Settings, FileText, Plus, Loader2 } from "lucide-react";
+import { Settings, FileText, Plus, Syringe, Clock, CalendarCheck, Loader2 } from "lucide-react";
 import ShotCard from "@/components/shots/ShotCard";
 import AddShotModal from "@/components/modals/AddShotModal";
 import { useAppState } from "@/lib/AppState";
 import { addDaysToShotDate, daysAgoLabel } from "@/lib/dateUtils";
 import { getDosingInterval } from "@/lib/medicationData";
 import { calcAdherence } from "@/lib/adherence";
-import { SyringeIcon, ClockIcon, CalendarIcon, ChartIcon } from "@/components/onboarding/LevliIcons";
-import { MascotEmptyState, SkeletonCard } from "@/components/levli/LevliUI";
-import { EmptyShotsIllustration } from "@/components/levli/LevliIllustrations";
 
 export default function Shots() {
   const [showShot, setShowShot] = useState(false);
@@ -31,24 +28,27 @@ export default function Shots() {
   const openNew = () => { setEditingShot(null); setShowShot(true); };
 
   const summaryCards = [
-    { icon: <SyringeIcon size={28} />, label: "Total shots", value: shots.length },
+    { icon: <Syringe size={14} className="text-teal-500" />, label: "Total Shots", value: shots.length, tint: "bg-teal-100" },
     {
-      icon: <ClockIcon size={28} />,
-      label: "Last dose",
+      icon: <Clock size={14} className="text-amber-500" />,
+      label: "Last Dose",
       value: last ? `${last.dose} ${last.dose_unit || "mg"}` : "—",
       sub: last ? daysAgoLabel(last.date) : "",
+      tint: "bg-amber-100",
     },
     {
-      icon: <CalendarIcon size={28} />,
-      label: "Next shot",
+      icon: <CalendarCheck size={14} className="text-green-500" />,
+      label: "Next Shot",
       value: nextDate || "—",
+      tint: "bg-green-100",
     },
     ...(adherence.adherencePct != null
       ? [{
-          icon: <ChartIcon size={28} />,
-          label: "90-day consistency",
+          icon: <CalendarCheck size={14} className="text-indigo-500" />,
+          label: "90d Consistency",
           value: `${adherence.adherencePct}%`,
           sub: `${adherence.logged}/${adherence.scheduled} doses`,
+          tint: "bg-indigo-100",
         }]
       : []),
   ];
@@ -67,24 +67,29 @@ export default function Shots() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 px-4 mb-5">
           {summaryCards.map((card) => (
             <div key={card.label} className="bg-white rounded-2xl p-3 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80">
-              <div className="mb-1.5">{card.icon}</div>
-              <span className="text-xs text-gray-400">{card.label}</span>
-              <p className="text-lg font-bold text-gray-800 leading-tight">{card.value}</p>
+              <div className="flex items-center gap-1.5 mb-1">
+                <div className={`w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 ${card.tint}`}>
+                  {card.icon}
+                </div>
+                <span className="text-xs text-gray-400">{card.label}</span>
+              </div>
+              <p className="text-xl font-bold text-gray-800">{card.value}</p>
               {card.sub && <p className="text-xs text-gray-400">{card.sub}</p>}
             </div>
           ))}
         </div>
 
         <div className="px-4 pb-32">
-          <h2 className="text-lg font-bold text-gray-800 mb-3">Your shot history</h2>
+          <h2 className="text-lg font-bold text-gray-800 mb-3">History</h2>
           {shotsLoading ? (
-            <div className="space-y-2">
-              <SkeletonCard lines={2} />
-              <SkeletonCard lines={2} />
-              <SkeletonCard lines={2} />
+            <div className="flex justify-center py-12">
+              <Loader2 size={28} className="animate-spin text-indigo-400" />
             </div>
           ) : shots.length === 0 ? (
-            <MascotEmptyState title="No shots logged yet" subtitle={`Tap "Log shot" to start tracking your doses.`} illustration={<EmptyShotsIllustration />} />
+            <div className="bg-white rounded-2xl p-6 text-center text-gray-400 border border-gray-100/80">
+              <Syringe size={32} className="mx-auto mb-2 text-gray-300" />
+              <p className="text-sm">No shots logged yet. Tap Add Shot to get started.</p>
+            </div>
           ) : (
             <div className="space-y-2">
               {shots.map((shot) => (

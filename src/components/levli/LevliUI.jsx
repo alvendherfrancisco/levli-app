@@ -1,5 +1,4 @@
 import React from "react";
-import { DropletMascot, FlameIcon } from "@/components/onboarding/LevliIcons";
 
 /**
  * Shared Levli UI primitives — the single visual language for the in-app experience.
@@ -129,16 +128,16 @@ export function StatusPill({ children, tone = "neutral" }) {
   );
 }
 
-// ── Ambient header background (soft drifting blobs) ───────────────────────
+// ── Ambient header background (soft blobs) ────────────────────────────────
 export function AmbientHeaderBg() {
   return (
     <div className="absolute top-0 left-0 right-0 h-64 overflow-hidden pointer-events-none -z-0">
       <div
-        className="absolute -top-10 -left-20 w-72 h-72 rounded-full blur-3xl opacity-40 animate-ambient-1"
+        className="absolute -top-10 -left-20 w-72 h-72 rounded-full blur-3xl opacity-40"
         style={{ background: "radial-gradient(circle, rgba(99,102,241,0.15), transparent 70%)" }}
       />
       <div
-        className="absolute top-20 -right-20 w-64 h-64 rounded-full blur-3xl opacity-30 animate-ambient-2"
+        className="absolute top-20 -right-20 w-64 h-64 rounded-full blur-3xl opacity-30"
         style={{ background: "radial-gradient(circle, rgba(20,184,166,0.12), transparent 70%)" }}
       />
     </div>
@@ -153,163 +152,3 @@ export function SectionHeading({ children, className = "" }) {
     </div>
   );
 }
-
-// ── Staggered fade-in list ──────────────────────────────────────────────────
-export function StaggerItem({ children, delay = 0, className = "" }) {
-  return (
-    <div
-      className={`animate-onb-scale ${className}`}
-      style={{ animationDelay: `${delay}ms`, animationFillMode: "backwards" }}
-    >
-      {children}
-    </div>
-  );
-}
-
-// ── Mascot empty state ───────────────────────────────────────────────────────
-// Accepts an optional custom `illustration` node (from LevliIllustrations).
-export function MascotEmptyState({ title, subtitle, children, illustration }) {
-  return (
-    <div className="bg-white rounded-2xl p-8 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 text-center relative overflow-hidden">
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="w-48 h-48 rounded-full blur-3xl opacity-30 animate-ambient-3" style={{ background: "radial-gradient(circle, rgba(99,102,241,0.2), transparent 70%)" }} />
-      </div>
-      <div className="relative z-10 animate-levli-fade-scale">
-        {illustration ? (
-          <div className="mx-auto mb-4 flex justify-center">{illustration}</div>
-        ) : (
-          <DropletMascot size={72} className="mx-auto mb-4 animate-levli-float" />
-        )}
-        {title && <h3 className="text-lg font-bold text-gray-800 mb-1">{title}</h3>}
-        {subtitle && <p className="text-sm text-gray-400 mb-5">{subtitle}</p>}
-        {children}
-      </div>
-    </div>
-  );
-}
-
-// ── Warm callout banner (reassuring tone) ──────────────────────────────────
-export function WarmCallout({ icon, title, children, tone = "indigo" }) {
-  const tones = {
-    indigo: "bg-indigo-50 border-indigo-100/50",
-    teal: "bg-teal-50 border-teal-100/50",
-    green: "bg-green-50 border-green-100/50",
-    amber: "bg-amber-50 border-amber-100/50",
-    orange: "bg-orange-50 border-orange-100/50",
-  };
-  const textTones = {
-    indigo: "text-indigo-600",
-    teal: "text-teal-600",
-    green: "text-green-600",
-    amber: "text-amber-600",
-    orange: "text-orange-600",
-  };
-  return (
-    <div className={`rounded-2xl p-3.5 border flex items-start gap-3 ${tones[tone]}`}>
-      {icon && <div className="flex-shrink-0 mt-0.5">{icon}</div>}
-      <div>
-        {title && <p className={`text-sm font-semibold ${textTones[tone]}`}>{title}</p>}
-        <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{children}</p>
-      </div>
-    </div>
-  );
-}
-
-// ── Gradient chart tooltip (dark rounded pill) ───────────────────────────────
-export function ChartTooltip({ active, payload, label, unit = "", valueLabels }) {
-  if (!active || !payload || !payload.length) return null;
-  return (
-    <div className="bg-gray-800/95 backdrop-blur-sm rounded-2xl px-3.5 py-2 shadow-xl border border-white/10">
-      {label && <p className="text-white/60 text-[10px] font-medium mb-1">{label}</p>}
-      {payload.map((entry, i) => (
-        <p key={i} className="text-white text-xs font-semibold">
-          {valueLabels?.[entry.name] || entry.name}: {entry.value}{unit}
-        </p>
-      ))}
-    </div>
-  );
-}
-
-// ── Gradient defs for recharts ───────────────────────────────────────────────
-export function ChartGradients({ idPrefix = "levli" }) {
-  return (
-    <defs>
-      <linearGradient id={`${idPrefix}-indigo`} x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stopColor="#6366F1" stopOpacity={0.25} />
-        <stop offset="100%" stopColor="#6366F1" stopOpacity={0.02} />
-      </linearGradient>
-      <linearGradient id={`${idPrefix}-teal`} x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stopColor="#14B8A6" stopOpacity={0.25} />
-        <stop offset="100%" stopColor="#14B8A6" stopOpacity={0.02} />
-      </linearGradient>
-      <linearGradient id={`${idPrefix}-orange`} x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stopColor="#F97316" stopOpacity={0.25} />
-        <stop offset="100%" stopColor="#F97316" stopOpacity={0.02} />
-      </linearGradient>
-      <linearGradient id={`${idPrefix}-purple`} x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stopColor="#8B5CF6" stopOpacity={0.22} />
-        <stop offset="100%" stopColor="#8B5CF6" stopOpacity={0.02} />
-      </linearGradient>
-    </defs>
-  );
-}
-
-// ── Floating Add Button ──────────────────────────────────────────────────────
-export function FloatingAddButton({ onClick, label = "Add" }) {
-  return (
-    <button
-      onClick={onClick}
-      className="fixed bottom-24 right-5 lg:right-8 bg-indigo-600 text-white rounded-full shadow-lg shadow-indigo-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-indigo-700 active:scale-95 transition-all text-sm px-5 py-3"
-    >
-      <Plus size={18} /> {label}
-    </button>
-  );
-}
-
-// ── Skeleton (branded loading placeholder) ─────────────────────────────────
-export function Skeleton({ className = "" }) {
-  return <div className={`levli-skeleton ${className}`} />;
-}
-
-export function SkeletonCard({ lines = 3 }) {
-  return (
-    <div className="bg-white rounded-2xl p-4 border border-gray-100/80">
-      <div className="flex items-center gap-3 mb-3">
-        <Skeleton className="w-10 h-10 rounded-xl" />
-        <div className="flex-1 space-y-1.5">
-          <Skeleton className="h-3 w-24" />
-          <Skeleton className="h-2.5 w-16" />
-        </div>
-      </div>
-      {Array.from({ length: lines }).map((_, i) => (
-        <Skeleton key={i} className={`h-3 w-full mb-2 ${i === lines - 1 ? "w-2/3" : ""}`} />
-      ))}
-    </div>
-  );
-}
-
-// ── Gradient hero card (soft, calm — never bold) ──────────────────────────
-export function GradientHeroCard({ children, className = "", tone = "teal" }) {
-  const tones = {
-    teal: "from-teal-50 via-indigo-50 to-white",
-    warm: "from-orange-50 via-pink-50 to-white",
-  };
-  return (
-    <div className={`rounded-2xl p-4 border border-gray-100/80 shadow-[0_2px_12px_rgba(0,0,0,0.04)] bg-gradient-to-br ${tones[tone]} ${className}`}>
-      {children}
-    </div>
-  );
-}
-
-// ── Streak badge (gentle motivation) ────────────────────────────────────────
-export function StreakBadge({ count, label = "day streak" }) {
-  return (
-    <div className="inline-flex items-center gap-1.5 rounded-full pl-1.5 pr-3 py-1 bg-gradient-to-r from-orange-50 to-pink-50 border border-orange-100/60">
-      <FlameIcon size={22} />
-      <span className="text-sm font-bold text-orange-600">{count}</span>
-      <span className="text-xs text-gray-400">{label}</span>
-    </div>
-  );
-}
-
-import { Plus } from "lucide-react";

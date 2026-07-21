@@ -3,15 +3,12 @@ import { Link } from "react-router-dom";
 import { Settings, TrendingDown, Syringe, HelpCircle, Zap, Gauge, Camera, Image, Clock, Plus, ArrowRight, Maximize2, Minimize2 } from "lucide-react";
 import ProgressPhotoCard from "@/components/insights/ProgressPhotoCard";
 import AddMetricModal from "@/components/modals/AddMetricModal";
-import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts";
+import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { useAppState } from "@/lib/AppState";
 import { parseShotDate, todayKey } from "@/lib/dateUtils";
 import { isInvestigational, getHalfLifeDays, getDosingInterval } from "@/lib/medicationData";
 import { steadyStateFraction, accumulationRatio, PK_CALCULATION_VERSION } from "@/lib/pkCalculations";
 import { toast } from "sonner";
-import { ChartTooltip, ChartGradients, MascotEmptyState, WarmCallout } from "@/components/levli/LevliUI";
-import { DropletMascot, SparkleIcon } from "@/components/onboarding/LevliIcons";
-import { EmptyProgressIllustration, EmptyShotsIllustration, InsightsAccent } from "@/components/levli/LevliIllustrations";
 
 const CLASS_COLORS = { Semaglutide: "#14B8A6", Tirzepatide: "#6366F1", Liraglutide: "#F59E0B" };
 
@@ -219,16 +216,6 @@ export default function Insights() {
       </div>
 
       <div className="max-w-3xl mx-auto">
-        {/* Warm headline callout */}
-        {shots.length > 0 && (
-          <div className="mx-4 mb-4">
-            <WarmCallout tone="teal" icon={<InsightsAccent size={56} />}
-              title="You're building a steady picture">
-              Every log helps you see your patterns more clearly. Here's what your data is showing so far.
-            </WarmCallout>
-          </div>
-        )}
-
         {/* Weight Change Panel */}
         <div className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 overflow-hidden">
           <div className="flex items-center gap-2 mb-1">
@@ -290,21 +277,22 @@ export default function Insights() {
             <div className="h-52">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={weightData}>
-                  <ChartGradients idPrefix="wt" />
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(150,150,150,0.08)" vertical={false} />
-                  <XAxis dataKey="date" tick={{ fontSize: 10 }} stroke="#ccc" interval="preserveStartEnd" axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fontSize: 10 }} stroke="#ccc" domain={["auto", "auto"]} width={36} axisLine={false} tickLine={false} />
-                  <ChartTooltip unit={` ${weightUnit}`} valueLabels={{ weight: "Weight", rollingAvg: "7-day avg" }} />
-                  <Line type="monotone" dataKey="weight" stroke="#6366F1" strokeWidth={2.5} dot={{ fill: "#6366F1", r: 3 }} activeDot={{ r: 5 }} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(150,150,150,0.15)" />
+                  <XAxis dataKey="date" tick={{ fontSize: 10 }} stroke="#999" interval="preserveStartEnd" />
+                  <YAxis tick={{ fontSize: 10 }} stroke="#999" domain={["auto", "auto"]} width={36} />
+                  <Tooltip
+                    formatter={(v, name) => [`${v} ${weightUnit}`, name === "rollingAvg" ? "7-day avg" : "Weight"]}
+                    contentStyle={{ background: "rgba(31,41,55,0.95)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, color: "#fff", fontSize: 12 }}
+                  />
+                  <Line type="monotone" dataKey="weight" stroke="#6366F1" strokeWidth={2} dot={{ fill: "#6366F1", r: 3 }} activeDot={{ r: 5 }} />
                   <Line type="monotone" dataKey="rollingAvg" stroke="#8B5CF6" strokeWidth={2} strokeDasharray="4 4" dot={false} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center bg-gray-50 rounded-xl gap-2 py-6">
-              <EmptyProgressIllustration className="!max-w-[160px]" />
+            <div className="h-48 flex flex-col items-center justify-center bg-gray-50 rounded-xl gap-2">
               <p className="text-sm text-gray-400 text-center px-4">
-                {weightHistory.length === 0 ? "Log your weight on Home to see trends here." : "Log at least 2 weight entries in this range to see a chart."}
+                {weightHistory.length === 0 ? "Log your weight in the Home tab to see trends here." : "Log at least 2 weight entries in this time range to see a chart."}
               </p>
             </div>
           )}
@@ -343,9 +331,6 @@ export default function Insights() {
 
           {photosAsc.length === 0 ? (
             <div className="space-y-4">
-              <div className="flex justify-center py-2">
-                <EmptyProgressIllustration className="!max-w-[170px]" />
-              </div>
               <button onClick={openAddPhoto}
                 className="w-full flex items-center gap-3 rounded-xl p-4 text-left bg-indigo-50 border border-indigo-100/50 active:scale-[0.99] transition-transform">
                 <Camera size={22} className="text-indigo-500 flex-shrink-0" />
@@ -425,26 +410,21 @@ export default function Insights() {
 
           {shots.length > 0 ? (
             medLevel.disabled ? (
-              <div className="flex flex-col items-center justify-center bg-gray-50 rounded-xl gap-2 py-6 px-4">
-                <DropletMascot size={56} />
-                <p className="text-sm text-gray-400 text-center">Exposure estimates aren't available for this medication yet — this appears for investigational or unsupported products.</p>
+              <div className="h-48 flex items-center justify-center bg-gray-50 rounded-xl px-4">
+                <p className="text-sm text-gray-400 text-center">Exposure estimation is not available for this medication. This appears for investigational or unsupported products.</p>
               </div>
             ) : (
               <>
                 <div className="h-48">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={medLevel.data}>
-                      <ChartGradients idPrefix="med" />
-                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(150,150,150,0.08)" vertical={false} />
-                      <XAxis dataKey="day" tick={{ fontSize: 10 }} stroke="#ccc" interval={Math.floor(medLevel.data.length / 5)} axisLine={false} tickLine={false} />
-                      <YAxis tick={{ fontSize: 10 }} stroke="#ccc" width={36} axisLine={false} tickLine={false} />
-                      <ChartTooltip unit=" relative units" />
-                      {medLevel.classes.map((cls, i) => {
-                        const gradKey = cls === "Semaglutide" ? "med-teal" : cls === "Tirzepatide" ? "med-indigo" : "med-orange";
-                        return (
-                          <Area key={cls} type="monotone" dataKey={cls} stroke={CLASS_COLORS[cls] || "#6366F1"} fill={`url(#${gradKey})`} strokeWidth={2.5} />
-                        );
-                      })}
+                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(150,150,150,0.15)" />
+                      <XAxis dataKey="day" tick={{ fontSize: 10 }} stroke="#999" interval={Math.floor(medLevel.data.length / 5)} />
+                      <YAxis tick={{ fontSize: 10 }} stroke="#999" width={36} />
+                      <Tooltip formatter={(v, name) => [`${v} relative units`, name]} contentStyle={{ background: "rgba(31,41,55,0.95)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, color: "#fff", fontSize: 12 }} />
+                      {medLevel.classes.map((cls) => (
+                        <Area key={cls} type="monotone" dataKey={cls} stroke={CLASS_COLORS[cls] || "#6366F1"} fill={CLASS_COLORS[cls] || "#6366F1"} fillOpacity={0.08} strokeWidth={2} />
+                      ))}
                     </AreaChart>
                   </ResponsiveContainer>
                 </div>
@@ -466,9 +446,8 @@ export default function Insights() {
               </>
             )
           ) : (
-            <div className="flex flex-col items-center justify-center bg-gray-50 rounded-xl gap-2 py-6">
-              <EmptyShotsIllustration className="!max-w-[160px]" />
-              <p className="text-sm text-gray-400">Log your first shot to see your medication levels here.</p>
+            <div className="h-48 flex items-center justify-center bg-gray-50 rounded-xl">
+              <p className="text-sm text-gray-400">Log your first shot to see relative exposure here.</p>
             </div>
           )}
           <p className="text-xs text-gray-400 text-center mt-2">Time vs modelled relative exposure (illustrative)</p>

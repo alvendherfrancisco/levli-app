@@ -5,9 +5,6 @@ import { useAppState } from "@/lib/AppState";
 import InventoryModal from "@/components/modals/InventoryModal";
 import { todayKey, calendarDaysBetween } from "@/lib/dateUtils";
 import { toast } from "sonner";
-import { PackageIcon } from "@/components/onboarding/LevliIcons";
-import { MascotEmptyState } from "@/components/levli/LevliUI";
-import { EmptyInventoryIllustration } from "@/components/levli/LevliIllustrations";
 
 export default function InventoryPage() {
   const { inventory, deleteInventory, addStorageLog, storageLogs } = useAppState();
@@ -81,11 +78,15 @@ export default function InventoryPage() {
         </p>
 
         {itemsWithStatus.length === 0 ? (
-          <MascotEmptyState title="No inventory tracked yet" subtitle="Track your product quantities, lot numbers, and expiry dates." illustration={<EmptyInventoryIllustration />}>
+          <div className="bg-white rounded-2xl p-8 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 text-center">
+            <div className="w-16 h-16 rounded-2xl bg-indigo-100 flex items-center justify-center mx-auto mb-3">
+              <Package size={28} className="text-indigo-500" />
+            </div>
+            <p className="text-sm text-gray-400 mb-5">No inventory tracked yet.</p>
             <button onClick={openNew} className="px-6 py-3.5 bg-indigo-600 text-white rounded-full font-semibold flex items-center gap-2 mx-auto shadow-lg shadow-indigo-600/20 active:scale-95 transition-all">
-              <Plus size={18} /> Add product
+              <Plus size={18} /> Add Product
             </button>
-          </MascotEmptyState>
+          </div>
         ) : (
           <div className="space-y-3">
             {itemsWithStatus.map((i) => (
@@ -93,8 +94,8 @@ export default function InventoryPage() {
                 <div className="flex items-start justify-between gap-2">
                   <button onClick={() => openEdit(i)} className="flex-1 text-left min-w-0">
                     <div className="flex items-center gap-2 mb-1 flex-wrap">
-                      <div className="flex-shrink-0">
-                        <PackageIcon size={40} />
+                      <div className="w-9 h-9 rounded-xl bg-indigo-100 flex items-center justify-center flex-shrink-0">
+                        <Package size={16} className="text-indigo-500" />
                       </div>
                       <span className="font-bold text-gray-800 break-words">{i.product_name}</span>
                       {i.status !== "active" && <span className="text-xs px-2.5 py-1 rounded-full bg-gray-100 text-gray-500 whitespace-nowrap flex-shrink-0">{i.status}</span>}

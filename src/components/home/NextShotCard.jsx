@@ -1,6 +1,5 @@
 import React from "react";
 import { Syringe } from "lucide-react";
-import { SyringeIcon } from "@/components/onboarding/LevliIcons";
 import { useAppState } from "@/lib/AppState";
 import { addDaysToShotDate, daysUntilShotDate } from "@/lib/dateUtils";
 import { getDosingInterval, getMissedDoseRule } from "@/lib/medicationData";
@@ -15,10 +14,7 @@ export default function NextShotCard() {
   if (shots.length === 0) {
     return (
       <div className="bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 mx-4 mb-4">
-        <div className="flex items-center gap-2 mb-3">
-          <SyringeIcon size={36} />
-          <p className="text-sm font-semibold text-gray-600">Next shot</p>
-        </div>
+        <p className="text-sm text-gray-400 mb-2">Next Shot</p>
         <div className="bg-indigo-50 rounded-xl p-3 flex items-start gap-2 border border-indigo-100/50">
           <Syringe size={18} className="text-indigo-500 mt-0.5 flex-shrink-0" />
           <p className="text-sm text-indigo-600">
@@ -49,20 +45,14 @@ export default function NextShotCard() {
 
   return (
     <>
-      <div className="bg-gradient-to-br from-teal-50 via-indigo-50 to-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 mx-4 mb-4 overflow-hidden">
-        <div className="flex items-center gap-2 mb-3">
-          <div className="animate-levli-float-soft"><SyringeIcon size={36} /></div>
-          <div>
-            <p className="text-xs text-gray-400">Next shot</p>
-            <p className="text-sm font-semibold text-gray-600">{last.medication}</p>
-          </div>
-        </div>
+      <div className="bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 mx-4 mb-4">
+        <p className="text-sm text-gray-400 mb-1">Next Shot</p>
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-xl font-bold text-gray-800">{nextDate}</h3>
             <p className="text-sm font-medium text-indigo-600 mt-0.5">{daysLabel}</p>
             <div className="mt-2 border-t border-gray-100 pt-2">
-              <p className="text-xs text-gray-400">Last dose</p>
+              <p className="text-xs text-gray-400">Last Dose</p>
               <p className="text-sm font-semibold text-gray-600">
                 {last.date} · {last.dose} {last.dose_unit || "mg"}
               </p>
@@ -70,19 +60,13 @@ export default function NextShotCard() {
           </div>
           <div className="relative w-20 h-20 flex-shrink-0">
             <svg className="w-20 h-20 -rotate-90" viewBox="0 0 80 80">
-              <defs>
-                <linearGradient id="levliRingNext" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
-                  <stop stopColor="#14B8A6" />
-                  <stop offset="1" stopColor="#6366F1" />
-                </linearGradient>
-              </defs>
               <circle cx="40" cy="40" r="34" fill="none" stroke="#E5E7EB" strokeWidth="5" />
               <circle
                 cx="40"
                 cy="40"
                 r="34"
                 fill="none"
-                stroke={isDue ? ringColor : "url(#levliRingNext)"}
+                stroke={ringColor}
                 strokeWidth="5"
                 strokeDasharray={circumference}
                 strokeDashoffset={circumference * (1 - progress)}
