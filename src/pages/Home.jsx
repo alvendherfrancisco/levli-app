@@ -1,14 +1,18 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Settings, Plus, Info, HelpCircle, Wind, ArrowRight } from "lucide-react";
+import { Settings, Plus, Info, ArrowRight } from "lucide-react";
 import DateStrip from "@/components/home/DateStrip";
 import NextShotCard from "@/components/home/NextShotCard";
 import MetricsGrid from "@/components/home/MetricsGrid";
+import MedicationsCard from "@/components/home/MedicationsCard";
+import StockCard from "@/components/home/StockCard";
+import RecentHistoryCard from "@/components/home/RecentHistoryCard";
 import AddShotModal from "@/components/modals/AddShotModal";
 import SideEffectsModal from "@/components/modals/SideEffectsModal";
 import { useAppState } from "@/lib/AppState";
 import { toDayKey } from "@/lib/dateUtils";
 import { AmbientHeaderBg } from "@/components/levli/LevliUI";
+import { HeartIcon, ChartIcon } from "@/components/onboarding/LevliIcons";
 
 export default function Home() {
   const [showShot, setShowShot] = useState(false);
@@ -25,8 +29,11 @@ export default function Home() {
   return (
     <div className="bg-[#FAFAFA] min-h-screen w-full relative">
       <AmbientHeaderBg />
-      <div className="sticky top-0 z-30 bg-[#FAFAFA] w-full flex items-center justify-between px-5 pt-6 pb-2 relative">
-        <h1 className="text-2xl font-bold text-gray-800">{greeting} 👋</h1>
+      <div className="sticky top-0 z-30 bg-[#FAFAFA]/80 backdrop-blur-sm w-full flex items-center justify-between px-5 pt-6 pb-2 relative">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-800 leading-tight">{greeting}</h1>
+          <p className="text-sm text-gray-400 mt-0.5">Here's your journey today.</p>
+        </div>
         <Link to="/settings">
           <div className="w-9 h-9 rounded-full border border-gray-200 bg-white flex items-center justify-center active:scale-95 transition-all">
             <Settings size={18} className="text-gray-500" />
@@ -35,23 +42,36 @@ export default function Home() {
       </div>
 
       <div className="max-w-3xl mx-auto pb-6 relative z-10">
-        <DateStrip selectedDate={selectedDate} onSelectDate={setSelectedDate} />
-        <NextShotCard />
-        <MetricsGrid dayKey={dk} />
+        <div className="animate-section-in">
+          <DateStrip selectedDate={selectedDate} onSelectDate={setSelectedDate} />
+          <NextShotCard />
+        </div>
 
-        {/* Side Effects card */}
+        <div className="animate-section-in" style={{ animationDelay: "60ms" }}>
+          <MetricsGrid dayKey={dk} />
+        </div>
+
+        <div className="animate-section-in" style={{ animationDelay: "120ms" }}>
+          <MedicationsCard />
+          <StockCard />
+          <RecentHistoryCard />
+        </div>
+
+        {/* Side Effects card — illustrated, warm */}
         <button
           onClick={() => setShowSideEffects(true)}
-          className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 w-[calc(100%-2rem)] text-left active:scale-[0.99] transition-transform"
+          className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 w-[calc(100%-2rem)] text-left active:scale-[0.99] transition-transform animate-card-in relative overflow-hidden"
+          style={{ animationDelay: "160ms" }}
         >
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center">
-              <Wind size={16} className="text-teal-500" />
-            </div>
+          <div className="absolute -right-3 -top-2 opacity-20 pointer-events-none">
+            <HeartIcon size={72} />
+          </div>
+          <div className="relative flex items-center gap-2 mb-2">
+            <HeartIcon size={32} />
             <span className="font-semibold text-gray-700 text-sm">Side effects</span>
           </div>
           {sideEffects || dayAdverseEvents.length > 0 ? (
-            <div className="bg-teal-50 rounded-xl p-3 border border-teal-100/50">
+            <div className="relative bg-teal-50 rounded-xl p-3 border border-teal-100/50">
               {dayAdverseEvents.length > 0 && (
                 <div className="flex flex-wrap gap-1 mb-2">
                   {dayAdverseEvents.map((e) => (
@@ -64,27 +84,28 @@ export default function Home() {
               {sideEffects && <p className="text-sm text-gray-600">{sideEffects}</p>}
             </div>
           ) : (
-            <div className="bg-teal-50 rounded-xl p-3 flex items-center gap-2 border border-teal-100/50">
+            <div className="relative bg-teal-50 rounded-xl p-3 flex items-center gap-2 border border-teal-100/50">
               <Info size={16} className="text-teal-500 flex-shrink-0" />
-              <p className="text-sm text-teal-600">Tap to add side effects.</p>
+              <p className="text-sm text-teal-600">Tap to log how you're feeling today.</p>
             </div>
           )}
         </button>
 
-        {/* Medication Exposure card */}
-        <div className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80">
-          <div className="flex items-start justify-between mb-2">
+        {/* Modelled Medication Exposure — illustrated */}
+        <div className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 animate-card-in relative overflow-hidden" style={{ animationDelay: "200ms" }}>
+          <div className="absolute -right-3 -bottom-3 opacity-15 pointer-events-none">
+            <ChartIcon size={84} />
+          </div>
+          <div className="relative flex items-start justify-between mb-2">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center">
-                <HelpCircle size={16} className="text-indigo-500" />
-              </div>
+              <ChartIcon size={32} />
               <div>
                 <h3 className="font-bold text-gray-800 text-sm">Modelled Medication Exposure</h3>
                 <p className="text-xs text-indigo-400">Illustrative estimate of relative medication exposure (not a blood-level measurement).</p>
               </div>
             </div>
           </div>
-          <Link to="/insights" className="bg-indigo-50 rounded-xl p-3 flex items-center gap-2 block border border-indigo-100/50 active:scale-[0.99] transition-transform">
+          <Link to="/insights" className="relative bg-indigo-50 rounded-xl p-3 flex items-center gap-2 block border border-indigo-100/50 active:scale-[0.99] transition-transform">
             <Info size={16} className="text-indigo-500 flex-shrink-0" />
             <p className="text-sm text-indigo-600">View full exposure chart in Insights <ArrowRight size={12} className="inline" /></p>
           </Link>

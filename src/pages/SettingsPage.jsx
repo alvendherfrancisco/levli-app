@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { ChevronLeft, Bell, Download, Upload, Loader2, FileText, MessageSquare, ChevronRight, UserPlus, X, LogOut, Moon } from "lucide-react";
+import { ChevronLeft, Bell, Download, Upload, Loader2, FileText, MessageSquare, ChevronRight, UserPlus, X, LogOut, Moon, Pill, Package, CalendarDays, User } from "lucide-react";
 import { useAppState } from "@/lib/AppState";
 import { useAuth } from "@/lib/AuthContext";
 import { base44 } from "@/api/base44Client";
@@ -133,7 +133,13 @@ export default function SettingsPage() {
     <div className="bg-[#FAFAFA] min-h-screen w-full">
       <div className="w-full flex items-center gap-3 px-5 pt-6 pb-4 bg-[#FAFAFA] sticky top-0 z-30">
         <button onClick={() => navigate(-1)}><div className="w-9 h-9 rounded-full border border-gray-200 bg-white flex items-center justify-center active:scale-95 transition-all"><ChevronLeft size={20} className="text-gray-500" /></div></button>
-        <h1 className="text-2xl font-bold text-gray-800">Settings</h1>
+        <h1 className="text-2xl font-bold text-gray-800 flex-1">Settings</h1>
+        {/* Power-user shortcuts to Meds, Stock, History */}
+        <div className="flex items-center gap-2">
+          <Link to="/medications" title="Medications"><div className="w-9 h-9 rounded-full border border-gray-200 bg-white flex items-center justify-center active:scale-95 transition-all"><Pill size={16} className="text-indigo-500" /></div></Link>
+          <Link to="/inventory" title="Stock"><div className="w-9 h-9 rounded-full border border-gray-200 bg-white flex items-center justify-center active:scale-95 transition-all"><Package size={16} className="text-teal-500" /></div></Link>
+          <Link to="/history" title="History"><div className="w-9 h-9 rounded-full border border-gray-200 bg-white flex items-center justify-center active:scale-95 transition-all"><CalendarDays size={16} className="text-blue-500" /></div></Link>
+        </div>
       </div>
 
       <div className="max-w-lg mx-auto">
@@ -165,6 +171,7 @@ export default function SettingsPage() {
         <div className="px-4 mb-4">
           <p className="text-xs font-semibold text-gray-400 uppercase mb-2 px-1">General</p>
           <div className="bg-white rounded-2xl px-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 divide-y divide-gray-100">
+            <MenuItem icon={<MenuIcon tint="bg-teal-100"><User size={18} className="text-teal-500" /></MenuIcon>} label="Profile Info" to="/profile" />
             <MenuItem icon={backupLoading ? <MenuIcon tint="bg-indigo-100"><Loader2 size={18} className="animate-spin text-indigo-500" /></MenuIcon> : <MenuIcon tint="bg-indigo-100"><Download size={18} className="text-indigo-500" /></MenuIcon>} label="Backup Data" onPress={handleBackup} />
             <MenuItem icon={restoreLoading ? <MenuIcon tint="bg-teal-100"><Loader2 size={18} className="animate-spin text-teal-500" /></MenuIcon> : <MenuIcon tint="bg-teal-100"><Upload size={18} className="text-teal-500" /></MenuIcon>} label="Restore Data" onPress={handleRestore} />
           </div>
