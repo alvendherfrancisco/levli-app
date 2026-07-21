@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Settings, Syringe, Lock, User, Check, Loader2, Pill, Package, CalendarDays } from "lucide-react";
+import { Settings, Syringe, Lock, User, Check, Loader2 } from "lucide-react";
 import { useAppState } from "@/lib/AppState";
 import { toast } from "sonner";
 
@@ -103,12 +103,7 @@ export default function Profile() {
     <div className="bg-[#FAFAFA] min-h-screen w-full">
       <div className="sticky top-0 z-30 bg-[#FAFAFA] w-full flex items-center justify-between px-5 pt-6 pb-4">
         <h1 className="text-2xl font-bold text-gray-800">Profile</h1>
-        <div className="flex items-center gap-2">
-          <Link to="/medications" title="Medications"><div className="w-9 h-9 rounded-full border border-gray-200 bg-white flex items-center justify-center active:scale-95 transition-all"><Pill size={16} className="text-indigo-500" /></div></Link>
-          <Link to="/inventory" title="Stock"><div className="w-9 h-9 rounded-full border border-gray-200 bg-white flex items-center justify-center active:scale-95 transition-all"><Package size={16} className="text-teal-500" /></div></Link>
-          <Link to="/history" title="History"><div className="w-9 h-9 rounded-full border border-gray-200 bg-white flex items-center justify-center active:scale-95 transition-all"><CalendarDays size={16} className="text-blue-500" /></div></Link>
-          <Link to="/settings"><div className="w-9 h-9 rounded-full border border-gray-200 bg-white flex items-center justify-center active:scale-95 transition-all"><Settings size={18} className="text-gray-500" /></div></Link>
-        </div>
+        <Link to="/settings"><div className="w-9 h-9 rounded-full border border-gray-200 bg-white flex items-center justify-center active:scale-95 transition-all"><Settings size={18} className="text-gray-500" /></div></Link>
       </div>
 
       <div className="max-w-3xl mx-auto">

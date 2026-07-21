@@ -4,7 +4,6 @@ import { Settings, Plus, BookOpen, Clock, Heart, FileText, AlertTriangle, Zap, S
 import JournalEntryModal from "@/components/modals/JournalEntryModal";
 import { useAppState } from "@/lib/AppState";
 import { toast } from "sonner";
-import PillTabs from "@/components/levli/PillTabs";
 
 const CATEGORY_CONFIG = {
   Mood:          { icon: <Heart size={20} className="text-teal-500" />, tint: "bg-teal-100" },
@@ -60,9 +59,21 @@ export default function Journal() {
         </div>
       </div>
 
-      {/* Category filter — pill tabs */}
-      <div className="max-w-3xl mx-auto px-4 mb-3">
-        <PillTabs tabs={ALL_CATEGORIES} active={filterCat} onChange={setFilterCat} />
+      {/* Category filter chips */}
+      <div className="max-w-3xl mx-auto px-4 mb-3 flex flex-wrap gap-2">
+        {ALL_CATEGORIES.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setFilterCat(cat)}
+            className={`px-3.5 py-1.5 rounded-full text-xs font-medium whitespace-nowrap border transition-all active:scale-95 ${
+              filterCat === cat
+                ? "bg-indigo-600 text-white border-indigo-600"
+                : "bg-white text-gray-500 border-gray-200 hover:border-gray-300"
+            }`}
+          >
+            {cat}
+          </button>
+        ))}
       </div>
 
       <div className="max-w-3xl mx-auto">
@@ -84,14 +95,13 @@ export default function Journal() {
           </div>
         ) : (
           <div className="px-4 space-y-3 pb-28">
-            {filtered.map((entry, i) => {
+            {filtered.map((entry) => {
               const cfg = CATEGORY_CONFIG[entry.category];
               return (
                 <button
                   key={entry.id}
                   onClick={() => openEdit(entry)}
-                  className="w-full text-left bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 overflow-hidden box-border active:scale-[0.99] transition-transform animate-card-in"
-                  style={{ animationDelay: `${i * 40}ms` }}
+                  className="w-full text-left bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 overflow-hidden box-border active:scale-[0.99] transition-transform"
                 >
                   <div className="flex items-start gap-3 w-full min-w-0">
                     <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${cfg ? cfg.tint : "bg-gray-100"}`}>

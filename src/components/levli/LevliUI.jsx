@@ -128,21 +128,17 @@ export function StatusPill({ children, tone = "neutral" }) {
   );
 }
 
-// ── Ambient header background (soft, slow-drifting blobs) ─────────────────
+// ── Ambient header background (soft blobs) ────────────────────────────────
 export function AmbientHeaderBg() {
   return (
-    <div className="absolute top-0 left-0 right-0 h-72 overflow-hidden pointer-events-none -z-0">
+    <div className="absolute top-0 left-0 right-0 h-64 overflow-hidden pointer-events-none -z-0">
       <div
-        className="absolute -top-10 -left-20 w-72 h-72 rounded-full blur-3xl opacity-50 animate-ambient-1"
-        style={{ background: "radial-gradient(circle, rgba(99,102,241,0.16), transparent 70%)" }}
+        className="absolute -top-10 -left-20 w-72 h-72 rounded-full blur-3xl opacity-40"
+        style={{ background: "radial-gradient(circle, rgba(99,102,241,0.15), transparent 70%)" }}
       />
       <div
-        className="absolute top-16 -right-24 w-72 h-72 rounded-full blur-3xl opacity-40 animate-ambient-2"
-        style={{ background: "radial-gradient(circle, rgba(20,184,166,0.14), transparent 70%)" }}
-      />
-      <div
-        className="absolute top-10 left-1/3 w-64 h-64 rounded-full blur-3xl opacity-30 animate-ambient-3"
-        style={{ background: "radial-gradient(circle, rgba(249,115,22,0.10), transparent 70%)" }}
+        className="absolute top-20 -right-20 w-64 h-64 rounded-full blur-3xl opacity-30"
+        style={{ background: "radial-gradient(circle, rgba(20,184,166,0.12), transparent 70%)" }}
       />
     </div>
   );

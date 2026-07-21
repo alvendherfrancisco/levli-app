@@ -65,8 +65,8 @@ export default function Shots() {
 
       <div className="max-w-3xl mx-auto">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 px-4 mb-5">
-          {summaryCards.map((card, i) => (
-            <div key={card.label} className="bg-white rounded-2xl p-3 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 animate-card-in" style={{ animationDelay: `${i * 40}ms` }}>
+          {summaryCards.map((card) => (
+            <div key={card.label} className="bg-white rounded-2xl p-3 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80">
               <div className="flex items-center gap-1.5 mb-1">
                 <div className={`w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 ${card.tint}`}>
                   {card.icon}
@@ -92,8 +92,8 @@ export default function Shots() {
             </div>
           ) : (
             <div className="space-y-2">
-              {shots.map((shot, i) => (
-                <button key={shot.id} onClick={() => openEdit(shot)} className="w-full text-left active:scale-[0.99] transition-transform animate-card-in" style={{ animationDelay: `${i * 40}ms` }}>
+              {shots.map((shot) => (
+                <button key={shot.id} onClick={() => openEdit(shot)} className="w-full text-left active:scale-[0.99] transition-transform">
                   <ShotCard {...shot} drugClass={shot.drug_class} />
                 </button>
               ))}

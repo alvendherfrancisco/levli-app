@@ -9,8 +9,6 @@ import { parseShotDate, todayKey } from "@/lib/dateUtils";
 import { isInvestigational, getHalfLifeDays, getDosingInterval } from "@/lib/medicationData";
 import { steadyStateFraction, accumulationRatio, PK_CALCULATION_VERSION } from "@/lib/pkCalculations";
 import { toast } from "sonner";
-import PillTabs from "@/components/levli/PillTabs";
-import { ScaleIcon } from "@/components/onboarding/LevliIcons";
 
 const CLASS_COLORS = { Semaglutide: "#14B8A6", Tirzepatide: "#6366F1", Liraglutide: "#F59E0B" };
 
@@ -219,15 +217,22 @@ export default function Insights() {
 
       <div className="max-w-3xl mx-auto">
         {/* Weight Change Panel */}
-        <div className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 overflow-hidden animate-card-in">
+        <div className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 overflow-hidden">
           <div className="flex items-center gap-2 mb-1">
             <TrendingDown size={18} className="text-indigo-500" />
             <h3 className="font-bold text-gray-800 text-lg">Weight Change</h3>
           </div>
           <div className="border-b-2 border-indigo-500 w-12 mb-3" />
 
-          <div className="mb-3">
-            <PillTabs tabs={Object.keys(WEIGHT_RANGES)} active={weightRange} onChange={setWeightRange} />
+          <div className="flex items-center gap-1 mb-3 flex-wrap">
+            {Object.keys(WEIGHT_RANGES).map((r) => (
+              <button key={r} onClick={() => setWeightRange(r)}
+                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                  weightRange === r
+                    ? "bg-indigo-600 text-white"
+                    : "bg-gray-100 text-gray-400"
+                }`}>{r}</button>
+            ))}
           </div>
 
           {/* Summary chips */}
@@ -285,8 +290,7 @@ export default function Insights() {
               </ResponsiveContainer>
             </div>
           ) : (
-            <div className="h-48 flex flex-col items-center justify-center bg-gradient-to-br from-indigo-50 to-teal-50 rounded-xl gap-3">
-              <div className="opacity-60"><ScaleIcon size={48} /></div>
+            <div className="h-48 flex flex-col items-center justify-center bg-gray-50 rounded-xl gap-2">
               <p className="text-sm text-gray-400 text-center px-4">
                 {weightHistory.length === 0 ? "Log your weight in the Home tab to see trends here." : "Log at least 2 weight entries in this time range to see a chart."}
               </p>
@@ -296,7 +300,7 @@ export default function Insights() {
         </div>
 
         {/* Progress Pictures Panel */}
-        <div className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 animate-card-in" style={{ animationDelay: "60ms" }}>
+        <div className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80">
           <div className="flex items-center gap-2 mb-1">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-indigo-100">
               <Camera size={16} className="text-indigo-500" />
@@ -380,7 +384,7 @@ export default function Insights() {
         </div>
 
         {/* Medication Exposure Panel */}
-        <div className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 animate-card-in" style={{ animationDelay: "120ms" }}>
+        <div className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80">
           <div className="flex items-start justify-between mb-1">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center">
@@ -395,8 +399,13 @@ export default function Insights() {
           </div>
           <div className="border-b-2 border-indigo-500 w-12 mb-3" />
 
-          <div className="mb-4">
-            <PillTabs tabs={Object.keys(MED_RANGES)} active={medRange} onChange={setMedRange} />
+          <div className="flex items-center gap-2 mb-4 flex-wrap">
+            {Object.keys(MED_RANGES).map((r) => (
+              <button key={r} onClick={() => setMedRange(r)}
+                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                  medRange === r ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-400"
+                }`}>{r}</button>
+            ))}
           </div>
 
           {shots.length > 0 ? (
