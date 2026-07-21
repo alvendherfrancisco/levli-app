@@ -95,6 +95,17 @@
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
+/* Prevent SVG icons inside interactive elements from becoming click targets.
+   The dev tooling serializes click event targets via postMessage, and SVG
+   elements (which carry SVGAnimatedString) cannot be structured-cloned.
+   Letting the button/anchor be the target avoids the DataCloneError. */
+button > svg,
+a > svg,
+button svg,
+a svg {
+  pointer-events: none;
+}
+
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
