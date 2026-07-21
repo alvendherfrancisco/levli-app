@@ -3,14 +3,15 @@ import { X, Save, Trash2 } from "lucide-react";
 import { useAppState } from "@/lib/AppState";
 import { getRecentMedication } from "@/lib/medicationData";
 import RedFlagBanner from "@/components/RedFlagBanner";
+import { CalmMoodIcon, EnergizedMoodIcon, LovingMoodIcon, LowMoodIcon, GrowingMoodIcon } from "@/components/onboarding/LevliIcons";
 import { toast } from "sonner";
 
 const MOODS = [
-  { label: "Feeling Excellent", emoji: "😊", lightCls: "bg-green-100 text-green-700 border-green-300", darkBg: "rgba(34,197,94,0.15)",  darkBorder: "rgba(34,197,94,0.3)",  darkText: "#4ade80" },
-  { label: "Feeling Good",      emoji: "🙂", lightCls: "bg-green-50 text-green-600 border-green-200",  darkBg: "rgba(34,197,94,0.10)",  darkBorder: "rgba(34,197,94,0.25)", darkText: "#86efac" },
-  { label: "Feeling Neutral",   emoji: "😐", lightCls: "bg-yellow-100 text-yellow-700 border-yellow-300", darkBg: "rgba(234,179,8,0.15)",darkBorder: "rgba(234,179,8,0.3)", darkText: "#fde047" },
-  { label: "Feeling Low",       emoji: "😔", lightCls: "bg-orange-100 text-orange-700 border-orange-300", darkBg: "rgba(249,115,22,0.15)",darkBorder: "rgba(249,115,22,0.3)",darkText: "#fb923c" },
-  { label: "Feeling Bad",       emoji: "😞", lightCls: "bg-red-100 text-red-700 border-red-300",     darkBg: "rgba(239,68,68,0.15)",  darkBorder: "rgba(239,68,68,0.3)",   darkText: "#f87171" },
+  { label: "Feeling Calm",      Icon: CalmMoodIcon,      grad: "from-teal-400 to-blue-500" },
+  { label: "Feeling Energized", Icon: EnergizedMoodIcon, grad: "from-amber-400 to-orange-500" },
+  { label: "Feeling Loving",    Icon: LovingMoodIcon,    grad: "from-orange-400 to-pink-500" },
+  { label: "Feeling Low",       Icon: LowMoodIcon,       grad: "from-violet-400 to-indigo-500" },
+  { label: "Feeling Growing",   Icon: GrowingMoodIcon,   grad: "from-emerald-400 to-teal-500" },
 ];
 
 const CATEGORIES = ["Mood", "General Note", "Side Effect", "Energy", "Milestone", "Food", "Exercise"];
@@ -29,6 +30,7 @@ function nowFormatted() {
 export default function JournalEntryModal({ open, onClose, onSave, onDelete, initialEntry }) {
   const [text, setText] = useState("");
   const [mood, setMood] = useState(MOODS[0]);
+  const [moodIdx, setMoodIdx] = useState(0);
   const [category, setCategory] = useState("General Note");
   const { darkMode, shots } = useAppState();
 
@@ -36,11 +38,14 @@ export default function JournalEntryModal({ open, onClose, onSave, onDelete, ini
     if (open) {
       if (initialEntry) {
         setText(initialEntry.text || "");
-        const m = MOODS.find(x => x.label === initialEntry.mood) || MOODS[0];
-        setMood(m);
+        const mIdx = MOODS.findIndex(x => x.label === initialEntry.mood);
+        const idx = mIdx >= 0 ? mIdx : 0;
+        setMoodIdx(idx);
+        setMood(MOODS[idx]);
         setCategory(initialEntry.category || "General Note");
       } else {
         setText("");
+        setMoodIdx(0);
         setMood(MOODS[0]);
         setCategory("General Note");
       }
@@ -55,7 +60,7 @@ export default function JournalEntryModal({ open, onClose, onSave, onDelete, ini
     if (!text.trim()) return;
     try {
       const { date, time } = initialEntry ? { date: initialEntry.date, time: initialEntry.time } : nowFormatted();
-      await onSave({ text: text.trim(), date, time, mood: mood.label, moodColor: mood.lightCls, category });
+      await onSave({ text: text.trim(), date, time, mood: mood.label, moodColor: `bg-gradient-to-br ${mood.grad}`, category });
       toast.success(initialEntry ? "Journal entry updated successfully!" : "Journal entry added successfully!");
       setTimeout(() => onClose(), 500);
     } catch (err) {
@@ -83,22 +88,19 @@ export default function JournalEntryModal({ open, onClose, onSave, onDelete, ini
           <div>
             <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">How are you feeling?</label>
             <div className="flex flex-wrap gap-2">
-              {MOODS.map((m) => {
+              {MOODS.map((m, i) => {
                 const isActive = mood.label === m.label;
-                const activeStyle = darkMode && isActive
-                  ? { background: m.darkBg, borderColor: m.darkBorder, color: m.darkText }
-                  : {};
                 return (
-                  <button key={m.label} onClick={() => setMood(m)}
-                    style={activeStyle}
-                    className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium border transition-colors ${
-                      isActive && !darkMode
-                        ? m.lightCls
-                        : isActive && darkMode
-                        ? "border-transparent"
-                        : "bg-white dark:bg-white/[0.05] text-gray-400 dark:text-[#9A9DAE] border-gray-200 dark:border-white/[0.08]"
+                  <button key={m.label} onClick={() => { setMoodIdx(i); setMood(m); }}
+                    className={`flex flex-col items-center gap-1.5 px-3 py-2.5 rounded-2xl border transition-all active:scale-95 ${
+                      isActive
+                        ? "border-indigo-400 bg-indigo-50 dark:bg-indigo-500/10 scale-105"
+                        : "bg-white dark:bg-white/[0.05] border-gray-200 dark:border-white/[0.08] hover:border-gray-300"
                     }`}>
-                    {m.emoji} {m.label.replace("Feeling ", "")}
+                    <div className={`w-10 h-10 rounded-full ${isActive ? `bg-gradient-to-br ${m.grad} shadow-md` : "opacity-60"} flex items-center justify-center transition-all`}>
+                      <m.Icon size={36} />
+                    </div>
+                    <span className={`text-xs font-medium ${isActive ? "text-indigo-600 dark:text-indigo-300" : "text-gray-400 dark:text-gray-500"}`}>{m.label.replace("Feeling ", "")}</span>
                   </button>
                 );
               })}

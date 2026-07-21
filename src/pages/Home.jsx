@@ -1,48 +1,75 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Settings, Plus, Syringe, Info, HelpCircle, Wind, ArrowRight } from "lucide-react";
+import { ArrowRight, Info, Syringe, Wind } from "lucide-react";
+import { PillIcon, PackageIcon, CalendarIcon, DocumentIcon, SyringeIcon, WaveIcon, DropletIcon } from "@/components/onboarding/LevliIcons";
+import TopBar from "@/components/TopBar";
 import DateStrip from "@/components/home/DateStrip";
 import NextShotCard from "@/components/home/NextShotCard";
 import MetricsGrid from "@/components/home/MetricsGrid";
+import CheckInRow from "@/components/home/CheckInRow";
+import QuickActions from "@/components/home/QuickActions";
 import AddShotModal from "@/components/modals/AddShotModal";
 import SideEffectsModal from "@/components/modals/SideEffectsModal";
+import JournalEntryModal from "@/components/modals/JournalEntryModal";
+import AddMetricModal from "@/components/modals/AddMetricModal";
 import { useAppState } from "@/lib/AppState";
-import { toDayKey } from "@/lib/dateUtils";
+import { toDayKey, todayKey } from "@/lib/dateUtils";
+import { toast } from "sonner";
+
+const MORE_CARDS = [
+  { to: "/medications", label: "Medications", desc: "Track your regimens", Icon: PillIcon },
+  { to: "/inventory", label: "Inventory", desc: "Stock & expiry", Icon: PackageIcon },
+  { to: "/history", label: "History", desc: "Calendar view", Icon: CalendarIcon },
+  { to: "/report", label: "Report", desc: "Export PDF", Icon: DocumentIcon },
+];
 
 export default function Home() {
   const [showShot, setShowShot] = useState(false);
   const [showSideEffects, setShowSideEffects] = useState(false);
+  const [showJournal, setShowJournal] = useState(false);
+  const [showWeight, setShowWeight] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const { getSideEffects, adverseEventsByDay } = useAppState();
+  const { getSideEffects, adverseEventsByDay, profile, saveWeight, addJournalEntry } = useAppState();
   const dk = toDayKey(selectedDate);
   const sideEffects = getSideEffects(dk);
   const dayAdverseEvents = adverseEventsByDay[dk] || [];
 
   const hour = new Date().getHours();
-  const greeting = hour < 12 ? "Good Morning!" : hour < 18 ? "Good Afternoon!" : "Good Evening!";
+  const greeting = hour < 12 ? "Good morning!" : hour < 18 ? "Good afternoon!" : "Good evening!";
+  const userName = profile?.default_medication ? "" : "";
+
+  const handleQuickAction = (key) => {
+    if (key === "shot") setShowShot(true);
+    else if (key === "symptom") setShowSideEffects(true);
+    else if (key === "mood") setShowJournal(true);
+    else if (key === "weight") setShowWeight(true);
+    else if (key === "photo") setShowWeight(true);
+  };
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-950 min-h-screen w-full">
-      <div className="sticky top-0 z-30 bg-gray-50 dark:bg-gray-950 w-full flex items-center justify-between px-5 pt-6 pb-2">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{greeting}</h1>
-        <Link to="/settings"><Settings size={24} className="text-gray-600 dark:text-gray-400" /></Link>
-      </div>
+    <div className="min-h-screen w-full">
+      <TopBar title={greeting} subtitle={userName || "How are you feeling today?"} />
 
-      <div className="max-w-3xl mx-auto pb-6">
+      <div className="max-w-3xl mx-auto pb-8">
         <DateStrip selectedDate={selectedDate} onSelectDate={setSelectedDate} />
+        <CheckInRow onLogMood={() => setShowJournal(true)} />
         <NextShotCard />
+        <QuickActions onAction={handleQuickAction} />
         <MetricsGrid dayKey={dk} />
 
         {/* Side Effects card */}
         <button
           onClick={() => setShowSideEffects(true)}
-          className="mx-3 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 w-[calc(100%-1.5rem)] text-left"
+          className="mx-4 mb-4 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100/80 dark:border-white/[0.04] w-[calc(100%-2rem)] text-left transition-all hover:shadow-md"
         >
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{background:"rgba(20,184,166,0.13)"}}>
-              <Wind size={16} className="text-teal-500" />
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0">
+              <WaveIcon size={36} />
             </div>
-            <span className="font-semibold text-gray-700 dark:text-gray-300">Side effects</span>
+            <div>
+              <span className="font-semibold text-gray-700 dark:text-gray-200 block">Side effects</span>
+              <span className="text-xs text-gray-400 dark:text-gray-500">Track how you're feeling</span>
+            </div>
           </div>
           {sideEffects || dayAdverseEvents.length > 0 ? (
             <div className="bg-teal-50 dark:bg-teal-500/10 rounded-xl p-3 border border-transparent dark:border-teal-500/15">
@@ -55,35 +82,47 @@ export default function Home() {
                   ))}
                 </div>
               )}
-              {sideEffects && <p className="text-sm text-gray-700 dark:text-[#E8E9F0]">{sideEffects}</p>}
+              {sideEffects && <p className="text-sm text-gray-700 dark:text-gray-200">{sideEffects}</p>}
             </div>
           ) : (
-            <div className="bg-teal-50 dark:bg-teal-500/10 rounded-xl p-3 flex items-center gap-2 border border-transparent dark:border-teal-500/15">
+            <div className="bg-gray-50 dark:bg-white/[0.03] rounded-xl p-3 flex items-center gap-2">
               <Info size={16} className="text-teal-500 dark:text-teal-400 flex-shrink-0" />
               <p className="text-sm text-teal-700 dark:text-teal-300">Tap to add side effects.</p>
             </div>
           )}
         </button>
 
-        {/* Medication Levels card */}
-        <div className="mx-3 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
-          <div className="flex items-start justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{background:"rgba(99,102,241,0.13)"}}>
-                <Syringe size={16} className="text-indigo-600" />
+        {/* Medication Exposure card */}
+        <Link to="/insights" className="mx-4 mb-4 block">
+          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 p-4 shadow-lg shadow-indigo-500/15 transition-all hover:shadow-xl">
+            <div className="absolute -top-2 -right-2 animate-float-1 opacity-40"><DropletIcon size={56} /></div>
+            <div className="relative z-10">
+              <div className="flex items-center gap-2 mb-1">
+                <Syringe size={16} className="text-white" />
+                <h3 className="font-bold text-white text-sm">Modelled Medication Exposure</h3>
               </div>
-              <div>
-                <h3 className="font-bold text-gray-900 dark:text-white">Modelled Medication Exposure</h3>
-                <p className="text-xs text-indigo-500">Illustrative estimate of relative medication exposure (not a blood-level measurement).</p>
+              <p className="text-white/80 text-xs mb-2">Illustrative estimate of relative medication exposure.</p>
+              <div className="flex items-center gap-1 text-white/90 text-sm font-medium">
+                View full chart in Insights <ArrowRight size={14} />
               </div>
             </div>
-            <HelpCircle size={18} className="text-indigo-400" />
           </div>
-          <div className="border-b-2 border-indigo-500 w-12 mb-3" />
-          <Link to="/insights" className="bg-indigo-50 dark:bg-indigo-500/10 rounded-xl p-3 flex items-center gap-2 block border border-transparent dark:border-indigo-500/15">
-            <Info size={16} className="text-indigo-500 dark:text-indigo-400 flex-shrink-0" />
-            <p className="text-sm text-indigo-700 dark:text-indigo-300">View full exposure chart in Insights <ArrowRight size={12} className="inline" /></p>
-          </Link>
+        </Link>
+
+        {/* More for you section */}
+        <div className="px-4 mb-4">
+          <p className="text-sm font-semibold text-gray-600 dark:text-gray-300 mb-3">More for you</p>
+          <div className="grid grid-cols-2 gap-3">
+            {MORE_CARDS.map(({ to, label, desc, Icon }) => (
+              <Link key={to} to={to} className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100/80 dark:border-white/[0.04] transition-all hover:shadow-md active:scale-[0.98]">
+                <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-3">
+                  <Icon size={40} />
+                </div>
+                <p className="font-semibold text-gray-800 dark:text-white text-sm">{label}</p>
+                <p className="text-xs text-gray-400 dark:text-gray-500">{desc}</p>
+              </Link>
+            ))}
+          </div>
         </div>
 
         <p className="text-[11px] text-gray-400 dark:text-gray-500 text-center px-4 mb-4">
@@ -91,16 +130,14 @@ export default function Home() {
         </p>
       </div>
 
-      <button
-        onClick={() => setShowShot(true)}
-        className="fixed bottom-24 right-5 lg:right-8 bg-teal-600 dark:bg-teal-500 text-white rounded-2xl shadow-lg shadow-teal-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-teal-700 dark:hover:bg-teal-400 transition-colors text-sm px-5 py-3"
-      style={{ boxShadow: "0 4px 24px 4px rgba(20,184,166,0.35)" }}
-      >
-        <Plus size={18} /> Add Shot
-      </button>
-
       <AddShotModal open={showShot} onClose={() => setShowShot(false)} />
       <SideEffectsModal open={showSideEffects} onClose={() => setShowSideEffects(false)} dayKey={dk} />
+      <JournalEntryModal open={showJournal} onClose={() => setShowJournal(false)} onSave={async (entry) => {
+        await addJournalEntry(entry);
+        toast.success("Mood logged!");
+      }} />
+      <AddMetricModal open={showWeight} onClose={() => setShowWeight(false)} label="Weight" unit={profile?.weight_unit || "lb"} value="" dayKey={dk}
+        onSave={async (v) => { await saveWeight(dk, v); toast.success("Weight saved!"); }} />
     </div>
   );
 }

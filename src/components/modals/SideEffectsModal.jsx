@@ -4,14 +4,12 @@ import { useAppState } from "@/lib/AppState";
 import { todayKey, toDayKey } from "@/lib/dateUtils";
 import { getRecentMedication } from "@/lib/medicationData";
 import { classifyRedFlag, RED_FLAG_WORDING, RED_FLAG_DISCLAIMER } from "@/lib/redFlags";
+import { WaveIcon } from "@/components/onboarding/LevliIcons";
 import { toast } from "sonner";
 
 const SIDE_EFFECT_OPTIONS = [
-  { label: "Nausea", emoji: "🤢" }, { label: "Vomiting", emoji: "🤮" },
-  { label: "Diarrhea", emoji: "💩" }, { label: "Constipation", emoji: "😣" },
-  { label: "Fatigue", emoji: "😴" }, { label: "Headache", emoji: "🤕" },
-  { label: "Dizziness", emoji: "💫" }, { label: "Injection site pain", emoji: "💉" },
-  { label: "Stomach pain", emoji: "😖" }, { label: "Heartburn", emoji: "🔥" },
+  "Nausea", "Vomiting", "Diarrhea", "Constipation", "Fatigue",
+  "Headache", "Dizziness", "Injection site pain", "Stomach pain", "Heartburn",
 ];
 const SEVERITIES = ["mild", "moderate", "severe", "emergency"];
 
