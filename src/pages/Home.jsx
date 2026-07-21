@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Plus, Info, HelpCircle, Wind, ArrowRight } from "lucide-react";
+import { Settings, Plus, Info, HelpCircle, Wind, ArrowRight } from "lucide-react";
 import DateStrip from "@/components/home/DateStrip";
 import NextShotCard from "@/components/home/NextShotCard";
 import MetricsGrid from "@/components/home/MetricsGrid";
@@ -9,8 +9,6 @@ import SideEffectsModal from "@/components/modals/SideEffectsModal";
 import { useAppState } from "@/lib/AppState";
 import { toDayKey } from "@/lib/dateUtils";
 import { AmbientHeaderBg } from "@/components/levli/LevliUI";
-import TopIcons from "@/components/TopIcons";
-import HomeNavCards from "@/components/home/HomeNavCards";
 
 export default function Home() {
   const [showShot, setShowShot] = useState(false);
@@ -29,14 +27,17 @@ export default function Home() {
       <AmbientHeaderBg />
       <div className="sticky top-0 z-30 bg-[#FAFAFA] w-full flex items-center justify-between px-5 pt-6 pb-2 relative">
         <h1 className="text-2xl font-bold text-gray-800">{greeting} 👋</h1>
-        <TopIcons />
+        <Link to="/settings">
+          <div className="w-9 h-9 rounded-full border border-gray-200 bg-white flex items-center justify-center active:scale-95 transition-all">
+            <Settings size={18} className="text-gray-500" />
+          </div>
+        </Link>
       </div>
 
       <div className="max-w-3xl mx-auto pb-6 relative z-10">
         <DateStrip selectedDate={selectedDate} onSelectDate={setSelectedDate} />
         <NextShotCard />
         <MetricsGrid dayKey={dk} />
-        <HomeNavCards />
 
         {/* Side Effects card */}
         <button

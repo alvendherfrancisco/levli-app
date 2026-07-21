@@ -1,8 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { TrendingDown, Syringe, HelpCircle, Zap, Gauge, Camera, Image, Clock, Plus, ArrowRight, Maximize2, Minimize2 } from "lucide-react";
+import { Settings, TrendingDown, Syringe, HelpCircle, Zap, Gauge, Camera, Image, Clock, Plus, ArrowRight, Maximize2, Minimize2 } from "lucide-react";
 import ProgressPhotoCard from "@/components/insights/ProgressPhotoCard";
-import TopIcons from "@/components/TopIcons";
 import AddMetricModal from "@/components/modals/AddMetricModal";
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { useAppState } from "@/lib/AppState";
@@ -213,7 +212,7 @@ export default function Insights() {
     <div className="bg-[#FAFAFA] min-h-screen w-full">
       <div className="sticky top-0 z-30 bg-[#FAFAFA] w-full flex items-center justify-between px-5 pt-6 pb-4">
         <h1 className="text-2xl font-bold text-gray-800">Insights</h1>
-        <TopIcons />
+        <Link to="/settings"><div className="w-9 h-9 rounded-full border border-gray-200 bg-white flex items-center justify-center active:scale-95 transition-all"><Settings size={18} className="text-gray-500" /></div></Link>
       </div>
 
       <div className="max-w-3xl mx-auto">
