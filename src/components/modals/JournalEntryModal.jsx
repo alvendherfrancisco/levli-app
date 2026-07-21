@@ -29,7 +29,6 @@ function nowFormatted() {
 
 export default function JournalEntryModal({ open, onClose, onSave, onDelete, initialEntry }) {
   const [text, setText] = useState("");
-  const [mood, setMood] = useState(MOODS[0]);
   const [moodIdx, setMoodIdx] = useState(0);
   const [category, setCategory] = useState("General Note");
   const { darkMode, shots } = useAppState();
@@ -39,14 +38,11 @@ export default function JournalEntryModal({ open, onClose, onSave, onDelete, ini
       if (initialEntry) {
         setText(initialEntry.text || "");
         const mIdx = MOODS.findIndex(x => x.label === initialEntry.mood);
-        const idx = mIdx >= 0 ? mIdx : 0;
-        setMoodIdx(idx);
-        setMood(MOODS[idx]);
+        setMoodIdx(mIdx >= 0 ? mIdx : 0);
         setCategory(initialEntry.category || "General Note");
       } else {
         setText("");
         setMoodIdx(0);
-        setMood(MOODS[0]);
         setCategory("General Note");
       }
     }
@@ -54,6 +50,7 @@ export default function JournalEntryModal({ open, onClose, onSave, onDelete, ini
 
   if (!open) return null;
 
+  const mood = MOODS[moodIdx];
   const recentMed = getRecentMedication(shots, null);
 
   const handleSave = async () => {
@@ -91,7 +88,7 @@ export default function JournalEntryModal({ open, onClose, onSave, onDelete, ini
               {MOODS.map((m, i) => {
                 const isActive = mood.label === m.label;
                 return (
-                  <button key={m.label} onClick={() => { setMoodIdx(i); setMood(m); }}
+                  <button key={m.label} onClick={() => setMoodIdx(i)}
                     className={`flex flex-col items-center gap-1.5 px-3 py-2.5 rounded-2xl border transition-all active:scale-95 ${
                       isActive
                         ? "border-indigo-400 bg-indigo-50 dark:bg-indigo-500/10 scale-105"
