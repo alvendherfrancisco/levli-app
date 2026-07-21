@@ -49,9 +49,9 @@ export default function NextShotCard() {
 
   return (
     <>
-      <div className="bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 mx-4 mb-4">
+      <div className="bg-gradient-to-br from-teal-50 via-indigo-50 to-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 mx-4 mb-4 overflow-hidden">
         <div className="flex items-center gap-2 mb-3">
-          <SyringeIcon size={36} />
+          <div className="animate-levli-float-soft"><SyringeIcon size={36} /></div>
           <div>
             <p className="text-xs text-gray-400">Next shot</p>
             <p className="text-sm font-semibold text-gray-600">{last.medication}</p>
@@ -70,13 +70,19 @@ export default function NextShotCard() {
           </div>
           <div className="relative w-20 h-20 flex-shrink-0">
             <svg className="w-20 h-20 -rotate-90" viewBox="0 0 80 80">
+              <defs>
+                <linearGradient id="levliRingNext" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+                  <stop stopColor="#14B8A6" />
+                  <stop offset="1" stopColor="#6366F1" />
+                </linearGradient>
+              </defs>
               <circle cx="40" cy="40" r="34" fill="none" stroke="#E5E7EB" strokeWidth="5" />
               <circle
                 cx="40"
                 cy="40"
                 r="34"
                 fill="none"
-                stroke={ringColor}
+                stroke={isDue ? ringColor : "url(#levliRingNext)"}
                 strokeWidth="5"
                 strokeDasharray={circumference}
                 strokeDashoffset={circumference * (1 - progress)}

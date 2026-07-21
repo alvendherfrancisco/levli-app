@@ -8,7 +8,8 @@ import { addDaysToShotDate, daysAgoLabel } from "@/lib/dateUtils";
 import { getDosingInterval } from "@/lib/medicationData";
 import { calcAdherence } from "@/lib/adherence";
 import { SyringeIcon, ClockIcon, CalendarIcon, ChartIcon } from "@/components/onboarding/LevliIcons";
-import { MascotEmptyState } from "@/components/levli/LevliUI";
+import { MascotEmptyState, SkeletonCard } from "@/components/levli/LevliUI";
+import { EmptyShotsIllustration } from "@/components/levli/LevliIllustrations";
 
 export default function Shots() {
   const [showShot, setShowShot] = useState(false);
@@ -77,11 +78,13 @@ export default function Shots() {
         <div className="px-4 pb-32">
           <h2 className="text-lg font-bold text-gray-800 mb-3">Your shot history</h2>
           {shotsLoading ? (
-            <div className="flex justify-center py-12">
-              <Loader2 size={28} className="animate-spin text-indigo-400" />
+            <div className="space-y-2">
+              <SkeletonCard lines={2} />
+              <SkeletonCard lines={2} />
+              <SkeletonCard lines={2} />
             </div>
           ) : shots.length === 0 ? (
-            <MascotEmptyState title="No shots logged yet" subtitle={`Tap "Log shot" to start tracking your doses.`} />
+            <MascotEmptyState title="No shots logged yet" subtitle={`Tap "Log shot" to start tracking your doses.`} illustration={<EmptyShotsIllustration />} />
           ) : (
             <div className="space-y-2">
               {shots.map((shot) => (

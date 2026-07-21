@@ -5,6 +5,7 @@ import { useAppState } from "@/lib/AppState";
 import MedicationModal from "@/components/modals/MedicationModal";
 import { PillIcon } from "@/components/onboarding/LevliIcons";
 import { MascotEmptyState } from "@/components/levli/LevliUI";
+import { EmptyMedicationsIllustration } from "@/components/levli/LevliIllustrations";
 
 export default function MyMedications() {
   const { medications, deleteMedication } = useAppState();
@@ -42,7 +43,7 @@ export default function MyMedications() {
         </p>
 
         {medications.length === 0 ? (
-          <MascotEmptyState title="No medications yet" subtitle="Add your prescribed regimen to link your shot logs.">
+          <MascotEmptyState title="No medications yet" subtitle="Add your prescribed regimen to link your shot logs." illustration={<EmptyMedicationsIllustration />}>
             <button onClick={openNew} className="px-6 py-3.5 bg-indigo-600 text-white rounded-full font-semibold flex items-center gap-2 mx-auto shadow-lg shadow-indigo-600/20 active:scale-95 transition-all">
               <Plus size={18} /> Add medication
             </button>

@@ -263,3 +263,71 @@ export function SparkleIcon({ size = 16, className }) {
     </svg>
   );
 }
+
+// ── Mood face (rounded, Levli-style) ───────────────────────────────────────
+// expression: excellent | good | neutral | low | bad
+const MOOD_PALETTES = {
+  excellent: ["#14B8A6", "#6366F1"],
+  good: ["#10B981", "#14B8A6"],
+  neutral: ["#F59E0B", "#F97316"],
+  low: ["#FB923C", "#F97316"],
+  bad: ["#F97316", "#EC4899"],
+};
+export function MoodFace({ size = 40, expression = "good", className }) {
+  const gid = useGid("mf");
+  const [from, to] = MOOD_PALETTES[expression] || MOOD_PALETTES.good;
+  let eyes, mouth;
+  if (expression === "excellent") {
+    eyes = (<>
+      <path d="M16 21 Q 19 17 22 21" stroke="white" strokeWidth="2" strokeLinecap="round" fill="none" />
+      <path d="M26 21 Q 29 17 32 21" stroke="white" strokeWidth="2" strokeLinecap="round" fill="none" />
+    </>);
+  } else {
+    eyes = (<>
+      <circle cx="19" cy="20" r="2" fill="white" />
+      <circle cx="29" cy="20" r="2" fill="white" />
+    </>);
+  }
+  if (expression === "excellent" || expression === "good") {
+    mouth = <path d="M17 28 Q 24 35 31 28" stroke="white" strokeWidth="2.5" strokeLinecap="round" fill="none" />;
+  } else if (expression === "neutral") {
+    mouth = <line x1="19" y1="31" x2="29" y2="31" stroke="white" strokeWidth="2.5" strokeLinecap="round" />;
+  } else if (expression === "low") {
+    mouth = <path d="M18 31 Q 24 27 30 31" stroke="white" strokeWidth="2.5" strokeLinecap="round" fill="none" />;
+  } else {
+    mouth = <path d="M17 32 Q 24 26 31 32" stroke="white" strokeWidth="2.5" strokeLinecap="round" fill="none" />;
+  }
+  return (
+    <SvgIcon size={size} className={className}>
+      <defs><Grad id={gid} from={from} to={to} /></defs>
+      <circle cx="24" cy="24" r="18" fill={`url(#${gid})`} />
+      <circle cx="24" cy="24" r="18" fill="white" fillOpacity="0.08" />
+      {eyes}
+      {mouth}
+    </SvgIcon>
+  );
+}
+
+// ── Flame (streak) ──────────────────────────────────────────────────────────
+export function FlameIcon({ size = 40, className }) {
+  const gid = useGid("flame");
+  return (
+    <SvgIcon size={size} className={className}>
+      <defs><Grad id={gid} from="#FB923C" to="#EC4899" /></defs>
+      <path d="M24 6 C 27 13, 33 17, 33 25 a9 9 0 0 1 -18 0 C 15 19, 22 13, 24 6Z" fill={`url(#${gid})`} />
+      <path d="M24 16 C 25 20, 28 22, 28 26 a4 4 0 0 1 -8 0 C 20 23, 23 20, 24 16Z" fill="white" fillOpacity="0.4" />
+    </SvgIcon>
+  );
+}
+
+// ── Milestone star ───────────────────────────────────────────────────────────
+export function MilestoneStarIcon({ size = 40, className }) {
+  const gid = useGid("mile");
+  return (
+    <SvgIcon size={size} className={className}>
+      <defs><Grad id={gid} from="#6366F1" to="#14B8A6" /></defs>
+      <path d="M24 6 L 27.5 17 L 39 19 L 31 27 L 33.5 39 L 24 32.5 L 14.5 39 L 17 27 L 9 19 L 20.5 17 Z" fill={`url(#${gid})`} />
+      <circle cx="24" cy="22" r="3" fill="white" fillOpacity="0.5" />
+    </SvgIcon>
+  );
+}

@@ -5,7 +5,10 @@ import JournalEntryModal from "@/components/modals/JournalEntryModal";
 import { useAppState } from "@/lib/AppState";
 import { toast } from "sonner";
 import { MascotEmptyState } from "@/components/levli/LevliUI";
-import { MoodIcon, NutritionIcon, HeartIcon, JournalIcon, SparkleIcon } from "@/components/onboarding/LevliIcons";
+import { MoodIcon, NutritionIcon, HeartIcon, JournalIcon, SparkleIcon, MoodFace } from "@/components/onboarding/LevliIcons";
+import { EmptyJournalIllustration } from "@/components/levli/LevliIllustrations";
+
+const MOOD_EXPR = { "Feeling Excellent": "excellent", "Feeling Good": "good", "Feeling Neutral": "neutral", "Feeling Low": "low", "Feeling Bad": "bad" };
 
 const CATEGORY_CONFIG = {
   Mood:          { icon: <MoodIcon size={36} />, tint: "" },
@@ -81,7 +84,7 @@ export default function Journal() {
       <div className="max-w-3xl mx-auto">
         {filtered.length === 0 ? (
           <div className="px-4">
-            <MascotEmptyState title="No entries yet" subtitle="Record your thoughts, mood, and how you're feeling.">
+            <MascotEmptyState title="No entries yet" subtitle="Record your thoughts, mood, and how you're feeling." illustration={<EmptyJournalIllustration />}>
               <button
                 onClick={openNew}
                 className="px-6 py-3.5 bg-indigo-600 text-white rounded-full font-semibold flex items-center gap-2 mx-auto shadow-lg shadow-indigo-600/20 active:scale-95 transition-all"
@@ -115,7 +118,7 @@ export default function Journal() {
                       <div className="flex items-center gap-2 mt-2 flex-wrap">
                         {entry.mood && (
                           <span className="text-xs px-2 py-0.5 rounded-full font-medium whitespace-nowrap flex items-center gap-1 bg-teal-50 text-teal-600">
-                            <Heart size={10} /> {entry.mood}
+                            <MoodFace size={14} expression={MOOD_EXPR[entry.mood] || "neutral"} /> {entry.mood}
                           </span>
                         )}
                         <span className="text-xs text-gray-400 whitespace-nowrap">• {entry.category}</span>

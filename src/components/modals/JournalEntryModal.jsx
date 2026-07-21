@@ -3,14 +3,15 @@ import { X, Save, Trash2 } from "lucide-react";
 import { useAppState } from "@/lib/AppState";
 import { getRecentMedication } from "@/lib/medicationData";
 import RedFlagBanner from "@/components/RedFlagBanner";
+import { MoodFace } from "@/components/onboarding/LevliIcons";
 import { toast } from "sonner";
 
 const MOODS = [
-  { label: "Feeling Excellent", emoji: "😊", lightCls: "bg-green-100 text-green-700 border-green-300", darkBg: "rgba(34,197,94,0.15)",  darkBorder: "rgba(34,197,94,0.3)",  darkText: "#4ade80" },
-  { label: "Feeling Good",      emoji: "🙂", lightCls: "bg-green-50 text-green-600 border-green-200",  darkBg: "rgba(34,197,94,0.10)",  darkBorder: "rgba(34,197,94,0.25)", darkText: "#86efac" },
-  { label: "Feeling Neutral",   emoji: "😐", lightCls: "bg-yellow-100 text-yellow-700 border-yellow-300", darkBg: "rgba(234,179,8,0.15)",darkBorder: "rgba(234,179,8,0.3)", darkText: "#fde047" },
-  { label: "Feeling Low",       emoji: "😔", lightCls: "bg-orange-100 text-orange-700 border-orange-300", darkBg: "rgba(249,115,22,0.15)",darkBorder: "rgba(249,115,22,0.3)",darkText: "#fb923c" },
-  { label: "Feeling Bad",       emoji: "😞", lightCls: "bg-red-100 text-red-700 border-red-300",     darkBg: "rgba(239,68,68,0.15)",  darkBorder: "rgba(239,68,68,0.3)",   darkText: "#f87171" },
+  { label: "Feeling Excellent", expression: "excellent", emoji: "😊", lightCls: "bg-teal-100 text-teal-700 border-teal-300", darkBg: "rgba(20,184,166,0.15)", darkBorder: "rgba(20,184,166,0.3)", darkText: "#5eead4" },
+  { label: "Feeling Good",      expression: "good",      emoji: "🙂", lightCls: "bg-green-100 text-green-700 border-green-300", darkBg: "rgba(34,197,94,0.15)",  darkBorder: "rgba(34,197,94,0.3)",  darkText: "#4ade80" },
+  { label: "Feeling Neutral",   expression: "neutral",   emoji: "😐", lightCls: "bg-amber-100 text-amber-700 border-amber-300", darkBg: "rgba(245,158,11,0.15)", darkBorder: "rgba(245,158,11,0.3)", darkText: "#fcd34d" },
+  { label: "Feeling Low",       expression: "low",       emoji: "😔", lightCls: "bg-orange-100 text-orange-700 border-orange-300", darkBg: "rgba(249,115,22,0.15)",darkBorder: "rgba(249,115,22,0.3)",darkText: "#fb923c" },
+  { label: "Feeling Bad",       expression: "bad",       emoji: "😞", lightCls: "bg-pink-100 text-pink-700 border-pink-300", darkBg: "rgba(236,72,153,0.15)", darkBorder: "rgba(236,72,153,0.3)", darkText: "#f9a8d4" },
 ];
 
 const CATEGORIES = ["Mood", "General Note", "Side Effect", "Energy", "Milestone", "Food", "Exercise"];
@@ -95,7 +96,7 @@ export default function JournalEntryModal({ open, onClose, onSave, onDelete, ini
                         : "bg-white text-gray-500 border-gray-200 hover:border-gray-300"
                     }`}
                   >
-                    {m.emoji} {m.label.replace("Feeling ", "")}
+                    <MoodFace size={20} expression={m.expression} /> {m.label.replace("Feeling ", "")}
                   </button>
                 );
               })}

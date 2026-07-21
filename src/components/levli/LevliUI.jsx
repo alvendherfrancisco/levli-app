@@ -1,4 +1,5 @@
 import React from "react";
+import { DropletMascot, FlameIcon } from "@/components/onboarding/LevliIcons";
 
 /**
  * Shared Levli UI primitives — the single visual language for the in-app experience.
@@ -128,16 +129,16 @@ export function StatusPill({ children, tone = "neutral" }) {
   );
 }
 
-// ── Ambient header background (soft blobs) ────────────────────────────────
+// ── Ambient header background (soft drifting blobs) ───────────────────────
 export function AmbientHeaderBg() {
   return (
     <div className="absolute top-0 left-0 right-0 h-64 overflow-hidden pointer-events-none -z-0">
       <div
-        className="absolute -top-10 -left-20 w-72 h-72 rounded-full blur-3xl opacity-40"
+        className="absolute -top-10 -left-20 w-72 h-72 rounded-full blur-3xl opacity-40 animate-ambient-1"
         style={{ background: "radial-gradient(circle, rgba(99,102,241,0.15), transparent 70%)" }}
       />
       <div
-        className="absolute top-20 -right-20 w-64 h-64 rounded-full blur-3xl opacity-30"
+        className="absolute top-20 -right-20 w-64 h-64 rounded-full blur-3xl opacity-30 animate-ambient-2"
         style={{ background: "radial-gradient(circle, rgba(20,184,166,0.12), transparent 70%)" }}
       />
     </div>
@@ -166,15 +167,19 @@ export function StaggerItem({ children, delay = 0, className = "" }) {
 }
 
 // ── Mascot empty state ───────────────────────────────────────────────────────
-import { DropletMascot } from "@/components/onboarding/LevliIcons";
-export function MascotEmptyState({ title, subtitle, children }) {
+// Accepts an optional custom `illustration` node (from LevliIllustrations).
+export function MascotEmptyState({ title, subtitle, children, illustration }) {
   return (
     <div className="bg-white rounded-2xl p-8 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 text-center relative overflow-hidden">
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="w-48 h-48 rounded-full blur-3xl opacity-30" style={{ background: "radial-gradient(circle, rgba(99,102,241,0.2), transparent 70%)" }} />
+        <div className="w-48 h-48 rounded-full blur-3xl opacity-30 animate-ambient-3" style={{ background: "radial-gradient(circle, rgba(99,102,241,0.2), transparent 70%)" }} />
       </div>
-      <div className="relative z-10">
-        <DropletMascot size={72} className="mx-auto mb-4 animate-onb-bounce" />
+      <div className="relative z-10 animate-levli-fade-scale">
+        {illustration ? (
+          <div className="mx-auto mb-4 flex justify-center">{illustration}</div>
+        ) : (
+          <DropletMascot size={72} className="mx-auto mb-4 animate-levli-float" />
+        )}
         {title && <h3 className="text-lg font-bold text-gray-800 mb-1">{title}</h3>}
         {subtitle && <p className="text-sm text-gray-400 mb-5">{subtitle}</p>}
         {children}
@@ -258,6 +263,52 @@ export function FloatingAddButton({ onClick, label = "Add" }) {
     >
       <Plus size={18} /> {label}
     </button>
+  );
+}
+
+// ── Skeleton (branded loading placeholder) ─────────────────────────────────
+export function Skeleton({ className = "" }) {
+  return <div className={`levli-skeleton ${className}`} />;
+}
+
+export function SkeletonCard({ lines = 3 }) {
+  return (
+    <div className="bg-white rounded-2xl p-4 border border-gray-100/80">
+      <div className="flex items-center gap-3 mb-3">
+        <Skeleton className="w-10 h-10 rounded-xl" />
+        <div className="flex-1 space-y-1.5">
+          <Skeleton className="h-3 w-24" />
+          <Skeleton className="h-2.5 w-16" />
+        </div>
+      </div>
+      {Array.from({ length: lines }).map((_, i) => (
+        <Skeleton key={i} className={`h-3 w-full mb-2 ${i === lines - 1 ? "w-2/3" : ""}`} />
+      ))}
+    </div>
+  );
+}
+
+// ── Gradient hero card (soft, calm — never bold) ──────────────────────────
+export function GradientHeroCard({ children, className = "", tone = "teal" }) {
+  const tones = {
+    teal: "from-teal-50 via-indigo-50 to-white",
+    warm: "from-orange-50 via-pink-50 to-white",
+  };
+  return (
+    <div className={`rounded-2xl p-4 border border-gray-100/80 shadow-[0_2px_12px_rgba(0,0,0,0.04)] bg-gradient-to-br ${tones[tone]} ${className}`}>
+      {children}
+    </div>
+  );
+}
+
+// ── Streak badge (gentle motivation) ────────────────────────────────────────
+export function StreakBadge({ count, label = "day streak" }) {
+  return (
+    <div className="inline-flex items-center gap-1.5 rounded-full pl-1.5 pr-3 py-1 bg-gradient-to-r from-orange-50 to-pink-50 border border-orange-100/60">
+      <FlameIcon size={22} />
+      <span className="text-sm font-bold text-orange-600">{count}</span>
+      <span className="text-xs text-gray-400">{label}</span>
+    </div>
   );
 }
 

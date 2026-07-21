@@ -11,6 +11,7 @@ import { steadyStateFraction, accumulationRatio, PK_CALCULATION_VERSION } from "
 import { toast } from "sonner";
 import { ChartTooltip, ChartGradients, MascotEmptyState, WarmCallout } from "@/components/levli/LevliUI";
 import { DropletMascot, SparkleIcon } from "@/components/onboarding/LevliIcons";
+import { EmptyProgressIllustration, EmptyShotsIllustration, InsightsAccent } from "@/components/levli/LevliIllustrations";
 
 const CLASS_COLORS = { Semaglutide: "#14B8A6", Tirzepatide: "#6366F1", Liraglutide: "#F59E0B" };
 
@@ -221,7 +222,7 @@ export default function Insights() {
         {/* Warm headline callout */}
         {shots.length > 0 && (
           <div className="mx-4 mb-4">
-            <WarmCallout tone="teal" icon={<SparkleIcon size={20} />}
+            <WarmCallout tone="teal" icon={<InsightsAccent size={56} />}
               title="You're building a steady picture">
               Every log helps you see your patterns more clearly. Here's what your data is showing so far.
             </WarmCallout>
@@ -301,7 +302,7 @@ export default function Insights() {
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center bg-gray-50 rounded-xl gap-2 py-6">
-              <DropletMascot size={56} />
+              <EmptyProgressIllustration className="!max-w-[160px]" />
               <p className="text-sm text-gray-400 text-center px-4">
                 {weightHistory.length === 0 ? "Log your weight on Home to see trends here." : "Log at least 2 weight entries in this range to see a chart."}
               </p>
@@ -342,6 +343,9 @@ export default function Insights() {
 
           {photosAsc.length === 0 ? (
             <div className="space-y-4">
+              <div className="flex justify-center py-2">
+                <EmptyProgressIllustration className="!max-w-[170px]" />
+              </div>
               <button onClick={openAddPhoto}
                 className="w-full flex items-center gap-3 rounded-xl p-4 text-left bg-indigo-50 border border-indigo-100/50 active:scale-[0.99] transition-transform">
                 <Camera size={22} className="text-indigo-500 flex-shrink-0" />
@@ -463,7 +467,7 @@ export default function Insights() {
             )
           ) : (
             <div className="flex flex-col items-center justify-center bg-gray-50 rounded-xl gap-2 py-6">
-              <DropletMascot size={56} />
+              <EmptyShotsIllustration className="!max-w-[160px]" />
               <p className="text-sm text-gray-400">Log your first shot to see your medication levels here.</p>
             </div>
           )}

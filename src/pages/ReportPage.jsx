@@ -4,6 +4,7 @@ import { ChevronLeft, Download, Loader2 } from "lucide-react";
 import { useAppState } from "@/lib/AppState";
 import { parseShotDate } from "@/lib/dateUtils";
 import { PK_CALCULATION_VERSION } from "@/lib/pkCalculations";
+import { ReportAccent } from "@/components/levli/LevliIllustrations";
 
 const REPORT_CALCULATION_VERSION = "report-v1";
 
@@ -139,6 +140,14 @@ export default function ReportPage() {
       </div>
 
       <div className="max-w-lg mx-auto px-4 py-4">
+        <div className="mb-4 rounded-2xl p-4 border border-gray-100/80 bg-gradient-to-br from-indigo-50 via-teal-50 to-white flex items-center gap-3">
+          <ReportAccent size={72} />
+          <div>
+            <h2 className="text-base font-bold text-gray-800">Your shot history, summarised</h2>
+            <p className="text-xs text-gray-400">A calm overview of everything you've logged.</p>
+          </div>
+        </div>
+
         <div className="bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 mb-4">
           <div className="flex items-center gap-2 mb-1">
             <div className="w-9 h-9 rounded-xl bg-indigo-100 flex items-center justify-center"><Download size={18} className="text-indigo-500" /></div>

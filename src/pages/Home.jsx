@@ -7,8 +7,8 @@ import MetricsGrid from "@/components/home/MetricsGrid";
 import AddShotModal from "@/components/modals/AddShotModal";
 import SideEffectsModal from "@/components/modals/SideEffectsModal";
 import { useAppState } from "@/lib/AppState";
-import { toDayKey } from "@/lib/dateUtils";
-import { AmbientHeaderBg, WarmCallout } from "@/components/levli/LevliUI";
+import { toDayKey, parseShotDate } from "@/lib/dateUtils";
+import { AmbientHeaderBg, WarmCallout, StreakBadge } from "@/components/levli/LevliUI";
 import { PillIcon, PackageIcon, ReportIcon, MoodIcon, SyringeIcon } from "@/components/onboarding/LevliIcons";
 
 export default function Home() {
@@ -19,6 +19,19 @@ export default function Home() {
   const dk = toDayKey(selectedDate);
   const sideEffects = getSideEffects(dk);
   const dayAdverseEvents = adverseEventsByDay[dk] || [];
+
+  // Gentle logging streak: consecutive days with a shot, ending at the most recent shot.
+  const shotDaySet = new Set(shots.map((s) => { const d = parseShotDate(s.date); return d ? toDayKey(d) : null; }).filter(Boolean));
+  let streak = 0;
+  if (shots.length) {
+    let cursor = parseShotDate(shots[0].date);
+    while (cursor && shotDaySet.has(toDayKey(cursor))) {
+      streak += 1;
+      const prev = new Date(cursor);
+      prev.setDate(prev.getDate() - 1);
+      cursor = prev;
+    }
+  }
 
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
@@ -42,6 +55,11 @@ export default function Home() {
       </div>
 
       <div className="max-w-3xl mx-auto pb-6 relative z-10">
+        {streak >= 2 && (
+          <div className="px-4 mb-3 animate-levli-fade-scale">
+            <StreakBadge count={streak} />
+          </div>
+        )}
         <DateStrip selectedDate={selectedDate} onSelectDate={setSelectedDate} />
 
         {/* Quick actions */}
