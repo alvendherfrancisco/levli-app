@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Settings, FileText, Plus, Syringe, Clock, CalendarCheck, Loader2 } from "lucide-react";
+import { FileText, Plus, Syringe, Clock, CalendarCheck, Loader2 } from "lucide-react";
 import ShotCard from "@/components/shots/ShotCard";
 import AddShotModal from "@/components/modals/AddShotModal";
+import TopIcons from "@/components/TopIcons";
 import { useAppState } from "@/lib/AppState";
 import { addDaysToShotDate, daysAgoLabel } from "@/lib/dateUtils";
 import { getDosingInterval } from "@/lib/medicationData";
@@ -57,9 +58,9 @@ export default function Shots() {
     <div className="bg-[#FAFAFA] min-h-screen w-full">
       <div className="sticky top-0 z-30 bg-[#FAFAFA] w-full flex items-center justify-between px-5 pt-6 pb-4">
         <h1 className="text-2xl font-bold text-gray-800">Shots</h1>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <Link to="/report"><div className="w-9 h-9 rounded-full border border-gray-200 bg-white flex items-center justify-center active:scale-95 transition-all"><FileText size={18} className="text-gray-500" /></div></Link>
-          <Link to="/settings"><div className="w-9 h-9 rounded-full border border-gray-200 bg-white flex items-center justify-center active:scale-95 transition-all"><Settings size={18} className="text-gray-500" /></div></Link>
+          <TopIcons />
         </div>
       </div>
 

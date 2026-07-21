@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Settings, Plus, BookOpen, Clock, Heart, FileText, AlertTriangle, Zap, Star } from "lucide-react";
+import { Plus, BookOpen, Clock, Heart, FileText, AlertTriangle, Zap, Star } from "lucide-react";
 import JournalEntryModal from "@/components/modals/JournalEntryModal";
+import TopIcons from "@/components/TopIcons";
 import { useAppState } from "@/lib/AppState";
 import { toast } from "sonner";
 
@@ -53,9 +54,9 @@ export default function Journal() {
     <div className="bg-[#FAFAFA] min-h-screen w-full">
       <div className="sticky top-0 z-30 bg-[#FAFAFA] w-full flex items-center justify-between px-5 pt-6 pb-4">
         <h1 className="text-2xl font-bold text-gray-800">Journal</h1>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <button onClick={openNew}><div className="w-9 h-9 rounded-full border border-gray-200 bg-white flex items-center justify-center active:scale-95 transition-all"><Plus size={18} className="text-gray-500" /></div></button>
-          <Link to="/settings"><div className="w-9 h-9 rounded-full border border-gray-200 bg-white flex items-center justify-center active:scale-95 transition-all"><Settings size={18} className="text-gray-500" /></div></Link>
+          <TopIcons />
         </div>
       </div>
 

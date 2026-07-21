@@ -156,3 +156,22 @@ input[type="range"]::-webkit-slider-thumb {
 .animate-onb-left { animation: onbSlideLeft 0.3s ease-out; }
 .animate-onb-bounce { animation: onbBounce 0.6s ease-out; }
 .animate-onb-sparkle { animation: onbSparkle 3s ease-in-out infinite; }
+
+/* ── Animated metric card illustrations (subtle, low-opacity) ────────────── */
+@keyframes metricFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes metricFlicker { 0%,100% { opacity: 0.14; transform: scale(1); } 50% { opacity: 0.34; transform: scale(1.08); } }
+@keyframes metricPulse { 0%,100% { opacity: 0.14; transform: scale(0.9); } 50% { opacity: 0.32; transform: scale(1.12); } }
+@keyframes metricBounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes metricSway { 0%,100% { transform: rotate(-7deg); } 50% { transform: rotate(7deg); } }
+@keyframes metricFall { 0% { transform: translateY(-14px); opacity: 0; } 30% { opacity: 0.5; } 100% { transform: translateY(36px); opacity: 0; } }
+@keyframes metricDrop { 0% { transform: translateY(-12px) scale(0.7); opacity: 0; } 30% { opacity: 0.5; } 100% { transform: translateY(30px) scale(1); opacity: 0; } }
+
+.metricFloat { animation: metricFloat 3.5s ease-in-out infinite; }
+.metricFlicker { animation: metricFlicker 2.8s ease-in-out infinite; }
+.metricPulse { animation: metricPulse 3s ease-in-out infinite; }
+.metricBounce { animation: metricBounce 2.2s ease-in-out infinite; }
+.metricSway { animation: metricSway 3.8s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .metricFloat, .metricFlicker, .metricPulse, .metricBounce, .metricSway { animation: none; }
+}
