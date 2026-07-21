@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Settings, Plus, Info, HelpCircle, Wind, ArrowRight } from "lucide-react";
+import { Settings, Plus, Syringe, Info, HelpCircle, Wind, ArrowRight } from "lucide-react";
 import DateStrip from "@/components/home/DateStrip";
 import NextShotCard from "@/components/home/NextShotCard";
 import MetricsGrid from "@/components/home/MetricsGrid";
@@ -8,7 +8,6 @@ import AddShotModal from "@/components/modals/AddShotModal";
 import SideEffectsModal from "@/components/modals/SideEffectsModal";
 import { useAppState } from "@/lib/AppState";
 import { toDayKey } from "@/lib/dateUtils";
-import { AmbientHeaderBg } from "@/components/levli/LevliUI";
 
 export default function Home() {
   const [showShot, setShowShot] = useState(false);
@@ -20,21 +19,16 @@ export default function Home() {
   const dayAdverseEvents = adverseEventsByDay[dk] || [];
 
   const hour = new Date().getHours();
-  const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+  const greeting = hour < 12 ? "Good Morning!" : hour < 18 ? "Good Afternoon!" : "Good Evening!";
 
   return (
-    <div className="bg-[#FAFAFA] min-h-screen w-full relative">
-      <AmbientHeaderBg />
-      <div className="sticky top-0 z-30 bg-[#FAFAFA] w-full flex items-center justify-between px-5 pt-6 pb-2 relative">
-        <h1 className="text-2xl font-bold text-gray-800">{greeting} 👋</h1>
-        <Link to="/settings">
-          <div className="w-9 h-9 rounded-full border border-gray-200 bg-white flex items-center justify-center active:scale-95 transition-all">
-            <Settings size={18} className="text-gray-500" />
-          </div>
-        </Link>
+    <div className="bg-gray-50 dark:bg-gray-950 min-h-screen w-full">
+      <div className="sticky top-0 z-30 bg-gray-50 dark:bg-gray-950 w-full flex items-center justify-between px-5 pt-6 pb-2">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{greeting}</h1>
+        <Link to="/settings"><Settings size={24} className="text-gray-600 dark:text-gray-400" /></Link>
       </div>
 
-      <div className="max-w-3xl mx-auto pb-6 relative z-10">
+      <div className="max-w-3xl mx-auto pb-6">
         <DateStrip selectedDate={selectedDate} onSelectDate={setSelectedDate} />
         <NextShotCard />
         <MetricsGrid dayKey={dk} />
@@ -42,62 +36,65 @@ export default function Home() {
         {/* Side Effects card */}
         <button
           onClick={() => setShowSideEffects(true)}
-          className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 w-[calc(100%-2rem)] text-left active:scale-[0.99] transition-transform"
+          className="mx-3 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 w-[calc(100%-1.5rem)] text-left"
         >
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{background:"rgba(20,184,166,0.13)"}}>
               <Wind size={16} className="text-teal-500" />
             </div>
-            <span className="font-semibold text-gray-700 text-sm">Side effects</span>
+            <span className="font-semibold text-gray-700 dark:text-gray-300">Side effects</span>
           </div>
           {sideEffects || dayAdverseEvents.length > 0 ? (
-            <div className="bg-teal-50 rounded-xl p-3 border border-teal-100/50">
+            <div className="bg-teal-50 dark:bg-teal-500/10 rounded-xl p-3 border border-transparent dark:border-teal-500/15">
               {dayAdverseEvents.length > 0 && (
                 <div className="flex flex-wrap gap-1 mb-2">
                   {dayAdverseEvents.map((e) => (
-                    <span key={e.id} className="text-xs bg-teal-500/10 text-teal-600 rounded-full px-2 py-0.5 border border-teal-500/20">
+                    <span key={e.id} className="text-xs bg-teal-500/10 text-teal-600 dark:text-teal-400 rounded-full px-2 py-0.5 border border-teal-500/20">
                       {e.symptom} <span className="opacity-60">({e.severity})</span>
                     </span>
                   ))}
                 </div>
               )}
-              {sideEffects && <p className="text-sm text-gray-600">{sideEffects}</p>}
+              {sideEffects && <p className="text-sm text-gray-700 dark:text-[#E8E9F0]">{sideEffects}</p>}
             </div>
           ) : (
-            <div className="bg-teal-50 rounded-xl p-3 flex items-center gap-2 border border-teal-100/50">
-              <Info size={16} className="text-teal-500 flex-shrink-0" />
-              <p className="text-sm text-teal-600">Tap to add side effects.</p>
+            <div className="bg-teal-50 dark:bg-teal-500/10 rounded-xl p-3 flex items-center gap-2 border border-transparent dark:border-teal-500/15">
+              <Info size={16} className="text-teal-500 dark:text-teal-400 flex-shrink-0" />
+              <p className="text-sm text-teal-700 dark:text-teal-300">Tap to add side effects.</p>
             </div>
           )}
         </button>
 
-        {/* Medication Exposure card */}
-        <div className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80">
+        {/* Medication Levels card */}
+        <div className="mx-3 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
           <div className="flex items-start justify-between mb-2">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center">
-                <HelpCircle size={16} className="text-indigo-500" />
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{background:"rgba(99,102,241,0.13)"}}>
+                <Syringe size={16} className="text-indigo-600" />
               </div>
               <div>
-                <h3 className="font-bold text-gray-800 text-sm">Modelled Medication Exposure</h3>
-                <p className="text-xs text-indigo-400">Illustrative estimate of relative medication exposure (not a blood-level measurement).</p>
+                <h3 className="font-bold text-gray-900 dark:text-white">Modelled Medication Exposure</h3>
+                <p className="text-xs text-indigo-500">Illustrative estimate of relative medication exposure (not a blood-level measurement).</p>
               </div>
             </div>
+            <HelpCircle size={18} className="text-indigo-400" />
           </div>
-          <Link to="/insights" className="bg-indigo-50 rounded-xl p-3 flex items-center gap-2 block border border-indigo-100/50 active:scale-[0.99] transition-transform">
-            <Info size={16} className="text-indigo-500 flex-shrink-0" />
-            <p className="text-sm text-indigo-600">View full exposure chart in Insights <ArrowRight size={12} className="inline" /></p>
+          <div className="border-b-2 border-indigo-500 w-12 mb-3" />
+          <Link to="/insights" className="bg-indigo-50 dark:bg-indigo-500/10 rounded-xl p-3 flex items-center gap-2 block border border-transparent dark:border-indigo-500/15">
+            <Info size={16} className="text-indigo-500 dark:text-indigo-400 flex-shrink-0" />
+            <p className="text-sm text-indigo-700 dark:text-indigo-300">View full exposure chart in Insights <ArrowRight size={12} className="inline" /></p>
           </Link>
         </div>
 
-        <p className="text-[11px] text-gray-400 text-center px-4 mb-4">
+        <p className="text-[11px] text-gray-400 dark:text-gray-500 text-center px-4 mb-4">
           Levli is a personal logbook, not medical advice. Do not use it to adjust your dose — consult your prescriber.
         </p>
       </div>
 
       <button
         onClick={() => setShowShot(true)}
-        className="fixed bottom-24 right-5 lg:right-8 bg-indigo-600 text-white rounded-full shadow-lg shadow-indigo-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-indigo-700 active:scale-95 transition-all text-sm px-5 py-3"
+        className="fixed bottom-24 right-5 lg:right-8 bg-teal-600 dark:bg-teal-500 text-white rounded-2xl shadow-lg shadow-teal-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-teal-700 dark:hover:bg-teal-400 transition-colors text-sm px-5 py-3"
+      style={{ boxShadow: "0 4px 24px 4px rgba(20,184,166,0.35)" }}
       >
         <Plus size={18} /> Add Shot
       </button>

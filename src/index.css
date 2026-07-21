@@ -115,7 +115,7 @@ input[type="range"]::-webkit-slider-thumb {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #6366F1;
+  background: #0D9488;
   cursor: pointer;
   border: 3px solid white;
   box-shadow: 0 1px 3px rgba(0,0,0,0.2);

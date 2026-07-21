@@ -7,14 +7,10 @@ export default function DateStrip({ selectedDate, onSelectDate }) {
   const today = new Date();
   const selected = selectedDate || today;
 
-  const shotDayKeys = new Set(
-    shots
-      .map((s) => {
-        const d = parseShotDate(s.date);
-        return d ? toDayKey(d) : null;
-      })
-      .filter(Boolean)
-  );
+  const shotDayKeys = new Set(shots.map((s) => {
+    const d = parseShotDate(s.date);
+    return d ? toDayKey(d) : null;
+  }).filter(Boolean));
 
   const days = [];
   for (let i = -2; i <= 2; i++) {
@@ -23,32 +19,32 @@ export default function DateStrip({ selectedDate, onSelectDate }) {
     days.push(d);
   }
 
-  const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const dayNames = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
   return (
-    <div className="flex items-center justify-center gap-1.5 py-3 px-3">
+    <div className="flex items-center justify-center gap-1.5 sm:gap-3 py-3 px-3">
       {days.map((d) => {
-        const isSelected =
-          d.getDate() === selected.getDate() &&
-          d.getMonth() === selected.getMonth() &&
-          d.getFullYear() === selected.getFullYear();
+        const isSelected = d.getDate() === selected.getDate() && d.getMonth() === selected.getMonth() && d.getFullYear() === selected.getFullYear();
         const hasShot = shotDayKeys.has(toDayKey(d));
         return (
           <button
             key={d.getTime()}
             onClick={() => onSelectDate && onSelectDate(d)}
-            className={`flex flex-col items-center gap-0.5 px-2 py-2 rounded-2xl flex-1 min-w-0 max-w-[64px] transition-all active:scale-90 ${
+            className={`flex flex-col items-center gap-0.5 px-2 sm:px-3 py-2 rounded-2xl flex-1 min-w-0 max-w-[64px] transition-all ${
               isSelected
-                ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/25"
-                : "text-gray-400"
+                ? "bg-teal-600 dark:bg-teal-500/80 text-white shadow-lg dark:[box-shadow:0_0_18px_4px_rgba(20,184,166,0.35)]"
+                : "text-gray-400 dark:text-[#9A9DAE]"
             }`}
           >
-            <span className="text-[10px] font-medium">{dayNames[d.getDay()]}</span>
-            <span className={`text-base font-bold ${isSelected ? "text-white" : "text-gray-600"}`}>
-              {d.getDate()}
-            </span>
+            <span className="text-[10px] sm:text-[11px] font-medium">{dayNames[d.getDay()]}</span>
+            <span className={`text-base sm:text-lg font-bold ${isSelected ? "text-white" : "text-gray-600 dark:text-[#E8E9F0]"}`}>{d.getDate()}</span>
+            <span className={`text-[10px] sm:text-[11px] ${isSelected ? "text-teal-200 dark:text-teal-200" : "text-gray-400 dark:text-[#9A9DAE]"}`}>{monthNames[d.getMonth()]}</span>
             {hasShot && (
-              <div className="w-1.5 h-1.5 rounded-full bg-teal-400" />
+              <div
+                className="w-1.5 h-1.5 rounded-full bg-green-400 mt-0.5"
+                style={{ boxShadow: "0 0 6px 2px rgba(74,222,128,0.5)" }}
+              />
             )}
           </button>
         );

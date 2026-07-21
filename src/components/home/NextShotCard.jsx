@@ -7,19 +7,16 @@ import { getDosingInterval, getMissedDoseRule } from "@/lib/medicationData";
 export default function NextShotCard() {
   const { shots, profile } = useAppState();
   const lastMed = shots[0]?.medication;
-  const daysBetween =
-    (lastMed && getDosingInterval(lastMed)) || parseInt(profile?.days_between || "7") || 7;
+  const daysBetween = (lastMed && getDosingInterval(lastMed)) || parseInt(profile?.days_between || "7") || 7;
   const missedRule = lastMed ? getMissedDoseRule(lastMed) : null;
 
   if (shots.length === 0) {
     return (
-      <div className="bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 mx-4 mb-4">
-        <p className="text-sm text-gray-400 mb-2">Next Shot</p>
-        <div className="bg-indigo-50 rounded-xl p-3 flex items-start gap-2 border border-indigo-100/50">
+      <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 mx-4 mb-4">
+        <p className="text-sm text-gray-400 dark:text-[#9A9DAE] mb-2">Next Shot</p>
+        <div className="bg-indigo-50 dark:bg-indigo-500/10 rounded-xl p-3 flex items-start gap-2">
           <Syringe size={18} className="text-indigo-500 mt-0.5 flex-shrink-0" />
-          <p className="text-sm text-indigo-600">
-            No shots recorded yet. Add your first shot to start tracking your schedule.
-          </p>
+          <p className="text-sm text-indigo-700 dark:text-indigo-300">No shots recorded yet. Add your first shot to start tracking your schedule.</p>
         </div>
       </div>
     );
@@ -35,8 +32,8 @@ export default function NextShotCard() {
   const daysLate = Math.max(0, -daysLeft);
   const isLate = daysLeft < 0;
   const isRetitration = missedRule && missedRule.retitrationDays && daysLate > missedRule.retitrationDays;
-  const ringColor = isDue ? "#22C55E" : "#6366F1";
-  const ringGlow = isDue ? "0 0 14px 3px rgba(34,197,94,0.3)" : "0 0 14px 3px rgba(99,102,241,0.25)";
+  const ringColor = isDue ? "#22C55E" : "#14B8A6";
+  const ringGlow = isDue ? "0 0 14px 3px rgba(34,197,94,0.35)" : "0 0 14px 3px rgba(20,184,166,0.35)";
 
   let daysLabel;
   if (isDue) daysLabel = "Today!";
@@ -45,61 +42,46 @@ export default function NextShotCard() {
 
   return (
     <>
-      <div className="bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 mx-4 mb-4">
-        <p className="text-sm text-gray-400 mb-1">Next Shot</p>
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-xl font-bold text-gray-800">{nextDate}</h3>
-            <p className="text-sm font-medium text-indigo-600 mt-0.5">{daysLabel}</p>
-            <div className="mt-2 border-t border-gray-100 pt-2">
-              <p className="text-xs text-gray-400">Last Dose</p>
-              <p className="text-sm font-semibold text-gray-600">
-                {last.date} · {last.dose} {last.dose_unit || "mg"}
-              </p>
-            </div>
+    <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 mx-4 mb-4">
+      <p className="text-sm text-gray-400 dark:text-[#9A9DAE] mb-1">Next Shot</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h3 className="text-xl font-bold text-gray-900 dark:text-[#E8E9F0]">{nextDate}</h3>
+          <p className="text-sm font-medium text-teal-600 dark:text-teal-400 mt-0.5">{daysLabel}</p>
+          <div className="mt-2 border-t border-gray-100 dark:border-gray-800 pt-2">
+            <p className="text-xs text-gray-400 dark:text-[#9A9DAE]">Last Dose</p>
+            <p className="text-sm font-semibold text-gray-700 dark:text-[#E8E9F0]">{last.date} · {last.dose} mg</p>
           </div>
-          <div className="relative w-20 h-20 flex-shrink-0">
-            <svg className="w-20 h-20 -rotate-90" viewBox="0 0 80 80">
-              <circle cx="40" cy="40" r="34" fill="none" stroke="#E5E7EB" strokeWidth="5" />
-              <circle
-                cx="40"
-                cy="40"
-                r="34"
-                fill="none"
-                stroke={ringColor}
-                strokeWidth="5"
-                strokeDasharray={circumference}
-                strokeDashoffset={circumference * (1 - progress)}
-                strokeLinecap="round"
-                style={{ filter: `drop-shadow(${ringGlow})` }}
-              />
-            </svg>
-            <span className="absolute inset-0 flex items-center justify-center text-[10px] text-gray-500 font-medium text-center leading-tight px-1">
-              {isDue ? "Now!" : `${daysLeft}d left`}
-            </span>
-          </div>
+        </div>
+        <div className="relative w-20 h-20 flex-shrink-0">
+          <svg className="w-20 h-20 -rotate-90" viewBox="0 0 80 80">
+            {/* Track ring: subtle dark gray-blue in dark mode */}
+            <circle cx="40" cy="40" r="34" fill="none" stroke="#E5E7EB" strokeWidth="5"
+              className="dark:hidden" />
+            <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="5"
+              className="hidden dark:block" />
+            {/* Progress ring */}
+            <circle cx="40" cy="40" r="34" fill="none" stroke={ringColor} strokeWidth="5"
+              strokeDasharray={circumference}
+              strokeDashoffset={circumference * (1 - progress)}
+              strokeLinecap="round"
+              style={{ filter: `drop-shadow(${ringGlow})` }}
+            />
+          </svg>
+          <span className="absolute inset-0 flex items-center justify-center text-[10px] text-gray-500 dark:text-[#9A9DAE] font-medium text-center leading-tight px-1">
+            {isDue ? "Now!" : `${daysLeft}d left`}
+          </span>
         </div>
       </div>
-      {isLate && missedRule && (
-        <div
-          className={`mx-4 mb-4 rounded-2xl p-3 border ${
-            isRetitration
-              ? "bg-orange-50 border-orange-100"
-              : "bg-amber-50 border-amber-100"
-          }`}
-        >
-          <p
-            className={`text-sm font-semibold ${
-              isRetitration ? "text-orange-600" : "text-amber-600"
-            }`}
-          >
-            {isRetitration
-              ? "Late dose — contact your prescriber"
-              : `Scheduled dose is ${daysLate} day${daysLate === 1 ? "" : "s"} late`}
-          </p>
-          <p className="text-xs mt-1 text-gray-500">{missedRule.advice}</p>
-        </div>
-      )}
+    </div>
+    {isLate && missedRule && (
+      <div className={`mx-4 mb-4 rounded-2xl p-3 border ${isRetitration ? "bg-red-50 dark:bg-red-500/10 border-red-200 dark:border-red-500/20" : "bg-amber-50 dark:bg-amber-500/10 border-amber-200 dark:border-amber-500/20"}`}>
+        <p className={`text-sm font-semibold ${isRetitration ? "text-red-700 dark:text-red-300" : "text-amber-700 dark:text-amber-300"}`}>
+          {isRetitration ? "Late dose — contact your prescriber" : `Scheduled dose is ${daysLate} day${daysLate === 1 ? "" : "s"} late`}
+        </p>
+        <p className="text-xs mt-1 text-gray-600 dark:text-[#9A9DAE]">{missedRule.advice}</p>
+      </div>
+    )}
     </>
   );
 }
