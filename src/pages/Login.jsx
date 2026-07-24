@@ -49,19 +49,19 @@ export default function Login() {
       title="Welcome back"
       subtitle="Log in to your account"
       footer={
-        <>
+      <>
           Don't have an account?{" "}
           <Link to="/register" className="text-primary font-medium hover:underline">
             Create one
           </Link>
         </>
-      }
-    >
+      }>
+      
       <Button
         variant="outline"
         className="w-full h-12 text-sm font-medium mb-6"
-        onClick={handleGoogle}
-      >
+        onClick={handleGoogle}>
+        
         <GoogleIcon className="w-5 h-5 mr-2" />
         Continue with Google
       </Button>
@@ -75,11 +75,11 @@ export default function Login() {
         </div>
       </div>
 
-      {error && (
-        <div className="mb-4 p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
+      {error &&
+      <div className="mb-4 p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
           {error}
         </div>
-      )}
+      }
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
@@ -95,8 +95,8 @@ export default function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="pl-10 h-12"
-              required
-            />
+              required />
+            
           </div>
         </div>
         <div className="space-y-2">
@@ -116,29 +116,29 @@ export default function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="pl-10 pr-10 h-12"
-              required
-            />
+              required />
+            
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-              aria-label={showPassword ? "Hide password" : "Show password"}
-            >
+              aria-label={showPassword ? "Hide password" : "Show password"}>
+              
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           </div>
         </div>
-        <Button type="submit" className="w-full h-12 font-medium" disabled={loading}>
-          {loading ? (
-            <>
+        <Button type="submit" className="w-full h-12 font-medium bg-[hsl(var(--accent-foreground))]" disabled={loading}>
+          {loading ?
+          <>
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
               Logging in...
-            </>
-          ) : (
-            "Log in"
-          )}
+            </> :
+
+          "Log in"
+          }
         </Button>
       </form>
-    </AuthLayout>
-  );
+    </AuthLayout>);
+
 }
