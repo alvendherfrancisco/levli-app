@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import MetricCard from "@/components/home/MetricCard";
-import { UtensilsCrossed, Leaf, Droplets, Dumbbell, Camera } from "lucide-react";
+import { Scale, Flame, Beef, Leaf, Cookie, Droplets, Dumbbell, Camera } from "lucide-react";
 import { useAppState } from "@/lib/AppState";
 import AddNutritionModal from "@/components/modals/AddNutritionModal";
 import AddMetricModal from "@/components/modals/AddMetricModal";
@@ -30,17 +30,17 @@ export default function MetricsGrid({ dayKey }) {
 
   const allMetrics = [
     {
-      icon: (<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" className="text-teal-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 3a4 4 0 0 1 4 4c0 .73-.19 1.41-.54 2H18c.95 0 1.75.67 1.95 1.56C21.96 18.57 22 18.78 22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2c0-.22.04-.43 2.05-8.44C4.25 9.67 5.05 9 6 9h2.54A3.9 3.9 0 0 1 8 7a4 4 0 0 1 4-4m0 2a2 2 0 0 0-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2" /></svg>), label: "Weight",
+      icon: <Scale size={14} className="text-teal-600" />, label: "Weight",
       value: weight != null ? String(weight) : "–", unit: weightUnit, color: "bg-teal-100",
       onAdd: () => setMetricModal({ label: "Weight", unit: weightUnit, current: weight != null ? String(weight) : "", onSave: async (v) => { await saveWeight(dk, v); weight != null ? toast.success("Weight updated successfully!") : toast.success("Weight added successfully!"); } }),
     },
     {
-      icon: <UtensilsCrossed size={14} className="text-orange-500" />, label: "Calories",
+      icon: <Flame size={14} className="text-orange-500" />, label: "Calories",
       value: nutrition.calories, unit: "kcal", color: "bg-orange-100",
       onAdd: () => setShowNutrition(true),
     },
     {
-      icon: <Dumbbell size={14} className="text-teal-500" />, label: "Protein",
+      icon: <Beef size={14} className="text-teal-500" />, label: "Protein",
       value: nutrition.protein, unit: "g", color: "bg-teal-100",
       onAdd: () => setShowNutrition(true),
     },
@@ -50,7 +50,7 @@ export default function MetricsGrid({ dayKey }) {
       onAdd: () => setShowNutrition(true),
     },
     {
-      icon: <UtensilsCrossed size={14} className="text-amber-500" />, label: "Carbs",
+      icon: <Cookie size={14} className="text-amber-500" />, label: "Carbs",
       value: nutrition.carbs, unit: "g", color: "bg-amber-100",
       onAdd: () => setShowNutrition(true),
     },

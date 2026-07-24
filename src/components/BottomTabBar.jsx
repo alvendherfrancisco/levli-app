@@ -1,34 +1,33 @@
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { MoreHorizontal, X } from "lucide-react";
 import {
-  HomeIcon, ShotsIcon, HistoryIcon, InsightsIcon,
-  MedsIcon, StockIcon, JournalIcon, ProfileIcon,
-} from "@/components/NavIcons";
+  Home, Syringe, CalendarDays, BarChart3, ClipboardList, User, Pill, Package,
+  MoreHorizontal, X,
+} from "lucide-react";
 
 const desktopTabs = [
-  { path: "/", label: "Home", Icon: HomeIcon },
-  { path: "/shots", label: "Shots", Icon: ShotsIcon },
-  { path: "/medications", label: "Meds", Icon: MedsIcon },
-  { path: "/inventory", label: "Stock", Icon: StockIcon },
-  { path: "/history", label: "History", Icon: HistoryIcon },
-  { path: "/insights", label: "Insights", Icon: InsightsIcon },
-  { path: "/journal", label: "Journal", Icon: JournalIcon },
-  { path: "/profile", label: "Profile", Icon: ProfileIcon },
+  { path: "/", label: "Home", icon: Home },
+  { path: "/shots", label: "Shots", icon: Syringe },
+  { path: "/medications", label: "Meds", icon: Pill },
+  { path: "/inventory", label: "Stock", icon: Package },
+  { path: "/history", label: "History", icon: CalendarDays },
+  { path: "/insights", label: "Insights", icon: BarChart3 },
+  { path: "/journal", label: "Journal", icon: ClipboardList },
+  { path: "/profile", label: "Profile", icon: User },
 ];
 
 const mobileTabs = [
-  { path: "/", label: "Home", Icon: HomeIcon },
-  { path: "/shots", label: "Shots", Icon: ShotsIcon },
-  { path: "/history", label: "History", Icon: HistoryIcon },
-  { path: "/insights", label: "Insights", Icon: InsightsIcon },
+  { path: "/", label: "Home", icon: Home },
+  { path: "/shots", label: "Shots", icon: Syringe },
+  { path: "/history", label: "History", icon: CalendarDays },
+  { path: "/insights", label: "Insights", icon: BarChart3 },
 ];
 
 const moreOptions = [
-  { path: "/medications", label: "Meds", Icon: MedsIcon },
-  { path: "/inventory", label: "Stock", Icon: StockIcon },
-  { path: "/journal", label: "Journal", Icon: JournalIcon },
-  { path: "/profile", label: "Profile", Icon: ProfileIcon },
+  { path: "/medications", label: "Meds", icon: Pill, tint: "bg-indigo-100 text-indigo-500" },
+  { path: "/inventory", label: "Stock", icon: Package, tint: "bg-blue-100 text-blue-500" },
+  { path: "/journal", label: "Journal", icon: ClipboardList, tint: "bg-amber-100 text-amber-500" },
+  { path: "/profile", label: "Profile", icon: User, tint: "bg-purple-100 text-purple-500" },
 ];
 
 export default function BottomTabBar() {
@@ -44,7 +43,7 @@ export default function BottomTabBar() {
           <div className="flex items-stretch justify-around px-1 py-1.5">
             {mobileTabs.map((tab) => {
               const isActive = location.pathname === tab.path;
-              const Icon = tab.Icon;
+              const Icon = tab.icon;
               return (
                 <Link
                   key={tab.path}
@@ -56,7 +55,11 @@ export default function BottomTabBar() {
                       isActive ? "bg-indigo-600" : "bg-transparent"
                     }`}
                   >
-                    <Icon size={18} filled={isActive} className={isActive ? "text-white" : "text-gray-400"} />
+                    <Icon
+                      size={18}
+                      strokeWidth={isActive ? 2.4 : 1.8}
+                      className={isActive ? "text-white" : "text-gray-400"}
+                    />
                   </div>
                   <span
                     className={`text-[9px] font-medium leading-none truncate ${
@@ -102,10 +105,10 @@ export default function BottomTabBar() {
                 <X size={20} className="text-gray-400" />
               </button>
             </div>
-            <div className="flex flex-col gap-1">
+            <div className="grid grid-cols-2 gap-3">
               {moreOptions.map((opt) => {
+                const Icon = opt.icon;
                 const isActive = location.pathname === opt.path;
-                const Icon = opt.Icon;
                 return (
                   <button
                     key={opt.path}
@@ -113,12 +116,16 @@ export default function BottomTabBar() {
                       navigate(opt.path);
                       setShowMore(false);
                     }}
-                    className={`flex items-center gap-3 px-3 py-3.5 rounded-xl text-left transition-all active:scale-95 ${
-                      isActive ? "bg-indigo-50 text-indigo-600" : "text-gray-600 hover:bg-gray-50"
+                    className={`flex flex-col items-start gap-2 p-4 rounded-2xl border-2 text-left transition-all active:scale-95 ${
+                      isActive
+                        ? "border-indigo-600 bg-indigo-50"
+                        : "border-gray-100 bg-gray-50 hover:border-gray-200"
                     }`}
                   >
-                    <Icon size={22} filled={isActive} className={isActive ? "text-indigo-600" : "text-gray-500"} />
-                    <span className="font-medium text-sm">{opt.label}</span>
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${opt.tint}`}>
+                      <Icon size={20} />
+                    </div>
+                    <span className="font-semibold text-gray-700 text-sm">{opt.label}</span>
                   </button>
                 );
               })}
@@ -138,7 +145,7 @@ export default function BottomTabBar() {
         <nav className="flex flex-col gap-1 flex-1">
           {desktopTabs.map((tab) => {
             const isActive = location.pathname === tab.path;
-            const Icon = tab.Icon;
+            const Icon = tab.icon;
             return (
               <Link
                 key={tab.path}
@@ -149,7 +156,7 @@ export default function BottomTabBar() {
                     : "text-gray-500 hover:bg-gray-50 hover:text-gray-700"
                 }`}
               >
-                <Icon size={20} filled={isActive} className={isActive ? "text-indigo-600" : "text-gray-500"} />
+                <Icon size={20} strokeWidth={isActive ? 2.2 : 1.8} />
                 {tab.label}
               </Link>
             );
