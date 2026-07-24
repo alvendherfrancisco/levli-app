@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { ChevronLeft, ChevronRight, Plus, Info, Wind } from "lucide-react";
-import TopBar from "@/components/TopBar";
+import { Link } from "react-router-dom";
+import { Settings, ChevronLeft, ChevronRight, Plus, Info, Wind } from "lucide-react";
 import ShotCard from "@/components/shots/ShotCard";
 import MetricsGrid from "@/components/home/MetricsGrid";
 import AddShotModal from "@/components/modals/AddShotModal";
 import SideEffectsModal from "@/components/modals/SideEffectsModal";
-import { WaveIcon } from "@/components/onboarding/LevliIcons";
 import { useAppState } from "@/lib/AppState";
 import { parseShotDate, toDayKey } from "@/lib/dateUtils";
 
@@ -24,11 +23,25 @@ export default function History() {
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const firstDayOfWeek = new Date(year, month, 1).getDay();
 
-  const prevMonth = () => { if (month === 0) { setMonth(11); setYear(y => y - 1); } else setMonth(m => m - 1); setSelectedDay(null); };
-  const nextMonth = () => { if (month === 11) { setMonth(0); setYear(y => y + 1); } else setMonth(m => m + 1); setSelectedDay(null); };
+  const prevMonth = () => {
+    if (month === 0) { setMonth(11); setYear((y) => y - 1); } else setMonth((m) => m - 1);
+    setSelectedDay(null);
+  };
+  const nextMonth = () => {
+    if (month === 11) { setMonth(0); setYear((y) => y + 1); } else setMonth((m) => m + 1);
+    setSelectedDay(null);
+  };
 
   const shotDayMap = {};
-  shots.forEach((s) => { const d = parseShotDate(s.date); if (!d) return; if (d.getMonth() === month && d.getFullYear() === year) { const day = d.getDate(); if (!shotDayMap[day]) shotDayMap[day] = []; shotDayMap[day].push(s); } });
+  shots.forEach((s) => {
+    const d = parseShotDate(s.date);
+    if (!d) return;
+    if (d.getMonth() === month && d.getFullYear() === year) {
+      const day = d.getDate();
+      if (!shotDayMap[day]) shotDayMap[day] = [];
+      shotDayMap[day].push(s);
+    }
+  });
 
   const selectedDayKey = selectedDay ? toDayKey(new Date(year, month, selectedDay)) : null;
   const selectedShots = selectedDay ? (shotDayMap[selectedDay] || []) : [];
@@ -39,19 +52,24 @@ export default function History() {
   const openNew = () => { setEditingShot(null); setShowShot(true); };
 
   return (
-    <div className="min-h-screen w-full">
-      <TopBar title="History" subtitle="Calendar view" />
+    <div className="bg-[#FAFAFA] min-h-screen w-full">
+      <div className="sticky top-0 z-30 bg-[#FAFAFA] w-full flex items-center justify-between px-5 pt-6 pb-4">
+        <h1 className="text-2xl font-bold text-gray-800">History</h1>
+        <Link to="/settings"><div className="w-9 h-9 rounded-full border border-gray-200 bg-white flex items-center justify-center active:scale-95 transition-all"><Settings size={18} className="text-gray-500" /></div></Link>
+      </div>
 
       <div className="max-w-3xl mx-auto pb-4">
         {/* Calendar */}
-        <div className="mx-4 mb-4 bg-white dark:bg-gray-800 rounded-3xl p-5 shadow-sm border border-gray-100/80 dark:border-white/[0.04]">
+        <div className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80">
           <div className="flex items-center justify-between mb-4">
-            <button onClick={prevMonth}><ChevronLeft size={22} className="text-indigo-500" /></button>
-            <h2 className="text-lg font-bold text-gray-800 dark:text-white">{monthNames[month]} {year}</h2>
-            <button onClick={nextMonth}><ChevronRight size={22} className="text-indigo-500" /></button>
+            <button onClick={prevMonth} className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center active:scale-90 transition-all"><ChevronLeft size={18} className="text-gray-500" /></button>
+            <h2 className="text-lg font-bold text-gray-800">{monthNames[month]} {year}</h2>
+            <button onClick={nextMonth} className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center active:scale-90 transition-all"><ChevronRight size={18} className="text-gray-500" /></button>
           </div>
           <div className="grid grid-cols-7 text-center mb-2">
-            {["S","M","T","W","T","F","S"].map((d, i) => <span key={i} className="text-xs font-medium text-indigo-500">{d}</span>)}
+            {["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map((d) => (
+              <span key={d} className="text-xs font-medium text-indigo-500">{d}</span>
+            ))}
           </div>
           <div className="grid grid-cols-7 gap-y-1 text-center">
             {Array.from({ length: firstDayOfWeek }).map((_, i) => <div key={`e${i}`} />)}
@@ -62,21 +80,29 @@ export default function History() {
               const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
               return (
                 <button key={day} onClick={() => setSelectedDay(day)}
-                  className={`py-2 rounded-xl text-sm font-medium relative flex flex-col items-center transition-all ${isSelected ? "bg-indigo-600 text-white shadow-md shadow-indigo-500/20" : isToday ? "text-indigo-600 bg-indigo-50 dark:bg-indigo-500/10" : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/[0.04]"}`}>
+                  className={`py-1.5 rounded-xl text-sm font-medium relative flex flex-col items-center transition-all active:scale-90 ${
+                    isSelected
+                      ? "bg-indigo-600 text-white"
+                      : isToday
+                        ? "text-indigo-600 bg-indigo-50"
+                        : "text-gray-700 hover:bg-gray-50"
+                  }`}>
                   {day}
-                  {hasShot && <div className={`w-1.5 h-1.5 rounded-full mt-0.5 ${isSelected ? "bg-white" : "bg-emerald-400"}`} />}
+                  {hasShot && <div className="w-1.5 h-1.5 bg-teal-400 rounded-full mt-0.5" />}
                 </button>
               );
             })}
           </div>
         </div>
 
+        {/* Selected day metrics */}
         {selectedDayKey && <MetricsGrid dayKey={selectedDayKey} />}
 
+        {/* Selected day shots */}
         {selectedDay && selectedShots.length > 0 && (
-          <div className="px-4 mb-4 space-y-2.5">
+          <div className="px-4 mb-4 space-y-2">
             {selectedShots.map((s) => (
-              <button key={s.id} onClick={() => openEdit(s)} className="w-full text-left">
+              <button key={s.id} onClick={() => openEdit(s)} className="w-full text-left active:scale-[0.99] transition-transform">
                 <ShotCard {...s} drugClass={s.drug_class} />
               </button>
             ))}
@@ -84,49 +110,58 @@ export default function History() {
         )}
         {selectedDay && selectedShots.length === 0 && (
           <div className="px-4 mb-4">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 text-center border border-gray-100/80 dark:border-white/[0.04] text-gray-400 dark:text-gray-500 text-sm">
+            <div className="bg-white rounded-2xl p-4 text-center border border-gray-100/80 text-gray-400 text-sm">
               No shots logged for {monthNames[month]} {selectedDay}
             </div>
           </div>
         )}
 
+        {/* Side Effects for selected day */}
         {selectedDayKey && (
-          <button onClick={() => setShowSideEffects(true)}
-            className="mx-4 mb-4 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100/80 dark:border-white/[0.04] w-[calc(100%-2rem)] text-left transition-all hover:shadow-md">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center"><WaveIcon size={36} /></div>
-              <span className="font-semibold text-gray-700 dark:text-gray-200">Side effects</span>
+          <button
+            onClick={() => setShowSideEffects(true)}
+            className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 w-[calc(100%-2rem)] text-left active:scale-[0.99] transition-transform"
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center">
+                <Wind size={16} className="text-teal-500" />
+              </div>
+              <span className="font-semibold text-gray-700 text-sm">Side effects</span>
             </div>
             {sideEffects || dayAdverseEvents.length > 0 ? (
-              <div className="bg-teal-50 dark:bg-teal-500/10 rounded-xl p-3 border border-transparent dark:border-teal-500/15">
+              <div className="bg-teal-50 rounded-xl p-3 border border-teal-100/50">
                 {dayAdverseEvents.length > 0 && (
                   <div className="flex flex-wrap gap-1 mb-2">
                     {dayAdverseEvents.map((e) => (
-                      <span key={e.id} className="text-xs bg-teal-500/10 text-teal-600 dark:text-teal-400 rounded-full px-2 py-0.5 border border-teal-500/20">
+                      <span key={e.id} className="text-xs bg-teal-500/10 text-teal-600 rounded-full px-2 py-0.5 border border-teal-500/20">
                         {e.symptom} <span className="opacity-60">({e.severity})</span>
                       </span>
                     ))}
                   </div>
                 )}
-                {sideEffects && <p className="text-sm text-gray-700 dark:text-gray-200">{sideEffects}</p>}
+                {sideEffects && <p className="text-sm text-gray-600">{sideEffects}</p>}
               </div>
             ) : (
-              <div className="bg-gray-50 dark:bg-white/[0.03] rounded-xl p-3 flex items-center gap-2">
+              <div className="bg-teal-50 rounded-xl p-3 flex items-center gap-2 border border-teal-100/50">
                 <Info size={16} className="text-teal-500 flex-shrink-0" />
-                <p className="text-sm text-teal-700 dark:text-teal-300">Tap to add side effects for this day.</p>
+                <p className="text-sm text-teal-600">Tap to add side effects for this day.</p>
               </div>
             )}
           </button>
         )}
       </div>
 
-      <button onClick={openNew}
-        className="fixed bottom-24 lg:bottom-8 right-5 lg:right-8 bg-indigo-600 text-white rounded-full shadow-lg shadow-indigo-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-indigo-700 transition-all active:scale-95 text-sm px-5 py-3.5">
+      <button
+        onClick={openNew}
+        className="fixed bottom-24 right-5 lg:right-8 bg-indigo-600 text-white rounded-full shadow-lg shadow-indigo-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-indigo-700 active:scale-95 transition-all text-sm px-5 py-3"
+      >
         <Plus size={18} /> Add Shot
       </button>
 
       <AddShotModal open={showShot} onClose={() => { setShowShot(false); setEditingShot(null); }} editingShot={editingShot} />
-      {selectedDayKey && <SideEffectsModal open={showSideEffects} onClose={() => setShowSideEffects(false)} dayKey={selectedDayKey} />}
+      {selectedDayKey && (
+        <SideEffectsModal open={showSideEffects} onClose={() => setShowSideEffects(false)} dayKey={selectedDayKey} />
+      )}
     </div>
   );
 }
