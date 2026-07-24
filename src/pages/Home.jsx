@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Settings, Plus, Info, HelpCircle, Wind, ArrowRight } from "lucide-react";
+import { Settings, Plus, Info, HelpCircle, Wind, ArrowRight, Pill, Package, ClipboardList } from "lucide-react";
 import DateStrip from "@/components/home/DateStrip";
 import NextShotCard from "@/components/home/NextShotCard";
 import MetricsGrid from "@/components/home/MetricsGrid";
@@ -39,37 +39,62 @@ export default function Home() {
         <NextShotCard />
         <MetricsGrid dayKey={dk} />
 
-        {/* Side Effects card */}
-        <button
-          onClick={() => setShowSideEffects(true)}
-          className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 w-[calc(100%-2rem)] text-left active:scale-[0.99] transition-transform"
-        >
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center">
+        {/* Quick access: Side effects + Journal | Medication + Stock */}
+        <div className="mx-4 mb-4 grid grid-cols-2 gap-3 w-[calc(100%-2rem)]">
+          {/* Side effects */}
+          <button
+            onClick={() => setShowSideEffects(true)}
+            className="bg-white rounded-2xl p-3.5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 text-left active:scale-[0.98] transition-transform flex flex-col"
+          >
+            <div className="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center mb-2">
               <Wind size={16} className="text-teal-500" />
             </div>
             <span className="font-semibold text-gray-700 text-sm">Side effects</span>
-          </div>
-          {sideEffects || dayAdverseEvents.length > 0 ? (
-            <div className="bg-teal-50 rounded-xl p-3 border border-teal-100/50">
-              {dayAdverseEvents.length > 0 && (
-                <div className="flex flex-wrap gap-1 mb-2">
-                  {dayAdverseEvents.map((e) => (
-                    <span key={e.id} className="text-xs bg-teal-500/10 text-teal-600 rounded-full px-2 py-0.5 border border-teal-500/20">
-                      {e.symptom} <span className="opacity-60">({e.severity})</span>
-                    </span>
-                  ))}
-                </div>
-              )}
-              {sideEffects && <p className="text-sm text-gray-600">{sideEffects}</p>}
+            {sideEffects || dayAdverseEvents.length > 0 ? (
+              <span className="text-xs text-teal-600 mt-0.5">
+                {dayAdverseEvents.length > 0 ? `${dayAdverseEvents.length} logged` : "Updated"}
+              </span>
+            ) : (
+              <span className="text-xs text-gray-400 mt-0.5">Tap to add</span>
+            )}
+          </button>
+
+          {/* Journal */}
+          <Link
+            to="/journal"
+            className="bg-white rounded-2xl p-3.5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 text-left active:scale-[0.98] transition-transform flex flex-col"
+          >
+            <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center mb-2">
+              <ClipboardList size={16} className="text-amber-500" />
             </div>
-          ) : (
-            <div className="bg-teal-50 rounded-xl p-3 flex items-center gap-2 border border-teal-100/50">
-              <Info size={16} className="text-teal-500 flex-shrink-0" />
-              <p className="text-sm text-teal-600">Tap to add side effects.</p>
+            <span className="font-semibold text-gray-700 text-sm">Journal</span>
+            <span className="text-xs text-gray-400 mt-0.5">Notes & mood</span>
+          </Link>
+
+          {/* Medication */}
+          <Link
+            to="/medications"
+            className="bg-white rounded-2xl p-3.5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 text-left active:scale-[0.98] transition-transform flex flex-col"
+          >
+            <div className="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center mb-2">
+              <Pill size={16} className="text-indigo-500" />
             </div>
-          )}
-        </button>
+            <span className="font-semibold text-gray-700 text-sm">Medication</span>
+            <span className="text-xs text-gray-400 mt-0.5">Your regimens</span>
+          </Link>
+
+          {/* Stock */}
+          <Link
+            to="/inventory"
+            className="bg-white rounded-2xl p-3.5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 text-left active:scale-[0.98] transition-transform flex flex-col"
+          >
+            <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center mb-2">
+              <Package size={16} className="text-blue-500" />
+            </div>
+            <span className="font-semibold text-gray-700 text-sm">Stock</span>
+            <span className="text-xs text-gray-400 mt-0.5">Inventory</span>
+          </Link>
+        </div>
 
         {/* Medication Exposure card */}
         <div className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80">
