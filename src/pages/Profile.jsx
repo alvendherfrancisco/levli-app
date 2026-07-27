@@ -65,7 +65,7 @@ export default function Profile() {
       <button onClick={() => handleSave(fields)}
       disabled={saving[key]}
       className={`px-4 py-2.5 rounded-xl font-semibold text-sm transition-all min-w-[60px] flex items-center justify-center ${
-      saved[key] ? "bg-green-500 text-white" : "bg-indigo-600 text-white"} disabled:opacity-60`
+      saved[key] ? "bg-teal-500 text-white" : "bg-indigo-600 text-white"} disabled:opacity-60`
       }>
         {saving[key] ? <Loader2 size={14} className="animate-spin" /> : saved[key] ? <Check size={16} /> : "Save"}
       </button>);
@@ -187,8 +187,8 @@ export default function Profile() {
         {/* Measurement Units */}
         <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
           <div className="flex items-center gap-2 mb-1">
-            <div className="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-900 flex items-center justify-center">
-              <Lock size={16} className="text-amber-600 dark:text-amber-400" />
+            <div className="w-8 h-8 rounded-lg bg-orange-100 dark:bg-orange-900 flex items-center justify-center">
+              <Lock size={16} className="text-orange-600 dark:text-orange-400" />
             </div>
             <h3 className="font-bold text-gray-900 dark:text-white text-lg">Measurement Units</h3>
           </div>

@@ -51,8 +51,8 @@ export default function MetricsGrid({ dayKey }) {
       onAdd: () => setShowNutrition(true),
     },
     {
-      icon: <IonIcon name="fast-food" size={20} className="text-amber-500" />, label: "Carbs",
-      value: nutrition.carbs, unit: "g", color: "bg-amber-100",
+      icon: <IonIcon name="fast-food" size={20} className="text-orange-500" />, label: "Carbs",
+      value: nutrition.carbs, unit: "g", color: "bg-orange-100",
       onAdd: () => setShowNutrition(true),
     },
     {
@@ -66,8 +66,8 @@ export default function MetricsGrid({ dayKey }) {
       onAdd: () => setMetricModal({ label: "Exercise", unit: "min", current: exercise != null ? String(exercise) : "", onSave: async (v) => { await saveExercise(dk, v); exercise != null ? toast.success("Exercise updated successfully!") : toast.success("Exercise added successfully!"); } }),
     },
     {
-      icon: <IonIcon name="camera" size={20} className="text-amber-500" />, label: "Progress",
-      value: photo ? "✓" : "–", unit: "pic", color: "bg-amber-100",
+      icon: <IonIcon name="camera" size={20} className="text-teal-500" />, label: "Progress",
+      value: photo ? "✓" : "–", unit: "pic", color: "bg-teal-100",
       onAdd: () => setMetricModal({ label: "Progress", unit: "pic", current: photo || "–", dayKey: dk, onSave: async (v, newDayKey) => { await addProgressPhotoRecord(newDayKey || dk, v); toast.success("Progress photo added successfully!"); }, onDelete: async () => { await deleteLatestProgressPhoto(dk); toast.success("Progress photo deleted successfully!"); } }),
     },
   ];

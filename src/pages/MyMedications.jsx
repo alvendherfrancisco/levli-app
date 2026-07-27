@@ -18,8 +18,8 @@ export default function MyMedications() {
   };
 
   const statusColors = {
-    active: "bg-green-100 dark:bg-green-500/10 text-green-700 dark:text-green-400",
-    paused: "bg-amber-100 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400",
+    active: "bg-teal-100 dark:bg-teal-500/10 text-teal-700 dark:text-teal-400",
+    paused: "bg-orange-100 dark:bg-orange-500/10 text-orange-700 dark:text-orange-400",
     discontinued: "bg-gray-100 dark:bg-gray-500/10 text-gray-600 dark:text-gray-400",
     switched: "bg-indigo-100 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-400",
   };
@@ -64,7 +64,7 @@ export default function MyMedications() {
                         <div className="flex items-center gap-2"><Activity size={14} className="text-indigo-500" /> {m.prescribed_dose} {m.dose_unit || "mg"} · {m.frequency || "—"}</div>
                       )}
                       {m.indication && <div className="flex items-center gap-2"><Pill size={14} className="text-indigo-500" /> {m.indication}</div>}
-                      {m.titration_stage && <div className="flex items-center gap-2"><Calendar size={14} className="text-amber-500" /> Stage: {m.titration_stage}</div>}
+                      {m.titration_stage && <div className="flex items-center gap-2"><Calendar size={14} className="text-orange-500" /> Stage: {m.titration_stage}</div>}
                       {m.prescriber_name && <div className="flex items-center gap-2"><User size={14} className="text-gray-400" /> {m.prescriber_name}</div>}
                     </div>
                   </button>

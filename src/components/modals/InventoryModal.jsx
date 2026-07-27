@@ -88,13 +88,15 @@ export default function InventoryModal({ open, onClose, editing }) {
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
+    <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="relative bg-white dark:bg-[#0f1117] rounded-t-3xl sm:rounded-3xl w-full sm:max-w-[520px] max-h-[92vh] overflow-y-auto animate-in slide-in-from-bottom sm:mx-4 dark:shadow-[0_-8px_40px_rgba(0,0,0,0.5)]">
-        <div className="flex justify-center pt-3 pb-1"><div className="w-10 h-1 bg-gray-300 rounded-full" /></div>
-        <div className="flex items-center justify-between px-5 pb-4">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-[#E8E9F0]">{editing ? "Edit Product" : "Add Product"}</h2>
-          <button onClick={onClose}><X size={22} className="text-gray-400" /></button>
+      <div className="relative bg-white dark:bg-[#0f1117] rounded-t-3xl sm:rounded-3xl w-full sm:max-w-[520px] max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom sm:mx-4 dark:shadow-[0_-8px_40px_rgba(0,0,0,0.5)]">
+        <div className="sticky top-0 z-10 bg-white dark:bg-[#0f1117]">
+          <div className="flex justify-center pt-3 pb-1"><div className="w-10 h-1 bg-gray-300 rounded-full" /></div>
+          <div className="flex items-center justify-between px-5 pb-4">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-[#E8E9F0]">{editing ? "Edit Product" : "Add Product"}</h2>
+            <button onClick={onClose}><X size={22} className="text-gray-400" /></button>
+          </div>
         </div>
         <div className="px-5 pb-4 space-y-4">
           <Field label="Product name">
@@ -153,6 +155,7 @@ export default function InventoryModal({ open, onClose, editing }) {
             </select>
           </Field>
         </div>
+        <div className="h-24" />
         <div className="sticky bottom-0 px-5 pb-8 pt-2 bg-white dark:bg-[#0f1117] border-t border-gray-100 dark:border-white/[0.08]">
           <button onClick={handleSave} disabled={saving}
             className="w-full py-3.5 bg-indigo-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-60">

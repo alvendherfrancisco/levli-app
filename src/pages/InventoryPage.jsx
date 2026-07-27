@@ -103,7 +103,7 @@ export default function InventoryPage() {
                       )}
                       {i.lot_number && <div className="text-xs">Lot: {i.lot_number}</div>}
                       {i.expiry_date && (
-                        <div className={`text-xs flex items-center gap-1 ${i.isExpired ? "text-red-500" : i.isExpiringSoon ? "text-amber-500" : "text-gray-400"}`}>
+                        <div className={`text-xs flex items-center gap-1 ${i.isExpired ? "text-red-500" : i.isExpiringSoon ? "text-orange-500" : "text-gray-400"}`}>
                           {i.isExpired ? <><AlertTriangle size={12} /> Expired</> : i.isExpiringSoon ? <><AlertTriangle size={12} /> Expires in {i.daysToExpiry}d</> : `Expires ${i.expiry_date}`}
                         </div>
                       )}
@@ -112,7 +112,7 @@ export default function InventoryPage() {
                   </button>
                   <div className="flex flex-col gap-2 items-end flex-shrink-0">
                     <button onClick={() => openEdit(i)} className="text-gray-400 hover:text-indigo-600"><ChevronRight size={20} /></button>
-                    <button onClick={() => openStorageLog(i)} className="text-gray-400 hover:text-amber-500"><Thermometer size={16} /></button>
+                    <button onClick={() => openStorageLog(i)} className="text-gray-400 hover:text-orange-500"><Thermometer size={16} /></button>
                     <button onClick={() => handleDelete(i.id)} className="text-gray-400 hover:text-red-500"><Trash2 size={16} /></button>
                   </div>
                 </div>
@@ -121,7 +121,7 @@ export default function InventoryPage() {
                     <p className="text-[11px] text-gray-400 mb-1">Storage logs</p>
                     {productStorageLogs(i.id).slice(0, 3).map((s) => (
                       <div key={s.id} className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
-                        {s.temperature_excursion && <AlertTriangle size={11} className="text-amber-500" />}
+                        {s.temperature_excursion && <AlertTriangle size={11} className="text-orange-500" />}
                         {s.logged_date}{s.notes ? ` — ${s.notes}` : ""}
                       </div>
                     ))}
@@ -148,7 +148,7 @@ export default function InventoryPage() {
             <h2 className="text-xl font-bold text-gray-900 dark:text-[#E8E9F0] mb-4">Storage Log — {storageModalFor.product_name}</h2>
             <label className="flex items-center gap-3 cursor-pointer mb-4">
               <input type="checkbox" checked={excursion} onChange={(e) => setExcursion(e.target.checked)} className="w-5 h-5 accent-indigo-600" />
-              <span className="text-sm text-gray-700 dark:text-gray-300 flex items-center gap-1"><Thermometer size={16} className="text-amber-500" /> Temperature excursion observed</span>
+              <span className="text-sm text-gray-700 dark:text-gray-300 flex items-center gap-1"><Thermometer size={16} className="text-orange-500" /> Temperature excursion observed</span>
             </label>
             <textarea value={storageNote} onChange={(e) => setStorageNote(e.target.value)} rows={3} placeholder="Notes (optional)"
               className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-sm outline-none focus:border-indigo-300 mb-4" />

@@ -13,7 +13,7 @@ export default function AppLayout() {
       {/* Main content — on desktop, offset for the left rail */}
       <div className="flex-1 lg:ml-56 pb-24 lg:pb-0 w-full min-w-0 relative min-h-screen bg-white dark:bg-gray-950">
         {showGradient && <PageBackground />}
-        <div className="relative z-10">
+        <div className="relative">
           <Outlet />
         </div>
       </div>

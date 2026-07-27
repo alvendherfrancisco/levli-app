@@ -15,7 +15,7 @@ function numericOnly(value) {
 // ── Shared dark-mode dialog shell ───────────────────────────────────────────
 function ModalShell({ onClose, children, bottom = false }) {
   return (
-    <div className={`fixed inset-0 z-50 flex ${bottom ? "items-end" : "items-center"} justify-center px-6`}>
+    <div className={`fixed inset-0 z-[60] flex ${bottom ? "items-end" : "items-center"} justify-center px-6`}>
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
       {children}
     </div>
@@ -112,9 +112,11 @@ function ProgressModal({ open, onClose, value, dayKey, onSave, onDelete }) {
   return (
     <ModalShell onClose={onClose} bottom>
       <div className="relative bg-white dark:bg-[#0f1117] rounded-t-3xl w-full max-w-lg max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom dark:shadow-[0_-8px_40px_rgba(0,0,0,0.5)] dark:border-t dark:border-white/[0.07]">
-        <div className="flex items-center justify-between px-5 pt-5 pb-4">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-[#E8E9F0]">{hasExisting ? "Edit Progress Picture" : "Add Progress Picture"}</h2>
-          <button onClick={onClose}><X size={22} className="text-gray-400" /></button>
+        <div className="sticky top-0 z-10 bg-white dark:bg-[#0f1117]">
+          <div className="flex items-center justify-between px-5 pt-5 pb-4">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-[#E8E9F0]">{hasExisting ? "Edit Progress Picture" : "Add Progress Picture"}</h2>
+            <button onClick={onClose}><X size={22} className="text-gray-400" /></button>
+          </div>
         </div>
         <div className="px-5 pb-4">
           <div className="border border-gray-200 dark:border-white/[0.1] rounded-2xl overflow-hidden bg-gray-50 dark:bg-white/[0.04] flex items-center justify-center" style={{ minHeight: 220 }}>
@@ -155,6 +157,7 @@ function ProgressModal({ open, onClose, value, dayKey, onSave, onDelete }) {
         </div>
         {showCamera && <CameraCapture onCapture={handleCameraCapture} onClose={() => setShowCamera(false)} />}
         <div className="border-t border-gray-100 dark:border-white/[0.08]" />
+        <div className="h-20" />
         {hasExisting ? (
           <div className="sticky bottom-0 flex gap-3 px-5 pt-5 pb-8 bg-white dark:bg-[#0f1117] border-t border-gray-100 dark:border-white/[0.08]">
             <button onClick={() => { onDelete(); onClose(); }}

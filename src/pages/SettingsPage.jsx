@@ -46,7 +46,7 @@ export default function SettingsPage() {
 
   const Toggle = ({ value, onChange }) => (
     <button onClick={() => onChange(!value)}
-      className={`w-12 h-7 rounded-full transition-colors relative ${value ? "bg-teal-500" : "bg-gray-300 dark:bg-gray-600"}`}>
+      className={`w-12 h-7 rounded-full transition-colors relative ${value ? "bg-indigo-500" : "bg-gray-300 dark:bg-gray-600"}`}>
       <div className={`w-5 h-5 bg-white rounded-full absolute top-1 transition-transform shadow ${value ? "translate-x-6" : "translate-x-1"}`} />
     </button>
   );
@@ -126,14 +126,14 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-950 min-h-screen w-full">
+    <div className="bg-white dark:bg-gray-950 min-h-screen w-full">
       {/* Full-width header */}
-      <div className="w-full flex items-center gap-3 px-5 pt-6 pb-4 bg-gray-50 dark:bg-gray-950 sticky top-0 z-30">
+      <div className="w-full flex items-center gap-3 px-5 pt-6 pb-4 bg-white dark:bg-gray-950 sticky top-0 z-30">
         <button onClick={() => navigate(-1)}><ChevronLeft size={24} className="text-gray-600 dark:text-gray-400" /></button>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Settings</h1>
       </div>
 
-      <div className="max-w-lg mx-auto">
+      <div className="max-w-lg mx-auto pt-4">
         {/* Settings toggles */}
         <div className="px-4 mb-4">
           <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase mb-2 px-1">Appearance & Security</p>
@@ -184,7 +184,7 @@ export default function SettingsPage() {
             <p className="text-xs text-gray-400 dark:text-gray-500">Grant scoped, revocable access to a caregiver or family member so they can view your logs.</p>
             <div className="flex flex-col sm:flex-row gap-2">
               <input type="email" value={proxyEmail} onChange={(e) => setProxyEmail(e.target.value)} placeholder="caregiver@email.com"
-                className="flex-1 border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-3 py-2 text-sm outline-none focus:border-teal-300 min-w-0" />
+                className="flex-1 border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-3 py-2 text-sm outline-none focus:border-indigo-300 min-w-0" />
               <select value={proxyScope} onChange={(e) => setProxyScope(e.target.value)}
                 className="border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-3 py-2 text-sm outline-none sm:w-auto">
                 <option value="read">Read only</option>
@@ -192,7 +192,7 @@ export default function SettingsPage() {
               </select>
             </div>
             <button onClick={handleGrantProxy} disabled={proxySaving}
-              className="w-full py-2.5 bg-teal-600 text-white rounded-xl font-semibold text-sm flex items-center justify-center gap-2 disabled:opacity-60">
+              className="w-full py-2.5 bg-indigo-600 text-white rounded-xl font-semibold text-sm flex items-center justify-center gap-2 disabled:opacity-60">
               <UserPlus size={16} /> {proxySaving ? "Granting…" : "Grant Access"}
             </button>
             {proxyAccess.length > 0 && (

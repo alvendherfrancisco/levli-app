@@ -278,21 +278,23 @@ export default function AddShotModal({ open, onClose, editingShot }) {
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
+    <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="relative bg-white dark:bg-[#0f1117] rounded-t-3xl sm:rounded-3xl w-full sm:max-w-[520px] max-h-[92vh] overflow-y-auto animate-in slide-in-from-bottom sm:mx-4 dark:shadow-[0_-8px_40px_rgba(0,0,0,0.5)]">
-        <div className="flex justify-center pt-3 pb-1"><div className="w-10 h-1 bg-gray-300 rounded-full" /></div>
-        <div className="flex items-center justify-between px-5 pb-4">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-[#E8E9F0]">{editingShot ? "Edit Shot Log" : "Add Shot Log"}</h2>
-          <div className="flex items-center gap-3">
-            {editingShot && <button onClick={handleDelete}><Trash2 size={20} className="text-red-400" /></button>}
-            <button onClick={onClose}><X size={22} className="text-gray-400" /></button>
+      <div className="relative bg-white dark:bg-[#0f1117] rounded-t-3xl sm:rounded-3xl w-full sm:max-w-[520px] max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom sm:mx-4 dark:shadow-[0_-8px_40px_rgba(0,0,0,0.5)]">
+        <div className="sticky top-0 z-10 bg-white dark:bg-[#0f1117]">
+          <div className="flex justify-center pt-3 pb-1"><div className="w-10 h-1 bg-gray-300 rounded-full" /></div>
+          <div className="flex items-center justify-between px-5 pb-4">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-[#E8E9F0]">{editingShot ? "Edit Shot Log" : "Add Shot Log"}</h2>
+            <div className="flex items-center gap-3">
+              {editingShot && <button onClick={handleDelete}><Trash2 size={20} className="text-red-400" /></button>}
+              <button onClick={onClose}><X size={22} className="text-gray-400" /></button>
+            </div>
           </div>
         </div>
 
         {error && <p className="mx-5 mb-3 text-sm text-red-500 dark:text-red-400 bg-red-50 dark:bg-red-500/10 rounded-xl px-3 py-2">{error}</p>}
         {capabilityWarning && (
-          <div className="mx-5 mb-3 text-sm text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-500/10 rounded-xl px-3 py-2 border border-amber-200 dark:border-amber-500/20">
+          <div className="mx-5 mb-3 text-sm text-orange-700 dark:text-orange-300 bg-orange-50 dark:bg-orange-500/10 rounded-xl px-3 py-2 border border-orange-200 dark:border-orange-500/20">
             <p className="font-semibold text-xs">⚠ {isInvestigational(medication) ? "Not an approved medicine" : "Capability notice"}</p>
             <p className="mt-1 text-xs">{capabilityWarning}</p>
           </div>
@@ -329,7 +331,7 @@ export default function AddShotModal({ open, onClose, editingShot }) {
                       className={`w-full px-4 py-3 text-left text-sm dark:text-[#E8E9F0] ${medication === m ? "bg-indigo-50 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-300 font-medium" : "hover:bg-gray-50 dark:hover:bg-white/[0.05]"}`}>
                       <span className="block">{m}</span>
                       <span className="text-xs text-gray-400 dark:text-gray-500 block">{getMolecularClassLabel(m)}</span>
-                      {isInvestigational(m) ? <span className="text-xs text-amber-600 dark:text-amber-400">investigational — not approved</span> : null}
+                      {isInvestigational(m) ? <span className="text-xs text-orange-600 dark:text-orange-400">investigational — not approved</span> : null}
                     </button>
                   ))}
                 </div>
@@ -427,7 +429,7 @@ export default function AddShotModal({ open, onClose, editingShot }) {
               <div className="relative">
                 <button onClick={() => { setShowSiteDropdown(!showSiteDropdown); setShowMedDropdown(false); setShowRouteDropdown(false); }}
                   className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 flex items-center justify-between text-left">
-                  <div className="flex items-center gap-2"><Star size={16} className="text-amber-400" /><span className="text-base font-semibold">{site}</span></div>
+                  <div className="flex items-center gap-2"><Star size={16} className="text-orange-400" /><span className="text-base font-semibold">{site}</span></div>
                   <ChevronDown size={18} className="text-gray-400" />
                 </button>
                 {showSiteDropdown && (
@@ -582,16 +584,17 @@ export default function AddShotModal({ open, onClose, editingShot }) {
         </div>
 
         {duplicateWarning && (
-          <div className="mx-5 mb-3 text-sm text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-500/10 rounded-xl px-3 py-2 border border-amber-200 dark:border-amber-500/20">
+          <div className="mx-5 mb-3 text-sm text-orange-700 dark:text-orange-300 bg-orange-50 dark:bg-orange-500/10 rounded-xl px-3 py-2 border border-orange-200 dark:border-orange-500/20">
             <p className="font-semibold">Possible duplicate active ingredient</p>
             <p className="mt-1">You logged {duplicateWarning.existingBrand} ({duplicateWarning.generic}) on {duplicateWarning.lastDoseDate}. Logging two forms of the same active ingredient may duplicate your dose. Confirm this is intended or contact your prescriber.</p>
             <div className="flex gap-2 mt-2">
-              <button onClick={() => { confirmedDupRef.current = true; handleSave(); }} className="px-3 py-1.5 rounded-lg bg-amber-600 text-white text-xs font-semibold">Save anyway</button>
+              <button onClick={() => { confirmedDupRef.current = true; handleSave(); }} className="px-3 py-1.5 rounded-lg bg-orange-600 text-white text-xs font-semibold">Save anyway</button>
               <button onClick={() => setDuplicateWarning(null)} className="px-3 py-1.5 rounded-lg bg-white dark:bg-white/10 text-gray-600 dark:text-gray-300 text-xs font-semibold border border-gray-200 dark:border-white/10">Cancel</button>
             </div>
           </div>
         )}
 
+        <div className="h-24" />
         <div className="sticky bottom-0 px-5 pb-8 pt-2 bg-white dark:bg-[#0f1117] border-t border-gray-100 dark:border-white/[0.08]">
           <button onClick={handleSave} disabled={saving}
             className="w-full py-3.5 bg-indigo-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-60">

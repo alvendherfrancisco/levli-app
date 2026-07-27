@@ -14,20 +14,20 @@ export default function RedFlagBanner({ text, medication }) {
       className={`rounded-xl p-3 border ${
         isEmergency
           ? "bg-red-50 dark:bg-red-500/10 border-red-200 dark:border-red-500/20"
-          : "bg-amber-50 dark:bg-amber-500/10 border-amber-200 dark:border-amber-500/20"
+          : "bg-orange-50 dark:bg-orange-500/10 border-orange-200 dark:border-orange-500/20"
       }`}
     >
       <div className="flex items-start gap-2">
         <AlertTriangle
           size={16}
           className={`flex-shrink-0 mt-0.5 ${
-            isEmergency ? "text-red-600 dark:text-red-400" : "text-amber-600 dark:text-amber-400"
+            isEmergency ? "text-red-600 dark:text-red-400" : "text-orange-600 dark:text-orange-400"
           }`}
         />
         <div>
           <p
             className={`text-sm font-semibold ${
-              isEmergency ? "text-red-700 dark:text-red-300" : "text-amber-700 dark:text-amber-300"
+              isEmergency ? "text-red-700 dark:text-red-300" : "text-orange-700 dark:text-orange-300"
             }`}
           >
             {isEmergency ? "This may need urgent attention" : "Consider contacting your clinician"}
