@@ -4,7 +4,8 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { LogIn, Mail, Lock, Loader2, Eye, EyeOff } from "lucide-react";
+import { Mail, Lock, Loader2, Eye, EyeOff } from "lucide-react";
+import { LevliDropletIcon } from "@/components/FilledIcons";
 import AuthLayout from "@/components/AuthLayout";
 import GoogleIcon from "@/components/GoogleIcon";
 
@@ -43,13 +44,13 @@ export default function Login() {
 
   return (
     <AuthLayout
-      icon={LogIn}
+      iconNode={<LevliDropletIcon size={56} />}
       title="Welcome back"
       subtitle="Log in to your account"
       footer={
         <>
           Don't have an account?{" "}
-          <Link to="/register" className="text-primary font-medium hover:underline">
+          <Link to="/register" className="text-indigo-600 font-medium hover:underline">
             Create one
           </Link>
         </>
@@ -100,7 +101,7 @@ export default function Login() {
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <Label htmlFor="password">Password</Label>
-            <Link to="/forgot-password" className="text-xs text-primary hover:underline">
+            <Link to="/forgot-password" className="text-xs text-indigo-600 hover:underline">
               Forgot password?
             </Link>
           </div>
@@ -126,7 +127,7 @@ export default function Login() {
             </button>
           </div>
         </div>
-        <Button type="submit" className="w-full h-12 font-medium" disabled={loading}>
+        <Button type="submit" className="w-full h-12 font-medium bg-indigo-600 hover:bg-indigo-700 text-white" disabled={loading}>
           {loading ? (
             <>
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />

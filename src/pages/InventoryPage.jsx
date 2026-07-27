@@ -62,7 +62,7 @@ export default function InventoryPage() {
   const productStorageLogs = (productId) => storageLogs.filter((s) => s.inventory_id === productId || s.product_name === (inventory.find((i) => i.id === productId)?.product_name));
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-950 min-h-screen w-full">
+    <div className="min-h-screen w-full">
       <div className="sticky top-0 z-30 bg-gray-50 dark:bg-gray-950 w-full flex items-center justify-between px-5 pt-6 pb-4">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Inventory</h1>
         <div className="flex items-center gap-3">
