@@ -25,12 +25,12 @@ export default function MetricCard({ icon, label, value, unit, color, onAdd }) {
     <div className="bg-white dark:bg-gray-900 rounded-xl p-2.5 shadow-sm border border-gray-100 dark:border-gray-800 min-h-[90px] overflow-hidden flex flex-col">
       <div className="flex items-center justify-between mb-2">
         {/* Light mode chip */}
-        <div className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 dark:hidden ${color}`}>
+        <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 dark:hidden ${color}`}>
           {lightIcon}
         </div>
         {/* Dark mode chip: tinted bg + glow */}
         <div
-          className="w-7 h-7 rounded-lg items-center justify-center flex-shrink-0 hidden dark:flex"
+          className="w-9 h-9 rounded-lg items-center justify-center flex-shrink-0 hidden dark:flex"
           style={ds ? { background: ds.bg } : {}}
         >
           {darkIcon}
