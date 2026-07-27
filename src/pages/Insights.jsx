@@ -237,10 +237,10 @@ export default function Insights() {
 
           {/* Summary chips */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
-            <div className="bg-green-50 dark:bg-green-500/10 rounded-xl p-2.5 text-center min-w-0 border border-transparent dark:border-green-500/15">
-              <TrendingDown size={14} className="text-green-500 dark:text-green-400 mx-auto mb-1" style={{filter:"drop-shadow(0 0 6px rgba(34,197,94,0.4))"}} />
+            <div className="bg-teal-50 dark:bg-teal-500/10 rounded-xl p-2.5 text-center min-w-0 border border-transparent dark:border-teal-500/15">
+              <TrendingDown size={14} className="text-teal-500 dark:text-teal-400 mx-auto mb-1" style={{filter:"drop-shadow(0 0 6px rgba(20,184,166,0.4))"}} />
               <p className="text-gray-500 dark:text-[#9A9DAE] text-[11px]">Weight Loss</p>
-              <p className="font-bold text-green-600 dark:text-green-400 text-sm">
+              <p className="font-bold text-teal-600 dark:text-teal-400 text-sm">
                 {weightLoss != null ? `${weightLoss >= 0 ? "-" : "+"}${Math.abs(weightLoss).toFixed(1)} ${weightUnit}` : "—"}
               </p>
             </div>
@@ -316,10 +316,10 @@ export default function Insights() {
                 <p className="text-[11px] text-gray-500 dark:text-[#9A9DAE]">Total Photos</p>
                 <p className="font-bold text-indigo-500 dark:text-indigo-400 text-sm">{photosAsc.length}</p>
               </div>
-              <div className="rounded-xl p-2.5 text-center" style={{ background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.15)" }}>
-                <Clock size={14} className="text-green-400 mx-auto mb-1" />
+              <div className="rounded-xl p-2.5 text-center" style={{ background: "rgba(20,184,166,0.1)", border: "1px solid rgba(20,184,166,0.15)" }}>
+                <Clock size={14} className="text-teal-400 mx-auto mb-1" />
                 <p className="text-[11px] text-gray-500 dark:text-[#9A9DAE]">Journey Days</p>
-                <p className="font-bold text-green-500 dark:text-green-400 text-sm">{journeyDays}</p>
+                <p className="font-bold text-teal-500 dark:text-teal-400 text-sm">{journeyDays}</p>
               </div>
               <div className="rounded-xl p-2.5 text-center" style={{ background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.15)" }}>
                 <Camera size={14} className="text-amber-400 mx-auto mb-1" />

@@ -115,7 +115,7 @@ export default function CameraCapture({ onCapture, onClose }) {
         )}
       </div>
       {!error && (
-        <div className="relative flex items-center justify-center py-8 shrink-0">
+        <div className="relative flex items-center justify-center pt-8 pb-[calc(2rem+env(safe-area-inset-bottom))] shrink-0">
           {capturedImage ? (
             <div className="flex items-center justify-center gap-10">
               <button onClick={() => setCapturedImage(null)} className="flex flex-col items-center gap-1.5 text-white">

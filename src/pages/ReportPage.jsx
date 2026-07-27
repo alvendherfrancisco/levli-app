@@ -108,7 +108,7 @@ export default function ReportPage() {
       doc.text(`${s.dose} mg`, 118, y);
       doc.text((s.site || "").substring(0, 18), 133, y);
       const p = s.pain || 0;
-      doc.setTextColor(p === 0 ? 34 : p <= 3 ? 161 : 220, p === 0 ? 197 : p <= 3 ? 98 : 38, p === 0 ? 94 : p <= 3 ? 21 : 38);
+      doc.setTextColor(p === 0 ? 20 : p <= 3 ? 249 : 220, p === 0 ? 184 : p <= 3 ? 115 : 38, p === 0 ? 166 : p <= 3 ? 22 : 38);
       doc.text(String(p), 183, y);
       doc.setTextColor(60);
       y += 7;
@@ -219,7 +219,7 @@ export default function ReportPage() {
                       <td className="p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 max-w-[80px] truncate">{s.medication}</td>
                       <td className="p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 whitespace-nowrap">{s.dose}mg</td>
                       <td className="p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 max-w-[80px] truncate">{s.site}</td>
-                      <td className={`p-1.5 sm:p-2 font-medium whitespace-nowrap ${s.pain === 0 ? "text-green-600" : s.pain <= 3 ? "text-yellow-600" : "text-red-600"}`}>{s.pain}</td>
+                      <td className={`p-1.5 sm:p-2 font-medium whitespace-nowrap ${s.pain === 0 ? "text-teal-600" : s.pain <= 3 ? "text-orange-600" : "text-red-600"}`}>{s.pain}</td>
                     </tr>
                   ))}
                 </tbody>
