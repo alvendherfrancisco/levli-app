@@ -6,9 +6,9 @@ import RedFlagBanner from "@/components/RedFlagBanner";
 import { toast } from "sonner";
 
 const MOODS = [
-  { label: "Feeling Excellent", emoji: "😊", lightCls: "bg-teal-100 text-teal-700 border-teal-300", darkBg: "rgba(20,184,166,0.15)",  darkBorder: "rgba(20,184,166,0.3)",  darkText: "#2dd4bf" },
-  { label: "Feeling Good",      emoji: "🙂", lightCls: "bg-teal-50 text-teal-600 border-teal-200",  darkBg: "rgba(20,184,166,0.10)",  darkBorder: "rgba(20,184,166,0.25)", darkText: "#5eead4" },
-  { label: "Feeling Neutral",   emoji: "😐", lightCls: "bg-indigo-100 text-indigo-700 border-indigo-300", darkBg: "rgba(99,102,241,0.15)",darkBorder: "rgba(99,102,241,0.3)", darkText: "#818cf8" },
+  { label: "Feeling Excellent", emoji: "😊", lightCls: "bg-green-100 text-green-700 border-green-300", darkBg: "rgba(34,197,94,0.15)",  darkBorder: "rgba(34,197,94,0.3)",  darkText: "#4ade80" },
+  { label: "Feeling Good",      emoji: "🙂", lightCls: "bg-green-50 text-green-600 border-green-200",  darkBg: "rgba(34,197,94,0.10)",  darkBorder: "rgba(34,197,94,0.25)", darkText: "#86efac" },
+  { label: "Feeling Neutral",   emoji: "😐", lightCls: "bg-yellow-100 text-yellow-700 border-yellow-300", darkBg: "rgba(234,179,8,0.15)",darkBorder: "rgba(234,179,8,0.3)", darkText: "#fde047" },
   { label: "Feeling Low",       emoji: "😔", lightCls: "bg-orange-100 text-orange-700 border-orange-300", darkBg: "rgba(249,115,22,0.15)",darkBorder: "rgba(249,115,22,0.3)",darkText: "#fb923c" },
   { label: "Feeling Bad",       emoji: "😞", lightCls: "bg-red-100 text-red-700 border-red-300",     darkBg: "rgba(239,68,68,0.15)",  darkBorder: "rgba(239,68,68,0.3)",   darkText: "#f87171" },
 ];
@@ -64,13 +64,13 @@ export default function JournalEntryModal({ open, onClose, onSave, onDelete, ini
   };
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
       <div className="relative bg-white dark:bg-[#0f1117] rounded-t-3xl sm:rounded-3xl w-full sm:max-w-[520px] max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom sm:mx-4 dark:shadow-[0_-8px_40px_rgba(0,0,0,0.5)]">
         <div className="flex justify-center pt-3 pb-1">
           <div className="w-10 h-1 bg-gray-300 dark:bg-white/20 rounded-full" />
         </div>
-        <div className="sticky top-0 sm:static z-20 bg-white dark:bg-[#0f1117] sm:bg-transparent sm:dark:bg-transparent flex items-center justify-between px-5 pb-4">
+        <div className="flex items-center justify-between px-5 pb-4">
           <h2 className="text-xl font-bold text-gray-900 dark:text-[#E8E9F0]">{initialEntry ? "Edit Entry" : "New Journal Entry"}</h2>
           <div className="flex items-center gap-3">
             {onDelete && <button onClick={onDelete}><Trash2 size={20} className="text-red-400" /></button>}
@@ -135,7 +135,7 @@ export default function JournalEntryModal({ open, onClose, onSave, onDelete, ini
           <div className="px-5 pb-3"><RedFlagBanner text={text} medication={recentMed} /></div>
         )}
 
-        <div className="sticky bottom-0 sm:static z-20 px-5 pt-2 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:pb-8 bg-white dark:bg-[#0f1117] sm:bg-transparent sm:dark:bg-transparent border-t border-gray-100 dark:border-white/[0.08] sm:border-0">
+        <div className="sticky bottom-0 px-5 pb-8 pt-2 bg-white dark:bg-[#0f1117] border-t border-gray-100 dark:border-white/[0.08]">
           <button onClick={handleSave} disabled={!text.trim()}
             className="w-full py-3.5 bg-indigo-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-50">
             <Save size={16} /> {initialEntry ? "Update Entry" : "Save Entry"}

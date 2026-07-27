@@ -15,7 +15,7 @@ function numericOnly(value) {
 // ── Shared dark-mode dialog shell ───────────────────────────────────────────
 function ModalShell({ onClose, children, bottom = false }) {
   return (
-    <div className={`fixed inset-0 z-[60] flex ${bottom ? "items-end" : "items-center"} justify-center px-6`}>
+    <div className={`fixed inset-0 z-50 flex ${bottom ? "items-end" : "items-center"} justify-center px-6`}>
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
       {children}
     </div>
@@ -112,7 +112,7 @@ function ProgressModal({ open, onClose, value, dayKey, onSave, onDelete }) {
   return (
     <ModalShell onClose={onClose} bottom>
       <div className="relative bg-white dark:bg-[#0f1117] rounded-t-3xl w-full max-w-lg max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom dark:shadow-[0_-8px_40px_rgba(0,0,0,0.5)] dark:border-t dark:border-white/[0.07]">
-        <div className="sticky top-0 sm:static z-20 bg-white dark:bg-[#0f1117] sm:bg-transparent sm:dark:bg-transparent flex items-center justify-between px-5 pt-5 pb-4">
+        <div className="flex items-center justify-between px-5 pt-5 pb-4">
           <h2 className="text-xl font-bold text-gray-900 dark:text-[#E8E9F0]">{hasExisting ? "Edit Progress Picture" : "Add Progress Picture"}</h2>
           <button onClick={onClose}><X size={22} className="text-gray-400" /></button>
         </div>
@@ -156,7 +156,7 @@ function ProgressModal({ open, onClose, value, dayKey, onSave, onDelete }) {
         {showCamera && <CameraCapture onCapture={handleCameraCapture} onClose={() => setShowCamera(false)} />}
         <div className="border-t border-gray-100 dark:border-white/[0.08]" />
         {hasExisting ? (
-          <div className="sticky bottom-0 sm:static z-20 flex gap-3 px-5 pt-5 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:pb-8 bg-white dark:bg-[#0f1117] sm:bg-transparent sm:dark:bg-transparent border-t border-gray-100 dark:border-white/[0.08] sm:border-0">
+          <div className="sticky bottom-0 flex gap-3 px-5 pt-5 pb-8 bg-white dark:bg-[#0f1117] border-t border-gray-100 dark:border-white/[0.08]">
             <button onClick={() => { onDelete(); onClose(); }}
               className="flex-1 py-3 bg-red-500/10 dark:bg-red-500/10 text-red-500 dark:text-red-400 border border-red-500/20 rounded-xl font-semibold flex items-center justify-center gap-2">
               <Trash2 size={18} /> Delete
@@ -167,7 +167,7 @@ function ProgressModal({ open, onClose, value, dayKey, onSave, onDelete }) {
             </button>
           </div>
         ) : (
-          <div className="sticky bottom-0 sm:static z-20 px-5 pt-5 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:pb-8 bg-white dark:bg-[#0f1117] sm:bg-transparent sm:dark:bg-transparent border-t border-gray-100 dark:border-white/[0.08] sm:border-0">
+          <div className="sticky bottom-0 px-5 pt-5 pb-8 bg-white dark:bg-[#0f1117] border-t border-gray-100 dark:border-white/[0.08]">
             <button disabled={uploading || !imgUrl || !photoDate} onClick={() => { if (imgUrl) { onSave(imgUrl, photoDate); onClose(); } }}
               className={`w-full py-3.5 rounded-xl font-semibold flex items-center justify-center gap-2 bg-indigo-600 text-white ${!imgUrl || uploading ? "opacity-60" : ""}`}>
               <Save size={18} /> Save

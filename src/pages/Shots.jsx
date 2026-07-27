@@ -49,8 +49,8 @@ export default function Shots() {
           </div>
           <div className="bg-white dark:bg-gray-900 rounded-xl p-3 shadow-sm border border-gray-100 dark:border-gray-800">
             <div className="flex items-center gap-1.5 mb-1">
-              <div className="w-6 h-6 rounded-lg bg-orange-100 dark:bg-orange-900 flex items-center justify-center flex-shrink-0">
-                <Clock size={12} className="text-orange-600 dark:text-orange-400" />
+              <div className="w-6 h-6 rounded-lg bg-yellow-100 dark:bg-yellow-900 flex items-center justify-center flex-shrink-0">
+                <Clock size={12} className="text-yellow-600 dark:text-yellow-400" />
               </div>
               <span className="text-xs text-gray-400 dark:text-gray-500">Last Dose</span>
             </div>
@@ -63,8 +63,8 @@ export default function Shots() {
           </div>
           <div className="bg-white dark:bg-gray-900 rounded-xl p-3 shadow-sm border border-gray-100 dark:border-gray-800">
             <div className="flex items-center gap-1.5 mb-1">
-              <div className="w-6 h-6 rounded-lg bg-teal-100 dark:bg-teal-900 flex items-center justify-center flex-shrink-0">
-                <CalendarCheck size={12} className="text-teal-600 dark:text-teal-400" />
+              <div className="w-6 h-6 rounded-lg bg-green-100 dark:bg-green-900 flex items-center justify-center flex-shrink-0">
+                <CalendarCheck size={12} className="text-green-600 dark:text-green-400" />
               </div>
               <span className="text-xs text-gray-400 dark:text-gray-500">Next Shot</span>
             </div>

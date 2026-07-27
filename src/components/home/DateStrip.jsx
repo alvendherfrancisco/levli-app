@@ -42,8 +42,8 @@ export default function DateStrip({ selectedDate, onSelectDate }) {
             <span className={`text-[10px] sm:text-[11px] ${isSelected ? "text-indigo-200 dark:text-indigo-200" : "text-gray-400 dark:text-[#9A9DAE]"}`}>{monthNames[d.getMonth()]}</span>
             {hasShot && (
               <div
-                className="w-1.5 h-1.5 rounded-full bg-teal-400 mt-0.5"
-                style={{ boxShadow: "0 0 6px 2px rgba(45,212,191,0.5)" }}
+                className="w-1.5 h-1.5 rounded-full bg-green-400 mt-0.5"
+                style={{ boxShadow: "0 0 6px 2px rgba(74,222,128,0.5)" }}
               />
             )}
           </button>

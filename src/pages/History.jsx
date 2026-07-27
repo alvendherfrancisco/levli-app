@@ -87,7 +87,7 @@ export default function History() {
                   isSelected ? "border-2 border-indigo-500 text-indigo-600 dark:bg-indigo-500/10" : isToday ? "text-indigo-600" : "text-gray-700 dark:text-gray-300"
                 }`}>
                   {day}
-                  {hasShot && <div className="w-2 h-2 bg-teal-500 rounded-full mt-0.5" style={{boxShadow:"0 0 6px 2px rgba(45,212,191,0.5)"}} />}
+                  {hasShot && <div className="w-2 h-2 bg-green-500 rounded-full mt-0.5" style={{boxShadow:"0 0 6px 2px rgba(74,222,128,0.5)"}} />}
                 </button>
               );
             })}

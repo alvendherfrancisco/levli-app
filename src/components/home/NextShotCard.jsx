@@ -32,8 +32,8 @@ export default function NextShotCard() {
   const daysLate = Math.max(0, -daysLeft);
   const isLate = daysLeft < 0;
   const isRetitration = missedRule && missedRule.retitrationDays && daysLate > missedRule.retitrationDays;
-  const ringColor = isDue ? "#14B8A6" : "#6366F1";
-  const ringGlow = isDue ? "0 0 14px 3px rgba(20,184,166,0.35)" : "0 0 14px 3px rgba(99,102,241,0.35)";
+  const ringColor = isDue ? "#22C55E" : "#6366F1";
+  const ringGlow = isDue ? "0 0 14px 3px rgba(34,197,94,0.35)" : "0 0 14px 3px rgba(99,102,241,0.35)";
 
   let daysLabel;
   if (isDue) daysLabel = "Today!";
