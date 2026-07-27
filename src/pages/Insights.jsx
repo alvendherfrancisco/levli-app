@@ -209,66 +209,66 @@ export default function Insights() {
   const heightMissing = heightM === 0 && latestWeight != null;
 
   return (
-    <div className="bg-[#FAFAFA] min-h-screen w-full">
-      <div className="sticky top-0 z-30 bg-[#FAFAFA] w-full flex items-center justify-between px-5 pt-6 pb-4">
-        <h1 className="text-2xl font-bold text-gray-800">Insights</h1>
-        <Link to="/settings"><div className="w-9 h-9 rounded-full border border-gray-200 bg-white flex items-center justify-center active:scale-95 transition-all"><Settings size={18} className="text-gray-500" /></div></Link>
+    <div className="bg-gray-50 dark:bg-gray-950 min-h-screen w-full">
+      <div className="sticky top-0 z-30 bg-gray-50 dark:bg-gray-950 w-full flex items-center justify-between px-5 pt-6 pb-4">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Insights</h1>
+        <Link to="/settings"><Settings size={22} className="text-gray-600 dark:text-gray-400" /></Link>
       </div>
 
       <div className="max-w-3xl mx-auto">
         {/* Weight Change Panel */}
-        <div className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80 overflow-hidden">
+        <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
           <div className="flex items-center gap-2 mb-1">
-            <TrendingDown size={18} className="text-indigo-500" />
-            <h3 className="font-bold text-gray-800 text-lg">Weight Change</h3>
+            <TrendingDown size={18} className="text-teal-600" />
+            <h3 className="font-bold text-gray-900 dark:text-white text-lg">Weight Change</h3>
           </div>
-          <div className="border-b-2 border-indigo-500 w-12 mb-3" />
+          <div className="border-b-2 border-teal-500 w-12 mb-3" />
 
           <div className="flex items-center gap-1 mb-3 flex-wrap">
             {Object.keys(WEIGHT_RANGES).map((r) => (
               <button key={r} onClick={() => setWeightRange(r)}
-                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                   weightRange === r
-                    ? "bg-indigo-600 text-white"
-                    : "bg-gray-100 text-gray-400"
+                    ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600"
+                    : "text-gray-400 dark:text-gray-500"
                 }`}>{r}</button>
             ))}
           </div>
 
           {/* Summary chips */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
-            <div className="bg-green-50 rounded-xl p-2.5 text-center min-w-0">
-              <TrendingDown size={14} className="text-green-500 mx-auto mb-1" style={{filter:"drop-shadow(0 0 6px rgba(34,197,94,0.4))"}} />
-              <p className="text-gray-500 text-[11px]">Weight Loss</p>
-              <p className="font-bold text-green-600 text-sm">
+            <div className="bg-green-50 dark:bg-green-500/10 rounded-xl p-2.5 text-center min-w-0 border border-transparent dark:border-green-500/15">
+              <TrendingDown size={14} className="text-green-500 dark:text-green-400 mx-auto mb-1" style={{filter:"drop-shadow(0 0 6px rgba(34,197,94,0.4))"}} />
+              <p className="text-gray-500 dark:text-[#9A9DAE] text-[11px]">Weight Loss</p>
+              <p className="font-bold text-green-600 dark:text-green-400 text-sm">
                 {weightLoss != null ? `${weightLoss >= 0 ? "-" : "+"}${Math.abs(weightLoss).toFixed(1)} ${weightUnit}` : "—"}
               </p>
             </div>
-            <div className="bg-indigo-50 rounded-xl p-2.5 text-center min-w-0">
-              <Zap size={14} className="text-indigo-500 mx-auto mb-1" style={{filter:"drop-shadow(0 0 6px rgba(99,102,241,0.4))"}} />
-              <p className="text-gray-500 text-[11px]">% Change</p>
-              <p className="font-bold text-indigo-600 text-sm">
+            <div className="bg-indigo-50 dark:bg-indigo-500/10 rounded-xl p-2.5 text-center min-w-0 border border-transparent dark:border-indigo-500/15">
+              <Zap size={14} className="text-indigo-500 dark:text-indigo-400 mx-auto mb-1" style={{filter:"drop-shadow(0 0 6px rgba(99,102,241,0.4))"}} />
+              <p className="text-gray-500 dark:text-[#9A9DAE] text-[11px]">% Change</p>
+              <p className="font-bold text-indigo-600 dark:text-indigo-400 text-sm">
                 {pctWeightChange != null ? `${pctWeightChange >= 0 ? "-" : "+"}${Math.abs(pctWeightChange)}%` : "—"}
               </p>
             </div>
-            <div className="bg-purple-50 rounded-xl p-2.5 text-center min-w-0">
-              <Clock size={14} className="text-purple-500 mx-auto mb-1" />
-              <p className="text-gray-500 text-[11px]">Rate/Week</p>
-              <p className="font-bold text-purple-600 text-sm">
+            <div className="bg-purple-50 dark:bg-purple-500/10 rounded-xl p-2.5 text-center min-w-0 border border-transparent dark:border-purple-500/15">
+              <Clock size={14} className="text-purple-500 dark:text-purple-400 mx-auto mb-1" />
+              <p className="text-gray-500 dark:text-[#9A9DAE] text-[11px]">Rate/Week</p>
+              <p className="font-bold text-purple-600 dark:text-purple-400 text-sm">
                 {ratePerWeek != null ? `${ratePerWeek >= 0 ? "-" : "+"}${Math.abs(ratePerWeek).toFixed(1)} ${weightUnit}` : "—"}
               </p>
             </div>
-            <div className="bg-orange-50 rounded-xl p-2.5 text-center min-w-0">
-              <Gauge size={14} className="text-orange-500 mx-auto mb-1" style={{filter:"drop-shadow(0 0 6px rgba(249,115,22,0.4))"}} />
-              <p className="text-gray-500 text-[11px]">Current BMI</p>
-              <p className="font-bold text-orange-600 text-sm">
+            <div className="bg-orange-50 dark:bg-orange-500/10 rounded-xl p-2.5 text-center min-w-0 border border-transparent dark:border-orange-500/15">
+              <Gauge size={14} className="text-orange-500 dark:text-orange-400 mx-auto mb-1" style={{filter:"drop-shadow(0 0 6px rgba(249,115,22,0.4))"}} />
+              <p className="text-gray-500 dark:text-[#9A9DAE] text-[11px]">Current BMI</p>
+              <p className="font-bold text-orange-600 dark:text-orange-400 text-sm">
                 {bmi || (heightMissing ? <span className="text-[10px] font-medium">Add height in Profile</span> : "—")}
               </p>
             </div>
           </div>
 
           {bmi && (
-            <p className="text-[11px] text-gray-400 mb-3">
+            <p className="text-[11px] text-gray-400 dark:text-gray-500 mb-3">
               BMI is a screening measure, not a diagnostic tool. It does not account for body composition.
             </p>
           )}
@@ -282,49 +282,49 @@ export default function Insights() {
                   <YAxis tick={{ fontSize: 10 }} stroke="#999" domain={["auto", "auto"]} width={36} />
                   <Tooltip
                     formatter={(v, name) => [`${v} ${weightUnit}`, name === "rollingAvg" ? "7-day avg" : "Weight"]}
-                    contentStyle={{ background: "rgba(31,41,55,0.95)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, color: "#fff", fontSize: 12 }}
+                    contentStyle={{ background: "rgba(20,22,32,0.95)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, color: "#E8E9F0" }}
                   />
-                  <Line type="monotone" dataKey="weight" stroke="#6366F1" strokeWidth={2} dot={{ fill: "#6366F1", r: 3 }} activeDot={{ r: 5 }} />
+                  <Line type="monotone" dataKey="weight" stroke="#14B8A6" strokeWidth={2} dot={{ fill: "#14B8A6", r: 3 }} activeDot={{ r: 5 }} />
                   <Line type="monotone" dataKey="rollingAvg" stroke="#8B5CF6" strokeWidth={2} strokeDasharray="4 4" dot={false} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
           ) : (
-            <div className="h-48 flex flex-col items-center justify-center bg-gray-50 rounded-xl gap-2">
-              <p className="text-sm text-gray-400 text-center px-4">
+            <div className="h-48 flex flex-col items-center justify-center bg-gray-50 dark:bg-white/[0.03] rounded-xl gap-2">
+              <p className="text-sm text-gray-400 dark:text-[#9A9DAE] text-center px-4">
                 {weightHistory.length === 0 ? "Log your weight in the Home tab to see trends here." : "Log at least 2 weight entries in this time range to see a chart."}
               </p>
             </div>
           )}
-          <p className="text-[11px] text-gray-400 mt-2">Solid line: daily entries · Dashed: 7-day rolling average</p>
+          <p className="text-[11px] text-gray-400 dark:text-[#9A9DAE] mt-2">Solid line: daily entries · Dashed: 7-day rolling average</p>
         </div>
 
         {/* Progress Pictures Panel */}
-        <div className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80">
+        <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
           <div className="flex items-center gap-2 mb-1">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-indigo-100">
-              <Camera size={16} className="text-indigo-500" />
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "rgba(20,184,166,0.13)" }}>
+              <Camera size={16} className="text-teal-500" />
             </div>
-            <h3 className="font-bold text-gray-800 text-lg">Progress Pictures</h3>
+            <h3 className="font-bold text-gray-900 dark:text-white text-lg">Progress Pictures</h3>
           </div>
-          <div className="border-b-2 border-indigo-500 w-12 mb-3" />
+          <div className="border-b-2 border-teal-500 w-12 mb-3" />
 
           {photosAsc.length > 0 && (
             <div className="grid grid-cols-3 gap-2 mb-4">
-              <div className="rounded-xl p-2.5 text-center bg-indigo-50 border border-indigo-100/50">
-                <Image size={14} className="text-indigo-400 mx-auto mb-1" />
-                <p className="text-[11px] text-gray-500">Total Photos</p>
-                <p className="font-bold text-indigo-500 text-sm">{photosAsc.length}</p>
+              <div className="rounded-xl p-2.5 text-center" style={{ background: "rgba(20,184,166,0.1)", border: "1px solid rgba(20,184,166,0.15)" }}>
+                <Image size={14} className="text-teal-400 mx-auto mb-1" />
+                <p className="text-[11px] text-gray-500 dark:text-[#9A9DAE]">Total Photos</p>
+                <p className="font-bold text-teal-500 dark:text-teal-400 text-sm">{photosAsc.length}</p>
               </div>
-              <div className="rounded-xl p-2.5 text-center bg-green-50 border border-green-100/50">
+              <div className="rounded-xl p-2.5 text-center" style={{ background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.15)" }}>
                 <Clock size={14} className="text-green-400 mx-auto mb-1" />
-                <p className="text-[11px] text-gray-500">Journey Days</p>
-                <p className="font-bold text-green-500 text-sm">{journeyDays}</p>
+                <p className="text-[11px] text-gray-500 dark:text-[#9A9DAE]">Journey Days</p>
+                <p className="font-bold text-green-500 dark:text-green-400 text-sm">{journeyDays}</p>
               </div>
-              <div className="rounded-xl p-2.5 text-center bg-amber-50 border border-amber-100/50">
+              <div className="rounded-xl p-2.5 text-center" style={{ background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.15)" }}>
                 <Camera size={14} className="text-amber-400 mx-auto mb-1" />
-                <p className="text-[11px] text-gray-500">Latest</p>
-                <p className="font-bold text-amber-500 text-sm">{latestPhotoDate ? latestPhotoDate.month : "—"}</p>
+                <p className="text-[11px] text-gray-500 dark:text-[#9A9DAE]">Latest</p>
+                <p className="font-bold text-amber-500 dark:text-amber-400 text-sm">{latestPhotoDate ? latestPhotoDate.month : "—"}</p>
               </div>
             </div>
           )}
@@ -332,12 +332,12 @@ export default function Insights() {
           {photosAsc.length === 0 ? (
             <div className="space-y-4">
               <button onClick={openAddPhoto}
-                className="w-full flex items-center gap-3 rounded-xl p-4 text-left bg-indigo-50 border border-indigo-100/50 active:scale-[0.99] transition-transform">
-                <Camera size={22} className="text-indigo-500 flex-shrink-0" />
-                <p className="text-indigo-500 font-medium text-sm">No progress pictures yet. Tap to add your first photo!</p>
+                className="w-full flex items-center gap-3 rounded-xl p-4 text-left" style={{ background: "rgba(20,184,166,0.1)", border: "1px solid rgba(20,184,166,0.25)" }}>
+                <Camera size={22} className="text-teal-500 flex-shrink-0" />
+                <p className="text-teal-500 font-medium text-sm">No progress pictures yet. Tap to add your first photo!</p>
               </button>
               <button onClick={openAddPhoto}
-                className="w-full py-3.5 bg-indigo-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 active:scale-95 transition-all text-sm shadow-lg shadow-indigo-600/20">
+                className="w-full py-3.5 bg-teal-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-teal-700 transition-colors text-sm">
                 <Plus size={18} /> Add Picture
               </button>
             </div>
@@ -356,8 +356,8 @@ export default function Insights() {
                     <>
                       <ProgressPhotoCard photo={prevDayPhoto} dateLabel={formatPhotoDate(prevDayPhoto.day_key)} weightLabel={getWeightLabel(prevDayPhoto.day_key)} tag={null} onClick={() => openEditPhoto(prevDayPhoto)} />
                       <div className="flex flex-col items-center gap-0.5 flex-shrink-0">
-                        <ArrowRight size={16} className="text-indigo-500" />
-                        <span className="text-[10px] sm:text-xs text-indigo-400 whitespace-nowrap">{gapDays}d</span>
+                        <ArrowRight size={16} sm={18} className="text-teal-500" />
+                        <span className="text-[10px] sm:text-xs text-teal-400 whitespace-nowrap">{gapDays}d</span>
                       </div>
                     </>
                   )}
@@ -366,12 +366,12 @@ export default function Insights() {
               )}
               <div className="flex gap-3">
                 <button onClick={openAddPhoto}
-                  className="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 active:scale-95 transition-all text-sm shadow-lg shadow-indigo-600/20">
+                  className="flex-1 py-3 bg-teal-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-teal-700 transition-colors text-sm">
                   <Plus size={16} /> Add Photo
                 </button>
                 {photosAsc.length >= 2 && (
                   <button onClick={() => setViewAllPhotos((v) => !v)}
-                    className="flex-1 py-3 bg-gray-100 text-indigo-600 rounded-xl font-semibold flex items-center justify-center gap-2 active:scale-95 transition-all text-sm">
+                    className="flex-1 py-3 bg-gray-100 dark:bg-white/[0.07] text-teal-600 dark:text-teal-400 rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-gray-200 dark:hover:bg-white/[0.12] transition-colors text-sm">
                     {viewAllPhotos ? <><Minimize2 size={16} /> Collapse</> : <><Maximize2 size={16} /> View All</>}
                   </button>
                 )}
@@ -384,15 +384,13 @@ export default function Insights() {
         </div>
 
         {/* Medication Exposure Panel */}
-        <div className="mx-4 mb-4 bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100/80">
+        <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
           <div className="flex items-start justify-between mb-1">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center">
-                <Syringe size={16} className="text-indigo-500" />
-              </div>
+              <Syringe size={18} className="text-indigo-600" />
               <div>
-                <h3 className="font-bold text-gray-800 text-lg">Modelled Medication Exposure</h3>
-                <p className="text-xs text-indigo-400">Illustrative relative-exposure estimate (not a blood-level measurement).</p>
+                <h3 className="font-bold text-gray-900 dark:text-white text-lg">Modelled Medication Exposure</h3>
+                <p className="text-xs text-indigo-500">Illustrative relative-exposure estimate (not a blood-level measurement).</p>
               </div>
             </div>
             <HelpCircle size={18} className="text-indigo-400" />
@@ -402,16 +400,16 @@ export default function Insights() {
           <div className="flex items-center gap-2 mb-4 flex-wrap">
             {Object.keys(MED_RANGES).map((r) => (
               <button key={r} onClick={() => setMedRange(r)}
-                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-                  medRange === r ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-400"
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                  medRange === r ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600" : "text-gray-400 dark:text-gray-500"
                 }`}>{r}</button>
             ))}
           </div>
 
           {shots.length > 0 ? (
             medLevel.disabled ? (
-              <div className="h-48 flex items-center justify-center bg-gray-50 rounded-xl px-4">
-                <p className="text-sm text-gray-400 text-center">Exposure estimation is not available for this medication. This appears for investigational or unsupported products.</p>
+              <div className="h-48 flex items-center justify-center bg-gray-50 dark:bg-white/[0.03] rounded-xl px-4">
+                <p className="text-sm text-gray-400 dark:text-[#9A9DAE] text-center">Exposure estimation is not available for this medication. This appears for investigational or unsupported products.</p>
               </div>
             ) : (
               <>
@@ -421,7 +419,7 @@ export default function Insights() {
                       <CartesianGrid strokeDasharray="3 3" stroke="rgba(150,150,150,0.15)" />
                       <XAxis dataKey="day" tick={{ fontSize: 10 }} stroke="#999" interval={Math.floor(medLevel.data.length / 5)} />
                       <YAxis tick={{ fontSize: 10 }} stroke="#999" width={36} />
-                      <Tooltip formatter={(v, name) => [`${v} relative units`, name]} contentStyle={{ background: "rgba(31,41,55,0.95)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, color: "#fff", fontSize: 12 }} />
+                      <Tooltip formatter={(v, name) => [`${v} relative units`, name]} contentStyle={{ background: "rgba(20,22,32,0.95)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, color: "#E8E9F0" }} />
                       {medLevel.classes.map((cls) => (
                         <Area key={cls} type="monotone" dataKey={cls} stroke={CLASS_COLORS[cls] || "#6366F1"} fill={CLASS_COLORS[cls] || "#6366F1"} fillOpacity={0.08} strokeWidth={2} />
                       ))}
@@ -431,34 +429,34 @@ export default function Insights() {
                 {/* Steady-state & accumulation metrics */}
                 {medLevel.steadyState != null && (
                   <div className="grid grid-cols-2 gap-2 mt-3">
-                    <div className="bg-indigo-50 rounded-xl p-2.5 text-center">
-                      <p className="text-[11px] text-gray-500">Steady-state reached</p>
-                      <p className="font-bold text-indigo-600 text-sm">{Math.round(medLevel.steadyState * 100)}%</p>
-                      <p className="text-[10px] text-gray-400">of {medLevel.primaryClass} ({medLevel.interval}d interval)</p>
+                    <div className="bg-indigo-50 dark:bg-indigo-500/10 rounded-xl p-2.5 text-center border border-transparent dark:border-indigo-500/15">
+                      <p className="text-[11px] text-gray-500 dark:text-[#9A9DAE]">Steady-state reached</p>
+                      <p className="font-bold text-indigo-600 dark:text-indigo-400 text-sm">{Math.round(medLevel.steadyState * 100)}%</p>
+                      <p className="text-[10px] text-gray-400 dark:text-gray-500">of {medLevel.primaryClass} ({medLevel.interval}d interval)</p>
                     </div>
-                    <div className="bg-teal-50 rounded-xl p-2.5 text-center">
-                      <p className="text-[11px] text-gray-500">Accumulation ratio</p>
-                      <p className="font-bold text-teal-600 text-sm">{medLevel.accumRatio != null ? medLevel.accumRatio.toFixed(2) : "—"}</p>
-                      <p className="text-[10px] text-gray-400">at steady state vs single dose</p>
+                    <div className="bg-teal-50 dark:bg-teal-500/10 rounded-xl p-2.5 text-center border border-transparent dark:border-teal-500/15">
+                      <p className="text-[11px] text-gray-500 dark:text-[#9A9DAE]">Accumulation ratio</p>
+                      <p className="font-bold text-teal-600 dark:text-teal-400 text-sm">{medLevel.accumRatio != null ? medLevel.accumRatio.toFixed(2) : "—"}</p>
+                      <p className="text-[10px] text-gray-400 dark:text-gray-500">at steady state vs single dose</p>
                     </div>
                   </div>
                 )}
               </>
             )
           ) : (
-            <div className="h-48 flex items-center justify-center bg-gray-50 rounded-xl">
-              <p className="text-sm text-gray-400">Log your first shot to see relative exposure here.</p>
+            <div className="h-48 flex items-center justify-center bg-gray-50 dark:bg-white/[0.03] rounded-xl">
+              <p className="text-sm text-gray-400 dark:text-[#9A9DAE]">Log your first shot to see relative exposure here.</p>
             </div>
           )}
-          <p className="text-xs text-gray-400 text-center mt-2">Time vs modelled relative exposure (illustrative)</p>
-          <p className="text-[11px] text-gray-400 text-center mt-1 px-2">Illustrative estimate only — not a blood-level measurement. Do not use it to adjust your dose. Confirm any decisions with your prescriber.</p>
-          <p className="text-[10px] text-gray-300 text-center mt-1">Calculation version: {PK_CALCULATION_VERSION}</p>
+          <p className="text-xs text-gray-400 dark:text-[#9A9DAE] text-center mt-2">Time vs modelled relative exposure (illustrative)</p>
+          <p className="text-[11px] text-gray-400 dark:text-[#9A9DAE] text-center mt-1 px-2">Illustrative estimate only — not a blood-level measurement. Do not use it to adjust your dose. Confirm any decisions with your prescriber.</p>
+          <p className="text-[10px] text-gray-300 dark:text-gray-600 text-center mt-1">Calculation version: {PK_CALCULATION_VERSION}</p>
           {!medLevel.disabled && medLevel.classes.length > 0 && (
             <div className="flex items-center justify-center gap-3 mt-2 flex-wrap">
               {medLevel.classes.map((cls) => (
                 <div key={cls} className="flex items-center gap-1.5">
                   <div className="w-4 h-0.5 rounded" style={{ background: CLASS_COLORS[cls] || "#6366F1" }} />
-                  <span className="text-xs text-gray-500">{cls}</span>
+                  <span className="text-xs text-gray-500 dark:text-[#9A9DAE]">{cls}</span>
                 </div>
               ))}
             </div>
