@@ -135,7 +135,7 @@ export default function SideEffectsModal({ open, onClose, dayKey }) {
             <div className="flex gap-2">
               {SEVERITIES.map((s) => (
                 <button key={s} onClick={() => setSeverity(s)}
-                  className={`flex-1 py-2 rounded-xl text-sm font-medium border capitalize transition-colors ${severity === s ? "bg-teal-100 dark:bg-teal-500/20 text-teal-700 dark:text-teal-300 border-teal-300 dark:border-teal-500/30" : "bg-white dark:bg-white/[0.05] text-gray-500 dark:text-[#9A9DAE] border-gray-200 dark:border-white/[0.1]"}`}>
+                  className={`flex-1 py-2 rounded-xl text-sm font-medium border capitalize transition-colors ${severity === s ? "bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 border-indigo-300 dark:border-indigo-500/30" : "bg-white dark:bg-white/[0.05] text-gray-500 dark:text-[#9A9DAE] border-gray-200 dark:border-white/[0.1]"}`}>
                   {s}
                 </button>
               ))}
@@ -143,7 +143,7 @@ export default function SideEffectsModal({ open, onClose, dayKey }) {
           </div>
 
           <button onClick={addEffect} disabled={!selectedEffect}
-            className="w-full py-2.5 bg-teal-600/10 dark:bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-200 dark:border-teal-500/30 rounded-xl font-semibold text-sm hover:bg-teal-500/20 transition-colors disabled:opacity-50">
+            className="w-full py-2.5 bg-indigo-600/10 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-500/30 rounded-xl font-semibold text-sm hover:bg-indigo-500/20 transition-colors disabled:opacity-50">
             + Add to List
           </button>
 
@@ -151,9 +151,9 @@ export default function SideEffectsModal({ open, onClose, dayKey }) {
           {dayEvents.length > 0 && (
             <div className="flex flex-wrap gap-2">
               {dayEvents.map((e) => (
-                <span key={e.id} className="flex items-center gap-1 bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/25 rounded-full px-3 py-1 text-sm">
+                <span key={e.id} className="flex items-center gap-1 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/25 rounded-full px-3 py-1 text-sm">
                   {e.symptom} <span className="text-xs opacity-60">({e.severity})</span>
-                  <button onClick={() => handleDelete(e.id)} className="ml-1 text-teal-400 hover:text-teal-300 dark:hover:text-teal-200">×</button>
+                  <button onClick={() => handleDelete(e.id)} className="ml-1 text-indigo-400 hover:text-indigo-300 dark:hover:text-indigo-200">×</button>
                 </span>
               ))}
             </div>
@@ -172,7 +172,7 @@ export default function SideEffectsModal({ open, onClose, dayKey }) {
             <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">Additional Notes</label>
             <textarea value={notes} onChange={(e) => setNotes(e.target.value)}
               placeholder="Any other observations..."
-              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-sm resize-none h-20 outline-none focus:border-teal-300" />
+              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-sm resize-none h-20 outline-none focus:border-indigo-300" />
           </div>
         </div>
 
@@ -201,15 +201,15 @@ export default function SideEffectsModal({ open, onClose, dayKey }) {
           <div className="flex flex-wrap gap-2">
             {PHARMACOVIGILANCE_LINKS.map((link) => (
               <a key={link.url} href={link.url} target="_blank" rel="noopener noreferrer"
-                className="flex items-center gap-1 text-xs text-teal-600 dark:text-teal-400 border border-teal-200 dark:border-teal-500/30 rounded-lg px-3 py-1.5 hover:bg-teal-50 dark:hover:bg-teal-500/10">
+                className="flex items-center gap-1 text-xs text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-500/30 rounded-lg px-3 py-1.5 hover:bg-indigo-50 dark:hover:bg-indigo-500/10">
                 {link.label} <ExternalLink size={12} />
               </a>
             ))}
           </div>
         </div>
 
-        <div className="px-5 pb-8 pt-2">
-          <button onClick={onClose} className="w-full py-3.5 bg-teal-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2">
+        <div className="sticky bottom-0 px-5 pb-8 pt-2 bg-white dark:bg-[#0f1117] border-t border-gray-100 dark:border-white/[0.08]">
+          <button onClick={onClose} className="w-full py-3.5 bg-indigo-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2">
             <Save size={16} /> Done
           </button>
         </div>

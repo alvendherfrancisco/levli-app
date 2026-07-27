@@ -6,13 +6,13 @@ import { useAppState } from "@/lib/AppState";
 import { toast } from "sonner";
 
 const CATEGORY_CONFIG = {
-  "Mood":         { icon: <Smile size={20} />,         lightBg: "bg-teal-100",  darkBg: "rgba(20,184,166,0.13)",   color: "#2DD4BF" },
+  "Mood":         { icon: <Smile size={20} />,         lightBg: "bg-indigo-100",  darkBg: "rgba(20,184,166,0.13)",   color: "#2DD4BF" },
   "General Note": { icon: <FileText size={20} />,      lightBg: "bg-indigo-100",   darkBg: "rgba(99,102,241,0.13)",  color: "#818CF8" },
   "Side Effect":  { icon: <AlertTriangle size={20} />, lightBg: "bg-red-100",    darkBg: "rgba(239,68,68,0.13)",   color: "#F87171" },
   "Energy":       { icon: <Zap size={20} />,           lightBg: "bg-indigo-100", darkBg: "rgba(99,102,241,0.13)",  color: "#818CF8" },
   "Milestone":    { icon: <Star size={20} />,          lightBg: "bg-orange-100", darkBg: "rgba(249,115,22,0.13)",   color: "#FB923C" },
   "Food":         { icon: <FileText size={20} />,      lightBg: "bg-orange-100", darkBg: "rgba(249,115,22,0.13)",  color: "#FB923C" },
-  "Exercise":     { icon: <Zap size={20} />,           lightBg: "bg-teal-100",   darkBg: "rgba(20,184,166,0.13)",  color: "#2DD4BF" },
+  "Exercise":     { icon: <Zap size={20} />,           lightBg: "bg-indigo-100",   darkBg: "rgba(20,184,166,0.13)",  color: "#2DD4BF" },
 };
 const ALL_CATEGORIES = ["All", "Mood", "General Note", "Side Effect", "Energy", "Milestone", "Food", "Exercise"];
 
@@ -53,7 +53,7 @@ export default function Journal() {
 
   return (
     <div className="min-h-screen w-full">
-      <div className="sticky top-0 z-30 bg-gray-50 dark:bg-gray-950 w-full flex items-center justify-between px-5 pt-6 pb-4">
+      <div className="sticky top-0 z-30 bg-white dark:bg-gray-950 w-full flex items-center justify-between px-5 pt-6 pb-4">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Journal</h1>
         <div className="flex items-center gap-3">
           <button onClick={openNew}><Plus size={22} className="text-gray-600 dark:text-gray-400" /></button>
@@ -62,11 +62,11 @@ export default function Journal() {
       </div>
 
       {/* Category filter chips */}
-      <div className="max-w-3xl mx-auto px-4 mb-3 flex flex-wrap gap-2">
+      <div className="max-w-3xl mx-auto pt-4 px-4 mb-3 flex flex-wrap gap-2">
         {ALL_CATEGORIES.map((cat) =>
         <button key={cat} onClick={() => setFilterCat(cat)}
         className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap border transition-colors ${
-        filterCat === cat ? "bg-teal-600 text-white border-teal-600" : "bg-white dark:bg-gray-900 text-gray-500 dark:text-[#9A9DAE] border-gray-200 dark:border-gray-700"}`
+        filterCat === cat ? "bg-indigo-600 text-white border-indigo-600" : "bg-white dark:bg-gray-900 text-gray-500 dark:text-[#9A9DAE] border-gray-200 dark:border-gray-700"}`
         }>
             {cat}
           </button>
@@ -77,12 +77,12 @@ export default function Journal() {
         {filtered.length === 0 ?
         <div className="px-4">
             <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-gray-800 text-center">
-              <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 bg-teal-100 dark:bg-teal-500/15">
-                <BookOpen size={36} className="text-teal-500 dark:text-teal-400" />
+              <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 bg-indigo-100 dark:bg-indigo-500/15">
+                <BookOpen size={36} className="text-indigo-500 dark:text-indigo-400" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">No Journal Entries</h3>
               <p className="text-sm text-gray-400 mb-4">Record your thoughts, symptoms, and medication experiences.</p>
-              <button onClick={openNew} className="px-5 py-3 bg-teal-600 text-white rounded-xl font-semibold flex items-center gap-2 mx-auto">
+              <button onClick={openNew} className="px-5 py-3 bg-indigo-600 text-white rounded-xl font-semibold flex items-center gap-2 mx-auto">
                 <Plus size={18} /> Add Journal Entry
               </button>
             </div>

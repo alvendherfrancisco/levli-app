@@ -45,7 +45,7 @@ export default function Login() {
   return (
     <AuthLayout
       iconNode={<LevliDropletIcon size={56} />}
-      title="Welcome back"
+      title="Glad you're here"
       subtitle="Log in to your account"
       footer={
         <>

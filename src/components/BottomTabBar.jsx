@@ -48,7 +48,7 @@ export default function BottomTabBar() {
       {/* Desktop: left side rail */}
       <div className="hidden lg:flex flex-col fixed top-0 left-0 h-full w-56 bg-white dark:bg-gray-900 border-r border-gray-100 dark:border-gray-800 z-40 pt-8 pb-6 px-4">
         <div className="mb-8 px-2">
-          <span className="text-xl font-bold text-teal-600 dark:text-teal-400">Levli</span>
+          <span className="text-xl font-bold text-indigo-600 dark:text-indigo-400">Levli</span>
         </div>
         <nav className="flex flex-col gap-1 flex-1">
           {TABS.map((tab) => {
@@ -59,11 +59,11 @@ export default function BottomTabBar() {
                 to={tab.path}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all font-medium text-sm ${
                   isActive
-                    ? "bg-teal-50 dark:bg-teal-500/15 text-teal-600 dark:text-teal-400"
+                    ? "bg-indigo-50 dark:bg-indigo-500/15 text-indigo-600 dark:text-indigo-400"
                     : "text-gray-500 dark:text-[#9A9DAE] hover:bg-gray-50 dark:hover:bg-white/[0.05] hover:text-gray-800 dark:hover:text-[#E8E9F0]"
                 }`}
               >
-                <TabIcon tab={tab} size={20} active={isActive} className={isActive ? "text-teal-600 dark:text-teal-400" : ""} />
+                <TabIcon tab={tab} size={20} active={isActive} className={isActive ? "text-indigo-600 dark:text-indigo-400" : ""} />
                 {tab.label}
               </Link>
             );
@@ -82,7 +82,7 @@ export default function BottomTabBar() {
                 to={tab.path}
                 className={`flex flex-col items-center justify-center gap-0.5 px-1 py-1 rounded-xl transition-all flex-1 min-w-0 ${
                   isActive
-                    ? "bg-teal-50 dark:bg-teal-500/15 text-teal-600 dark:text-teal-400"
+                    ? "bg-indigo-50 dark:bg-indigo-500/15 text-indigo-600 dark:text-indigo-400"
                     : "text-gray-400 dark:text-[#9A9DAE]"
                 }`}
               >
@@ -90,7 +90,7 @@ export default function BottomTabBar() {
                   tab={tab}
                   size={22}
                   active={isActive}
-                  className={isActive ? "text-teal-600 dark:text-teal-400" : ""}
+                  className={isActive ? "text-indigo-600 dark:text-indigo-400" : ""}
                 />
                 {isActive && <span className="text-[9px] font-semibold leading-none truncate w-full text-center">{tab.label}</span>}
               </Link>
@@ -101,15 +101,15 @@ export default function BottomTabBar() {
             onClick={() => setMoreOpen(true)}
             className={`flex flex-col items-center justify-center gap-0.5 px-1 py-1 rounded-xl transition-all flex-1 min-w-0 ${
               moreActive
-                ? "bg-teal-50 dark:bg-teal-500/15 text-teal-600 dark:text-teal-400"
+                ? "bg-indigo-50 dark:bg-indigo-500/15 text-indigo-600 dark:text-indigo-400"
                 : "text-gray-400 dark:text-[#9A9DAE]"
             }`}
           >
             <MoreHorizontal
               size={22}
               strokeWidth={moreActive ? 2.6 : 1.8}
-              className={moreActive ? "text-teal-600 dark:text-teal-400" : "text-gray-400"}
-              style={moreActive ? { filter: "drop-shadow(0 0 6px rgba(20,184,166,0.5))" } : undefined}
+              className={moreActive ? "text-indigo-600 dark:text-indigo-400" : "text-gray-400"}
+              style={moreActive ? { filter: "drop-shadow(0 0 6px rgba(99,102,241,0.5))" } : undefined}
             />
             {moreActive && <span className="text-[9px] font-semibold leading-none">More</span>}
           </button>
@@ -137,7 +137,7 @@ export default function BottomTabBar() {
                     onClick={() => setMoreOpen(false)}
                     className={`flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all ${
                       isActive
-                        ? "bg-teal-50 dark:bg-teal-500/15 text-teal-600 dark:text-teal-400"
+                        ? "bg-indigo-50 dark:bg-indigo-500/15 text-indigo-600 dark:text-indigo-400"
                         : "text-gray-600 dark:text-[#E8E9F0] hover:bg-gray-50 dark:hover:bg-white/[0.05]"
                     }`}
                   >
@@ -145,7 +145,7 @@ export default function BottomTabBar() {
                       tab={tab}
                       size={24}
                       active={isActive}
-                      className={isActive ? "text-teal-600 dark:text-teal-400" : "text-gray-500 dark:text-[#9A9DAE]"}
+                      className={isActive ? "text-indigo-600 dark:text-indigo-400" : "text-gray-500 dark:text-[#9A9DAE]"}
                     />
                     <span className="text-sm font-medium">{tab.label}</span>
                   </Link>

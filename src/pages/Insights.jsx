@@ -210,19 +210,19 @@ export default function Insights() {
 
   return (
     <div className="min-h-screen w-full">
-      <div className="sticky top-0 z-30 bg-gray-50 dark:bg-gray-950 w-full flex items-center justify-between px-5 pt-6 pb-4">
+      <div className="sticky top-0 z-30 bg-white dark:bg-gray-950 w-full flex items-center justify-between px-5 pt-6 pb-4">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Insights</h1>
         <Link to="/settings"><Settings size={22} className="text-gray-600 dark:text-gray-400" /></Link>
       </div>
 
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-3xl mx-auto pt-4">
         {/* Weight Change Panel */}
         <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
           <div className="flex items-center gap-2 mb-1">
-            <TrendingDown size={18} className="text-teal-600" />
+            <TrendingDown size={18} className="text-indigo-600" />
             <h3 className="font-bold text-gray-900 dark:text-white text-lg">Weight Change</h3>
           </div>
-          <div className="border-b-2 border-teal-500 w-12 mb-3" />
+          <div className="border-b-2 border-indigo-500 w-12 mb-3" />
 
           <div className="flex items-center gap-1 mb-3 flex-wrap">
             {Object.keys(WEIGHT_RANGES).map((r) => (
@@ -284,7 +284,7 @@ export default function Insights() {
                     formatter={(v, name) => [`${v} ${weightUnit}`, name === "rollingAvg" ? "7-day avg" : "Weight"]}
                     contentStyle={{ background: "rgba(20,22,32,0.95)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, color: "#E8E9F0" }}
                   />
-                  <Line type="monotone" dataKey="weight" stroke="#14B8A6" strokeWidth={2} dot={{ fill: "#14B8A6", r: 3 }} activeDot={{ r: 5 }} />
+                  <Line type="monotone" dataKey="weight" stroke="#6366F1" strokeWidth={2} dot={{ fill: "#6366F1", r: 3 }} activeDot={{ r: 5 }} />
                   <Line type="monotone" dataKey="rollingAvg" stroke="#8B5CF6" strokeWidth={2} strokeDasharray="4 4" dot={false} />
                 </LineChart>
               </ResponsiveContainer>
@@ -302,19 +302,19 @@ export default function Insights() {
         {/* Progress Pictures Panel */}
         <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
           <div className="flex items-center gap-2 mb-1">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "rgba(20,184,166,0.13)" }}>
-              <Camera size={16} className="text-teal-500" />
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "rgba(99,102,241,0.13)" }}>
+              <Camera size={16} className="text-indigo-500" />
             </div>
             <h3 className="font-bold text-gray-900 dark:text-white text-lg">Progress Pictures</h3>
           </div>
-          <div className="border-b-2 border-teal-500 w-12 mb-3" />
+          <div className="border-b-2 border-indigo-500 w-12 mb-3" />
 
           {photosAsc.length > 0 && (
             <div className="grid grid-cols-3 gap-2 mb-4">
-              <div className="rounded-xl p-2.5 text-center" style={{ background: "rgba(20,184,166,0.1)", border: "1px solid rgba(20,184,166,0.15)" }}>
-                <Image size={14} className="text-teal-400 mx-auto mb-1" />
+              <div className="rounded-xl p-2.5 text-center" style={{ background: "rgba(99,102,241,0.1)", border: "1px solid rgba(99,102,241,0.15)" }}>
+                <Image size={14} className="text-indigo-400 mx-auto mb-1" />
                 <p className="text-[11px] text-gray-500 dark:text-[#9A9DAE]">Total Photos</p>
-                <p className="font-bold text-teal-500 dark:text-teal-400 text-sm">{photosAsc.length}</p>
+                <p className="font-bold text-indigo-500 dark:text-indigo-400 text-sm">{photosAsc.length}</p>
               </div>
               <div className="rounded-xl p-2.5 text-center" style={{ background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.15)" }}>
                 <Clock size={14} className="text-green-400 mx-auto mb-1" />
@@ -332,12 +332,12 @@ export default function Insights() {
           {photosAsc.length === 0 ? (
             <div className="space-y-4">
               <button onClick={openAddPhoto}
-                className="w-full flex items-center gap-3 rounded-xl p-4 text-left" style={{ background: "rgba(20,184,166,0.1)", border: "1px solid rgba(20,184,166,0.25)" }}>
-                <Camera size={22} className="text-teal-500 flex-shrink-0" />
-                <p className="text-teal-500 font-medium text-sm">No progress pictures yet. Tap to add your first photo!</p>
+                className="w-full flex items-center gap-3 rounded-xl p-4 text-left" style={{ background: "rgba(99,102,241,0.1)", border: "1px solid rgba(99,102,241,0.25)" }}>
+                <Camera size={22} className="text-indigo-500 flex-shrink-0" />
+                <p className="text-indigo-500 font-medium text-sm">No progress pictures yet. Tap to add your first photo!</p>
               </button>
               <button onClick={openAddPhoto}
-                className="w-full py-3.5 bg-teal-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-teal-700 transition-colors text-sm">
+                className="w-full py-3.5 bg-indigo-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-indigo-700 transition-colors text-sm">
                 <Plus size={18} /> Add Picture
               </button>
             </div>
@@ -356,8 +356,8 @@ export default function Insights() {
                     <>
                       <ProgressPhotoCard photo={prevDayPhoto} dateLabel={formatPhotoDate(prevDayPhoto.day_key)} weightLabel={getWeightLabel(prevDayPhoto.day_key)} tag={null} onClick={() => openEditPhoto(prevDayPhoto)} />
                       <div className="flex flex-col items-center gap-0.5 flex-shrink-0">
-                        <ArrowRight size={16} sm={18} className="text-teal-500" />
-                        <span className="text-[10px] sm:text-xs text-teal-400 whitespace-nowrap">{gapDays}d</span>
+                        <ArrowRight size={16} sm={18} className="text-indigo-500" />
+                        <span className="text-[10px] sm:text-xs text-indigo-400 whitespace-nowrap">{gapDays}d</span>
                       </div>
                     </>
                   )}
@@ -366,12 +366,12 @@ export default function Insights() {
               )}
               <div className="flex gap-3">
                 <button onClick={openAddPhoto}
-                  className="flex-1 py-3 bg-teal-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-teal-700 transition-colors text-sm">
+                  className="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-indigo-700 transition-colors text-sm">
                   <Plus size={16} /> Add Photo
                 </button>
                 {photosAsc.length >= 2 && (
                   <button onClick={() => setViewAllPhotos((v) => !v)}
-                    className="flex-1 py-3 bg-gray-100 dark:bg-white/[0.07] text-teal-600 dark:text-teal-400 rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-gray-200 dark:hover:bg-white/[0.12] transition-colors text-sm">
+                    className="flex-1 py-3 bg-gray-100 dark:bg-white/[0.07] text-indigo-600 dark:text-indigo-400 rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-gray-200 dark:hover:bg-white/[0.12] transition-colors text-sm">
                     {viewAllPhotos ? <><Minimize2 size={16} /> Collapse</> : <><Maximize2 size={16} /> View All</>}
                   </button>
                 )}
@@ -434,9 +434,9 @@ export default function Insights() {
                       <p className="font-bold text-indigo-600 dark:text-indigo-400 text-sm">{Math.round(medLevel.steadyState * 100)}%</p>
                       <p className="text-[10px] text-gray-400 dark:text-gray-500">of {medLevel.primaryClass} ({medLevel.interval}d interval)</p>
                     </div>
-                    <div className="bg-teal-50 dark:bg-teal-500/10 rounded-xl p-2.5 text-center border border-transparent dark:border-teal-500/15">
+                    <div className="bg-indigo-50 dark:bg-indigo-500/10 rounded-xl p-2.5 text-center border border-transparent dark:border-indigo-500/15">
                       <p className="text-[11px] text-gray-500 dark:text-[#9A9DAE]">Accumulation ratio</p>
-                      <p className="font-bold text-teal-600 dark:text-teal-400 text-sm">{medLevel.accumRatio != null ? medLevel.accumRatio.toFixed(2) : "—"}</p>
+                      <p className="font-bold text-indigo-600 dark:text-indigo-400 text-sm">{medLevel.accumRatio != null ? medLevel.accumRatio.toFixed(2) : "—"}</p>
                       <p className="text-[10px] text-gray-400 dark:text-gray-500">at steady state vs single dose</p>
                     </div>
                   </div>

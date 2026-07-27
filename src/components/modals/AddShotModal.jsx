@@ -19,7 +19,7 @@ const scSites = [
 // IM injection sites
 const imSites = [
   "Deltoid – Left", "Deltoid – Right", "Vastus Lateralis – Left", "Vastus Lateralis – Right",
-  "Gluteal – Left", "Gluteal – Right",
+  "Gluindigo – Left", "Gluindigo – Right",
 ];
 // Intradermal sites
 const idSites = [
@@ -304,9 +304,9 @@ export default function AddShotModal({ open, onClose, editingShot }) {
             <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">Date & Time</label>
             <div className="flex gap-3">
               <input type="date" value={date} onChange={(e) => setDate(e.target.value)}
-                className="flex-1 border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] dark:[color-scheme:dark] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+                className="flex-1 border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] dark:[color-scheme:dark] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300" />
               <input type="time" value={time} onChange={(e) => setTime(e.target.value)}
-                className="flex-1 border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] dark:[color-scheme:dark] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+                className="flex-1 border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] dark:[color-scheme:dark] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300" />
             </div>
           </div>
 
@@ -326,7 +326,7 @@ export default function AddShotModal({ open, onClose, editingShot }) {
                 <div className="absolute z-10 mt-1 w-full bg-white dark:bg-[#1e2130] border border-gray-200 dark:border-white/[0.08] rounded-xl shadow-lg max-h-64 overflow-y-auto">
                   {MEDICATIONS.map((m) => (
                     <button key={m} onClick={() => { setMedication(m); setRoute(getPrimaryRoute(m)); setShowMedDropdown(false); }}
-                      className={`w-full px-4 py-3 text-left text-sm dark:text-[#E8E9F0] ${medication === m ? "bg-teal-50 dark:bg-teal-500/20 text-teal-600 dark:text-teal-300 font-medium" : "hover:bg-gray-50 dark:hover:bg-white/[0.05]"}`}>
+                      className={`w-full px-4 py-3 text-left text-sm dark:text-[#E8E9F0] ${medication === m ? "bg-indigo-50 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-300 font-medium" : "hover:bg-gray-50 dark:hover:bg-white/[0.05]"}`}>
                       <span className="block">{m}</span>
                       <span className="text-xs text-gray-400 dark:text-gray-500 block">{getMolecularClassLabel(m)}</span>
                       {isInvestigational(m) ? <span className="text-xs text-amber-600 dark:text-amber-400">investigational — not approved</span> : null}
@@ -365,7 +365,7 @@ export default function AddShotModal({ open, onClose, editingShot }) {
                 <div className="absolute z-10 mt-1 w-full bg-white dark:bg-[#1e2130] border border-gray-200 dark:border-white/[0.08] rounded-xl shadow-lg">
                   {medRoutes.map((r) => (
                     <button key={r} onClick={() => { setRoute(r); setShowRouteDropdown(false); }}
-                      className={`w-full px-4 py-3 text-left text-sm dark:text-[#E8E9F0] ${route === r ? "bg-teal-50 dark:bg-teal-500/20 text-teal-600 dark:text-teal-300 font-medium" : "hover:bg-gray-50 dark:hover:bg-white/[0.05]"}`}>
+                      className={`w-full px-4 py-3 text-left text-sm dark:text-[#E8E9F0] ${route === r ? "bg-indigo-50 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-300 font-medium" : "hover:bg-gray-50 dark:hover:bg-white/[0.05]"}`}>
                       {ROUTE_LABELS[r] || r}
                     </button>
                   ))}
@@ -378,7 +378,7 @@ export default function AddShotModal({ open, onClose, editingShot }) {
           <div>
             <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">Device Type (optional)</label>
             <select value={deviceType} onChange={(e) => setDeviceType(e.target.value)}
-              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300">
+              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300">
               {DEVICE_TYPES.map((dt) => <option key={dt.value || "none"} value={dt.value}>{dt.label}</option>)}
             </select>
           </div>
@@ -398,7 +398,7 @@ export default function AddShotModal({ open, onClose, editingShot }) {
                     <div className="absolute z-10 mt-1 right-0 bg-white dark:bg-[#1e2130] border border-gray-200 dark:border-white/[0.08] rounded-xl shadow-lg">
                       {DOSE_UNITS.map((u) => (
                         <button key={u} onClick={() => { setDoseUnit(u); setShowUnitDropdown(false); }}
-                          className={`block w-full px-4 py-2 text-sm text-left dark:text-[#E8E9F0] ${doseUnit === u ? "bg-teal-50 dark:bg-teal-500/20 text-teal-600 dark:text-teal-300 font-medium" : "hover:bg-gray-50 dark:hover:bg-white/[0.05]"}`}>
+                          className={`block w-full px-4 py-2 text-sm text-left dark:text-[#E8E9F0] ${doseUnit === u ? "bg-indigo-50 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-300 font-medium" : "hover:bg-gray-50 dark:hover:bg-white/[0.05]"}`}>
                           {doseUnitLabel(u)}
                         </button>
                       ))}
@@ -434,7 +434,7 @@ export default function AddShotModal({ open, onClose, editingShot }) {
                   <div className="absolute z-10 mt-1 w-full bg-white dark:bg-[#1e2130] border border-gray-200 dark:border-white/[0.08] rounded-xl shadow-lg max-h-48 overflow-y-auto">
                     {siteOptions.map((s) => (
                       <button key={s} onClick={() => { setSite(s); setShowSiteDropdown(false); }}
-                        className={`w-full px-4 py-3 text-left text-sm dark:text-[#E8E9F0] ${site === s ? "bg-teal-50 dark:bg-teal-500/20 text-teal-600 dark:text-teal-300 font-medium" : "hover:bg-gray-50 dark:hover:bg-white/[0.05]"}`}>{s}</button>
+                        className={`w-full px-4 py-3 text-left text-sm dark:text-[#E8E9F0] ${site === s ? "bg-indigo-50 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-300 font-medium" : "hover:bg-gray-50 dark:hover:bg-white/[0.05]"}`}>{s}</button>
                     ))}
                   </div>
                 )}
@@ -447,14 +447,14 @@ export default function AddShotModal({ open, onClose, editingShot }) {
             <>
               <InputField label="Infusion duration (minutes)">
                 <input type="number" min="0" step="1" value={infusionDuration} onChange={(e) => setInfusionDuration(e.target.value)}
-                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300" />
               </InputField>
               <InputField label="Clinic / location">
                 <input type="text" value={clinicLocation} onChange={(e) => setClinicLocation(e.target.value)}
-                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300" />
               </InputField>
               <label className="flex items-center gap-3 cursor-pointer">
-                <input type="checkbox" checked={premedication} onChange={(e) => setPremedication(e.target.checked)} className="w-5 h-5 accent-teal-600" />
+                <input type="checkbox" checked={premedication} onChange={(e) => setPremedication(e.target.checked)} className="w-5 h-5 accent-indigo-600" />
                 <span className="text-sm text-gray-700 dark:text-gray-300">Premedication administered</span>
               </label>
             </>
@@ -464,16 +464,16 @@ export default function AddShotModal({ open, onClose, editingShot }) {
             <>
               <InputField label="Spray count">
                 <input type="number" min="0" step="1" value={sprayCount} onChange={(e) => setSprayCount(e.target.value)}
-                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300" />
               </InputField>
               <InputField label="Nostril">
                 <select value={nostril} onChange={(e) => setNostril(e.target.value)}
-                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300">
+                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300">
                   <option value="both">Both</option><option value="left">Left</option><option value="right">Right</option>
                 </select>
               </InputField>
               <label className="flex items-center gap-3 cursor-pointer">
-                <input type="checkbox" checked={priming} onChange={(e) => setPriming(e.target.checked)} className="w-5 h-5 accent-teal-600" />
+                <input type="checkbox" checked={priming} onChange={(e) => setPriming(e.target.checked)} className="w-5 h-5 accent-indigo-600" />
                 <span className="text-sm text-gray-700 dark:text-gray-300">Device primed before use</span>
               </label>
             </>
@@ -488,7 +488,7 @@ export default function AddShotModal({ open, onClose, editingShot }) {
                   { v: null, label: "Not recorded" },
                 ].map((opt) => (
                   <button key={String(opt.v)} onClick={() => setTakenWithFood(opt.v)}
-                    className={`flex-1 py-2.5 rounded-xl text-sm font-medium border ${takenWithFood === opt.v ? "bg-teal-100 dark:bg-teal-500/20 text-teal-700 dark:text-teal-300 border-teal-300 dark:border-teal-500/30" : "bg-white dark:bg-white/[0.05] text-gray-500 dark:text-[#9A9DAE] border-gray-200 dark:border-white/[0.1]"}`}>
+                    className={`flex-1 py-2.5 rounded-xl text-sm font-medium border ${takenWithFood === opt.v ? "bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 border-indigo-300 dark:border-indigo-500/30" : "bg-white dark:bg-white/[0.05] text-gray-500 dark:text-[#9A9DAE] border-gray-200 dark:border-white/[0.1]"}`}>
                     {opt.label}
                   </button>
                 ))}
@@ -500,11 +500,11 @@ export default function AddShotModal({ open, onClose, editingShot }) {
             <>
               <InputField label="Patch site">
                 <input type="text" value={patchSite} onChange={(e) => setPatchSite(e.target.value)} placeholder="e.g. Abdomen, upper arm"
-                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300" />
               </InputField>
               <InputField label="Application date">
                 <input type="date" value={applicationDate} onChange={(e) => setApplicationDate(e.target.value)}
-                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] dark:[color-scheme:dark] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] dark:[color-scheme:dark] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300" />
               </InputField>
             </>
           )}
@@ -513,11 +513,11 @@ export default function AddShotModal({ open, onClose, editingShot }) {
             <>
               <InputField label="Body area">
                 <input type="text" value={bodyArea} onChange={(e) => setBodyArea(e.target.value)} placeholder="e.g. Face, left cheek"
-                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300" />
               </InputField>
               <InputField label="Application notes">
                 <textarea value={applicationNotes} onChange={(e) => setApplicationNotes(e.target.value)} rows={2}
-                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-sm outline-none focus:border-teal-300" />
+                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-sm outline-none focus:border-indigo-300" />
               </InputField>
             </>
           )}
@@ -526,11 +526,11 @@ export default function AddShotModal({ open, onClose, editingShot }) {
             <>
               <InputField label="Clinic / location">
                 <input type="text" value={clinicLocation} onChange={(e) => setClinicLocation(e.target.value)}
-                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300" />
               </InputField>
               <InputField label="Insertion date">
                 <input type="date" value={insertionDate} onChange={(e) => setInsertionDate(e.target.value)}
-                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] dark:[color-scheme:dark] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] dark:[color-scheme:dark] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300" />
               </InputField>
             </>
           )}
@@ -539,11 +539,11 @@ export default function AddShotModal({ open, onClose, editingShot }) {
             <>
               <InputField label="Pump rate">
                 <input type="number" min="0" step="0.1" value={pumpRate} onChange={(e) => setPumpRate(e.target.value)}
-                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300" />
               </InputField>
               <InputField label="Site change date">
                 <input type="date" value={siteChangeDate} onChange={(e) => setSiteChangeDate(e.target.value)}
-                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] dark:[color-scheme:dark] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] dark:[color-scheme:dark] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300" />
               </InputField>
             </>
           )}
@@ -554,20 +554,20 @@ export default function AddShotModal({ open, onClose, editingShot }) {
               <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Reconstitution</div>
               <InputField label="Reconstitution date">
                 <input type="date" value={reconstitutionDate} onChange={(e) => setReconstitutionDate(e.target.value)}
-                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] dark:[color-scheme:dark] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] dark:[color-scheme:dark] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300" />
               </InputField>
               <InputField label="In-use expiry date">
                 <input type="date" value={inUseExpiry} onChange={(e) => setInUseExpiry(e.target.value)}
-                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] dark:[color-scheme:dark] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+                  className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] dark:[color-scheme:dark] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300" />
               </InputField>
             </>
           )}
 
           {/* Pain Level */}
           <div>
-            <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">Pain Level: <span className="text-teal-600">{pain}/10</span></label>
+            <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">Pain Level: <span className="text-indigo-600">{pain}/10</span></label>
             <div className="px-1">
-              <input type="range" min="0" max="10" value={pain} onChange={(e) => setPain(Number(e.target.value))} className="w-full accent-teal-600" />
+              <input type="range" min="0" max="10" value={pain} onChange={(e) => setPain(Number(e.target.value))} className="w-full accent-indigo-600" />
               <div className="flex justify-between text-xs text-gray-400 mt-1"><span>0 – No Pain</span><span>10 – Severe</span></div>
             </div>
           </div>
@@ -577,7 +577,7 @@ export default function AddShotModal({ open, onClose, editingShot }) {
             <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">Notes (Optional)</label>
             <textarea value={notes} onChange={(e) => setNotes(e.target.value)}
               placeholder="Add any notes or side effects experienced"
-              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-sm resize-none h-24 outline-none focus:border-teal-300" />
+              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-sm resize-none h-24 outline-none focus:border-indigo-300" />
           </div>
         </div>
 
@@ -592,9 +592,9 @@ export default function AddShotModal({ open, onClose, editingShot }) {
           </div>
         )}
 
-        <div className="px-5 pb-8 pt-2">
+        <div className="sticky bottom-0 px-5 pb-8 pt-2 bg-white dark:bg-[#0f1117] border-t border-gray-100 dark:border-white/[0.08]">
           <button onClick={handleSave} disabled={saving}
-            className="w-full py-3.5 bg-teal-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-60">
+            className="w-full py-3.5 bg-indigo-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-60">
             <Save size={16} /> {saving ? "Saving…" : editingShot ? "Update Shot" : "Save Shot"}
           </button>
         </div>

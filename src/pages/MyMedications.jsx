@@ -26,15 +26,15 @@ export default function MyMedications() {
 
   return (
     <div className="min-h-screen w-full">
-      <div className="sticky top-0 z-30 bg-gray-50 dark:bg-gray-950 w-full flex items-center justify-between px-5 pt-6 pb-4">
+      <div className="sticky top-0 z-30 bg-white dark:bg-gray-950 w-full flex items-center justify-between px-5 pt-6 pb-4">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">My Medications</h1>
         <div className="flex items-center gap-3">
-          <button onClick={openNew}><Plus size={24} className="text-teal-600" /></button>
+          <button onClick={openNew}><Plus size={24} className="text-indigo-600" /></button>
           <Link to="/settings"><Settings size={22} className="text-gray-600 dark:text-gray-400" /></Link>
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 pb-32">
+      <div className="max-w-3xl mx-auto pt-4 px-4 pb-32">
         <p className="text-xs text-gray-400 dark:text-gray-500 mb-4">
           Track your prescribed regimens. Titration stages show only what you or your prescriber entered — Levli never generates a schedule.
         </p>
@@ -43,7 +43,7 @@ export default function MyMedications() {
           <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-gray-800 text-center">
             <Pill size={36} className="mx-auto mb-3 text-gray-300 dark:text-white/20" />
             <p className="text-sm text-gray-400 dark:text-[#9A9DAE] mb-4">No medications saved yet. Add your prescribed regimen to link your shot logs.</p>
-            <button onClick={openNew} className="px-5 py-3 bg-teal-600 text-white rounded-xl font-semibold flex items-center gap-2 mx-auto">
+            <button onClick={openNew} className="px-5 py-3 bg-indigo-600 text-white rounded-xl font-semibold flex items-center gap-2 mx-auto">
               <Plus size={18} /> Add Medication
             </button>
           </div>
@@ -61,7 +61,7 @@ export default function MyMedications() {
                     </div>
                     <div className="space-y-1 text-sm text-gray-500 dark:text-[#9A9DAE]">
                       {m.prescribed_dose != null && (
-                        <div className="flex items-center gap-2"><Activity size={14} className="text-teal-500" /> {m.prescribed_dose} {m.dose_unit || "mg"} · {m.frequency || "—"}</div>
+                        <div className="flex items-center gap-2"><Activity size={14} className="text-indigo-500" /> {m.prescribed_dose} {m.dose_unit || "mg"} · {m.frequency || "—"}</div>
                       )}
                       {m.indication && <div className="flex items-center gap-2"><Pill size={14} className="text-indigo-500" /> {m.indication}</div>}
                       {m.titration_stage && <div className="flex items-center gap-2"><Calendar size={14} className="text-amber-500" /> Stage: {m.titration_stage}</div>}
@@ -69,7 +69,7 @@ export default function MyMedications() {
                     </div>
                   </button>
                   <div className="flex flex-col gap-2 items-end flex-shrink-0">
-                    <button onClick={() => openEdit(m)} className="text-gray-400 hover:text-teal-600"><ChevronRight size={20} /></button>
+                    <button onClick={() => openEdit(m)} className="text-gray-400 hover:text-indigo-600"><ChevronRight size={20} /></button>
                     <button onClick={() => handleDelete(m.id)} className="text-gray-400 hover:text-red-500"><Trash2 size={16} /></button>
                   </div>
                 </div>
@@ -80,7 +80,7 @@ export default function MyMedications() {
       </div>
 
       <button onClick={openNew}
-        className="fixed bottom-24 right-5 lg:right-8 bg-teal-600 text-white rounded-2xl shadow-lg shadow-teal-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-teal-700 transition-colors text-sm px-5 py-3">
+        className="fixed bottom-24 right-5 lg:right-8 bg-indigo-600 text-white rounded-2xl shadow-lg shadow-indigo-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-indigo-700 transition-colors text-sm px-5 py-3">
         <Plus size={18} /> Add Medication
       </button>
 

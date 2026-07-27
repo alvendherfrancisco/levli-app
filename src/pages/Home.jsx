@@ -23,12 +23,12 @@ export default function Home() {
 
   return (
     <div className="min-h-screen w-full">
-      <div className="sticky top-0 z-30 bg-gray-50 dark:bg-gray-950 w-full flex items-center justify-between px-5 pt-6 pb-2">
+      <div className="sticky top-0 z-30 bg-white dark:bg-gray-950 w-full flex items-center justify-between px-5 pt-6 pb-2">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{greeting}</h1>
         <Link to="/settings"><Settings size={24} className="text-gray-600 dark:text-gray-400" /></Link>
       </div>
 
-      <div className="max-w-3xl mx-auto pb-6">
+      <div className="max-w-3xl mx-auto pt-4 pb-6">
         <DateStrip selectedDate={selectedDate} onSelectDate={setSelectedDate} />
         <NextShotCard />
         <MetricsGrid dayKey={dk} />
@@ -39,17 +39,17 @@ export default function Home() {
           className="mx-3 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 w-[calc(100%-1.5rem)] text-left"
         >
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{background:"rgba(20,184,166,0.13)"}}>
-              <Wind size={16} className="text-teal-500" />
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{background:"rgba(99,102,241,0.13)"}}>
+              <Wind size={16} className="text-indigo-500" />
             </div>
             <span className="font-semibold text-gray-700 dark:text-gray-300">Side effects</span>
           </div>
           {sideEffects || dayAdverseEvents.length > 0 ? (
-            <div className="bg-teal-50 dark:bg-teal-500/10 rounded-xl p-3 border border-transparent dark:border-teal-500/15">
+            <div className="bg-indigo-50 dark:bg-indigo-500/10 rounded-xl p-3 border border-transparent dark:border-indigo-500/15">
               {dayAdverseEvents.length > 0 && (
                 <div className="flex flex-wrap gap-1 mb-2">
                   {dayAdverseEvents.map((e) => (
-                    <span key={e.id} className="text-xs bg-teal-500/10 text-teal-600 dark:text-teal-400 rounded-full px-2 py-0.5 border border-teal-500/20">
+                    <span key={e.id} className="text-xs bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-full px-2 py-0.5 border border-indigo-500/20">
                       {e.symptom} <span className="opacity-60">({e.severity})</span>
                     </span>
                   ))}
@@ -58,9 +58,9 @@ export default function Home() {
               {sideEffects && <p className="text-sm text-gray-700 dark:text-[#E8E9F0]">{sideEffects}</p>}
             </div>
           ) : (
-            <div className="bg-teal-50 dark:bg-teal-500/10 rounded-xl p-3 flex items-center gap-2 border border-transparent dark:border-teal-500/15">
-              <Info size={16} className="text-teal-500 dark:text-teal-400 flex-shrink-0" />
-              <p className="text-sm text-teal-700 dark:text-teal-300">Tap to add side effects.</p>
+            <div className="bg-indigo-50 dark:bg-indigo-500/10 rounded-xl p-3 flex items-center gap-2 border border-transparent dark:border-indigo-500/15">
+              <Info size={16} className="text-indigo-500 dark:text-indigo-400 flex-shrink-0" />
+              <p className="text-sm text-indigo-700 dark:text-indigo-300">Tap to add side effects.</p>
             </div>
           )}
         </button>
@@ -93,8 +93,8 @@ export default function Home() {
 
       <button
         onClick={() => setShowShot(true)}
-        className="fixed bottom-24 right-5 lg:right-8 bg-teal-600 dark:bg-teal-500 text-white rounded-2xl shadow-lg shadow-teal-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-teal-700 dark:hover:bg-teal-400 transition-colors text-sm px-5 py-3"
-      style={{ boxShadow: "0 4px 24px 4px rgba(20,184,166,0.35)" }}
+        className="fixed bottom-24 right-5 lg:right-8 bg-indigo-600 dark:bg-indigo-500 text-white rounded-2xl shadow-lg shadow-indigo-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-indigo-700 dark:hover:bg-indigo-400 transition-colors text-sm px-5 py-3"
+      style={{ boxShadow: "0 4px 24px 4px rgba(99,102,241,0.35)" }}
       >
         <Plus size={18} /> Add Shot
       </button>

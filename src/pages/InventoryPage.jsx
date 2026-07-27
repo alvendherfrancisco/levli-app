@@ -63,15 +63,15 @@ export default function InventoryPage() {
 
   return (
     <div className="min-h-screen w-full">
-      <div className="sticky top-0 z-30 bg-gray-50 dark:bg-gray-950 w-full flex items-center justify-between px-5 pt-6 pb-4">
+      <div className="sticky top-0 z-30 bg-white dark:bg-gray-950 w-full flex items-center justify-between px-5 pt-6 pb-4">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Inventory</h1>
         <div className="flex items-center gap-3">
-          <button onClick={openNew}><Plus size={24} className="text-teal-600" /></button>
+          <button onClick={openNew}><Plus size={24} className="text-indigo-600" /></button>
           <Link to="/settings"><Settings size={22} className="text-gray-600 dark:text-gray-400" /></Link>
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 pb-32">
+      <div className="max-w-3xl mx-auto pt-4 px-4 pb-32">
         <p className="text-xs text-gray-400 dark:text-gray-500 mb-4">
           Track product quantities, lot numbers, and expiry dates. Logging a shot for a tracked product decrements the remaining quantity.
         </p>
@@ -80,7 +80,7 @@ export default function InventoryPage() {
           <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-gray-800 text-center">
             <Package size={36} className="mx-auto mb-3 text-gray-300 dark:text-white/20" />
             <p className="text-sm text-gray-400 dark:text-[#9A9DAE] mb-4">No inventory tracked yet.</p>
-            <button onClick={openNew} className="px-5 py-3 bg-teal-600 text-white rounded-xl font-semibold flex items-center gap-2 mx-auto">
+            <button onClick={openNew} className="px-5 py-3 bg-indigo-600 text-white rounded-xl font-semibold flex items-center gap-2 mx-auto">
               <Plus size={18} /> Add Product
             </button>
           </div>
@@ -97,7 +97,7 @@ export default function InventoryPage() {
                     <div className="space-y-1 text-sm text-gray-500 dark:text-[#9A9DAE]">
                       {i.remaining_quantity != null && i.starting_quantity != null && (
                         <div className="flex items-center gap-2">
-                          <Package size={14} className="text-teal-500" />
+                          <Package size={14} className="text-indigo-500" />
                           {i.remaining_quantity} / {i.starting_quantity} {i.quantity_unit || "doses"} remaining
                         </div>
                       )}
@@ -111,7 +111,7 @@ export default function InventoryPage() {
                     </div>
                   </button>
                   <div className="flex flex-col gap-2 items-end flex-shrink-0">
-                    <button onClick={() => openEdit(i)} className="text-gray-400 hover:text-teal-600"><ChevronRight size={20} /></button>
+                    <button onClick={() => openEdit(i)} className="text-gray-400 hover:text-indigo-600"><ChevronRight size={20} /></button>
                     <button onClick={() => openStorageLog(i)} className="text-gray-400 hover:text-amber-500"><Thermometer size={16} /></button>
                     <button onClick={() => handleDelete(i.id)} className="text-gray-400 hover:text-red-500"><Trash2 size={16} /></button>
                   </div>
@@ -134,7 +134,7 @@ export default function InventoryPage() {
       </div>
 
       <button onClick={openNew}
-        className="fixed bottom-24 right-5 lg:right-8 bg-teal-600 text-white rounded-2xl shadow-lg shadow-teal-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-teal-700 transition-colors text-sm px-5 py-3">
+        className="fixed bottom-24 right-5 lg:right-8 bg-indigo-600 text-white rounded-2xl shadow-lg shadow-indigo-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-indigo-700 transition-colors text-sm px-5 py-3">
         <Plus size={18} /> Add Product
       </button>
 
@@ -147,12 +147,12 @@ export default function InventoryPage() {
           <div className="relative bg-white dark:bg-[#0f1117] rounded-3xl w-full max-w-sm p-6 shadow-2xl">
             <h2 className="text-xl font-bold text-gray-900 dark:text-[#E8E9F0] mb-4">Storage Log — {storageModalFor.product_name}</h2>
             <label className="flex items-center gap-3 cursor-pointer mb-4">
-              <input type="checkbox" checked={excursion} onChange={(e) => setExcursion(e.target.checked)} className="w-5 h-5 accent-teal-600" />
+              <input type="checkbox" checked={excursion} onChange={(e) => setExcursion(e.target.checked)} className="w-5 h-5 accent-indigo-600" />
               <span className="text-sm text-gray-700 dark:text-gray-300 flex items-center gap-1"><Thermometer size={16} className="text-amber-500" /> Temperature excursion observed</span>
             </label>
             <textarea value={storageNote} onChange={(e) => setStorageNote(e.target.value)} rows={3} placeholder="Notes (optional)"
-              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-sm outline-none focus:border-teal-300 mb-4" />
-            <button onClick={saveStorageLog} className="w-full py-3 bg-teal-600 text-white rounded-xl font-semibold">Save Log</button>
+              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-sm outline-none focus:border-indigo-300 mb-4" />
+            <button onClick={saveStorageLog} className="w-full py-3 bg-indigo-600 text-white rounded-xl font-semibold">Save Log</button>
           </div>
         </div>
       )}

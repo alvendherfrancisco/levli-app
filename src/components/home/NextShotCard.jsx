@@ -32,8 +32,8 @@ export default function NextShotCard() {
   const daysLate = Math.max(0, -daysLeft);
   const isLate = daysLeft < 0;
   const isRetitration = missedRule && missedRule.retitrationDays && daysLate > missedRule.retitrationDays;
-  const ringColor = isDue ? "#22C55E" : "#14B8A6";
-  const ringGlow = isDue ? "0 0 14px 3px rgba(34,197,94,0.35)" : "0 0 14px 3px rgba(20,184,166,0.35)";
+  const ringColor = isDue ? "#22C55E" : "#6366F1";
+  const ringGlow = isDue ? "0 0 14px 3px rgba(34,197,94,0.35)" : "0 0 14px 3px rgba(99,102,241,0.35)";
 
   let daysLabel;
   if (isDue) daysLabel = "Today!";
@@ -47,7 +47,7 @@ export default function NextShotCard() {
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-xl font-bold text-gray-900 dark:text-[#E8E9F0]">{nextDate}</h3>
-          <p className="text-sm font-medium text-teal-600 dark:text-teal-400 mt-0.5">{daysLabel}</p>
+          <p className="text-sm font-medium text-indigo-600 dark:text-indigo-400 mt-0.5">{daysLabel}</p>
           <div className="mt-2 border-t border-gray-100 dark:border-gray-800 pt-2">
             <p className="text-xs text-gray-400 dark:text-[#9A9DAE]">Last Dose</p>
             <p className="text-sm font-semibold text-gray-700 dark:text-[#E8E9F0]">{last.date} · {last.dose} mg</p>

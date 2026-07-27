@@ -27,7 +27,7 @@ export default function Shots() {
 
   return (
     <div className="min-h-screen w-full">
-      <div className="sticky top-0 z-30 bg-gray-50 dark:bg-gray-950 w-full flex items-center justify-between px-5 pt-6 pb-4">
+      <div className="sticky top-0 z-30 bg-white dark:bg-gray-950 w-full flex items-center justify-between px-5 pt-6 pb-4">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Shots</h1>
         <div className="flex items-center gap-3">
           <button onClick={() => navigate("/report")}><FileText size={22} className="text-gray-500" /></button>
@@ -35,13 +35,13 @@ export default function Shots() {
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-3xl mx-auto pt-4">
         {/* Summary cards */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 px-4 mb-5">
           <div className="bg-white dark:bg-gray-900 rounded-xl p-3 shadow-sm border border-gray-100 dark:border-gray-800">
             <div className="flex items-center gap-1.5 mb-1">
-              <div className="w-6 h-6 rounded-lg bg-teal-100 dark:bg-teal-900 flex items-center justify-center flex-shrink-0">
-                <Syringe size={12} className="text-teal-600 dark:text-teal-400" />
+              <div className="w-6 h-6 rounded-lg bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center flex-shrink-0">
+                <Syringe size={12} className="text-indigo-600 dark:text-indigo-400" />
               </div>
               <span className="text-xs text-gray-400 dark:text-gray-500">Total Shots</span>
             </div>
@@ -88,7 +88,7 @@ export default function Shots() {
           <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-3">History</h2>
           {shotsLoading ? (
             <div className="flex justify-center py-12">
-              <Loader2 size={28} className="animate-spin text-teal-400" />
+              <Loader2 size={28} className="animate-spin text-indigo-400" />
             </div>
           ) : shots.length === 0 ? (
             <div className="bg-white dark:bg-gray-900 rounded-xl p-6 text-center text-gray-400 dark:text-[#9A9DAE] border border-gray-100 dark:border-gray-800">
@@ -112,7 +112,7 @@ export default function Shots() {
       </p>
 
       <button onClick={openNew}
-        className="fixed bottom-24 right-5 lg:right-8 bg-teal-600 text-white rounded-2xl shadow-lg shadow-teal-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-teal-700 transition-colors text-sm px-5 py-3">
+        className="fixed bottom-24 right-5 lg:right-8 bg-indigo-600 text-white rounded-2xl shadow-lg shadow-indigo-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-indigo-700 transition-colors text-sm px-5 py-3">
         <Plus size={18} /> Add Shot
       </button>
 

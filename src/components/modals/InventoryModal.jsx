@@ -99,63 +99,63 @@ export default function InventoryModal({ open, onClose, editing }) {
         <div className="px-5 pb-4 space-y-4">
           <Field label="Product name">
             <input type="text" list="med-list" value={productName} onChange={(e) => setProductName(e.target.value)} placeholder="e.g. Ozempic®"
-              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300" />
             <datalist id="med-list">{MEDICATIONS.map((m) => <option key={m} value={m} />)}</datalist>
           </Field>
           <div className="flex flex-col sm:flex-row gap-3">
             <Field label="Lot number">
               <input type="text" value={lotNumber} onChange={(e) => setLotNumber(e.target.value)}
-                className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+                className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300" />
             </Field>
             <Field label="Expiry date">
               <input type="date" value={expiryDate} onChange={(e) => setExpiryDate(e.target.value)}
-                className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] dark:[color-scheme:dark] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+                className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] dark:[color-scheme:dark] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300" />
             </Field>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <Field label="Starting quantity">
               <input type="number" min="0" step="1" value={startingQuantity} onChange={(e) => setStartingQuantity(e.target.value)}
-                className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+                className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300" />
             </Field>
             <Field label="Remaining quantity">
               <input type="number" min="0" step="1" value={remainingQuantity} onChange={(e) => setRemainingQuantity(e.target.value)} placeholder="defaults to starting"
-                className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+                className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300" />
             </Field>
             <Field label="Unit">
               <select value={quantityUnit} onChange={(e) => setQuantityUnit(e.target.value)}
-                className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300">
+                className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300">
                 {["doses", "mg", "mL", "units", "pens", "vials"].map((u) => <option key={u} value={u}>{u}</option>)}
               </select>
             </Field>
           </div>
           <Field label="Storage location">
             <input type="text" value={storageLocation} onChange={(e) => setStorageLocation(e.target.value)} placeholder="e.g. Refrigerator"
-              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300" />
           </Field>
           <div className="flex flex-col sm:flex-row gap-3">
             <Field label="Opened date">
               <input type="date" value={openedDate} onChange={(e) => setOpenedDate(e.target.value)}
-                className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] dark:[color-scheme:dark] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+                className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] dark:[color-scheme:dark] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300" />
             </Field>
             <Field label="In-use expiry">
               <input type="date" value={inUseExpiry} onChange={(e) => setInUseExpiry(e.target.value)}
-                className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] dark:[color-scheme:dark] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+                className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] dark:[color-scheme:dark] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300" />
             </Field>
           </div>
           <Field label="Expiry warning (days before)">
             <input type="number" min="1" step="1" value={expiryWarningDays} onChange={(e) => setExpiryWarningDays(e.target.value)}
-              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300" />
           </Field>
           <Field label="Status">
             <select value={status} onChange={(e) => setStatus(e.target.value)}
-              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300">
+              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300">
               {["active", "depleted", "expired", "archived"].map((s) => <option key={s} value={s} className="capitalize">{s}</option>)}
             </select>
           </Field>
         </div>
-        <div className="px-5 pb-8 pt-2">
+        <div className="sticky bottom-0 px-5 pb-8 pt-2 bg-white dark:bg-[#0f1117] border-t border-gray-100 dark:border-white/[0.08]">
           <button onClick={handleSave} disabled={saving}
-            className="w-full py-3.5 bg-teal-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-60">
+            className="w-full py-3.5 bg-indigo-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-60">
             <Save size={16} /> {saving ? "Saving…" : editing ? "Update" : "Save"}
           </button>
         </div>

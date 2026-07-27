@@ -101,68 +101,68 @@ export default function MedicationModal({ open, onClose, editing }) {
         <div className="px-5 pb-4 space-y-4">
           <Field label="Medication name">
             <input type="text" list="med-list" value={medicationName} onChange={(e) => setMedicationName(e.target.value)} placeholder="e.g. Ozempic®"
-              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300" />
             <datalist id="med-list">{MEDICATIONS.map((m) => <option key={m} value={m} />)}</datalist>
           </Field>
           <div className="flex flex-col sm:flex-row gap-3">
             <Field label="Prescribed dose">
               <input type="number" min="0" step="0.25" value={prescribedDose} onChange={(e) => setPrescribedDose(e.target.value)}
-                className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+                className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300" />
             </Field>
             <Field label="Unit">
               <select value={doseUnit} onChange={(e) => setDoseUnit(e.target.value)}
-                className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300">
+                className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300">
                 {["mg", "mcg", "units", "IU", "mL"].map((u) => <option key={u} value={u}>{u}</option>)}
               </select>
             </Field>
           </div>
           <Field label="Frequency">
             <input type="text" value={frequency} onChange={(e) => setFrequency(e.target.value)} placeholder="e.g. once weekly"
-              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300" />
           </Field>
           <Field label="Indication (as prescribed)">
             <input type="text" value={indication} onChange={(e) => setIndication(e.target.value)} placeholder="e.g. Type 2 diabetes"
-              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300" />
           </Field>
           <div className="flex flex-col sm:flex-row gap-3">
             <Field label="Start date">
               <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)}
-                className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] dark:[color-scheme:dark] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+                className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] dark:[color-scheme:dark] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300" />
             </Field>
             <Field label="Planned end (optional)">
               <input type="date" value={plannedEndDate} onChange={(e) => setPlannedEndDate(e.target.value)}
-                className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] dark:[color-scheme:dark] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+                className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] dark:[color-scheme:dark] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300" />
             </Field>
           </div>
           <Field label="Titration stage (as directed by prescriber)">
             <input type="text" value={titrationStage} onChange={(e) => setTitrationStage(e.target.value)} placeholder="e.g. 1.0 mg maintenance"
-              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300" />
             <p className="text-xs text-gray-400 mt-1">Enter only what your prescriber told you. Levli does not generate titration schedules.</p>
           </Field>
           <div className="flex flex-col sm:flex-row gap-3">
             <Field label="Prescriber name">
               <input type="text" value={prescriberName} onChange={(e) => setPrescriberName(e.target.value)}
-                className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+                className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300" />
             </Field>
             <Field label="Prescriber contact">
               <input type="text" value={prescriberContact} onChange={(e) => setPrescriberContact(e.target.value)}
-                className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300" />
+                className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300" />
             </Field>
           </div>
           <Field label="Status">
             <select value={status} onChange={(e) => setStatus(e.target.value)}
-              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-teal-300">
+              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-base outline-none focus:border-indigo-300">
               {["active", "paused", "discontinued", "switched"].map((s) => <option key={s} value={s} className="capitalize">{s}</option>)}
             </select>
           </Field>
           <Field label="Notes">
             <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={2}
-              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-sm outline-none focus:border-teal-300" />
+              className="w-full border border-gray-200 dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-[#E8E9F0] rounded-xl px-4 py-3 text-sm outline-none focus:border-indigo-300" />
           </Field>
         </div>
-        <div className="px-5 pb-8 pt-2">
+        <div className="sticky bottom-0 px-5 pb-8 pt-2 bg-white dark:bg-[#0f1117] border-t border-gray-100 dark:border-white/[0.08]">
           <button onClick={handleSave} disabled={saving}
-            className="w-full py-3.5 bg-teal-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-60">
+            className="w-full py-3.5 bg-indigo-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-60">
             <Save size={16} /> {saving ? "Saving…" : editing ? "Update" : "Save"}
           </button>
         </div>
