@@ -37,44 +37,44 @@ export default function Home() {
         {/* Side Effects card */}
         <button
           onClick={() => setShowSideEffects(true)}
-          className="mx-3 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 w-[calc(100%-1.5rem)] text-left"
-        >
+          className="mx-3 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 w-[calc(100%-1.5rem)] text-left">
+          
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{background:"rgba(99,102,241,0.13)"}}>
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "rgba(99,102,241,0.13)" }}>
               <Wind size={16} className="text-indigo-500" />
             </div>
             <span className="font-semibold text-gray-700 dark:text-gray-300">Side effects</span>
           </div>
-          {sideEffects || dayAdverseEvents.length > 0 ? (
-            <div className="bg-indigo-50 dark:bg-indigo-500/10 rounded-xl p-3 border border-transparent dark:border-indigo-500/15">
-              {dayAdverseEvents.length > 0 && (
-                <div className="flex flex-wrap gap-1 mb-2">
-                  {dayAdverseEvents.map((e) => (
-                    <span key={e.id} className="text-xs bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-full px-2 py-0.5 border border-indigo-500/20">
+          {sideEffects || dayAdverseEvents.length > 0 ?
+          <div className="bg-indigo-50 dark:bg-indigo-500/10 rounded-xl p-3 border border-transparent dark:border-indigo-500/15">
+              {dayAdverseEvents.length > 0 &&
+            <div className="flex flex-wrap gap-1 mb-2">
+                  {dayAdverseEvents.map((e) =>
+              <span key={e.id} className="text-xs bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-full px-2 py-0.5 border border-indigo-500/20">
                       {e.symptom} <span className="opacity-60">({e.severity})</span>
                     </span>
-                  ))}
-                </div>
               )}
+                </div>
+            }
               {sideEffects && <p className="text-sm text-gray-700 dark:text-[#E8E9F0]">{sideEffects}</p>}
-            </div>
-          ) : (
-            <div className="relative overflow-hidden rounded-xl p-4 flex items-center gap-3" style={{ background: "#E0E7FF" }}>
+            </div> :
+
+          <div className="relative overflow-hidden rounded-xl p-4 flex items-center gap-3" style={{ background: "#E0E7FF" }}>
               <ScatteredFaces color="#312E81" />
               <div className="relative z-10 flex-1 min-w-0">
-                <p className="text-sm font-bold text-indigo-900">Track Side Effects</p>
-                <p className="text-xs text-indigo-700/80 mt-0.5">Log how you're feeling today.</p>
+                <p className="text-sm font-bold text-indigo-900 hidden">Track Side Effects</p>
+                <p className="text-xs text-indigo-700/80 mt-0.5 hidden">Log how you're feeling today.</p>
                 <p className="text-xs font-semibold text-indigo-900 mt-2 flex items-center gap-1">Tap to add <ArrowRight size={12} /></p>
               </div>
             </div>
-          )}
+          }
         </button>
 
         {/* Medication Levels card */}
         <div className="mx-3 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
           <div className="flex items-start justify-between mb-2">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 aspect-square" style={{background:"rgba(99,102,241,0.13)"}}>
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 aspect-square" style={{ background: "rgba(99,102,241,0.13)" }}>
                 <Syringe size={16} className="text-indigo-600" />
               </div>
               <div>
@@ -99,13 +99,13 @@ export default function Home() {
       <button
         onClick={() => setShowShot(true)}
         className="fixed bottom-24 right-5 lg:right-8 bg-indigo-600 dark:bg-indigo-500 text-white rounded-2xl shadow-lg shadow-indigo-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-indigo-700 dark:hover:bg-indigo-400 transition-colors text-sm px-5 py-3"
-      style={{ boxShadow: "0 4px 24px 4px rgba(99,102,241,0.35)" }}
-      >
+        style={{ boxShadow: "0 4px 24px 4px rgba(99,102,241,0.35)" }}>
+        
         <Plus size={18} /> Add Shot
       </button>
 
       <AddShotModal open={showShot} onClose={() => setShowShot(false)} />
       <SideEffectsModal open={showSideEffects} onClose={() => setShowSideEffects(false)} dayKey={dk} />
-    </div>
-  );
+    </div>);
+
 }
