@@ -4,6 +4,7 @@ import { Settings, Plus, BookOpen, Smile, FileText, AlertTriangle, Zap, Star, Cl
 import JournalEntryModal from "@/components/modals/JournalEntryModal";
 import { useAppState } from "@/lib/AppState";
 import { toast } from "sonner";
+import ScatteredFaces from "@/components/ScatteredFaces";
 
 const CATEGORY_CONFIG = {
   "Mood":         { icon: <Smile size={20} />,         lightBg: "bg-indigo-100",  darkBg: "rgba(20,184,166,0.13)",   color: "#2DD4BF" },
@@ -15,6 +16,15 @@ const CATEGORY_CONFIG = {
   "Exercise":     { icon: <Zap size={20} />,           lightBg: "bg-indigo-100",   darkBg: "rgba(20,184,166,0.13)",  color: "#2DD4BF" },
 };
 const ALL_CATEGORIES = ["All", "Mood", "General Note", "Side Effect", "Energy", "Milestone", "Food", "Exercise"];
+const CATEGORY_PASTEL = {
+  "Mood": "teal",
+  "General Note": "indigo",
+  "Side Effect": "indigo",
+  "Energy": "orange",
+  "Milestone": "orange",
+  "Food": "orange",
+  "Exercise": "teal",
+};
 
 export default function Journal() {
   const { journalEntries, addJournalEntry, updateJournalEntry, deleteJournalEntry } = useAppState();
@@ -76,46 +86,49 @@ export default function Journal() {
       <div className="max-w-3xl mx-auto">
         {filtered.length === 0 ?
         <div className="px-4">
-            <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-gray-800 text-center">
-              <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 bg-indigo-100 dark:bg-indigo-500/15">
-                <BookOpen size={36} className="text-indigo-500 dark:text-indigo-400" />
+            <div className="relative overflow-hidden rounded-2xl p-8 shadow-sm border border-black/5 text-center">
+              <ScatteredFaces color="indigo" count={6} opacity={0.45} spread="full" />
+              <div className="relative z-10">
+                <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 bg-white/40 backdrop-blur-sm">
+                  <BookOpen size={36} className="text-indigo-600" />
+                </div>
+                <h3 className="text-xl font-bold text-indigo-900 mb-2">No Journal Entries</h3>
+                <p className="text-sm text-indigo-700 mb-4">Record your thoughts, symptoms, and medication experiences.</p>
+                <button onClick={openNew} className="px-5 py-3 bg-indigo-600 text-white rounded-xl font-semibold flex items-center gap-2 mx-auto">
+                  <Plus size={18} /> Add Journal Entry
+                </button>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">No Journal Entries</h3>
-              <p className="text-sm text-gray-400 mb-4">Record your thoughts, symptoms, and medication experiences.</p>
-              <button onClick={openNew} className="px-5 py-3 bg-indigo-600 text-white rounded-xl font-semibold flex items-center gap-2 mx-auto">
-                <Plus size={18} /> Add Journal Entry
-              </button>
             </div>
           </div> :
 
         <div className="px-4 space-y-3 pb-28">
-            {filtered.map((entry) => {
+            {filtered.map((entry, idx) => {
             const e = normalizeEntry(entry);
             return (
-              <button key={e.id} onClick={() => openEdit(e)} className="w-full text-left bg-white dark:bg-gray-900 rounded-xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden box-border">
-                  <div className="flex items-start gap-3 w-full min-w-0">
+              <button key={e.id} onClick={() => openEdit(e)} className="relative overflow-hidden w-full text-left rounded-xl p-4 shadow-sm border border-black/5 box-border">
+                  <ScatteredFaces color={CATEGORY_PASTEL[e.category] || "indigo"} count={4} opacity={0.35} seed={idx} />
+                  <div className="relative z-10 flex items-start gap-3 w-full min-w-0">
                     {(() => {
                       const cfg = CATEGORY_CONFIG[e.category];
                       return (
-                        <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                          style={{ background: cfg ? cfg.darkBg : "rgba(150,150,150,0.13)" }}>
-                          {cfg ? React.cloneElement(cfg.icon, { style: { color: cfg.color } }) : <FileText size={20} className="text-gray-500" />}
+                        <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-white/50 backdrop-blur-sm">
+                          {cfg ? React.cloneElement(cfg.icon, { style: { color: cfg.color } }) : <FileText size={20} className="text-gray-700" />}
                         </div>
                       );
                     })()}
                     <div className="flex-1 min-w-0">
                       <div className="flex justify-between items-start gap-2">
-                        <p className="text-sm text-gray-700 dark:text-gray-300 overflow-hidden text-ellipsis whitespace-nowrap flex-1 min-w-0">{e.text}</p>
-                        <span className="text-xs text-gray-400 flex-shrink-0 whitespace-nowrap">{e.date}</span>
+                        <p className="text-sm text-gray-800 overflow-hidden text-ellipsis whitespace-nowrap flex-1 min-w-0">{e.text}</p>
+                        <span className="text-xs text-gray-600 flex-shrink-0 whitespace-nowrap">{e.date}</span>
                       </div>
-                      <div className="flex items-center gap-1 mt-1 text-xs text-gray-400">
+                      <div className="flex items-center gap-1 mt-1 text-xs text-gray-600">
                         <Clock size={11} className="flex-shrink-0" /><span>{e.time}</span>
                       </div>
                       <div className="flex items-center gap-2 mt-2 flex-wrap">
-                        <span className="text-xs px-2 py-0.5 rounded-full font-medium whitespace-nowrap flex items-center gap-1 bg-white/10 dark:bg-white/[0.08] text-gray-600 dark:text-[#C0C3D4] border border-gray-200 dark:border-white/[0.1]">
+                        <span className="text-xs px-2 py-0.5 rounded-full font-medium whitespace-nowrap flex items-center gap-1 bg-white/60 backdrop-blur-sm text-gray-700 border border-white/60">
                           <Heart size={10} /> {e.mood}
                         </span>
-                        <span className="text-xs text-gray-400 whitespace-nowrap">• {e.category}</span>
+                        <span className="text-xs text-gray-600 whitespace-nowrap">• {e.category}</span>
                       </div>
                     </div>
                   </div>
