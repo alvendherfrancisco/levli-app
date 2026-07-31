@@ -1,6 +1,19 @@
 import React from "react";
 import { Plus } from "lucide-react";
 
+// Soft low-opacity tints — light mode (matches the Side Effects icon chip)
+const LIGHT_STYLES = {
+  "bg-yellow-100":  "rgba(234,179,8,0.14)",
+  "bg-orange-100":  "rgba(249,115,22,0.14)",
+  "bg-teal-100":    "rgba(20,184,166,0.14)",
+  "bg-green-100":   "rgba(34,197,94,0.14)",
+  "bg-amber-100":   "rgba(245,158,11,0.14)",
+  "bg-blue-100":    "rgba(59,130,246,0.14)",
+  "bg-red-100":     "rgba(239,68,68,0.14)",
+  "bg-purple-100":  "rgba(168,85,247,0.14)",
+  "bg-indigo-100":  "rgba(99,102,241,0.14)",
+};
+
 // Dark mode: low-opacity tinted chip background, no glow
 const DARK_STYLES = {
   "bg-yellow-100":  { bg: "rgba(234,179,8,0.13)",   color: "#FBBF24" },
@@ -24,8 +37,8 @@ export default function MetricCard({ icon, label, value, unit, color, onAdd }) {
   return (
     <div className="bg-white dark:bg-gray-900 rounded-xl p-2.5 shadow-sm border border-gray-100 dark:border-gray-800 min-h-[90px] overflow-hidden flex flex-col">
       <div className="flex items-center justify-between mb-2">
-        {/* Light mode chip */}
-        <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 dark:hidden ${color}`}>
+        {/* Light mode chip — soft tinted background */}
+        <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 dark:hidden" style={{ background: LIGHT_STYLES[color] }}>
           {lightIcon}
         </div>
         {/* Dark mode chip: tinted bg + glow */}
