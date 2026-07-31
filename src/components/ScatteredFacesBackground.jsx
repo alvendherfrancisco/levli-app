@@ -16,15 +16,16 @@ const FACES = {
 };
 
 // Deterministic scatter layout — percentages keep it responsive (mobile-first)
-// and faces spread across the ENTIRE card, not just one side.
+// and faces spread across the ENTIRE card. The top-left is kept clear so the
+// header text stays readable; faces fill the right, centre and lower areas.
 const LAYOUT = [
-  { url: FACES.happy,   top: "3%",  left: "2%",   size: 60, rot: -8,  op: 0.13 },
-  { url: FACES.wink,    top: "1%",  left: "72%",  size: 56, rot: 10,  op: 0.11 },
-  { url: FACES.neutral, top: "42%", left: "82%",  size: 72, rot: -6,  op: 0.10 },
-  { url: FACES.shocked, top: "46%", left: "-3%",  size: 52, rot: 8,   op: 0.09 },
-  { url: FACES.content, top: "74%", left: "5%",   size: 62, rot: 12,  op: 0.12 },
-  { url: FACES.smirk,   top: "78%", left: "68%",  size: 66, rot: -10, op: 0.11 },
-  { url: FACES.yawn,    top: "92%", left: "36%",  size: 54, rot: -4,  op: 0.09 },
+  { url: FACES.wink,    top: "3%",  left: "70%", size: 60, rot: 10,  op: 0.12 },
+  { url: FACES.happy,   top: "12%", left: "36%", size: 56, rot: -8,  op: 0.11 },
+  { url: FACES.neutral, top: "40%", left: "74%", size: 62, rot: -6,  op: 0.10 },
+  { url: FACES.shocked, top: "42%", left: "2%",  size: 54, rot: 8,   op: 0.09 },
+  { url: FACES.content, top: "72%", left: "8%",  size: 60, rot: 12,  op: 0.12 },
+  { url: FACES.smirk,   top: "74%", left: "66%", size: 62, rot: -10, op: 0.11 },
+  { url: FACES.yawn,    top: "78%", left: "38%", size: 54, rot: -4,  op: 0.09 },
 ];
 
 export default function ScatteredFacesBackground() {
