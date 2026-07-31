@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Settings, ChevronLeft, ChevronRight, Plus, Info, Wind } from "lucide-react";
+import { Settings, ChevronLeft, ChevronRight, Plus, Wind } from "lucide-react";
 import ShotCard from "@/components/shots/ShotCard";
 import MetricsGrid from "@/components/home/MetricsGrid";
 import AddShotModal from "@/components/modals/AddShotModal";
 import SideEffectsModal from "@/components/modals/SideEffectsModal";
+import ScatteredFaces from "@/components/ScatteredFaces";
 import { useAppState } from "@/lib/AppState";
 import { parseShotDate, toDayKey, fromDayKey } from "@/lib/dateUtils";
 
@@ -139,9 +140,12 @@ export default function History() {
                 {sideEffects && <p className="text-sm text-gray-700 dark:text-[#E8E9F0]">{sideEffects}</p>}
               </div>
             ) : (
-              <div className="bg-indigo-50 dark:bg-indigo-500/10 rounded-xl p-3 flex items-center gap-2 border border-transparent dark:border-indigo-500/15">
-                <Info size={16} className="text-indigo-500 dark:text-indigo-400 flex-shrink-0" />
-                <p className="text-sm text-indigo-700 dark:text-indigo-300">Tap to add side effects for this day.</p>
+              <div className="relative rounded-xl overflow-hidden bg-white dark:bg-gray-950 border border-indigo-100 dark:border-indigo-500/15 min-h-[120px]">
+                <ScatteredFaces />
+                <div className="relative z-10 p-4 pr-[55%]">
+                  <p className="text-sm font-semibold text-indigo-700 dark:text-indigo-300">No side effects logged</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Tap to add how you felt on this day.</p>
+                </div>
               </div>
             )}
           </button>
