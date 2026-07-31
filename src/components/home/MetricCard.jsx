@@ -24,13 +24,16 @@ export default function MetricCard({ icon, label, value, unit, color, onAdd }) {
   return (
     <div className="bg-white dark:bg-gray-900 rounded-xl p-2.5 shadow-sm border border-gray-100 dark:border-gray-800 min-h-[90px] overflow-hidden flex flex-col">
       <div className="flex items-center justify-between mb-2">
-        {/* Subtle pastel tinted chip — same low-opacity treatment in light & dark */}
+        {/* Light mode chip */}
+        <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 dark:hidden ${color}`}>
+          {lightIcon}
+        </div>
+        {/* Dark mode chip: tinted bg + glow */}
         <div
-          className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
-          style={{ background: ds ? ds.bg : "rgba(99,102,241,0.13)" }}
+          className="w-9 h-9 rounded-lg items-center justify-center flex-shrink-0 hidden dark:flex"
+          style={ds ? { background: ds.bg } : {}}
         >
-          <span className="dark:hidden">{lightIcon}</span>
-          <span className="hidden dark:flex">{darkIcon}</span>
+          {darkIcon}
         </div>
         <button onClick={onAdd} className="w-5 h-5 rounded-full bg-gray-100 dark:bg-white/[0.07] flex items-center justify-center hover:bg-gray-200 dark:hover:bg-white/[0.12] transition-colors flex-shrink-0">
           <Plus size={11} className="text-gray-500 dark:text-white/70" />
