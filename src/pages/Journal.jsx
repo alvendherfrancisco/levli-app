@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Settings, Plus, BookOpen, Smile, FileText, AlertTriangle, Zap, Star, Clock, Heart, ArrowRight } from "lucide-react";
+import { Settings, Plus, BookOpen, Smile, FileText, AlertTriangle, Zap, Star, Clock, Heart } from "lucide-react";
 import JournalEntryModal from "@/components/modals/JournalEntryModal";
-import ScatteredFaces from "@/components/ScatteredFaces";
 import { useAppState } from "@/lib/AppState";
 import { toast } from "sonner";
 
@@ -77,15 +76,15 @@ export default function Journal() {
       <div className="max-w-3xl mx-auto">
         {filtered.length === 0 ?
         <div className="px-4">
-            <div className="relative overflow-hidden rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800" style={{ background: "#CCFBF1" }}>
-              <ScatteredFaces color="#312E81" />
-              <div className="relative z-10">
-                <h3 className="text-xl font-bold text-indigo-900 mb-1">No Journal Entries</h3>
-                <p className="text-sm text-indigo-700/80 mb-4 max-w-[55%]">Record your thoughts, symptoms, and medication experiences.</p>
-                <button onClick={openNew} className="px-5 py-3 bg-indigo-900 text-white rounded-xl font-semibold flex items-center gap-2">
-                  <Plus size={18} /> Add Journal Entry
-                </button>
+            <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-gray-800 text-center">
+              <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 bg-indigo-100 dark:bg-indigo-500/15">
+                <BookOpen size={36} className="text-indigo-500 dark:text-indigo-400" />
               </div>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">No Journal Entries</h3>
+              <p className="text-sm text-gray-400 mb-4">Record your thoughts, symptoms, and medication experiences.</p>
+              <button onClick={openNew} className="px-5 py-3 bg-indigo-600 text-white rounded-xl font-semibold flex items-center gap-2 mx-auto">
+                <Plus size={18} /> Add Journal Entry
+              </button>
             </div>
           </div> :
 
