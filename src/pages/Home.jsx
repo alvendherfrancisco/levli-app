@@ -83,7 +83,7 @@ export default function Home() {
             </div>
             <HelpCircle size={18} className="text-indigo-400" />
           </div>
-          <div className="border-b-2 border-indigo-500 w-12 mb-3 hidden" />
+          
           <Link to="/insights" className="bg-indigo-50 dark:bg-indigo-500/10 rounded-xl p-3 flex items-center gap-2 block border border-transparent dark:border-indigo-500/15">
             <Info size={16} className="text-indigo-500 dark:text-indigo-400 flex-shrink-0" />
             <p className="text-sm text-indigo-700 dark:text-indigo-300">View full exposure chart in Insights <ArrowRight size={12} className="inline" /></p>
