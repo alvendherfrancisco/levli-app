@@ -6,6 +6,7 @@ import NextShotCard from "@/components/home/NextShotCard";
 import MetricsGrid from "@/components/home/MetricsGrid";
 import AddShotModal from "@/components/modals/AddShotModal";
 import SideEffectsModal from "@/components/modals/SideEffectsModal";
+import ScatteredFaces from "@/components/ScatteredFaces";
 import { useAppState } from "@/lib/AppState";
 import { toDayKey } from "@/lib/dateUtils";
 
@@ -58,9 +59,13 @@ export default function Home() {
               {sideEffects && <p className="text-sm text-gray-700 dark:text-[#E8E9F0]">{sideEffects}</p>}
             </div>
           ) : (
-            <div className="bg-indigo-50 dark:bg-indigo-500/10 rounded-xl p-3 flex items-center gap-2 border border-transparent dark:border-indigo-500/15">
-              <Info size={16} className="text-indigo-500 dark:text-indigo-400 flex-shrink-0" />
-              <p className="text-sm text-indigo-700 dark:text-indigo-300">Tap to add side effects.</p>
+            <div className="relative overflow-hidden rounded-xl p-4 flex items-center gap-3" style={{ background: "#E0E7FF" }}>
+              <ScatteredFaces color="#312E81" />
+              <div className="relative z-10 flex-1 min-w-0">
+                <p className="text-sm font-bold text-indigo-900">Track Side Effects</p>
+                <p className="text-xs text-indigo-700/80 mt-0.5">Log how you're feeling today.</p>
+                <p className="text-xs font-semibold text-indigo-900 mt-2 flex items-center gap-1">Tap to add <ArrowRight size={12} /></p>
+              </div>
             </div>
           )}
         </button>
@@ -69,7 +74,7 @@ export default function Home() {
         <div className="mx-3 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
           <div className="flex items-start justify-between mb-2">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{background:"rgba(99,102,241,0.13)"}}>
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 aspect-square" style={{background:"rgba(99,102,241,0.13)"}}>
                 <Syringe size={16} className="text-indigo-600" />
               </div>
               <div>
