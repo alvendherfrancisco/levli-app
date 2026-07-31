@@ -37,7 +37,7 @@ export default function Home() {
         {/* Side Effects card */}
         <button
           onClick={() => setShowSideEffects(true)}
-          className="relative overflow-hidden mx-3 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-5 min-h-[210px] shadow-sm border border-gray-100 dark:border-gray-800 w-[calc(100%-1.5rem)] text-left"
+          className="relative overflow-hidden mx-3 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 w-[calc(100%-1.5rem)] text-left"
         >
           <ScatteredFacesBackground />
           <div className="relative z-10">
