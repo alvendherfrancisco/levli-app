@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Settings, FileText, Plus, Syringe, Clock, CalendarCheck, Loader2 } from "lucide-react";
+import { Settings, FileText, Plus, Syringe, CalendarCheck, Loader2 } from "lucide-react";
+import { SyringeIcon, ClockIcon, CalendarCheckIcon } from "@/components/CustomIcons";
 import ShotCard from "@/components/shots/ShotCard";
 import AddShotModal from "@/components/modals/AddShotModal";
 import { useAppState } from "@/lib/AppState";
@@ -40,8 +41,8 @@ export default function Shots() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 px-4 mb-5">
           <div className="bg-white dark:bg-gray-900 rounded-xl p-3 shadow-sm border border-gray-100 dark:border-gray-800">
             <div className="flex items-center gap-1.5 mb-1">
-              <div className="w-6 h-6 rounded-lg bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center flex-shrink-0">
-                <Syringe size={12} className="text-indigo-600 dark:text-indigo-400" />
+              <div className="w-9 h-9 rounded-lg bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center flex-shrink-0">
+                <SyringeIcon size={20} className="text-indigo-600 dark:text-indigo-400" />
               </div>
               <span className="text-xs text-gray-400 dark:text-gray-500">Total Shots</span>
             </div>
@@ -49,8 +50,8 @@ export default function Shots() {
           </div>
           <div className="bg-white dark:bg-gray-900 rounded-xl p-3 shadow-sm border border-gray-100 dark:border-gray-800">
             <div className="flex items-center gap-1.5 mb-1">
-              <div className="w-6 h-6 rounded-lg bg-orange-100 dark:bg-orange-900 flex items-center justify-center flex-shrink-0">
-                <Clock size={12} className="text-orange-600 dark:text-orange-400" />
+              <div className="w-9 h-9 rounded-lg bg-orange-100 dark:bg-orange-900 flex items-center justify-center flex-shrink-0">
+                <ClockIcon size={20} className="text-orange-600 dark:text-orange-400" />
               </div>
               <span className="text-xs text-gray-400 dark:text-gray-500">Last Dose</span>
             </div>
@@ -63,8 +64,8 @@ export default function Shots() {
           </div>
           <div className="bg-white dark:bg-gray-900 rounded-xl p-3 shadow-sm border border-gray-100 dark:border-gray-800">
             <div className="flex items-center gap-1.5 mb-1">
-              <div className="w-6 h-6 rounded-lg bg-teal-100 dark:bg-teal-900 flex items-center justify-center flex-shrink-0">
-                <CalendarCheck size={12} className="text-teal-600 dark:text-teal-400" />
+              <div className="w-9 h-9 rounded-lg bg-teal-100 dark:bg-teal-900 flex items-center justify-center flex-shrink-0">
+                <CalendarCheckIcon size={20} className="text-teal-600 dark:text-teal-400" />
               </div>
               <span className="text-xs text-gray-400 dark:text-gray-500">Next Shot</span>
             </div>
