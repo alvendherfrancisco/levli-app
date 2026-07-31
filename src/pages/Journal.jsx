@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Settings, Plus, BookOpen, Smile, FileText, AlertTriangle, Zap, Star, Clock, Heart } from "lucide-react";
 import JournalEntryModal from "@/components/modals/JournalEntryModal";
+import ScatteredFacesBackground from "@/components/ScatteredFacesBackground";
 import { useAppState } from "@/lib/AppState";
 import { toast } from "sonner";
 
@@ -76,7 +77,9 @@ export default function Journal() {
       <div className="max-w-3xl mx-auto">
         {filtered.length === 0 ?
         <div className="px-4">
-            <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-gray-800 text-center">
+            <div className="relative overflow-hidden bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-gray-800 text-center">
+              <ScatteredFacesBackground />
+              <div className="relative z-10">
               <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 bg-indigo-100 dark:bg-indigo-500/15">
                 <BookOpen size={36} className="text-indigo-500 dark:text-indigo-400" />
               </div>
@@ -85,6 +88,7 @@ export default function Journal() {
               <button onClick={openNew} className="px-5 py-3 bg-indigo-600 text-white rounded-xl font-semibold flex items-center gap-2 mx-auto">
                 <Plus size={18} /> Add Journal Entry
               </button>
+              </div>
             </div>
           </div> :
 

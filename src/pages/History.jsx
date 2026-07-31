@@ -5,6 +5,7 @@ import ShotCard from "@/components/shots/ShotCard";
 import MetricsGrid from "@/components/home/MetricsGrid";
 import AddShotModal from "@/components/modals/AddShotModal";
 import SideEffectsModal from "@/components/modals/SideEffectsModal";
+import ScatteredFacesBackground from "@/components/ScatteredFacesBackground";
 import { useAppState } from "@/lib/AppState";
 import { parseShotDate, toDayKey, fromDayKey } from "@/lib/dateUtils";
 
@@ -118,7 +119,9 @@ export default function History() {
         {/* Side Effects for selected day */}
         {selectedDayKey && (
           <button onClick={() => setShowSideEffects(true)}
-            className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 w-[calc(100%-2rem)] text-left">
+            className="relative overflow-hidden mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 w-[calc(100%-2rem)] text-left">
+            <ScatteredFacesBackground />
+            <div className="relative z-10">
             <div className="flex items-center gap-2 mb-2">
               <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{background:"rgba(99,102,241,0.13)"}}>
                 <Wind size={16} className="text-indigo-500 dark:text-indigo-400" />
@@ -144,6 +147,7 @@ export default function History() {
                 <p className="text-sm text-indigo-700 dark:text-indigo-300">Tap to add side effects for this day.</p>
               </div>
             )}
+            </div>
           </button>
         )}
       </div>
