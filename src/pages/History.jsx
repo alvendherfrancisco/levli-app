@@ -119,7 +119,7 @@ export default function History() {
         {/* Side Effects for selected day */}
         {selectedDayKey && (
           <button onClick={() => setShowSideEffects(true)}
-            className="relative overflow-hidden min-h-[260px] mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 w-[calc(100%-2rem)] text-left">
+            className="relative overflow-hidden mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 w-[calc(100%-2rem)] text-left">
             <ScatteredFacesBackground />
             <div className="relative z-10">
             <div className="flex items-center gap-2 mb-2">
