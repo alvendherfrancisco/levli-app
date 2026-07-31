@@ -62,8 +62,8 @@ export default function Home() {
           <div className="relative overflow-hidden rounded-xl p-4 flex items-center gap-3" style={{ background: "#E0E7FF" }}>
               <ScatteredFaces color="#312E81" />
               <div className="relative z-10 flex-1 min-w-0">
-                <p className="text-sm font-bold text-indigo-900 hidden">Track Side Effects</p>
-                <p className="text-xs text-indigo-700/80 mt-0.5 hidden">Log how you're feeling today.</p>
+                
+                
                 <p className="text-xs font-semibold text-indigo-900 mt-2 flex items-center gap-1">Tap to add <ArrowRight size={12} /></p>
               </div>
             </div>
