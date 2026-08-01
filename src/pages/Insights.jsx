@@ -220,7 +220,7 @@ export default function Insights() {
         <Link to="/settings"><Settings size={22} className="text-gray-600 dark:text-gray-400" /></Link>
       </div>
 
-      <div className="max-w-3xl mx-auto pt-4">
+      <div className="max-w-3xl mx-auto pt-4 pb-56">
         {/* Weight Change Panel */}
         <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
           <div className="flex items-center gap-2 mb-1">

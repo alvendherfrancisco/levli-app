@@ -9,7 +9,6 @@ import SideEffectsModal from "@/components/modals/SideEffectsModal";
 import ScatteredFacesBackground from "@/components/ScatteredFacesBackground";
 import { useAppState } from "@/lib/AppState";
 import { toDayKey } from "@/lib/dateUtils";
-import UpsellBanner from "@/components/UpsellBanner";
 import LockedFeatureCard from "@/components/LockedFeatureCard";
 import { useSubscription } from "@/lib/SubscriptionContext";
 
@@ -104,8 +103,6 @@ export default function Home() {
             </LockedFeatureCard>
           )}
         </div>
-
-        <UpsellBanner />
 
         <p className="text-[11px] text-gray-400 dark:text-gray-500 text-center px-4 mb-4">
           Levli is a personal logbook, not medical advice. Do not use it to adjust your dose — consult your prescriber.
