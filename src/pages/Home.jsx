@@ -8,7 +8,6 @@ import NextShotCard from "@/components/home/NextShotCard";
 import MetricsGrid from "@/components/home/MetricsGrid";
 import AddShotModal from "@/components/modals/AddShotModal";
 import SideEffectsModal from "@/components/modals/SideEffectsModal";
-import ScatteredFacesBackground from "@/components/ScatteredFacesBackground";
 import { useAppState } from "@/lib/AppState";
 import { toDayKey } from "@/lib/dateUtils";
 import LockedFeatureCard from "@/components/LockedFeatureCard";
@@ -44,8 +43,7 @@ export default function Home() {
           onClick={() => setShowSideEffects(true)}
           className="relative overflow-hidden mx-3 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 w-[calc(100%-1.5rem)] text-left"
         >
-          <ScatteredFacesBackground />
-          <div className="relative z-10">
+          <div>
           <div className="flex items-center gap-2 mb-2">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{background:"rgba(99,102,241,0.13)"}}>
               <Wind size={16} className="text-indigo-500" />
