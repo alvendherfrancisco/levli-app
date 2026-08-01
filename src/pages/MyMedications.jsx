@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Settings, Plus, Pill, Calendar, User, Activity, Trash2, ChevronRight } from "lucide-react";
+import PageContainer from "@/components/PageContainer";
+import Fab from "@/components/Fab";
 import { useAppState } from "@/lib/AppState";
 import MedicationModal from "@/components/modals/MedicationModal";
 
@@ -25,7 +27,7 @@ export default function MyMedications() {
   };
 
   return (
-    <div className="min-h-screen w-full">
+    <PageContainer bottomInset="fab">
       <div className="sticky top-0 z-30 bg-white dark:bg-gray-950 w-full flex items-center justify-between px-5 pt-6 pb-4">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">My Medications</h1>
         <div className="flex items-center gap-3">
@@ -34,7 +36,7 @@ export default function MyMedications() {
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto pt-4 px-4 pb-32">
+      <div className="max-w-3xl mx-auto pt-4 px-4">
         <p className="text-xs text-gray-400 dark:text-gray-500 mb-4">
           Track your prescribed regimens. Titration stages show only what you or your prescriber entered — Levli never generates a schedule.
         </p>
@@ -79,12 +81,9 @@ export default function MyMedications() {
         )}
       </div>
 
-      <button onClick={openNew}
-        className="fixed bottom-24 right-5 lg:right-8 bg-indigo-600 text-white rounded-2xl shadow-lg shadow-indigo-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-indigo-700 transition-colors text-sm px-5 py-3">
-        <Plus size={18} /> Add Medication
-      </button>
+      <Fab onClick={openNew} label="Add Medication" />
 
       <MedicationModal open={modalOpen} onClose={() => { setModalOpen(false); setEditing(null); }} editing={editing} />
-    </div>
+    </PageContainer>
   );
 }

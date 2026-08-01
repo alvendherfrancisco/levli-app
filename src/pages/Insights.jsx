@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import UpsellBanner from "@/components/UpsellBanner";
 import SiteRotationChart from "@/components/insights/SiteRotationChart";
 import { useSubscription } from "@/lib/SubscriptionContext";
+import PageContainer from "@/components/PageContainer";
 
 const CLASS_COLORS = { Semaglutide: "#14B8A6", Tirzepatide: "#6366F1", Liraglutide: "#F59E0B" };
 
@@ -214,13 +215,13 @@ export default function Insights() {
   const heightMissing = heightM === 0 && latestWeight != null;
 
   return (
-    <div className="min-h-screen w-full">
+    <PageContainer bottomInset="banner">
       <div className="sticky top-0 z-30 bg-white dark:bg-gray-950 w-full flex items-center justify-between px-5 pt-6 pb-4">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Insights</h1>
         <Link to="/settings"><Settings size={22} className="text-gray-600 dark:text-gray-400" /></Link>
       </div>
 
-      <div className="max-w-3xl mx-auto pt-4 pb-52">
+      <div className="max-w-3xl mx-auto pt-4">
         {/* Weight Change Panel */}
         <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
           <div className="flex items-center gap-2 mb-1">
@@ -517,6 +518,6 @@ export default function Insights() {
 
         <UpsellBanner />
       </div>
-    </div>
+    </PageContainer>
   );
 }

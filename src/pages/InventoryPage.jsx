@@ -1,6 +1,8 @@
 import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Settings, Plus, Package, AlertTriangle, Trash2, ChevronRight, Thermometer } from "lucide-react";
+import PageContainer from "@/components/PageContainer";
+import Fab from "@/components/Fab";
 import { useAppState } from "@/lib/AppState";
 import InventoryModal from "@/components/modals/InventoryModal";
 import { todayKey, fromDayKey, calendarDaysBetween } from "@/lib/dateUtils";
@@ -62,7 +64,7 @@ export default function InventoryPage() {
   const productStorageLogs = (productId) => storageLogs.filter((s) => s.inventory_id === productId || s.product_name === (inventory.find((i) => i.id === productId)?.product_name));
 
   return (
-    <div className="min-h-screen w-full">
+    <PageContainer bottomInset="fab">
       <div className="sticky top-0 z-30 bg-white dark:bg-gray-950 w-full flex items-center justify-between px-5 pt-6 pb-4">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Inventory</h1>
         <div className="flex items-center gap-3">
@@ -71,7 +73,7 @@ export default function InventoryPage() {
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto pt-4 px-4 pb-32">
+      <div className="max-w-3xl mx-auto pt-4 px-4">
         <p className="text-xs text-gray-400 dark:text-gray-500 mb-4">
           Track product quantities, lot numbers, and expiry dates. Logging a shot for a tracked product decrements the remaining quantity.
         </p>
@@ -133,10 +135,7 @@ export default function InventoryPage() {
         )}
       </div>
 
-      <button onClick={openNew}
-        className="fixed bottom-24 right-5 lg:right-8 bg-indigo-600 text-white rounded-2xl shadow-lg shadow-indigo-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-indigo-700 transition-colors text-sm px-5 py-3">
-        <Plus size={18} /> Add Product
-      </button>
+      <Fab onClick={openNew} label="Add Product" />
 
       <InventoryModal open={modalOpen} onClose={() => { setModalOpen(false); setEditing(null); }} editing={editing} />
 
@@ -156,6 +155,6 @@ export default function InventoryPage() {
           </div>
         </div>
       )}
-    </div>
+    </PageContainer>
   );
 }

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Settings, Plus, BookOpen, Smile, FileText, AlertTriangle, Zap, Star, Clock, Heart } from "lucide-react";
+import PageContainer from "@/components/PageContainer";
 import JournalEntryModal from "@/components/modals/JournalEntryModal";
 import ScatteredFacesBackground from "@/components/ScatteredFacesBackground";
 import { useAppState } from "@/lib/AppState";
@@ -53,7 +54,7 @@ export default function Journal() {
   const normalizeEntry = (e) => ({ ...e, moodColor: e.mood_color || e.moodColor || "bg-gray-100 text-gray-600" });
 
   return (
-    <div className="min-h-screen w-full">
+    <PageContainer bottomInset="default">
       <div className="sticky top-0 z-30 bg-white dark:bg-gray-950 w-full flex items-center justify-between px-5 pt-6 pb-4">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Journal</h1>
         <div className="flex items-center gap-3">
@@ -92,7 +93,7 @@ export default function Journal() {
             </div>
           </div> :
 
-        <div className="px-4 space-y-3 pb-28">
+        <div className="px-4 space-y-3">
             {filtered.map((entry) => {
             const e = normalizeEntry(entry);
             return (
@@ -136,7 +137,6 @@ export default function Journal() {
         onSave={handleSave}
         onDelete={editingEntry ? () => handleDelete(editingEntry.id) : null}
         initialEntry={editingEntry} />
-      
-    </div>);
-
-}
+        
+        </PageContainer>);
+        }

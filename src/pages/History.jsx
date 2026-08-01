@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Settings, ChevronLeft, ChevronRight, Plus, Info, Wind } from "lucide-react";
+import { Settings, ChevronLeft, ChevronRight, Info, Wind } from "lucide-react";
+import PageContainer from "@/components/PageContainer";
+import Fab from "@/components/Fab";
 import ShotCard from "@/components/shots/ShotCard";
 import MetricsGrid from "@/components/home/MetricsGrid";
 import AddShotModal from "@/components/modals/AddShotModal";
@@ -56,13 +58,13 @@ export default function History() {
   const openNew = () => { setEditingShot(null); setShowShot(true); };
 
   return (
-    <div className="min-h-screen w-full">
+    <PageContainer bottomInset="fab">
       <div className="sticky top-0 z-30 bg-white dark:bg-gray-950 w-full flex items-center justify-between px-5 pt-6 pb-4">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">History</h1>
         <Link to="/settings"><Settings size={22} className="text-gray-600 dark:text-gray-400" /></Link>
       </div>
 
-      <div className="max-w-3xl mx-auto pt-4 pb-4">
+      <div className="max-w-3xl mx-auto pt-4">
         {/* Calendar */}
         <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between mb-4">
@@ -152,15 +154,12 @@ export default function History() {
         )}
       </div>
 
-      <button onClick={openNew}
-        className="fixed bottom-24 right-5 lg:right-8 bg-indigo-600 text-white rounded-2xl shadow-lg shadow-indigo-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-indigo-700 transition-colors text-sm px-5 py-3">
-        <Plus size={18} /> Add Shot
-      </button>
+      <Fab onClick={openNew} label="Add Shot" />
 
       <AddShotModal open={showShot} onClose={() => { setShowShot(false); setEditingShot(null); }} editingShot={editingShot} />
       {selectedDayKey && (
         <SideEffectsModal open={showSideEffects} onClose={() => setShowSideEffects(false)} dayKey={selectedDayKey} />
       )}
-    </div>
+    </PageContainer>
   );
 }

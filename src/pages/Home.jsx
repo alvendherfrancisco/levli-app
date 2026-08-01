@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Settings, Plus, Syringe, Info, HelpCircle, Wind, ArrowRight } from "lucide-react";
+import { Settings, Syringe, Info, HelpCircle, Wind, ArrowRight } from "lucide-react";
+import PageContainer from "@/components/PageContainer";
+import Fab from "@/components/Fab";
 import DateStrip from "@/components/home/DateStrip";
 import NextShotCard from "@/components/home/NextShotCard";
 import MetricsGrid from "@/components/home/MetricsGrid";
@@ -26,13 +28,13 @@ export default function Home() {
   const greeting = hour < 12 ? "Good Morning!" : hour < 18 ? "Good Afternoon!" : "Good Evening!";
 
   return (
-    <div className="min-h-screen w-full">
+    <PageContainer bottomInset="fab">
       <div className="sticky top-0 z-30 bg-white dark:bg-gray-950 w-full flex items-center justify-between px-5 pt-6 pb-2">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{greeting}</h1>
         <Link to="/settings"><Settings size={24} className="text-gray-600 dark:text-gray-400" /></Link>
       </div>
 
-      <div className="max-w-3xl mx-auto pt-4 pb-6">
+      <div className="max-w-3xl mx-auto pt-4">
         <DateStrip selectedDate={selectedDate} onSelectDate={setSelectedDate} />
         <NextShotCard />
         <MetricsGrid dayKey={dk} />
@@ -109,16 +111,10 @@ export default function Home() {
         </p>
       </div>
 
-      <button
-        onClick={() => setShowShot(true)}
-        className="fixed bottom-24 right-5 lg:right-8 bg-indigo-600 dark:bg-indigo-500 text-white rounded-2xl shadow-lg shadow-indigo-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-indigo-700 dark:hover:bg-indigo-400 transition-colors text-sm px-5 py-3"
-      style={{ boxShadow: "0 4px 24px 4px rgba(99,102,241,0.35)" }}
-      >
-        <Plus size={18} /> Add Shot
-      </button>
+      <Fab onClick={() => setShowShot(true)} label="Add Shot" />
 
       <AddShotModal open={showShot} onClose={() => setShowShot(false)} />
       <SideEffectsModal open={showSideEffects} onClose={() => setShowSideEffects(false)} dayKey={dk} />
-    </div>
+    </PageContainer>
   );
 }

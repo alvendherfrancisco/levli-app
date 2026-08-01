@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Settings, FileText, Plus, Syringe, Clock, CalendarCheck, ClipboardCheck, Loader2, Crown } from "lucide-react";
+import { Settings, FileText, Syringe, Clock, CalendarCheck, ClipboardCheck, Loader2, Crown } from "lucide-react";
+import PageContainer from "@/components/PageContainer";
+import Fab from "@/components/Fab";
 import ShotCard from "@/components/shots/ShotCard";
 import AddShotModal from "@/components/modals/AddShotModal";
 import { useAppState } from "@/lib/AppState";
@@ -32,7 +34,7 @@ export default function Shots() {
   const openNew = () => { setEditingShot(null); setShowShot(true); };
 
   return (
-    <div className="min-h-screen w-full">
+    <PageContainer bottomInset="fab">
       <div className="sticky top-0 z-30 bg-white dark:bg-gray-950 w-full flex items-center justify-between px-5 pt-6 pb-4">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Shots</h1>
         <div className="flex items-center gap-3">
@@ -124,16 +126,13 @@ export default function Shots() {
         </div>
       </div>
 
-      <p className="text-[11px] text-gray-400 dark:text-gray-500 text-center px-4 pb-24">
+      <p className="text-[11px] text-gray-400 dark:text-gray-500 text-center px-4">
         Levli is a personal logbook, not medical advice. Consult your prescriber for dosing decisions.
       </p>
 
-      <button onClick={openNew}
-        className="fixed bottom-24 right-5 lg:right-8 bg-indigo-600 text-white rounded-2xl shadow-lg shadow-indigo-600/30 flex items-center gap-2 font-semibold z-40 hover:bg-indigo-700 transition-colors text-sm px-5 py-3">
-        <Plus size={18} /> Add Shot
-      </button>
+      <Fab onClick={openNew} label="Add Shot" />
 
       <AddShotModal open={showShot} onClose={() => { setShowShot(false); setEditingShot(null); }} editingShot={editingShot} />
-    </div>
+    </PageContainer>
   );
 }
