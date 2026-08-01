@@ -54,6 +54,33 @@
     "parental_consent_name": {
       "type": "string",
       "description": "Name of the parent/guardian who provided consent for a minor"
+    },
+    "plan_type": {
+      "type": "string",
+      "enum": [
+        "free",
+        "monthly",
+        "yearly",
+        "lifetime"
+      ],
+      "default": "free",
+      "description": "Current subscription plan"
+    },
+    "subscription_status": {
+      "type": "string",
+      "description": "Stripe subscription status: active, trialing, past_due, canceled, inactive, none"
+    },
+    "premium_until": {
+      "type": "string",
+      "description": "ISO date when premium access expires (null/empty for lifetime or active recurring plans)"
+    },
+    "stripe_customer_id": {
+      "type": "string",
+      "description": "Stripe customer ID linked to this user"
+    },
+    "stripe_subscription_id": {
+      "type": "string",
+      "description": "Stripe subscription ID (for recurring plans)"
     }
   },
   "name": "UserProfile",

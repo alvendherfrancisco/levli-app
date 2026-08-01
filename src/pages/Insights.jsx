@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Settings, TrendingDown, Syringe, HelpCircle, Zap, Gauge, Camera, Image, Clock, Plus, ArrowRight, Maximize2, Minimize2 } from "lucide-react";
+import { Settings, TrendingDown, Syringe, HelpCircle, Zap, Gauge, Camera, Image, Clock, Plus, ArrowRight, Maximize2, Minimize2, Crown } from "lucide-react";
 import ProgressPhotoCard from "@/components/insights/ProgressPhotoCard";
 import AddMetricModal from "@/components/modals/AddMetricModal";
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
@@ -9,6 +9,8 @@ import { parseShotDate, todayKey } from "@/lib/dateUtils";
 import { isInvestigational, getHalfLifeDays, getDosingInterval } from "@/lib/medicationData";
 import { steadyStateFraction, accumulationRatio, PK_CALCULATION_VERSION } from "@/lib/pkCalculations";
 import { toast } from "sonner";
+import UpsellBanner from "@/components/UpsellBanner";
+import { useSubscription } from "@/lib/SubscriptionContext";
 
 const CLASS_COLORS = { Semaglutide: "#14B8A6", Tirzepatide: "#6366F1", Liraglutide: "#F59E0B" };
 
@@ -101,6 +103,7 @@ const MED_RANGES = { "7 Days": 7, "30 Days": 30, "90 Days": 90 };
 
 export default function Insights() {
   const { shots, weightHistory, profile, dayMetrics, progressPhotosList, addProgressPhotoRecord, updateProgressPhotoRecord, deleteProgressPhotoRecord } = useAppState();
+  const { isPremium, openPaywall } = useSubscription();
   const [weightRange, setWeightRange] = useState("180 Days");
   const [medRange, setMedRange] = useState("30 Days");
   const [viewAllPhotos, setViewAllPhotos] = useState(false);
@@ -406,6 +409,8 @@ export default function Insights() {
             ))}
           </div>
 
+          <div className="relative">
+            <div className={isPremium ? "" : "blur-sm pointer-events-none select-none opacity-60"}>
           {shots.length > 0 ? (
             medLevel.disabled ? (
               <div className="h-48 flex items-center justify-center bg-gray-50 dark:bg-white/[0.03] rounded-xl px-4">
@@ -447,7 +452,18 @@ export default function Insights() {
             <div className="h-48 flex items-center justify-center bg-gray-50 dark:bg-white/[0.03] rounded-xl">
               <p className="text-sm text-gray-400 dark:text-[#9A9DAE]">Log your first shot to see relative exposure here.</p>
             </div>
-          )}
+            )}
+            </div>
+            {!isPremium && (
+              <button onClick={openPaywall} className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+                <div className="w-14 h-14 rounded-full bg-indigo-100 flex items-center justify-center mb-3">
+                  <Crown size={26} className="text-indigo-600" />
+                </div>
+                <p className="font-bold text-gray-900 dark:text-white">Unlock with Levli Premium</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 max-w-xs">Upgrade to premium to view estimated medication levels.</p>
+              </button>
+            )}
+          </div>
           <p className="text-xs text-gray-400 dark:text-[#9A9DAE] text-center mt-2">Time vs modelled relative exposure (illustrative)</p>
           <p className="text-[11px] text-gray-400 dark:text-[#9A9DAE] text-center mt-1 px-2">Illustrative estimate only — not a blood-level measurement. Do not use it to adjust your dose. Confirm any decisions with your prescriber.</p>
           <p className="text-[10px] text-gray-300 dark:text-gray-600 text-center mt-1">Calculation version: {PK_CALCULATION_VERSION}</p>
@@ -462,6 +478,8 @@ export default function Insights() {
             </div>
           )}
         </div>
+
+        <UpsellBanner />
       </div>
     </div>
   );

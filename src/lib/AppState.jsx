@@ -478,6 +478,7 @@ export function AppStateProvider({ children }) {
       proxyAccess, addProxyAccess, revokeProxyAccess,
       // Profile
       profile, setProfile, recordConsent, recordParentalConsent,
+      refreshProfile: loadProfile,
       // Derived
       weightHistory, getRecommendedSite,
       // Dark mode

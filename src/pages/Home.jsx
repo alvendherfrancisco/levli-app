@@ -9,12 +9,16 @@ import SideEffectsModal from "@/components/modals/SideEffectsModal";
 import ScatteredFacesBackground from "@/components/ScatteredFacesBackground";
 import { useAppState } from "@/lib/AppState";
 import { toDayKey } from "@/lib/dateUtils";
+import UpsellBanner from "@/components/UpsellBanner";
+import LockedFeatureCard from "@/components/LockedFeatureCard";
+import { useSubscription } from "@/lib/SubscriptionContext";
 
 export default function Home() {
   const [showShot, setShowShot] = useState(false);
   const [showSideEffects, setShowSideEffects] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const { getSideEffects, adverseEventsByDay } = useAppState();
+  const { isPremium } = useSubscription();
   const dk = toDayKey(selectedDate);
   const sideEffects = getSideEffects(dk);
   const dayAdverseEvents = adverseEventsByDay[dk] || [];
@@ -84,11 +88,24 @@ export default function Home() {
             <HelpCircle size={18} className="text-indigo-400" />
           </div>
           <div className="border-b-2 border-indigo-500 w-12 mb-3" />
-          <Link to="/insights" className="bg-indigo-50 dark:bg-indigo-500/10 rounded-xl p-3 flex items-center gap-2 block border border-transparent dark:border-indigo-500/15">
-            <Info size={16} className="text-indigo-500 dark:text-indigo-400 flex-shrink-0" />
-            <p className="text-sm text-indigo-700 dark:text-indigo-300">View full exposure chart in Insights <ArrowRight size={12} className="inline" /></p>
-          </Link>
+          {isPremium ? (
+            <Link to="/insights" className="bg-indigo-50 dark:bg-indigo-500/10 rounded-xl p-3 flex items-center gap-2 block border border-transparent dark:border-indigo-500/15">
+              <Info size={16} className="text-indigo-500 dark:text-indigo-400 flex-shrink-0" />
+              <p className="text-sm text-indigo-700 dark:text-indigo-300">View full exposure chart in Insights <ArrowRight size={12} className="inline" /></p>
+            </Link>
+          ) : (
+            <LockedFeatureCard subtitle="Upgrade to premium to view estimated medication levels.">
+              <div className="flex items-center gap-2 mb-3 flex-wrap">
+                {["7 Days", "30 Days", "90 Days"].map((r) => (
+                  <span key={r} className="px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-400">{r}</span>
+                ))}
+              </div>
+              <div className="h-32 rounded-xl bg-gradient-to-b from-indigo-50 to-transparent dark:from-indigo-500/10" />
+            </LockedFeatureCard>
+          )}
         </div>
+
+        <UpsellBanner />
 
         <p className="text-[11px] text-gray-400 dark:text-gray-500 text-center px-4 mb-4">
           Levli is a personal logbook, not medical advice. Do not use it to adjust your dose — consult your prescriber.

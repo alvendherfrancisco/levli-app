@@ -9,6 +9,7 @@ import ScrollToTop from './components/ScrollToTop';
 import ProtectedRoute from '@/components/ProtectedRoute';
 
 import { AppStateProvider, useAppState } from '@/lib/AppState';
+import { SubscriptionProvider } from '@/lib/SubscriptionContext';
 
 // Auth pages
 import Login from '@/pages/Login';
@@ -103,11 +104,13 @@ function App() {
     <AuthProvider>
       <QueryClientProvider client={queryClientInstance}>
         <AppStateProvider>
+          <SubscriptionProvider>
           <Router>
             <ScrollToTop />
             <AuthenticatedApp />
           </Router>
           <Toaster />
+          </SubscriptionProvider>
         </AppStateProvider>
       </QueryClientProvider>
     </AuthProvider>
