@@ -189,8 +189,8 @@ export default function Profile() {
         {/* Measurement Units */}
         <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
           <div className="flex items-center gap-2 mb-1">
-            <div className="w-8 h-8 rounded-lg bg-orange-100 dark:bg-orange-900 flex items-center justify-center">
-              <ScaleIcon size={18} className="text-orange-600 dark:text-orange-400" />
+            <div className="w-8 h-8 rounded-lg bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
+              <ScaleIcon size={18} className="text-indigo-600 dark:text-indigo-400" />
             </div>
             <h3 className="font-bold text-gray-900 dark:text-white text-lg">Measurement Units</h3>
           </div>
