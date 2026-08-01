@@ -31,7 +31,7 @@ export default function MetricsGrid({ dayKey }) {
 
   const allMetrics = [
     {
-      icon: <WeightFilledIcon size={20} className="text-gray-800 dark:text-gray-400" />, label: "Weight",
+      icon: <WeightFilledIcon size={20} className="text-amber-500 dark:text-amber-400" />, label: "Weight",
       value: weight != null ? String(weight) : "–", unit: weightUnit, color: "bg-amber-50 dark:bg-amber-500/10",
       onAdd: () => setMetricModal({ label: "Weight", unit: weightUnit, current: weight != null ? String(weight) : "", onSave: async (v) => { await saveWeight(dk, v); weight != null ? toast.success("Weight updated successfully!") : toast.success("Weight added successfully!"); } }),
     },
