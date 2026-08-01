@@ -1,7 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
-import Stripe from 'npm:stripe';
-import { secrets } from 'base44:runtime';
 
+// PayMongo does not provide a self-serve customer portal like Stripe.
+// For now, Restore simply reports whether an active subscription exists.
 export default async function(req) {
   try {
     const base44 = createClientFromRequest(req);
@@ -13,18 +13,12 @@ export default async function(req) {
 
     const profiles = await base44.asServiceRole.entities.UserProfile.filter({ created_by_id: userId });
     const profile = profiles[0];
-    if (!profile || !profile.stripe_customer_id) {
+    if (!profile || profile.subscription_status !== "active") {
       return Response.json({ error: "No subscription found" }, { status: 404 });
     }
 
-    const stripe = new Stripe(secrets.get("STRIPE_SECRET_KEY"));
-    const origin = new URL(req.url).origin;
-    const session = await stripe.billingPortal.sessions.create({
-      customer: profile.stripe_customer_id,
-      return_url: `${origin}/`,
-    });
-
-    return Response.json({ url: session.url });
+    // No portal URL available for PayMongo one-time payments.
+    return Response.json({ error: "No portal available" }, { status: 404 });
   } catch (error) {
     console.error("create-portal-session error:", error);
     return Response.json({ error: error.message }, { status: 500 });

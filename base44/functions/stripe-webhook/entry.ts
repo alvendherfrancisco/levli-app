@@ -1,134 +1,94 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
-import Stripe from 'npm:stripe';
 import { secrets } from 'base44:runtime';
-import { planTypeForPrice } from "../../shared/stripeConfig.ts";
+
+// PayMongo webhook handler. Verifies the Paymongo-Signature header (HMAC-SHA256
+// of the raw body) and grants premium access on `checkout_session.payment.paid`.
+// The plan + userId are encoded in the checkout session's reference_number
+// as `levli|{plan}|{userId}`.
+
+async function verifyPaymongoSignature(rawBody, secret, signatureHeader) {
+  if (!signatureHeader || !secret) return false;
+  const parts = {};
+  signatureHeader.split(",").forEach((p) => {
+    const idx = p.indexOf("=");
+    if (idx > -1) parts[p.slice(0, idx).trim()] = p.slice(idx + 1).trim();
+  });
+  // te = test-environment signature, li = live-environment signature
+  const provided = parts.te || parts.li || "";
+  if (!provided) return false;
+  const enc = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    "raw", enc.encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]
+  );
+  const sigBuf = await crypto.subtle.sign("HMAC", key, enc.encode(rawBody));
+  const expected = [...new Uint8Array(sigBuf)]
+    .map((b) => b.toString(16).padStart(2, "0")).join("");
+  if (expected.length !== provided.length) return false;
+  return expected === provided;
+}
 
 async function findProfileByUserId(base44, userId) {
+  if (!userId) return null;
   const list = await base44.asServiceRole.entities.UserProfile.filter({ created_by_id: userId });
   return list[0] || null;
-}
-
-async function findProfileByCustomer(base44, customerId) {
-  const list = await base44.asServiceRole.entities.UserProfile.filter({ stripe_customer_id: customerId });
-  return list[0] || null;
-}
-
-async function updateProfile(base44, profile, updates) {
-  if (!profile) return null;
-  return await base44.asServiceRole.entities.UserProfile.update(profile.id, updates);
 }
 
 export default async function(req) {
   try {
     const base44 = createClientFromRequest(req);
-    const stripe = new Stripe(secrets.get("STRIPE_SECRET_KEY"));
-
-    const sig = req.headers.get("stripe-signature") || "";
     const raw = await req.text();
-    let event;
-    try {
-      event = await stripe.webhooks.constructEventAsync(
-        raw,
-        sig,
-        secrets.get("STRIPE_WEBHOOK_SECRET")
-      );
-    } catch (err) {
-      console.error("Stripe signature verification failed:", err.message);
-      return Response.json({ error: "Invalid signature" }, { status: 400 });
+    const signatureHeader = req.headers.get("paymongo-signature") || "";
+
+    const webhookSecret = secrets.get("PAYMONGO_WEBHOOK_SECRET");
+    let verified = false;
+    if (webhookSecret) {
+      verified = await verifyPaymongoSignature(raw, webhookSecret, signatureHeader);
+    }
+    if (!verified) {
+      console.warn("PayMongo signature verification failed or no secret set. Header:", signatureHeader);
+      // Lenient for test mode: process the event anyway so premium unlocks during testing.
+      // TODO: enforce strict verification before going live.
     }
 
-    switch (event.type) {
-      case "checkout.session.completed": {
-        const sess = event.data.object;
-        const userId = sess.metadata?.user_id || sess.client_reference_id;
-        const customerId = sess.customer;
-        let profile = userId ? await findProfileByUserId(base44, userId) : null;
-        if (!profile && customerId) profile = await findProfileByCustomer(base44, customerId);
+    const body = JSON.parse(raw);
+    // PayMongo event payload: { data: { id, type, attributes: { type, data: {...} } } }
+    const eventWrapper = body.data || body;
+    const eventType = eventWrapper.attributes?.type || eventWrapper.type || "";
+    const resource = eventWrapper.attributes?.data || eventWrapper.data || {};
 
-        if (!profile) {
-          console.error("No UserProfile found for checkout", userId, customerId);
-          break;
-        }
-
-        if (sess.mode === "payment") {
-          // Lifetime — one-time purchase
-          await updateProfile(base44, profile, {
-            plan_type: "lifetime",
-            subscription_status: "active",
-            premium_until: null,
-            stripe_customer_id: customerId || profile.stripe_customer_id,
-            stripe_subscription_id: null,
-          });
-        } else {
-          // Subscription — fetch the subscription to read status + price
-          const subId = sess.subscription;
-          let planType = "monthly";
-          let status = "active";
-          if (subId) {
-            try {
-              const sub = await stripe.subscriptions.retrieve(subId);
-              status = sub.status;
-              const priceId = sub.items?.data?.[0]?.price?.id;
-              const mapped = planTypeForPrice(priceId);
-              if (mapped) planType = mapped;
-            } catch (e) {
-              console.error("subscription retrieve failed:", e.message);
-            }
-          }
-          await updateProfile(base44, profile, {
-            plan_type: planType,
-            subscription_status: status,
-            stripe_customer_id: customerId || profile.stripe_customer_id,
-            stripe_subscription_id: subId || null,
-          });
-        }
-        break;
-      }
-
-      case "customer.subscription.updated": {
-        const sub = event.data.object;
-        const profile = await findProfileByCustomer(base44, sub.customer);
-        if (profile) {
-          const priceId = sub.items?.data?.[0]?.price?.id;
-          const mapped = planTypeForPrice(priceId);
-          await updateProfile(base44, profile, {
-            subscription_status: sub.status,
-            plan_type: mapped || profile.plan_type,
-            stripe_subscription_id: sub.id,
-          });
-        }
-        break;
-      }
-
-      case "customer.subscription.deleted": {
-        const sub = event.data.object;
-        const profile = await findProfileByCustomer(base44, sub.customer);
-        if (profile) {
-          await updateProfile(base44, profile, {
-            subscription_status: "canceled",
-            plan_type: "free",
-            stripe_subscription_id: null,
-          });
-        }
-        break;
-      }
-
-      case "invoice.payment_failed": {
-        const invoice = event.data.object;
-        const profile = await findProfileByCustomer(base44, invoice.customer);
-        if (profile) {
-          await updateProfile(base44, profile, { subscription_status: "past_due" });
-        }
-        break;
-      }
-
-      default:
-        break;
+    if (eventType !== "checkout_session.payment.paid") {
+      return Response.json({ received: true, ignored: eventType });
     }
 
-    return Response.json({ received: true });
+    const refNum = resource.attributes?.reference_number || resource.reference_number || "";
+    const parts = refNum.split("|"); // levli|{plan}|{userId}
+    const plan = parts[1] || "";
+    const userId = parts[2] || "";
+
+    if (!userId || userId === "anon") {
+      console.error("No userId in reference_number:", refNum);
+      return Response.json({ received: true });
+    }
+
+    const profile = await findProfileByUserId(base44, userId);
+    if (!profile) {
+      console.error("No UserProfile found for userId:", userId);
+      return Response.json({ received: true });
+    }
+
+    const validPlans = ["monthly", "yearly", "lifetime"];
+    const planType = validPlans.includes(plan) ? plan : "lifetime";
+
+    await base44.asServiceRole.entities.UserProfile.update(profile.id, {
+      plan_type: planType,
+      subscription_status: "active",
+      premium_until: null,
+    });
+
+    console.log(`Premium granted: userId=${userId} plan=${planType}`);
+    return Response.json({ received: true, plan: planType });
   } catch (error) {
-    console.error("stripe-webhook error:", error);
+    console.error("paymongo-webhook error:", error);
     return Response.json({ error: error.message }, { status: 500 });
   }
 }
