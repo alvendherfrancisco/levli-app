@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useRef } from "react";
 import { useAppState } from "@/lib/AppState";
 import { useAuth } from "@/lib/AuthContext";
 import { base44 } from "@/api/base44Client";
@@ -18,27 +18,26 @@ export function SubscriptionProvider({ children }) {
     return false;
   })();
 
-  // After returning from a successful checkout, refresh the profile so the
-  // synced subscription status (written by the webhook) is reflected.
+  // After returning from a successful checkout, verify the payment directly
+  // with PayMongo (fallback in case the webhook hasn't processed yet) and
+  // refresh the profile. Waits until auth has loaded before running.
+  const checkoutHandled = useRef(false);
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    if (params.get("checkout") === "success") {
-      params.delete("checkout");
-      const qs = params.toString();
-      window.history.replaceState({}, "", window.location.pathname + (qs ? "?" + qs : ""));
-      // Fallback: verify the payment directly with PayMongo in case the webhook
-      // hasn't processed yet, then refresh the profile.
-      (async () => {
-        if (user?.id) {
-          try { await base44.functions.invoke("verify-payment", { userId: user.id }); } catch (e) { /* non-fatal */ }
-        }
-        refreshProfile?.();
-        setTimeout(() => refreshProfile?.(), 2000);
-        setTimeout(() => refreshProfile?.(), 5000);
-        setTimeout(() => refreshProfile?.(), 9000);
-      })();
-    }
-  }, []);
+    if (params.get("checkout") !== "success" || checkoutHandled.current) return;
+    if (!user?.id) return; // auth still loading — re-run when user is available
+    checkoutHandled.current = true;
+    params.delete("checkout");
+    const qs = params.toString();
+    window.history.replaceState({}, "", window.location.pathname + (qs ? "?" + qs : ""));
+    (async () => {
+      try { await base44.functions.invoke("verify-payment", { userId: user.id }); } catch (e) { /* non-fatal */ }
+      refreshProfile?.();
+      setTimeout(() => refreshProfile?.(), 2000);
+      setTimeout(() => refreshProfile?.(), 5000);
+      setTimeout(() => refreshProfile?.(), 9000);
+    })();
+  }, [user?.id]);
 
   const openPaywall = () => setPaywallOpen(true);
   const closePaywall = () => setPaywallOpen(false);
