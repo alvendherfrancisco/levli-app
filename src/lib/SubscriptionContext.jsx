@@ -20,10 +20,15 @@ export function SubscriptionProvider({ children }) {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get("checkout") === "success") {
-      refreshProfile?.();
       params.delete("checkout");
       const qs = params.toString();
       window.history.replaceState({}, "", window.location.pathname + (qs ? "?" + qs : ""));
+      // Refresh now, then retry a few times so the webhook-processed
+      // subscription status is picked up even if it lands a few seconds later.
+      refreshProfile?.();
+      setTimeout(() => refreshProfile?.(), 2000);
+      setTimeout(() => refreshProfile?.(), 5000);
+      setTimeout(() => refreshProfile?.(), 9000);
     }
   }, []);
 
