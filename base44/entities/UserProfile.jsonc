@@ -68,19 +68,11 @@
     },
     "subscription_status": {
       "type": "string",
-      "description": "Stripe subscription status: active, trialing, past_due, canceled, inactive, none"
+      "description": "Subscription status: active, trialing, past_due, canceled, inactive, none"
     },
     "premium_until": {
       "type": "string",
       "description": "ISO date when premium access expires (null/empty for lifetime or active recurring plans)"
-    },
-    "stripe_customer_id": {
-      "type": "string",
-      "description": "Stripe customer ID linked to this user"
-    },
-    "stripe_subscription_id": {
-      "type": "string",
-      "description": "Stripe subscription ID (for recurring plans)"
     }
   },
   "name": "UserProfile",

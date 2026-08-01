@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { X, Crown, Syringe, BarChart3, History, FileText, Droplet, Bell } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { useAuth } from "@/lib/AuthContext";
+import { useAppState } from "@/lib/AppState";
 import { toast } from "sonner";
 
 const PLANS = [
@@ -21,6 +22,7 @@ const FEATURES = [
 
 export default function PaywallModal({ open, onClose }) {
   const { user } = useAuth();
+  const { refreshProfile } = useAppState();
   const [selected, setSelected] = useState("yearly");
   const [busy, setBusy] = useState(false);
   const [showNoSub, setShowNoSub] = useState(false);
@@ -38,6 +40,7 @@ export default function PaywallModal({ open, onClose }) {
         plan: selected,
         userId: user?.id,
         email: user?.email,
+        appOrigin: window.location.origin,
       });
       if (res.data?.url) {
         window.location.href = res.data.url;
@@ -55,9 +58,11 @@ export default function PaywallModal({ open, onClose }) {
   const handleRestore = async () => {
     setBusy(true);
     try {
-      const res = await base44.functions.invoke("create-portal-session", { userId: user?.id });
-      if (res.data?.url) {
-        window.location.href = res.data.url;
+      const res = await base44.functions.invoke("verify-payment", { userId: user?.id });
+      if (res.data?.granted) {
+        toast.success("Premium restored!");
+        refreshProfile?.();
+        onClose();
       } else {
         setShowNoSub(true);
       }

@@ -1,11 +1,14 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useAppState } from "@/lib/AppState";
+import { useAuth } from "@/lib/AuthContext";
+import { base44 } from "@/api/base44Client";
 import PaywallModal from "@/components/PaywallModal";
 
 const SubscriptionContext = createContext(null);
 
 export function SubscriptionProvider({ children }) {
   const { profile, refreshProfile } = useAppState();
+  const { user } = useAuth();
   const [paywallOpen, setPaywallOpen] = useState(false);
 
   const isPremium = (() => {
@@ -23,12 +26,17 @@ export function SubscriptionProvider({ children }) {
       params.delete("checkout");
       const qs = params.toString();
       window.history.replaceState({}, "", window.location.pathname + (qs ? "?" + qs : ""));
-      // Refresh now, then retry a few times so the webhook-processed
-      // subscription status is picked up even if it lands a few seconds later.
-      refreshProfile?.();
-      setTimeout(() => refreshProfile?.(), 2000);
-      setTimeout(() => refreshProfile?.(), 5000);
-      setTimeout(() => refreshProfile?.(), 9000);
+      // Fallback: verify the payment directly with PayMongo in case the webhook
+      // hasn't processed yet, then refresh the profile.
+      (async () => {
+        if (user?.id) {
+          try { await base44.functions.invoke("verify-payment", { userId: user.id }); } catch (e) { /* non-fatal */ }
+        }
+        refreshProfile?.();
+        setTimeout(() => refreshProfile?.(), 2000);
+        setTimeout(() => refreshProfile?.(), 5000);
+        setTimeout(() => refreshProfile?.(), 9000);
+      })();
     }
   }, []);
 
