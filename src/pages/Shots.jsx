@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Settings, FileText, Plus, Syringe, CalendarCheck, Loader2, Crown } from "lucide-react";
-import { SyringeIcon, ClockIcon, CalendarCheckIcon } from "@/components/CustomIcons";
+import { Settings, FileText, Plus, Syringe, Clock, CalendarCheck, ClipboardCheck, Loader2, Crown } from "lucide-react";
 import ShotCard from "@/components/shots/ShotCard";
 import AddShotModal from "@/components/modals/AddShotModal";
 import { useAppState } from "@/lib/AppState";
@@ -47,8 +46,8 @@ export default function Shots() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 px-4 mb-5">
           <div className="bg-white dark:bg-gray-900 rounded-xl p-3 shadow-sm border border-gray-100 dark:border-gray-800">
             <div className="flex items-center gap-1.5 mb-1">
-              <div className="w-9 h-9 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center flex-shrink-0">
-                <SyringeIcon size={20} className="text-indigo-600 dark:text-indigo-400" />
+              <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center flex-shrink-0">
+                <Syringe size={20} strokeWidth={2} className="text-indigo-600 dark:text-indigo-400" />
               </div>
               <span className="text-xs text-gray-400 dark:text-gray-500">Total Shots</span>
             </div>
@@ -56,8 +55,8 @@ export default function Shots() {
           </div>
           <div className="bg-white dark:bg-gray-900 rounded-xl p-3 shadow-sm border border-gray-100 dark:border-gray-800">
             <div className="flex items-center gap-1.5 mb-1">
-              <div className="w-9 h-9 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center flex-shrink-0">
-                <ClockIcon size={20} className="text-amber-500 dark:text-amber-400" />
+              <div className="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center flex-shrink-0">
+                <Clock size={20} strokeWidth={2} className="text-amber-500 dark:text-amber-400" />
               </div>
               <span className="text-xs text-gray-400 dark:text-gray-500">Last Dose</span>
             </div>
@@ -70,8 +69,8 @@ export default function Shots() {
           </div>
           <div className="bg-white dark:bg-gray-900 rounded-xl p-3 shadow-sm border border-gray-100 dark:border-gray-800">
             <div className="flex items-center gap-1.5 mb-1">
-              <div className="w-9 h-9 rounded-full bg-teal-100 dark:bg-teal-900 flex items-center justify-center flex-shrink-0">
-                <CalendarCheckIcon size={20} className="text-teal-600 dark:text-teal-400" />
+              <div className="w-10 h-10 rounded-full bg-teal-100 dark:bg-teal-900 flex items-center justify-center flex-shrink-0">
+                <CalendarCheck size={20} strokeWidth={2} className="text-teal-600 dark:text-teal-400" />
               </div>
               <span className="text-xs text-gray-400 dark:text-gray-500">Next Shot</span>
             </div>
@@ -80,8 +79,8 @@ export default function Shots() {
           {adherence.adherencePct != null && (
             <div className="bg-white dark:bg-gray-900 rounded-xl p-3 shadow-sm border border-gray-100 dark:border-gray-800">
               <div className="flex items-center gap-1.5 mb-1">
-                <div className="w-6 h-6 rounded-lg bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center flex-shrink-0">
-                  <CalendarCheck size={12} className="text-indigo-600 dark:text-indigo-400" />
+                <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center flex-shrink-0">
+                  <ClipboardCheck size={20} strokeWidth={2} className="text-indigo-600 dark:text-indigo-400" />
                 </div>
                 <span className="text-xs text-gray-400 dark:text-gray-500">90d Adherence</span>
               </div>
