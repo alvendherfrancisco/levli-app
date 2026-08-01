@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronLeft, Download, Loader2 } from "lucide-react";
+import { ChevronLeft, Download, Loader2, Crown } from "lucide-react";
 import { useAppState } from "@/lib/AppState";
 import { parseShotDate } from "@/lib/dateUtils";
 import { PK_CALCULATION_VERSION } from "@/lib/pkCalculations";
+import { useSubscription } from "@/lib/SubscriptionContext";
 
 const REPORT_CALCULATION_VERSION = "report-v1";
 
 export default function ReportPage() {
   const navigate = useNavigate();
   const { shots } = useAppState();
+  const { isPremium, openPaywall } = useSubscription();
   const [exporting, setExporting] = useState(false);
 
   const painShots = shots.filter((s) => s.pain > 0);
@@ -122,6 +124,28 @@ export default function ReportPage() {
     doc.save(`levli-report-${new Date().toISOString().slice(0,10)}.pdf`);
     setExporting(false);
   };
+
+  if (!isPremium) {
+    return (
+      <div className="bg-gray-50 dark:bg-gray-950 min-h-screen w-full">
+        <div className="w-full flex items-center justify-between px-5 pt-6 pb-4 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 sticky top-0 z-30">
+          <button onClick={() => navigate(-1)} className="flex items-center gap-1 text-teal-600">
+            <ChevronLeft size={22} /><span className="font-medium">Back</span>
+          </button>
+          <h1 className="text-lg font-bold text-gray-900 dark:text-white">Report</h1>
+          <span className="w-6" />
+        </div>
+        <div className="max-w-lg mx-auto px-4 py-10 flex flex-col items-center text-center">
+          <div className="w-16 h-16 rounded-full bg-indigo-100 flex items-center justify-center mb-4">
+            <Crown size={30} className="text-indigo-600" />
+          </div>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">Report export is a premium feature</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 max-w-sm">Upgrade to Levli Premium to generate and export a PDF summary of your shot history.</p>
+          <button onClick={openPaywall} className="mt-6 px-6 py-3 bg-indigo-600 text-white rounded-xl font-semibold">Unlock with Levli Premium</button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-gray-50 dark:bg-gray-950 min-h-screen w-full">

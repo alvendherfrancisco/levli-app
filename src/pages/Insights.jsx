@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Settings, TrendingDown, Syringe, HelpCircle, Zap, Gauge, Camera, Image, Clock, Plus, ArrowRight, Maximize2, Minimize2, Crown } from "lucide-react";
+import { Settings, TrendingDown, Syringe, HelpCircle, Zap, Gauge, Camera, Image, Clock, Plus, ArrowRight, Maximize2, Minimize2, Crown, MapPin } from "lucide-react";
 import ProgressPhotoCard from "@/components/insights/ProgressPhotoCard";
 import AddMetricModal from "@/components/modals/AddMetricModal";
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
@@ -10,6 +10,7 @@ import { isInvestigational, getHalfLifeDays, getDosingInterval } from "@/lib/med
 import { steadyStateFraction, accumulationRatio, PK_CALCULATION_VERSION } from "@/lib/pkCalculations";
 import { toast } from "sonner";
 import UpsellBanner from "@/components/UpsellBanner";
+import SiteRotationChart from "@/components/insights/SiteRotationChart";
 import { useSubscription } from "@/lib/SubscriptionContext";
 
 const CLASS_COLORS = { Semaglutide: "#14B8A6", Tirzepatide: "#6366F1", Liraglutide: "#F59E0B" };
@@ -106,6 +107,7 @@ export default function Insights() {
   const { isPremium, openPaywall } = useSubscription();
   const [weightRange, setWeightRange] = useState("180 Days");
   const [medRange, setMedRange] = useState("30 Days");
+  const [siteRange, setSiteRange] = useState("30 Days");
   const [viewAllPhotos, setViewAllPhotos] = useState(false);
   const [photoModal, setPhotoModal] = useState(null);
   const weightUnit = profile?.weight_unit || "lb";
@@ -477,6 +479,40 @@ export default function Insights() {
               ))}
             </div>
           )}
+        </div>
+
+        {/* Injection Site Rotation Panel */}
+        <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
+          <div className="flex items-center gap-2 mb-1">
+            <MapPin size={18} className="text-indigo-600" />
+            <h3 className="font-bold text-gray-900 dark:text-white text-lg">Injection Site Rotation</h3>
+          </div>
+          <div className="border-b-2 border-indigo-500 w-12 mb-3" />
+
+          <div className="flex items-center gap-2 mb-4 flex-wrap">
+            {Object.keys(MED_RANGES).map((r) => (
+              <button key={r} onClick={() => setSiteRange(r)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                  siteRange === r ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600" : "text-gray-400 dark:text-gray-500"
+                }`}>{r}</button>
+            ))}
+          </div>
+
+          <div className="relative">
+            <div className={isPremium ? "" : "blur-sm pointer-events-none select-none opacity-60"}>
+              <SiteRotationChart shots={shots} range={MED_RANGES[siteRange]} />
+            </div>
+            {!isPremium && (
+              <button onClick={openPaywall} className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+                <div className="w-14 h-14 rounded-full bg-indigo-100 flex items-center justify-center mb-3">
+                  <Crown size={26} className="text-indigo-600" />
+                </div>
+                <p className="font-bold text-gray-900 dark:text-white">Unlock with Levli Premium</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 max-w-xs">Upgrade to premium to view your injection site rotation.</p>
+              </button>
+            )}
+          </div>
+          <p className="text-xs text-gray-400 dark:text-[#9A9DAE] text-center mt-2">Rotate sites to support absorption and reduce irritation.</p>
         </div>
 
         <UpsellBanner />

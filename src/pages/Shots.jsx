@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Settings, FileText, Plus, Syringe, CalendarCheck, Loader2 } from "lucide-react";
+import { Settings, FileText, Plus, Syringe, CalendarCheck, Loader2, Crown } from "lucide-react";
 import { SyringeIcon, ClockIcon, CalendarCheckIcon } from "@/components/CustomIcons";
 import ShotCard from "@/components/shots/ShotCard";
 import AddShotModal from "@/components/modals/AddShotModal";
 import { useAppState } from "@/lib/AppState";
 import { addDaysToShotDate, daysAgoLabel } from "@/lib/dateUtils";
+import { useSubscription } from "@/lib/SubscriptionContext";
 import { getDosingInterval } from "@/lib/medicationData";
 import { calcAdherence } from "@/lib/adherence";
 
@@ -13,7 +14,12 @@ export default function Shots() {
   const [showShot, setShowShot] = useState(false);
   const [editingShot, setEditingShot] = useState(null);
   const { shots, shotsLoading, profile } = useAppState();
+  const { isPremium, openPaywall } = useSubscription();
   const navigate = useNavigate();
+
+  const FREE_LIMIT = 10;
+  const visibleShots = isPremium ? shots : shots.slice(0, FREE_LIMIT);
+  const hiddenCount = isPremium ? 0 : Math.max(0, shots.length - FREE_LIMIT);
 
   const last = shots[0] || null;
   const daysBetween = (last && getDosingInterval(last.medication)) || parseInt(profile?.days_between || "7") || 7;
@@ -98,11 +104,22 @@ export default function Shots() {
             </div>
           ) : (
             <div className="space-y-2">
-              {shots.map((shot) => (
+              {visibleShots.map((shot) => (
                 <button key={shot.id} onClick={() => openEdit(shot)} className="w-full text-left">
                   <ShotCard {...shot} drugClass={shot.drug_class} />
                 </button>
               ))}
+              {hiddenCount > 0 && (
+                <button onClick={openPaywall} className="w-full bg-white dark:bg-gray-900 rounded-xl p-4 border border-dashed border-indigo-200 dark:border-indigo-500/30 flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center flex-shrink-0">
+                    <Crown size={18} className="text-indigo-600" />
+                  </div>
+                  <div className="text-left">
+                    <p className="font-semibold text-gray-900 dark:text-white text-sm">{hiddenCount} more shots in your history</p>
+                    <p className="text-xs text-gray-400">Unlock with Levli Premium to view your complete shot history.</p>
+                  </div>
+                </button>
+              )}
             </div>
           )}
         </div>

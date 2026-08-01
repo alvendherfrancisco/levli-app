@@ -1,0 +1,75 @@
+import React, { useMemo } from "react";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
+import { parseShotDate } from "@/lib/dateUtils";
+
+const SITE_COLORS = [
+  "#6366F1", "#14B8A6", "#F59E0B", "#3B82F6", "#EC4899",
+  "#8B5CF6", "#10B981", "#F43F5E", "#06B6D4", "#A855F7",
+];
+
+export default function SiteRotationChart({ shots, range }) {
+  const days = parseInt(range, 10);
+
+  const siteData = useMemo(() => {
+    const now = new Date(); now.setHours(0, 0, 0, 0);
+    const counts = {};
+    shots.forEach((s) => {
+      if (!s.site) return;
+      const sd = parseShotDate(s.date);
+      if (!sd) return;
+      const daysSince = Math.round((now - sd) / 86400000);
+      if (daysSince > days || daysSince < 0) return;
+      counts[s.site] = (counts[s.site] || 0) + 1;
+    });
+    return Object.entries(counts)
+      .map(([site, count]) => ({ site, count }))
+      .sort((a, b) => b.count - a.count);
+  }, [shots, days]);
+
+  const rotation = useMemo(() => shots.filter((s) => s.site).slice(0, 8), [shots]);
+
+  if (siteData.length === 0) {
+    return (
+      <div className="h-48 flex items-center justify-center bg-gray-50 dark:bg-white/[0.03] rounded-xl">
+        <p className="text-sm text-gray-400 dark:text-[#9A9DAE] text-center px-4">
+          Log shots with an injection site to see your rotation here.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <div className="h-56">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={siteData} layout="vertical" margin={{ top: 4, right: 12, bottom: 4, left: 4 }}>
+            <XAxis type="number" hide />
+            <YAxis type="category" dataKey="site" width={150} tick={{ fontSize: 10 }} stroke="#999" />
+            <Tooltip
+              formatter={(v) => [`${v} shots`, "Uses"]}
+              contentStyle={{ background: "rgba(20,22,32,0.95)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, color: "#E8E9F0" }}
+            />
+            <Bar dataKey="count" radius={[0, 6, 6, 0]} barSize={18}>
+              {siteData.map((_, i) => (
+                <Cell key={i} fill={SITE_COLORS[i % SITE_COLORS.length]} />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+
+      <div className="mt-3">
+        <p className="text-[11px] text-gray-400 dark:text-gray-500 mb-2">Recent rotation (newest first)</p>
+        <div className="flex flex-wrap gap-2">
+          {rotation.map((s, i) => (
+            <div key={s.id} className="flex items-center gap-1.5 bg-gray-50 dark:bg-white/[0.05] rounded-lg px-2 py-1">
+              <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: SITE_COLORS[i % SITE_COLORS.length] }} />
+              <span className="text-xs text-gray-600 dark:text-gray-300">{s.site}</span>
+              <span className="text-[10px] text-gray-400">{s.date}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
