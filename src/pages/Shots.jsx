@@ -91,7 +91,7 @@ export default function Shots() {
           )}
         </div>
 
-        <div className="px-4 pb-32">
+        <div className="px-4 pb-4">
           <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-3">History</h2>
           {shotsLoading ? (
             <div className="flex justify-center py-12">
@@ -125,7 +125,7 @@ export default function Shots() {
         </div>
       </div>
 
-      <p className="text-[11px] text-gray-400 dark:text-gray-500 text-center px-4 pb-32">
+      <p className="text-[11px] text-gray-400 dark:text-gray-500 text-center px-4 pb-24">
         Levli is a personal logbook, not medical advice. Consult your prescriber for dosing decisions.
       </p>
 
