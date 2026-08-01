@@ -31,43 +31,43 @@ export default function MetricsGrid({ dayKey }) {
 
   const allMetrics = [
     {
-      icon: <WeightFilledIcon size={20} className="text-teal-600" />, label: "Weight",
-      value: weight != null ? String(weight) : "–", unit: weightUnit, color: "bg-teal-100",
+      icon: <WeightFilledIcon size={20} className="text-gray-800 dark:text-gray-400" />, label: "Weight",
+      value: weight != null ? String(weight) : "–", unit: weightUnit, color: "bg-amber-50 dark:bg-amber-500/10",
       onAdd: () => setMetricModal({ label: "Weight", unit: weightUnit, current: weight != null ? String(weight) : "", onSave: async (v) => { await saveWeight(dk, v); weight != null ? toast.success("Weight updated successfully!") : toast.success("Weight added successfully!"); } }),
     },
     {
-      icon: <IonIcon name="flame" size={20} className="text-orange-500" />, label: "Calories",
-      value: nutrition.calories, unit: "kcal", color: "bg-orange-100",
+      icon: <IonIcon name="flame" size={20} className="text-orange-500 dark:text-orange-400" />, label: "Calories",
+      value: nutrition.calories, unit: "kcal", color: "bg-orange-100 dark:bg-orange-500/10",
       onAdd: () => setShowNutrition(true),
     },
     {
-      icon: <IonIcon name="fish" size={20} className="text-teal-500" />, label: "Protein",
-      value: nutrition.protein, unit: "g", color: "bg-teal-100",
+      icon: <IonIcon name="fish" size={20} className="text-teal-600 dark:text-teal-400" />, label: "Protein",
+      value: nutrition.protein, unit: "g", color: "bg-teal-100 dark:bg-teal-500/10",
       onAdd: () => setShowNutrition(true),
     },
     {
-      icon: <IonIcon name="nutrition" size={20} className="text-indigo-500" />, label: "Fiber",
-      value: nutrition.fiber, unit: "g", color: "bg-indigo-100",
+      icon: <IonIcon name="nutrition" size={20} className="text-green-500 dark:text-green-400" />, label: "Fiber",
+      value: nutrition.fiber, unit: "g", color: "bg-green-100 dark:bg-green-500/10",
       onAdd: () => setShowNutrition(true),
     },
     {
-      icon: <IonIcon name="fast-food" size={20} className="text-orange-500" />, label: "Carbs",
-      value: nutrition.carbs, unit: "g", color: "bg-orange-100",
+      icon: <IonIcon name="fast-food" size={20} className="text-orange-500 dark:text-orange-400" />, label: "Carbs",
+      value: nutrition.carbs, unit: "g", color: "bg-orange-100 dark:bg-orange-500/10",
       onAdd: () => setShowNutrition(true),
     },
     {
-      icon: <IonIcon name="water" size={20} className="text-indigo-500" />, label: "Water",
-      value: nutrition.water, unit: liquidUnit, color: "bg-indigo-100",
+      icon: <IonIcon name="water" size={20} className="text-blue-500 dark:text-blue-400" />, label: "Water",
+      value: nutrition.water, unit: liquidUnit, color: "bg-blue-100 dark:bg-blue-500/10",
       onAdd: () => setShowNutrition(true),
     },
     {
-      icon: <IonIcon name="barbell" size={20} className="text-teal-600" />, label: "Exercise",
-      value: exercise != null ? String(exercise) : "0", unit: "min", color: "bg-teal-100",
+      icon: <IonIcon name="barbell" size={20} className="text-red-500 dark:text-red-400" />, label: "Exercise",
+      value: exercise != null ? String(exercise) : "0", unit: "min", color: "bg-red-100 dark:bg-red-500/10",
       onAdd: () => setMetricModal({ label: "Exercise", unit: "min", current: exercise != null ? String(exercise) : "", onSave: async (v) => { await saveExercise(dk, v); exercise != null ? toast.success("Exercise updated successfully!") : toast.success("Exercise added successfully!"); } }),
     },
     {
-      icon: <IonIcon name="camera" size={20} className="text-teal-500" />, label: "Progress",
-      value: photo ? "✓" : "–", unit: "pic", color: "bg-teal-100",
+      icon: <IonIcon name="camera" size={20} className="text-pink-500 dark:text-pink-400" />, label: "Progress",
+      value: photo ? "✓" : "–", unit: "pic", color: "bg-pink-100 dark:bg-pink-500/10",
       onAdd: () => setMetricModal({ label: "Progress", unit: "pic", current: photo || "–", dayKey: dk, onSave: async (v, newDayKey) => { await addProgressPhotoRecord(newDayKey || dk, v); toast.success("Progress photo added successfully!"); }, onDelete: async () => { await deleteLatestProgressPhoto(dk); toast.success("Progress photo deleted successfully!"); } }),
     },
   ];
