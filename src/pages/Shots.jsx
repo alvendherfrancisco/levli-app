@@ -41,7 +41,7 @@ export default function Shots() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 px-4 mb-5">
           <div className="bg-white dark:bg-gray-900 rounded-xl p-3 shadow-sm border border-gray-100 dark:border-gray-800">
             <div className="flex items-center gap-1.5 mb-1">
-              <div className="w-9 h-9 rounded-lg bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center flex-shrink-0">
+              <div className="w-9 h-9 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center flex-shrink-0">
                 <SyringeIcon size={20} className="text-indigo-600 dark:text-indigo-400" />
               </div>
               <span className="text-xs text-gray-400 dark:text-gray-500">Total Shots</span>
@@ -50,8 +50,8 @@ export default function Shots() {
           </div>
           <div className="bg-white dark:bg-gray-900 rounded-xl p-3 shadow-sm border border-gray-100 dark:border-gray-800">
             <div className="flex items-center gap-1.5 mb-1">
-              <div className="w-9 h-9 rounded-lg bg-orange-100 dark:bg-orange-900 flex items-center justify-center flex-shrink-0">
-                <ClockIcon size={20} className="text-orange-600 dark:text-orange-400" />
+              <div className="w-9 h-9 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center flex-shrink-0">
+                <ClockIcon size={20} className="text-amber-500 dark:text-amber-400" />
               </div>
               <span className="text-xs text-gray-400 dark:text-gray-500">Last Dose</span>
             </div>
@@ -64,7 +64,7 @@ export default function Shots() {
           </div>
           <div className="bg-white dark:bg-gray-900 rounded-xl p-3 shadow-sm border border-gray-100 dark:border-gray-800">
             <div className="flex items-center gap-1.5 mb-1">
-              <div className="w-9 h-9 rounded-lg bg-teal-100 dark:bg-teal-900 flex items-center justify-center flex-shrink-0">
+              <div className="w-9 h-9 rounded-full bg-teal-100 dark:bg-teal-900 flex items-center justify-center flex-shrink-0">
                 <CalendarCheckIcon size={20} className="text-teal-600 dark:text-teal-400" />
               </div>
               <span className="text-xs text-gray-400 dark:text-gray-500">Next Shot</span>
