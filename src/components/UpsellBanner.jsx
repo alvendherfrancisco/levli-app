@@ -10,7 +10,7 @@ export default function UpsellBanner() {
       className="fixed left-0 right-0 z-40"
       style={{ bottom: "calc(52px + env(safe-area-inset-bottom, 0px))" }}
     >
-      <div className="bg-indigo-600 rounded-t-2xl px-5 py-4 flex flex-col items-center text-center shadow-lg shadow-indigo-600/30">
+      <div className="bg-indigo-600 rounded-t-2xl px-5 py-4 flex flex-col items-center text-center">
         <div className="flex items-center gap-2 mb-1">
           <Gem size={18} className="text-indigo-200" />
           <span className="font-bold text-white">Levli Premium</span>
