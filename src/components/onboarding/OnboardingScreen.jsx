@@ -66,7 +66,7 @@ export default function OnboardingScreen({
 
         {/* Footer — pill CTA + optional secondary */}
         {!hideFooter && (
-          <div className="px-5 sm:px-6 pb-9 pt-4 flex-shrink-0">
+          <div className="px-6 sm:px-8 pb-9 pt-4 flex-shrink-0">
             <button
               onClick={canContinue ? onContinue : undefined}
               disabled={!canContinue}
@@ -81,7 +81,7 @@ export default function OnboardingScreen({
             {secondaryAction && (
               <button
                 onClick={secondaryAction.onClick}
-                className="w-full text-center text-gray-500 text-sm font-medium mt-3 hover:text-gray-700 transition-colors"
+                className="w-full text-center text-gray-500 text-sm font-medium mt-5 hover:text-gray-700 transition-colors"
               >
                 {secondaryAction.label}
               </button>

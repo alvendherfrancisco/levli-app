@@ -98,7 +98,7 @@ export default function SignUpStep({ persistState }) {
             </span>
           ) : "Verify"}
         </button>
-        <p className="text-center text-sm text-gray-500 mt-4">
+        <p className="text-center text-sm text-gray-500 mt-5">
           Didn't receive the code?{" "}
           <button onClick={handleResend} className="text-indigo-600 font-medium hover:underline">
             Resend
@@ -162,7 +162,7 @@ export default function SignUpStep({ persistState }) {
           ) : "Create account"}
         </button>
       </form>
-      <p className="text-center text-xs text-gray-400 mt-3 px-4">
+      <p className="text-center text-xs text-gray-400 mt-5 px-4">
         By creating an account, you agree to our Terms of Service and Privacy Policy.
       </p>
     </div>
