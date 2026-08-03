@@ -5,6 +5,19 @@ import { useAppState } from "@/lib/AppState";
 import { useAuth } from "@/lib/AuthContext";
 import { base44 } from "@/api/base44Client";
 
+// Shared toggle — defined outside the component so React doesn't remount it
+// on every state change (which caused the two toggles to look inconsistent).
+function Toggle({ value, onChange }) {
+  return (
+    <button
+      onClick={() => onChange(!value)}
+      className={`w-12 h-7 rounded-full transition-colors relative flex-shrink-0 ${value ? "bg-indigo-500" : "bg-gray-300 dark:bg-gray-600"}`}
+    >
+      <div className={`w-5 h-5 bg-white rounded-full absolute top-1 transition-transform shadow ${value ? "translate-x-6" : "translate-x-1"}`} />
+    </button>
+  );
+}
+
 export default function SettingsPage() {
   const navigate = useNavigate();
   const { darkMode, setDarkMode, profile, setProfile, shots, journalEntries, dayMetrics, resetState, proxyAccess, addProxyAccess, revokeProxyAccess } = useAppState();
@@ -57,13 +70,6 @@ export default function SettingsPage() {
     setIosBannerDismissed(true);
     localStorage.setItem("levli_ios_banner_dismissed", "true");
   };
-
-  const Toggle = ({ value, onChange }) => (
-    <button onClick={() => onChange(!value)}
-      className={`w-12 h-7 rounded-full transition-colors relative ${value ? "bg-indigo-500" : "bg-gray-300 dark:bg-gray-600"}`}>
-      <div className={`w-5 h-5 bg-white rounded-full absolute top-1 transition-transform shadow ${value ? "translate-x-6" : "translate-x-1"}`} />
-    </button>
-  );
 
   const MenuItem = ({ icon, label, onPress, href, to }) => {
     const inner = (
@@ -268,7 +274,7 @@ export default function SettingsPage() {
           </button>
         </div>
 
-        <div className="py-6 text-center">
+        <div className="py-6 text-center pb-safe">
           <p className="text-xs text-gray-400 dark:text-gray-600">Version 1.0.0</p>
           <p className="text-xs text-gray-400 dark:text-gray-600">© 2026 Levli</p>
         </div>

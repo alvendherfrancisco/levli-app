@@ -1,9 +1,9 @@
 import React from "react";
 
 const PADDING = {
-  default: "pb-28 lg:pb-8",
-  fab: "pb-40 lg:pb-8",
-  banner: "pb-52 lg:pb-8",
+  default: "pb-safe-content",
+  fab: "pb-safe-fab",
+  banner: "pb-safe-banner",
 };
 
 export default function PageContainer({ children, bottomInset = "default", className = "" }) {

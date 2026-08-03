@@ -96,6 +96,20 @@
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
+/* PWA standalone safe-area-aware spacing.
+   Without viewport-fit=cover these env() values resolve to 0; the viewport
+   meta in index.html now enables them so installed PWAs respect the home
+   indicator / bottom safe area. */
+.pb-safe-content { padding-bottom: calc(7rem + env(safe-area-inset-bottom, 0px)); }
+.pb-safe-fab { padding-bottom: calc(10rem + env(safe-area-inset-bottom, 0px)); }
+.pb-safe-banner { padding-bottom: calc(13rem + env(safe-area-inset-bottom, 0px)); }
+.bottom-fab-safe { bottom: calc(6rem + env(safe-area-inset-bottom, 0px)); }
+.pb-modal-footer { padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px)); }
+@media (min-width: 1024px) {
+  .pb-safe-content, .pb-safe-fab, .pb-safe-banner { padding-bottom: 2rem; }
+  .bottom-fab-safe { bottom: 2rem; }
+}
+
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
