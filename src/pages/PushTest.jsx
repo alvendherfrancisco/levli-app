@@ -59,6 +59,21 @@ export default function PushTest() {
       });
       log(`✓ Push subscription created`);
       log(`  endpoint: ${sub.endpoint}`);
+
+      // Save subscription to database so the daily reminder workflow can reach this device
+      log("Saving subscription to database...");
+      try {
+        const subObj = sub.toJSON ? sub.toJSON() : JSON.parse(JSON.stringify(sub));
+        await base44.entities.PushSubscription.create({
+          endpoint: subObj.endpoint,
+          keys_p256dh: subObj.keys?.p256dh,
+          keys_auth: subObj.keys?.auth,
+        });
+        log("✓ Subscription saved to database");
+      } catch (e) {
+        log(`⚠ Could not save subscription to database: ${e.message}`);
+      }
+
       setSubscription(sub);
       setPhase("subscribed");
     } catch (e) {
