@@ -19,6 +19,8 @@ export default function Register() {
   const [showOtp, setShowOtp] = useState(false);
   const [otpCode, setOtpCode] = useState("");
 
+  const returnTo = new URLSearchParams(window.location.search).get("returnTo") || "/";
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -45,7 +47,7 @@ export default function Register() {
       if (result?.access_token) {
         base44.auth.setToken(result.access_token);
       }
-      window.location.href = "/";
+      window.location.href = returnTo;
     } catch (err) {
       setError(err.message || "Invalid verification code");
     } finally {
@@ -67,7 +69,7 @@ export default function Register() {
   };
 
   const handleGoogle = () => {
-    base44.auth.loginWithProvider("google", "/");
+    base44.auth.loginWithProvider("google", returnTo);
   };
 
   if (showOtp) {

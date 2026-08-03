@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import OnboardingScreen from "@/components/onboarding/OnboardingScreen";
 import {
@@ -19,11 +19,23 @@ import {
   InjectionSiteIcon,
 } from "@/components/onboarding/LevliIcons";
 import { useAppState } from "@/lib/AppState";
+import { useAuth } from "@/lib/AuthContext";
 import { MEDICATIONS } from "@/lib/medicationData";
-import { Check } from "lucide-react";
+import { Check, UserPlus } from "lucide-react";
 
-const TOTAL_STEPS = 7;
+const TOTAL_STEPS = 8;
 const PRIVACY_POLICY_VERSION = "1.0";
+const DRAFT_KEY = "levli_onboarding_draft";
+
+// Step order: Welcome → Empathy → Medication → Sign-Up → Age → Schedule → Tracking → Completion
+const STEP_WELCOME = 0;
+const STEP_EMPATHY = 1;
+const STEP_MEDICATION = 2;
+const STEP_SIGNUP = 3;
+const STEP_AGE = 4;
+const STEP_SCHEDULE = 5;
+const STEP_TRACKING = 6;
+const STEP_COMPLETION = 7;
 
 function isMinor(birthdate) {
   if (!birthdate) return false;
@@ -70,33 +82,95 @@ const UNIT_GROUPS = [
   { key: "liquid_unit", label: "Liquids", options: [{ value: "oz", label: "oz" }, { value: "mL", label: "mL" }] },
 ];
 
+function readDraft() {
+  try {
+    return JSON.parse(sessionStorage.getItem(DRAFT_KEY) || "null");
+  } catch {
+    return null;
+  }
+}
+
+function buildDraft(state) {
+  return {
+    selectedMeds: state.selectedMeds,
+    doseAmount: state.doseAmount,
+    frequency: state.frequency,
+    shotDay: state.shotDay,
+    tracking: state.tracking,
+    units: state.units,
+    gdprConsented: state.gdprConsented,
+    birthdate: state.birthdate,
+    parentalConsentName: state.parentalConsentName,
+  };
+}
+
 export default function Onboarding() {
-  const [step, setStep] = useState(0);
+  const { isAuthenticated, isLoadingAuth } = useAuth();
   const navigate = useNavigate();
   const { setProfile, profile, recordConsent, recordParentalConsent } = useAppState();
 
-  const [selectedMeds, setSelectedMeds] = useState([]);
-  const [doseAmount, setDoseAmount] = useState("");
-  const [frequency, setFrequency] = useState(null);
-  const [shotDay, setShotDay] = useState(null);
-  const [tracking, setTracking] = useState([]);
-  const [units, setUnits] = useState({ weight_unit: "lb", height_unit: "in", liquid_unit: "oz" });
-  const [gdprConsented, setGdprConsented] = useState(false);
-  const [birthdate, setBirthdate] = useState("");
-  const [parentalConsentName, setParentalConsentName] = useState("");
+  const draft = readDraft() || {};
+
+  const [step, setStep] = useState(draft.selectedMeds ? STEP_SIGNUP : STEP_WELCOME);
+  const [selectedMeds, setSelectedMeds] = useState(draft.selectedMeds || []);
+  const [doseAmount, setDoseAmount] = useState(draft.doseAmount || "");
+  const [frequency, setFrequency] = useState(draft.frequency || null);
+  const [shotDay, setShotDay] = useState(draft.shotDay ?? null);
+  const [tracking, setTracking] = useState(draft.tracking || []);
+  const [units, setUnits] = useState(draft.units || { weight_unit: "lb", height_unit: "in", liquid_unit: "oz" });
+  const [gdprConsented, setGdprConsented] = useState(draft.gdprConsented || false);
+  const [birthdate, setBirthdate] = useState(draft.birthdate || "");
+  const [parentalConsentName, setParentalConsentName] = useState(draft.parentalConsentName || "");
+
+  const resumeChecked = useRef(false);
+
+  // Resume at the correct step once auth status is known. If a draft exists
+  // and the user is now authenticated, they registered and came back — jump
+  // past the sign-up step to the age step. If still unauthenticated, sit on
+  // the sign-up step so they can register.
+  useEffect(() => {
+    if (resumeChecked.current || isLoadingAuth) return;
+    resumeChecked.current = true;
+    const d = readDraft();
+    if (!d) return;
+    if (isAuthenticated) {
+      setStep(STEP_AGE);
+    } else {
+      setStep(STEP_SIGNUP);
+    }
+  }, [isLoadingAuth, isAuthenticated]);
+
+  // Persist answers to sessionStorage so they survive the redirect to
+  // /register and a mid-onboarding abandon/resume.
+  useEffect(() => {
+    sessionStorage.setItem(
+      DRAFT_KEY,
+      JSON.stringify(buildDraft({ selectedMeds, doseAmount, frequency, shotDay, tracking, units, gdprConsented, birthdate, parentalConsentName }))
+    );
+  }, [selectedMeds, doseAmount, frequency, shotDay, tracking, units, gdprConsented, birthdate, parentalConsentName]);
 
   if (profile?.onboarding_completed) {
     return <Navigate to="/" replace />;
   }
 
   const canContinue = (() => {
-    if (step === 2) return selectedMeds.length > 0;
-    if (step === 3) return frequency !== null;
-    if (step === 5) return gdprConsented && birthdate;
+    if (step === STEP_MEDICATION) return selectedMeds.length > 0;
+    if (step === STEP_AGE) return gdprConsented && birthdate;
     return true;
   })();
 
   const next = async () => {
+    // Sign-up step: if not yet authenticated, save the draft and redirect to
+    // /register (which returns here after sign-up). If already authenticated,
+    // just advance past it.
+    if (step === STEP_SIGNUP && !isAuthenticated) {
+      sessionStorage.setItem(
+        DRAFT_KEY,
+        JSON.stringify(buildDraft({ selectedMeds, doseAmount, frequency, shotDay, tracking, units, gdprConsented, birthdate, parentalConsentName }))
+      );
+      window.location.href = "/register?returnTo=/onboarding";
+      return;
+    }
     if (step < TOTAL_STEPS - 1) {
       setStep(step + 1);
       return;
@@ -124,6 +198,7 @@ export default function Onboarding() {
       birthdate,
       onboarding_completed: true,
     });
+    sessionStorage.removeItem(DRAFT_KEY);
     navigate("/");
   };
 
@@ -132,12 +207,13 @@ export default function Onboarding() {
   };
 
   const ctaLabel =
-    step === 0 ? "Get started" :
-    step === 5 ? "Allow & continue" :
-    step === 6 ? "Go to Home" : "Next";
+    step === STEP_WELCOME ? "Get started" :
+    step === STEP_SIGNUP ? (isAuthenticated ? "Continue" : "Create account") :
+    step === STEP_AGE ? "Allow & continue" :
+    step === STEP_COMPLETION ? "Go to Home" : "Next";
 
   const secondaryAction =
-    step === 0
+    step === STEP_WELCOME
       ? { label: "I already have an account", onClick: () => navigate("/login") }
       : null;
 
@@ -151,23 +227,11 @@ export default function Onboarding() {
       canContinue={canContinue}
       secondaryAction={secondaryAction}
     >
-      {step === 0 && <WelcomeStep />}
-      {step === 1 && <EmpathyStep />}
-      {step === 2 && <MedicationStep selectedMeds={selectedMeds} setSelectedMeds={setSelectedMeds} />}
-      {step === 3 && (
-        <ScheduleStep
-          doseAmount={doseAmount}
-          setDoseAmount={setDoseAmount}
-          frequency={frequency}
-          setFrequency={setFrequency}
-          shotDay={shotDay}
-          setShotDay={setShotDay}
-        />
-      )}
-      {step === 4 && (
-        <TrackingStep tracking={tracking} setTracking={setTracking} units={units} setUnits={setUnits} />
-      )}
-      {step === 5 && (
+      {step === STEP_WELCOME && <WelcomeStep />}
+      {step === STEP_EMPATHY && <EmpathyStep />}
+      {step === STEP_MEDICATION && <MedicationStep selectedMeds={selectedMeds} setSelectedMeds={setSelectedMeds} />}
+      {step === STEP_SIGNUP && <SignUpStep isAuthenticated={isAuthenticated} />}
+      {step === STEP_AGE && (
         <PrivacyStep
           gdprConsented={gdprConsented}
           setGdprConsented={setGdprConsented}
@@ -177,7 +241,20 @@ export default function Onboarding() {
           setParentalConsentName={setParentalConsentName}
         />
       )}
-      {step === 6 && <CompletionStep />}
+      {step === STEP_SCHEDULE && (
+        <ScheduleStep
+          doseAmount={doseAmount}
+          setDoseAmount={setDoseAmount}
+          frequency={frequency}
+          setFrequency={setFrequency}
+          shotDay={shotDay}
+          setShotDay={setShotDay}
+        />
+      )}
+      {step === STEP_TRACKING && (
+        <TrackingStep tracking={tracking} setTracking={setTracking} units={units} setUnits={setUnits} />
+      )}
+      {step === STEP_COMPLETION && <CompletionStep />}
     </OnboardingScreen>
   );
 }
@@ -247,6 +324,24 @@ function MedicationStep({ selectedMeds, setSelectedMeds }) {
           );
         })}
       </div>
+    </div>
+  );
+}
+
+function SignUpStep({ isAuthenticated }) {
+  return (
+    <div className="flex flex-col items-center text-center flex-1 justify-center">
+      <div className="w-20 h-20 rounded-full bg-indigo-50 flex items-center justify-center mb-5">
+        <UserPlus size={36} className="text-indigo-600" />
+      </div>
+      <h1 className="text-2xl sm:text-[28px] font-bold text-gray-800 mb-3 leading-tight px-2">
+        {isAuthenticated ? "You're signed in" : "Create your account"}
+      </h1>
+      <p className="text-gray-500 text-sm sm:text-base leading-relaxed px-3">
+        {isAuthenticated
+          ? "Your progress is saved. Continue to set up your age and preferences."
+          : "Create an account to save your medication selection and keep your data private and secure."}
+      </p>
     </div>
   );
 }
