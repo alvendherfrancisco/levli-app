@@ -206,30 +206,39 @@ export function PrivacyIllustration({ className }) {
   );
 }
 
-// ── Sign-Up — droplet mascot with account badge ─────────────────────────────
+// ── Sign-Up — profile / ID card being created ───────────────────────────────
 export function SignUpIllustration({ className }) {
   return (
-    <Scene className={className} blobStyle={{ background: "linear-gradient(135deg, #818CF8, #FDBA74)" }}>
+    <Scene className={className} blobStyle={{ background: "linear-gradient(135deg, #818CF8, #5EEAD4)" }}>
       <defs>
-        <linearGradient id="sigDrop" x1="90" y1="30" x2="190" y2="170" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#6366F1" /><stop offset="1" stopColor="#F97316" />
+        <linearGradient id="sigCard" x1="70" y1="50" x2="200" y2="160" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#6366F1" /><stop offset="1" stopColor="#14B8A6" />
+        </linearGradient>
+        <linearGradient id="sigAvatar" x1="120" y1="70" x2="160" y2="120" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#F97316" /><stop offset="1" stopColor="#EC4899" />
         </linearGradient>
       </defs>
-      {/* droplet mascot */}
-      <path d="M140 40 C 140 40, 95 95, 95 135 a45 45 0 0 0 90 0 C 185 95, 140 40, 140 40Z" fill="url(#sigDrop)" />
-      <path d="M140 65 C 140 65, 112 105, 112 132 a28 28 0 0 0 28 28" fill="white" fillOpacity="0.15" />
-      {/* eyes */}
-      <circle cx="126" cy="125" r="4" fill="white" />
-      <circle cx="154" cy="125" r="4" fill="white" />
-      {/* smile */}
-      <path d="M128 140 Q 140 148 152 140" stroke="white" strokeWidth="3" strokeLinecap="round" fill="none" />
-      {/* account badge */}
-      <circle cx="200" cy="58" r="22" fill="white" stroke="#E5E7EB" strokeWidth="1.5" />
-      <circle cx="200" cy="52" r="6" fill="#6366F1" />
-      <path d="M188 70 a12 12 0 0 1 24 0Z" fill="#6366F1" />
+      {/* profile card */}
+      <rect x="72" y="52" width="136" height="104" rx="16" fill="white" stroke="#E5E7EB" strokeWidth="1.5" />
+      <rect x="72" y="52" width="136" height="30" rx="16" fill="url(#sigCard)" />
+      <rect x="72" y="68" width="136" height="14" fill="url(#sigCard)" />
+      {/* card header line */}
+      <line x1="86" y1="64" x2="118" y2="64" stroke="white" strokeWidth="3" strokeLinecap="round" opacity="0.7" />
+      {/* avatar circle + person silhouette */}
+      <circle cx="112" cy="108" r="22" fill="url(#sigAvatar)" />
+      <circle cx="112" cy="101" r="8" fill="white" />
+      <path d="M96 122 a16 16 0 0 1 32 0Z" fill="white" />
+      {/* detail lines (name / fields) */}
+      <line x1="146" y1="98" x2="192" y2="98" stroke="#E5E7EB" strokeWidth="4" strokeLinecap="round" />
+      <line x1="146" y1="112" x2="184" y2="112" stroke="#E5E7EB" strokeWidth="4" strokeLinecap="round" />
+      <line x1="146" y1="126" x2="190" y2="126" stroke="#E5E7EB" strokeWidth="4" strokeLinecap="round" />
+      {/* small "+" new-account badge */}
+      <circle cx="188" cy="150" r="14" fill="#F97316" />
+      <path d="M182 150 H 194 M 188 144 V 156" stroke="white" strokeWidth="3" strokeLinecap="round" />
       {/* sparkles */}
       <g className="animate-onb-sparkle"><path d="M55 50 L 57 55 L 62 57 L 57 59 L 55 64 L 53 59 L 48 57 L 53 55Z" fill="#F59E0B" /></g>
-      <g className="animate-onb-sparkle" style={{ animationDelay: "1s" }}><path d="M225 140 L 227 145 L 232 147 L 227 149 L 225 154 L 223 149 L 218 147 L 223 145Z" fill="#14B8A6" /></g>
+      <g className="animate-onb-sparkle" style={{ animationDelay: "1s" }}><path d="M225 60 L 227 65 L 232 67 L 227 69 L 225 74 L 223 69 L 218 67 L 223 65Z" fill="#6366F1" /></g>
+      <g className="animate-onb-sparkle" style={{ animationDelay: "0.5s" }}><path d="M50 150 L 52 155 L 57 157 L 52 159 L 50 164 L 48 159 L 43 157 L 48 155Z" fill="#14B8A6" /></g>
     </Scene>
   );
 }
