@@ -97,21 +97,30 @@ async function hkdfExpand(prk: Uint8Array, info: Uint8Array, length: number): Pr
   return okm.slice(0, length);
 }
 
-function buildInfo(label: string, p256dh: Uint8Array, epub: Uint8Array): Uint8Array {
+// RFC 8291: key_info = "WebPush: info" || 0x00 || ua_public || as_public
+function buildKeyInfo(uaPublic: Uint8Array, asPublic: Uint8Array): Uint8Array {
   const enc = new TextEncoder();
-  const labelBytes = enc.encode(label);
-  const info = new Uint8Array(labelBytes.length + 1 + 2 + p256dh.length + 2 + epub.length);
+  const label = enc.encode('WebPush: info');
+  const info = new Uint8Array(label.length + 1 + uaPublic.length + asPublic.length);
   let o = 0;
-  info.set(labelBytes, o); o += labelBytes.length;
+  info.set(label, o); o += label.length;
   info[o++] = 0;
-  info[o++] = 0; info[o++] = p256dh.length;
-  info.set(p256dh, o); o += p256dh.length;
-  info[o++] = 0; info[o++] = epub.length;
-  info.set(epub, o);
+  info.set(uaPublic, o); o += uaPublic.length;
+  info.set(asPublic, o);
   return info;
 }
 
-// RFC 8291 aes128g2 content encryption
+// RFC 8188: info = label || 0x00
+function buildRfc8188Info(label: string): Uint8Array {
+  const enc = new TextEncoder();
+  const labelBytes = enc.encode(label);
+  const info = new Uint8Array(labelBytes.length + 1);
+  info.set(labelBytes, 0);
+  info[labelBytes.length] = 0;
+  return info;
+}
+
+// RFC 8291 + RFC 8188 aes128g2 content encryption
 async function encryptPayload(payload: string, sub: { keys: { p256dh: string; auth: string } }): Promise<Uint8Array> {
   const enc = new TextEncoder();
   const plaintext = enc.encode(payload);
@@ -127,17 +136,20 @@ async function encryptPayload(payload: string, sub: { keys: { p256dh: string; au
   // Shared secret
   const sharedSecret = new Uint8Array(await crypto.subtle.deriveBits({ name: 'ECDH', public: p256dhKey }, ecdhKeys.privateKey, 256));
 
-  // IKM = HKDF-Extract(auth_secret, shared_secret)
+  // RFC 8291: IKM' = HKDF(salt=auth_secret, IKM=shared_secret, info=key_info, L=32)
   const authSecret = base64UrlDecode(sub.keys.auth);
-  const ikm = await hkdfExtract(authSecret, sharedSecret);
+  const prk1 = await hkdfExtract(authSecret, sharedSecret);
+  const ikm = await hkdfExpand(prk1, buildKeyInfo(p256dhBytes, epub), 32);
 
-  // PRK = HKDF-Extract(salt, IKM)
+  // RFC 8188: PRK' = HKDF-Extract(salt=random_salt, IKM=IKM')
   const salt = crypto.getRandomValues(new Uint8Array(16));
   const prk = await hkdfExtract(salt, ikm);
 
-  // CEK and nonce
-  const cek = await hkdfExpand(prk, buildInfo('WebPush: info', p256dhBytes, epub), 16);
-  const nonce = await hkdfExpand(prk, buildInfo('WebPush: nonce', p256dhBytes, epub), 12);
+  // RFC 8188: CEK = HKDF-Expand(PRK', info="Content-Encoding: aes128gcm"||0x00, L=16)
+  const cek = await hkdfExpand(prk, buildRfc8188Info('Content-Encoding: aes128gcm'), 16);
+
+  // RFC 8188: nonce = HKDF-Expand(PRK', info="Content-Encoding: nonce"||0x00, L=12)
+  const nonce = await hkdfExpand(prk, buildRfc8188Info('Content-Encoding: nonce'), 12);
 
   // Pad: plaintext || 0x02 (last-record delimiter)
   const padded = new Uint8Array(plaintext.length + 1);
@@ -202,7 +214,7 @@ export async function sendWebPush(
       method: 'POST',
       headers: {
         'Authorization': `vapid t=${vapidJwt},k=${vapidPublicKey}`,
-        'Content-Encoding': 'aes128g2',
+        'Content-Encoding': 'aes128gcm',
         'Content-Type': 'application/octet-stream',
         'TTL': '86400',
       },
