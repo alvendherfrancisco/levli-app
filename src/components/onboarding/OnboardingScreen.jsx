@@ -31,7 +31,7 @@ export default function OnboardingScreen({
   return (
     <div className="min-h-screen bg-[#FAFAFA] relative overflow-hidden flex items-start sm:items-center justify-center">
       <AmbientBackground />
-      <div className="w-full max-w-lg mx-auto flex flex-col h-screen sm:h-[88vh] sm:rounded-3xl sm:shadow-xl sm:my-6 bg-white/70 backdrop-blur-md overflow-hidden relative z-10 border border-gray-100/80">
+      <div className="w-full max-w-lg mx-auto flex flex-col h-[100dvh] sm:h-[88vh] sm:rounded-3xl sm:shadow-xl sm:my-6 bg-white/70 backdrop-blur-md overflow-hidden relative z-10 border border-gray-100/80">
         {/* Header — back + segmented progress */}
         <div className="flex items-center gap-3 px-5 sm:px-6 pt-6 pb-2 flex-shrink-0">
           <div className="w-9 h-9 flex-shrink-0">
@@ -61,8 +61,8 @@ export default function OnboardingScreen({
             min-h-0 is the critical fix: without it, flex-1 children default
             to min-height:auto (content size) and the area grows instead of
             scrolling, causing content to overflow/overlap the footer. */}
-        <div className="flex-1 min-h-0 flex flex-col px-5 sm:px-6 pt-3 pb-4 overflow-y-auto">
-          <div key={step} className={`flex-1 flex flex-col ${animClass}`}>
+        <div className="flex-1 min-h-0 px-5 sm:px-6 pt-3 pb-4 overflow-y-auto">
+          <div key={step} className={`min-h-full flex flex-col ${animClass}`}>
             {children}
           </div>
         </div>
