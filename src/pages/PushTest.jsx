@@ -4,7 +4,7 @@ import { base44 } from "@/api/base44Client";
 import { Bell, BellRing, CheckCircle2, XCircle, Loader2, Send, FileWarning, ChevronLeft } from "lucide-react";
 
 // VAPID public key — safe to expose client-side.
-const VAPID_PUBLIC_KEY = "BE6031Ju-baEdeNh66nZ6Bdd82eweNTZ53x-2S-kGwDHr0KJvTkT8v_Tq6BZQKRKyACoOovSsUXxD4n08h5q-18";
+const VAPID_PUBLIC_KEY = "BIcr9owMtcG-eSvzdIhP2Iar24NhT7c-7Wp6ReZLa6-C3VKUGzN0Llnd7ANCvjWUqcCHrpvh7CNb4-ULozH_3bE";
 
 function urlBase64ToUint8Array(base64String) {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
@@ -52,6 +52,14 @@ export default function PushTest() {
       log(`Permission result: ${permission}`);
       if (permission !== "granted") {
         throw new Error("Notification permission was not granted.");
+      }
+
+      log("Checking for existing subscription...");
+      const existingSub = await reg.pushManager.getSubscription();
+      if (existingSub) {
+        log("Found existing subscription (old key) — unsubscribing first...");
+        await existingSub.unsubscribe();
+        log("✓ Old subscription removed");
       }
 
       log("Subscribing to push manager with VAPID public key...");
