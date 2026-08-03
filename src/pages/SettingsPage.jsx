@@ -5,6 +5,7 @@ import { useAppState } from "@/lib/AppState";
 import { useAuth } from "@/lib/AuthContext";
 import { base44 } from "@/api/base44Client";
 import { subscribeToPush, unsubscribeFromPush } from "@/lib/pushSubscription";
+import { ICON_SIZE_ROW } from "@/lib/iconConstants";
 
 // Shared toggle — defined outside the component so React doesn't remount it
 // on every state change (which caused the two toggles to look inconsistent).
@@ -77,7 +78,7 @@ export default function SettingsPage() {
     const inner = (
       <div className="flex items-center justify-between py-3.5 w-full">
         <div className="flex items-center gap-3">
-          {icon}
+          <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">{icon}</div>
           <span className="text-sm text-gray-700 dark:text-gray-300">{label}</span>
         </div>
         <ChevronRight size={16} className="text-gray-300 dark:text-gray-600" />
@@ -184,14 +185,14 @@ export default function SettingsPage() {
           <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <Moon size={18} className="text-gray-500 dark:text-gray-400" />
+                <div className="w-5 h-5 flex items-center justify-center flex-shrink-0"><Moon size={ICON_SIZE_ROW} className="text-gray-500 dark:text-gray-400" /></div>
                 <span className="text-sm text-gray-700 dark:text-gray-300">Dark Mode</span>
               </div>
               <Toggle value={darkMode} onChange={handleDarkMode} />
             </div>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <Bell size={18} className="text-gray-500 dark:text-gray-400" />
+                <div className="w-5 h-5 flex items-center justify-center flex-shrink-0"><Bell size={ICON_SIZE_ROW} className="text-gray-500 dark:text-gray-400" /></div>
                 <div>
                   <span className="text-sm text-gray-700 dark:text-gray-300 block">Push Notifications</span>
                   <span className="text-[11px] text-gray-400 dark:text-gray-500">Get a gentle reminder on the morning of your scheduled shot.</span>
@@ -212,7 +213,7 @@ export default function SettingsPage() {
             <div className="bg-indigo-50 dark:bg-indigo-500/10 rounded-2xl p-4 border border-indigo-100 dark:border-indigo-500/20">
               <div className="flex items-start gap-3">
                 <div className="w-9 h-9 rounded-lg bg-indigo-100 dark:bg-indigo-500/20 flex items-center justify-center flex-shrink-0">
-                  <Share size={18} className="text-indigo-600 dark:text-indigo-400" />
+                  <Share size={ICON_SIZE_ROW} className="text-indigo-600 dark:text-indigo-400" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-indigo-800 dark:text-indigo-300">Add Levli to your Home Screen</p>
@@ -232,10 +233,10 @@ export default function SettingsPage() {
         <div className="px-4 mb-4">
           <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase mb-2 px-1">General</p>
           <div className="bg-white dark:bg-gray-900 rounded-2xl px-4 shadow-sm border border-gray-100 dark:border-gray-800 divide-y divide-gray-100 dark:divide-white/[0.07]">
-            <MenuItem icon={backupLoading ? <Loader2 size={18} className="animate-spin text-gray-400" /> : <Download size={18} className="text-gray-500 dark:text-gray-400" />} label="Backup Data" onPress={handleBackup} />
-            <MenuItem icon={restoreLoading ? <Loader2 size={18} className="animate-spin text-gray-400" /> : <Upload size={18} className="text-gray-500 dark:text-gray-400" />} label="Restore Data" onPress={handleRestore} />
-            <MenuItem icon={<Mail size={18} className="text-gray-500 dark:text-gray-400" />} label="Contact Us" href="mailto:support@levli.app" />
-            {isDeveloper && <MenuItem icon={<Bell size={18} className="text-indigo-500" />} label="Push Notification Test" to="/push-test" />}
+            <MenuItem icon={backupLoading ? <Loader2 size={ICON_SIZE_ROW} className="animate-spin text-gray-400" /> : <Download size={ICON_SIZE_ROW} className="text-gray-500 dark:text-gray-400" />} label="Backup Data" onPress={handleBackup} />
+            <MenuItem icon={restoreLoading ? <Loader2 size={ICON_SIZE_ROW} className="animate-spin text-gray-400" /> : <Upload size={ICON_SIZE_ROW} className="text-gray-500 dark:text-gray-400" />} label="Restore Data" onPress={handleRestore} />
+            <MenuItem icon={<Mail size={ICON_SIZE_ROW} className="text-gray-500 dark:text-gray-400" />} label="Contact Us" href="mailto:support@levli.app" />
+            {isDeveloper && <MenuItem icon={<Bell size={ICON_SIZE_ROW} className="text-indigo-500" />} label="Push Notification Test" to="/push-test" />}
           </div>
         </div>
 
@@ -243,8 +244,8 @@ export default function SettingsPage() {
         <div className="px-4 mb-4">
           <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase mb-2 px-1">Policy and application terms</p>
           <div className="bg-white dark:bg-gray-900 rounded-2xl px-4 shadow-sm border border-gray-100 dark:border-gray-800 divide-y divide-gray-100 dark:divide-white/[0.07]">
-            <MenuItem icon={<FileText size={18} className="text-gray-500 dark:text-gray-400" />} label="Privacy Policy" to="/privacy" />
-            <MenuItem icon={<FileText size={18} className="text-gray-500 dark:text-gray-400" />} label="Terms and Conditions" to="/terms" />
+            <MenuItem icon={<FileText size={ICON_SIZE_ROW} className="text-gray-500 dark:text-gray-400" />} label="Privacy Policy" to="/privacy" />
+            <MenuItem icon={<FileText size={ICON_SIZE_ROW} className="text-gray-500 dark:text-gray-400" />} label="Terms and Conditions" to="/terms" />
           </div>
         </div>
 
@@ -289,7 +290,7 @@ export default function SettingsPage() {
         {/* Feedback */}
         <div className="px-4 mb-4">
           <div className="bg-white dark:bg-gray-900 rounded-2xl px-4 shadow-sm border border-gray-100 dark:border-gray-800">
-            <MenuItem icon={<MessageSquare size={18} className="text-gray-500 dark:text-gray-400" />} label="Leave feedback" href="mailto:feedback@levli.app" />
+            <MenuItem icon={<MessageSquare size={ICON_SIZE_ROW} className="text-gray-500 dark:text-gray-400" />} label="Leave feedback" href="mailto:feedback@levli.app" />
           </div>
         </div>
 
@@ -298,7 +299,7 @@ export default function SettingsPage() {
             onClick={handleLogout}
             className="w-full flex items-center justify-center gap-2 py-3.5 bg-white dark:bg-gray-900 text-red-500 font-semibold rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800"
           >
-            <LogOut size={18} /> Log Out
+            <LogOut size={ICON_SIZE_ROW} /> Log Out
           </button>
         </div>
 

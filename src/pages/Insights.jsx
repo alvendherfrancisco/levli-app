@@ -13,6 +13,7 @@ import UpsellBanner from "@/components/UpsellBanner";
 import SiteRotationChart from "@/components/insights/SiteRotationChart";
 import { useSubscription } from "@/lib/SubscriptionContext";
 import PageContainer from "@/components/PageContainer";
+import { ICON_SIZE_ROW } from "@/lib/iconConstants";
 
 const CLASS_COLORS = { Semaglutide: "#14B8A6", Tirzepatide: "#6366F1", Liraglutide: "#F59E0B" };
 
@@ -225,7 +226,7 @@ export default function Insights() {
         {/* Weight Change Panel */}
         <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
           <div className="flex items-center gap-2 mb-1">
-            <TrendingDown size={18} className="text-indigo-600" />
+            <div className="w-5 h-5 flex items-center justify-center flex-shrink-0"><TrendingDown size={ICON_SIZE_ROW} className="text-indigo-600" /></div>
             <h3 className="font-bold text-gray-900 dark:text-white text-lg">Weight Change</h3>
           </div>
           <div className="border-b-2 border-indigo-500 w-12 mb-3" />
@@ -344,7 +345,7 @@ export default function Insights() {
               </button>
               <button onClick={openAddPhoto}
                 className="w-full py-3.5 bg-indigo-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-indigo-700 transition-colors text-sm">
-                <Plus size={18} /> Add Picture
+                <Plus size={ICON_SIZE_ROW} /> Add Picture
               </button>
             </div>
           ) : (
@@ -393,13 +394,13 @@ export default function Insights() {
         <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
           <div className="flex items-start justify-between mb-1">
             <div className="flex items-center gap-2">
-              <Syringe size={18} className="text-indigo-600" />
+              <div className="w-5 h-5 flex items-center justify-center flex-shrink-0"><Syringe size={ICON_SIZE_ROW} className="text-indigo-600" /></div>
               <div>
                 <h3 className="font-bold text-gray-900 dark:text-white text-lg">Modelled Medication Exposure</h3>
                 <p className="text-xs text-indigo-500">Illustrative relative-exposure estimate (not a blood-level measurement).</p>
               </div>
             </div>
-            <HelpCircle size={18} className="text-indigo-400" />
+            <HelpCircle size={ICON_SIZE_ROW} className="text-indigo-400" />
           </div>
           <div className="border-b-2 border-indigo-500 w-12 mb-3" />
 
@@ -485,7 +486,7 @@ export default function Insights() {
         {/* Injection Site Rotation Panel */}
         <div className="mx-4 mb-4 bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
           <div className="flex items-center gap-2 mb-1">
-            <MapPin size={18} className="text-indigo-600" />
+            <div className="w-5 h-5 flex items-center justify-center flex-shrink-0"><MapPin size={ICON_SIZE_ROW} className="text-indigo-600" /></div>
             <h3 className="font-bold text-gray-900 dark:text-white text-lg">Injection Site Rotation</h3>
           </div>
           <div className="border-b-2 border-indigo-500 w-12 mb-3" />
