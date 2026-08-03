@@ -73,6 +73,40 @@
     "premium_until": {
       "type": "string",
       "description": "ISO date when premium access expires (null/empty for lifetime or active recurring plans)"
+    },
+    "first_name": {
+      "type": "string",
+      "description": "User's first name for personalized notification copy"
+    },
+    "notif_shot_reminders": {
+      "type": "boolean",
+      "default": true,
+      "description": "Core shot due/overdue reminders (on by default)"
+    },
+    "notif_checkin_reminders": {
+      "type": "boolean",
+      "default": false,
+      "description": "Symptom/mood check-in nudges (off by default, a few times a week)"
+    },
+    "notif_weight_reminders": {
+      "type": "boolean",
+      "default": false,
+      "description": "Weekly weight logging reminder (off unless user opted into weight tracking)"
+    },
+    "notif_inventory_alerts": {
+      "type": "boolean",
+      "default": true,
+      "description": "Refill/low-inventory alerts (on by default)"
+    },
+    "notif_reengagement": {
+      "type": "boolean",
+      "default": false,
+      "description": "Supportive re-engagement nudge after 5+ days of inactivity (off by default)"
+    },
+    "weight_tracking_opted_in": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the user opted into weight tracking during onboarding"
     }
   },
   "name": "UserProfile",

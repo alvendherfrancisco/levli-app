@@ -13,6 +13,13 @@ const DEFAULT_PROFILE = {
   default_medication: "Ozempic®", notifications_enabled: false, dark_mode: false,
   birthdate: "", gdpr_consent_date: "", gdpr_privacy_policy_version: "",
   parental_consent_date: "", parental_consent_name: "",
+  first_name: "",
+  notif_shot_reminders: true,
+  notif_checkin_reminders: false,
+  notif_weight_reminders: false,
+  notif_inventory_alerts: true,
+  notif_reengagement: false,
+  weight_tracking_opted_in: false,
 };
 
 export function AppStateProvider({ children }) {
@@ -385,6 +392,13 @@ export function AppStateProvider({ children }) {
       gdpr_privacy_policy_version: next.gdpr_privacy_policy_version || "",
       parental_consent_date: next.parental_consent_date || "",
       parental_consent_name: next.parental_consent_name || "",
+      first_name: next.first_name || "",
+      notif_shot_reminders: next.notif_shot_reminders !== undefined ? !!next.notif_shot_reminders : true,
+      notif_checkin_reminders: !!next.notif_checkin_reminders,
+      notif_weight_reminders: !!next.notif_weight_reminders,
+      notif_inventory_alerts: next.notif_inventory_alerts !== undefined ? !!next.notif_inventory_alerts : true,
+      notif_reengagement: !!next.notif_reengagement,
+      weight_tracking_opted_in: !!next.weight_tracking_opted_in,
     };
     if (profileId) {
       await base44.entities.UserProfile.update(profileId, payload);

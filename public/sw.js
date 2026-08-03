@@ -1,41 +1,55 @@
-// Service worker for web push notifications.
-// Registered from PushTest.jsx at scope "/sw.js".
+// Levli Service Worker — Push notifications with deep-link navigation.
+// Handles push events (show notifications with URL data) and notificationclick
+// events (focus or open the correct app screen based on the deep-link URL).
 
-self.addEventListener("install", (event) => {
+self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-self.addEventListener("activate", (event) => {
+self.addEventListener('activate', (event) => {
   event.waitUntil(self.clients.claim());
 });
 
-self.addEventListener("push", (event) => {
+self.addEventListener('push', (event) => {
   let data = {};
   try {
-    data = event.data ? event.data.json() : {};
+    data = JSON.parse(event.data.text());
   } catch (e) {
-    data = { body: event.data ? event.data.text() : "" };
+    data = { title: 'Levli', body: event.data ? event.data.text() : '' };
   }
-  const title = data.title || "Levli";
+
+  const title = data.title || 'Levli';
   const options = {
-    body: data.body || "",
-    data: data.url ? { url: data.url } : {},
-    requireInteraction: false,
+    body: data.body || '',
+    icon: '/levli-logo-icon.svg',
+    badge: '/levli-logo-icon.svg',
+    data: { url: data.url || '/' },
+    vibrate: [100],
   };
+
   event.waitUntil(self.registration.showNotification(title, options));
 });
 
-self.addEventListener("notificationclick", (event) => {
+self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  const targetUrl = event.notification.data?.url || "/";
+
+  const url = (event.notification.data && event.notification.data.url) || '/';
+
   event.waitUntil(
-    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((clientList) => {
-      for (const client of clientList) {
-        if (client.url.includes(self.location.origin) && "focus" in client) {
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clients) => {
+      // Focus an existing window and navigate to the deep-link URL
+      for (const client of clients) {
+        if (client.url.includes(self.location.origin) && 'focus' in client) {
+          if (client.navigate) {
+            client.navigate(url);
+          }
           return client.focus();
         }
       }
-      return self.clients.openWindow(targetUrl);
+      // No existing window — open a new one
+      if (self.clients.openWindow) {
+        return self.clients.openWindow(url);
+      }
     })
   );
 });

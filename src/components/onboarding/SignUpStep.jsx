@@ -11,6 +11,7 @@ import { SignUpIllustration } from "@/components/onboarding/OnboardingIllustrati
  * The reload resumes onboarding at step 5 (Privacy) with all prior data intact.
  */
 export default function SignUpStep({ persistState }) {
+  const [firstName, setFirstName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -44,7 +45,7 @@ export default function SignUpStep({ persistState }) {
       const result = await base44.auth.verifyOtp({ email, otpCode });
       if (result?.access_token) base44.auth.setToken(result.access_token);
       // Persist onboarding state so it survives the auth-session reload.
-      persistState?.();
+      persistState?.({ firstName });
       window.location.href = "/onboarding";
     } catch (err) {
       setError(err.message || "Invalid verification code");
@@ -123,6 +124,14 @@ export default function SignUpStep({ persistState }) {
         <p className="mb-3 text-sm text-red-500 text-center bg-red-50 rounded-xl px-3 py-2">{error}</p>
       )}
       <form onSubmit={handleSubmit} className="space-y-3 flex flex-col items-center">
+        <input
+          type="text"
+          placeholder="First name"
+          autoComplete="given-name"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          className="w-full max-w-[400px] border-2 border-gray-200 bg-white rounded-xl px-4 py-3 text-base text-gray-700 outline-none focus:border-indigo-500 transition-colors"
+        />
         <input
           type="email"
           placeholder="Email"

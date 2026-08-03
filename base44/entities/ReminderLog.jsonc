@@ -3,7 +3,7 @@
   "properties": {
     "shot_date_key": {
       "type": "string",
-      "description": "Dedup instance key. For shot-based reminders: YYYY-MM-DD of the scheduled shot. For refill: 'inventory:{id}'. For weekly: 'week:{YYYY-Www}'. For check-in/weigh-in: YYYY-MM-DD of the run date."
+      "description": "Dedup instance key. For shot-based reminders: YYYY-MM-DD of the scheduled shot. For refill: 'inventory:{id}'. For weekly: 'week:{YYYY-Www}'. For check-in/weigh-in/re-engagement: YYYY-MM-DD of the run date."
     },
     "reminder_type": {
       "type": "string",
@@ -16,7 +16,8 @@
         "refill_low",
         "weekly_summary",
         "side_effect_checkin",
-        "weigh_in"
+        "weigh_in",
+        "reengagement"
       ],
       "default": "due_today",
       "description": "Type of reminder sent"

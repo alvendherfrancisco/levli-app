@@ -124,6 +124,10 @@ export default function SettingsPage() {
     }
   };
 
+  const handleNotifToggle = async (field, value) => {
+    await setProfile({ ...profile, [field]: value });
+  };
+
   const handleBackup = () => {
     setBackupLoading(true);
     const data = { shots, journalEntries, dayMetrics, profile, exportedAt: new Date().toISOString() };
@@ -224,6 +228,50 @@ export default function SettingsPage() {
                     Got it
                   </button>
                 </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Individual notification toggles — only visible when push is enabled */}
+        {notifEnabled && (
+          <div className="px-4 mb-4">
+            <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase mb-2 px-1">Notifications</p>
+            <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 space-y-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="text-sm text-gray-700 dark:text-gray-300 block">Shot Reminders</span>
+                  <span className="text-[11px] text-gray-400 dark:text-gray-500">Reminds you on the day of your scheduled dose.</span>
+                </div>
+                <Toggle value={profile?.notif_shot_reminders !== false} onChange={(v) => handleNotifToggle('notif_shot_reminders', v)} />
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="text-sm text-gray-700 dark:text-gray-300 block">Symptom &amp; Mood Check-ins</span>
+                  <span className="text-[11px] text-gray-400 dark:text-gray-500">A gentle nudge to log how you're feeling, a few times a week.</span>
+                </div>
+                <Toggle value={!!profile?.notif_checkin_reminders} onChange={(v) => handleNotifToggle('notif_checkin_reminders', v)} />
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="text-sm text-gray-700 dark:text-gray-300 block">Weight Logging</span>
+                  <span className="text-[11px] text-gray-400 dark:text-gray-500">Weekly reminder to log your weight.</span>
+                </div>
+                <Toggle value={!!profile?.notif_weight_reminders} onChange={(v) => handleNotifToggle('notif_weight_reminders', v)} />
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="text-sm text-gray-700 dark:text-gray-300 block">Medication Inventory Alerts</span>
+                  <span className="text-[11px] text-gray-400 dark:text-gray-500">Notifies you when you're running low on doses.</span>
+                </div>
+                <Toggle value={profile?.notif_inventory_alerts !== false} onChange={(v) => handleNotifToggle('notif_inventory_alerts', v)} />
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="text-sm text-gray-700 dark:text-gray-300 block">Re-engagement Nudges</span>
+                  <span className="text-[11px] text-gray-400 dark:text-gray-500">A supportive check-in if you haven't opened the app in a few days.</span>
+                </div>
+                <Toggle value={!!profile?.notif_reengagement} onChange={(v) => handleNotifToggle('notif_reengagement', v)} />
               </div>
             </div>
           </div>

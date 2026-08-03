@@ -83,6 +83,7 @@ export default function Onboarding() {
   const [tracking, setTracking] = useState([]);
   const [units, setUnits] = useState({ weight_unit: "lb", height_unit: "in", liquid_unit: "oz" });
   const [gdprConsented, setGdprConsented] = useState(false);
+  const [firstName, setFirstName] = useState("");
   const [birthdate, setBirthdate] = useState("");
   const [parentalConsentName, setParentalConsentName] = useState("");
 
@@ -103,6 +104,7 @@ export default function Onboarding() {
       setGdprConsented(!!data.gdprConsented);
       setBirthdate(data.birthdate || "");
       setParentalConsentName(data.parentalConsentName || "");
+      setFirstName(data.firstName || "");
       setStep(typeof data.step === "number" ? data.step : 4);
     } catch (e) { /* ignore malformed */ }
     sessionStorage.removeItem("onboarding_signup_state");
@@ -121,20 +123,41 @@ export default function Onboarding() {
 
   // Sign-up (step 3) requires a page reload to initialise the auth session.
   // Persist the data collected in steps 1–3 so it can be restored after reload.
-  const persistOnboardingState = () => {
+  const persistOnboardingState = (extra = {}) => {
     sessionStorage.setItem("onboarding_signup_state", JSON.stringify({
       step: 4,
       selectedMeds, doseAmount, frequency, shotDay, tracking, units,
       gdprConsented, birthdate, parentalConsentName,
+      ...extra,
     }));
   };
 
   const next = async () => {
+    // After the schedule step (5), request notification permission — this is
+    // where the value of the permission is obvious to the user ("we'll remind
+    // you on this day").  If the user denies or the browser doesn't support
+    // push (e.g. iOS without home-screen install), we continue silently; the
+    // Settings page shows the iOS home-screen banner if needed.
+    if (step === 5) {
+      try {
+        const { subscribeToPush } = await import("@/lib/pushSubscription");
+        const { subObj, isNew } = await subscribeToPush();
+        await setProfile({
+          ...profile,
+          notifications_enabled: true,
+          notif_shot_reminders: true,
+          notif_inventory_alerts: true,
+        });
+      } catch (e) {
+        console.log("Notification permission not granted:", e.message);
+      }
+    }
+
     if (step < TOTAL_STEPS - 1) {
       setStep(step + 1);
       return;
     }
-    // Completion — record consents + save profile (preserves all original logic)
+    // Completion — record consents + save profile
     if (gdprConsented) await recordConsent(PRIVACY_POLICY_VERSION);
     if (isMinor(birthdate) && parentalConsentName.trim()) await recordParentalConsent(parentalConsentName);
 
@@ -149,13 +172,19 @@ export default function Onboarding() {
     const freqOption = FREQUENCY_OPTIONS.find((f) => f.label === frequency);
     const daysBetween = freqOption ? freqOption.days : "7";
 
+    // Auto-enable weight reminders if the user opted into weight tracking
+    const weightOptedIn = tracking.includes("weight");
+
     await setProfile({
       ...profile,
+      first_name: firstName,
       default_medication: defaultMed,
       days_between: daysBetween,
       ...units,
       birthdate,
       onboarding_completed: true,
+      weight_tracking_opted_in: weightOptedIn,
+      notif_weight_reminders: weightOptedIn,
     });
     navigate("/");
   };
@@ -167,6 +196,7 @@ export default function Onboarding() {
   const ctaLabel =
     step === 0 ? "Get started" :
     step === 4 ? "Allow & continue" :
+    step === 5 ? "Allow reminders" :
     step === 7 ? "Go to Home" : "Next";
 
   const secondaryAction =
