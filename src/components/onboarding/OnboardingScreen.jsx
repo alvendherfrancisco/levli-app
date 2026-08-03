@@ -70,7 +70,7 @@ export default function OnboardingScreen({
             <button
               onClick={canContinue ? onContinue : undefined}
               disabled={!canContinue}
-              className={`w-full max-w-[280px] mx-auto py-4 rounded-full font-semibold text-base sm:text-lg transition-all duration-300 active:scale-95 ${
+              className={`w-full max-w-[320px] mx-auto py-4 rounded-full font-semibold text-base sm:text-lg transition-all duration-300 active:scale-95 ${
                 canContinue
                   ? "bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-600/25"
                   : "bg-gray-200 text-gray-400 cursor-not-allowed"
