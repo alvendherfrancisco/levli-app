@@ -57,16 +57,22 @@ export default function OnboardingScreen({
           </div>
         </div>
 
-        {/* Content */}
-        <div className="flex-1 flex flex-col px-5 sm:px-6 pt-3 overflow-y-auto">
+        {/* Content — scrollable, independent of the fixed footer below.
+            min-h-0 is the critical fix: without it, flex-1 children default
+            to min-height:auto (content size) and the area grows instead of
+            scrolling, causing content to overflow/overlap the footer. */}
+        <div className="flex-1 min-h-0 flex flex-col px-5 sm:px-6 pt-3 pb-4 overflow-y-auto">
           <div key={step} className={`flex-1 flex flex-col ${animClass}`}>
             {children}
           </div>
         </div>
 
-        {/* Footer — pill CTA + optional secondary */}
+        {/* Footer — pill CTA + optional secondary.
+            Fixed-height flex sibling (not absolute), so content never
+            needs padding equal to footer height. Safe-area inset respected
+            via max() so devices with a home indicator get extra space. */}
         {!hideFooter && (
-          <div className="px-6 sm:px-8 pb-9 pt-4 flex-shrink-0">
+          <div className="px-6 sm:px-8 pt-4 flex-shrink-0" style={{ paddingBottom: 'max(2.25rem, env(safe-area-inset-bottom, 0px))' }}>
             <button
               onClick={canContinue ? onContinue : undefined}
               disabled={!canContinue}
