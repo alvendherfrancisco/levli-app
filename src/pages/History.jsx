@@ -24,14 +24,29 @@ export default function History() {
 
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const firstDayOfWeek = new Date(year, month, 1).getDay();
+  const isCurrentMonth = month === today.getMonth() && year === today.getFullYear();
+
+  // Navigate to a given month/year, auto-selecting a valid day so the
+  // content sections below the calendar never disappear on month change.
+  const goToMonth = (newMonth, newYear) => {
+    const daysInNewMonth = new Date(newYear, newMonth + 1, 0).getDate();
+    const isCurrentMonthNew = newMonth === today.getMonth() && newYear === today.getFullYear();
+    const maxDay = isCurrentMonthNew ? today.getDate() : daysInNewMonth;
+    const prev = selectedDay || 1;
+    const newDay = Math.min(prev, maxDay);
+    setMonth(newMonth);
+    setYear(newYear);
+    setSelectedDay(newDay);
+  };
 
   const prevMonth = () => {
-    if (month === 0) { setMonth(11); setYear(y => y - 1); } else setMonth(m => m - 1);
-    setSelectedDay(null);
+    if (month === 0) goToMonth(11, year - 1);
+    else goToMonth(month - 1, year);
   };
   const nextMonth = () => {
-    if (month === 11) { setMonth(0); setYear(y => y + 1); } else setMonth(m => m + 1);
-    setSelectedDay(null);
+    if (isCurrentMonth) return; // can't navigate past the current month
+    if (month === 11) goToMonth(0, year + 1);
+    else goToMonth(month + 1, year);
   };
 
   // Build map of days → shots for this month/year
@@ -69,7 +84,9 @@ export default function History() {
           <div className="flex items-center justify-between mb-4">
             <button onClick={prevMonth}><ChevronLeft size={22} className="text-indigo-500" /></button>
             <h2 className="text-lg font-bold text-gray-900 dark:text-white">{monthNames[month]} {year}</h2>
-            <button onClick={nextMonth}><ChevronRight size={22} className="text-indigo-500" /></button>
+            <button onClick={nextMonth} disabled={isCurrentMonth} aria-label="Next month">
+              <ChevronRight size={22} className={isCurrentMonth ? "text-gray-300 dark:text-gray-700" : "text-indigo-500"} />
+            </button>
           </div>
           <div className="grid grid-cols-7 text-center mb-2">
             {["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map((d) => (
@@ -83,9 +100,11 @@ export default function History() {
               const hasShot = !!shotDayMap[day];
               const isSelected = day === selectedDay;
               const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+              const isFuture = isCurrentMonth && day > today.getDate();
               return (
-              <button key={day} onClick={() => setSelectedDay(day)}
+              <button key={day} onClick={() => !isFuture && setSelectedDay(day)} disabled={isFuture}
                 className={`py-1.5 rounded-lg text-sm font-medium relative flex flex-col items-center ${
+                  isFuture ? "text-gray-300 dark:text-gray-700 cursor-not-allowed" :
                   isSelected ? "border-2 border-indigo-500 text-indigo-600 dark:bg-indigo-500/10" : isToday ? "text-indigo-600" : "text-gray-700 dark:text-gray-300"
                 }`}>
                   {day}
