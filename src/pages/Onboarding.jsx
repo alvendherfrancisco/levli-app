@@ -169,6 +169,11 @@ export default function Onboarding() {
     step === 4 ? "Allow & continue" :
     step === 7 ? "Go to Home" : "Next";
 
+  const secondaryAction =
+    step === 0
+      ? { label: "I already have an account", onClick: () => navigate("/login") }
+      : null;
+
   return (
     <OnboardingScreen
       step={step}
@@ -178,6 +183,7 @@ export default function Onboarding() {
       ctaLabel={ctaLabel}
       canContinue={canContinue}
       hideFooter={step === 3}
+      secondaryAction={secondaryAction}
     >
       {step === 0 && <WelcomeStep />}
       {step === 1 && <EmpathyStep />}
