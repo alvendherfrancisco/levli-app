@@ -68,20 +68,15 @@ export function AppStateProvider({ children }) {
   };
 
   const loadProfile = async () => {
-    try {
-      const data = await base44.entities.UserProfile.list("", 1);
-      if (data.length > 0) {
-        const p = data[0];
-        setProfileId(p.id);
-        const merged = { ...DEFAULT_PROFILE, ...p };
-        setProfileState(merged);
-        setDarkModeState(!!p.dark_mode);
-        setOnboardingCompleted(!!p.onboarding_completed);
-      } else {
-        setOnboardingCompleted(false);
-      }
-    } catch (e) {
-      // Unauthenticated (pre-sign-up onboarding) or error — no profile yet.
+    const data = await base44.entities.UserProfile.list("", 1);
+    if (data.length > 0) {
+      const p = data[0];
+      setProfileId(p.id);
+      const merged = { ...DEFAULT_PROFILE, ...p };
+      setProfileState(merged);
+      setDarkModeState(!!p.dark_mode);
+      setOnboardingCompleted(!!p.onboarding_completed);
+    } else {
       setOnboardingCompleted(false);
     }
   };
