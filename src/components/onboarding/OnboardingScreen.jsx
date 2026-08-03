@@ -61,9 +61,11 @@ export default function OnboardingScreen({
             min-h-0 is the critical fix: without it, flex-1 children default
             to min-height:auto (content size) and the area grows instead of
             scrolling, causing content to overflow/overlap the footer. */}
-        <div className="flex-1 min-h-0 px-5 sm:px-6 pt-3 pb-4 overflow-y-auto">
-          <div key={step} className={`min-h-full flex flex-col ${animClass}`}>
-            {children}
+        <div className="flex-1 min-h-0 px-5 sm:px-6 pt-3 pb-4 overflow-y-auto flex flex-col">
+          <div key={step} className={`flex-1 flex flex-col ${animClass}`}>
+            <div className="w-full my-auto">
+              {children}
+            </div>
           </div>
         </div>
 
