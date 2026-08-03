@@ -19,7 +19,9 @@ export default async function(req) {
 
     const publicKey = secrets.get('VAPID_PUBLIC_KEY');
     const privateKey = secrets.get('VAPID_PRIVATE_KEY');
-    const subject = secrets.get('VAPID_SUBJECT') || 'mailto:alvendherfrancisco01@gmail.com';
+    // Sanitize subject: strip angle brackets and spaces that break the mailto: URL format
+    const rawSubject = secrets.get('VAPID_SUBJECT') || 'mailto:alvendherfrancisco01@gmail.com';
+    const subject = rawSubject.replace(/[<>]/g, '').replace(/mailto:\s*/i, 'mailto:').trim();
 
     if (!publicKey || !privateKey) {
       console.error('VAPID keys not configured');

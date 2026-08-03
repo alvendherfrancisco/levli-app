@@ -4,7 +4,7 @@ import { base44 } from "@/api/base44Client";
 import { Bell, BellRing, CheckCircle2, XCircle, Loader2, Send, FileWarning, ChevronLeft } from "lucide-react";
 
 // VAPID public key — safe to expose client-side.
-const VAPID_PUBLIC_KEY = "BIcr9owMtcG-eSvzdIhP2Iar24NhT7c-7Wp6ReZLa6-C3VKUGzN0Llnd7ANCvjWUqcCHrpvh7CNb4-ULozH_3bE";
+const VAPID_PUBLIC_KEY = "BIvggstIUyKg2SGxfM0LkRw5Onl5HysVhqG4ACz-VGW8wvOpZbGGDYxGi9BwKOKFKYYwno74LYQ1ELgCphcMteA";
 
 function urlBase64ToUint8Array(base64String) {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
