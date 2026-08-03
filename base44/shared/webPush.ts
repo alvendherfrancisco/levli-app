@@ -168,24 +168,53 @@ export async function sendWebPush(
   vapidPrivateKey: string,
   vapidSubject: string
 ): Promise<{ success: boolean; statusCode?: number; error?: string }> {
-  const vapidKey = await importVapidPrivateKey(vapidPublicKey, vapidPrivateKey);
-  const vapidJwt = await createVapidJwt(subscription.endpoint, vapidSubject, vapidPublicKey, vapidKey);
-  const encrypted = await encryptPayload(payload, subscription);
+  // Step 1: Import VAPID private key
+  let vapidKey: CryptoKey;
+  try {
+    vapidKey = await importVapidPrivateKey(vapidPublicKey, vapidPrivateKey);
+  } catch (e) {
+    return { success: false, error: `[Step 1: import VAPID key] ${e.message}` };
+  }
 
-  const response = await fetch(subscription.endpoint, {
-    method: 'POST',
-    headers: {
-      'Authorization': `vapid t=${vapidJwt},k=${vapidPublicKey}`,
-      'Content-Encoding': 'aes128g2',
-      'Content-Type': 'application/octet-stream',
-      'TTL': '86400',
-    },
-    body: encrypted,
-  });
+  // Step 2: Create VAPID JWT
+  let vapidJwt: string;
+  try {
+    vapidJwt = await createVapidJwt(subscription.endpoint, vapidSubject, vapidPublicKey, vapidKey);
+  } catch (e) {
+    return { success: false, error: `[Step 2: create VAPID JWT] ${e.message}` };
+  }
+
+  // Step 3: Encrypt payload (RFC 8291 aes128g2)
+  let encrypted: Uint8Array;
+  try {
+    if (!subscription.keys?.p256dh || !subscription.keys?.auth) {
+      throw new Error(`Subscription missing keys — p256dh present: ${!!subscription.keys?.p256dh}, auth present: ${!!subscription.keys?.auth}`);
+    }
+    encrypted = await encryptPayload(payload, subscription);
+  } catch (e) {
+    return { success: false, error: `[Step 3: encrypt payload] ${e.message}` };
+  }
+
+  // Step 4: Send to push service endpoint
+  let response: Response;
+  try {
+    response = await fetch(subscription.endpoint, {
+      method: 'POST',
+      headers: {
+        'Authorization': `vapid t=${vapidJwt},k=${vapidPublicKey}`,
+        'Content-Encoding': 'aes128g2',
+        'Content-Type': 'application/octet-stream',
+        'TTL': '86400',
+      },
+      body: encrypted,
+    });
+  } catch (e) {
+    return { success: false, error: `[Step 4: fetch to push endpoint] ${e.message}` };
+  }
 
   if (response.status === 201 || response.status === 202) {
     return { success: true, statusCode: response.status };
   }
   const errorText = await response.text();
-  return { success: false, statusCode: response.status, error: `Push service returned ${response.status}: ${errorText}` };
+  return { success: false, statusCode: response.status, error: `[Step 4: push service response] Push service returned ${response.status}: ${errorText}` };
 }

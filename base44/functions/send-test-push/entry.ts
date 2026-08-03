@@ -26,6 +26,15 @@ export default async function(req) {
       return Response.json({ success: false, error: 'VAPID keys not configured' }, { status: 500 });
     }
 
+    // Log what we received for debugging
+    console.log('send-test-push called');
+    console.log('  endpoint:', subscription.endpoint);
+    console.log('  keys.p256dh present:', !!subscription.keys?.p256dh, 'length:', subscription.keys?.p256dh?.length);
+    console.log('  keys.auth present:', !!subscription.keys?.auth, 'length:', subscription.keys?.auth?.length);
+    console.log('  VAPID_PUBLIC_KEY present:', !!publicKey, 'length:', publicKey?.length);
+    console.log('  VAPID_PRIVATE_KEY present:', !!privateKey, 'length:', privateKey?.length);
+    console.log('  VAPID_SUBJECT:', subject);
+
     const payload = JSON.stringify({ title, body: messageBody });
     const result = await sendWebPush(subscription, payload, publicKey, privateKey, subject);
 
@@ -34,10 +43,27 @@ export default async function(req) {
       return Response.json({ success: true, statusCode: result.statusCode });
     } else {
       console.error('Push failed:', result.error);
-      return Response.json({ success: false, error: result.error, statusCode: result.statusCode }, { status: 500 });
+      // Return the full error text + status code so the client can see exactly which step failed
+      return Response.json({
+        success: false,
+        error: result.error,
+        statusCode: result.statusCode,
+        debug: {
+          endpoint: subscription.endpoint,
+          hasP256dh: !!subscription.keys?.p256dh,
+          hasAuth: !!subscription.keys?.auth,
+          vapidPublicKeyLength: publicKey?.length,
+          vapidPrivateKeyLength: privateKey?.length,
+        }
+      }, { status: 500 });
     }
   } catch (error) {
-    console.error('send-test-push error:', error.message, error.stack);
-    return Response.json({ success: false, error: error.message }, { status: 500 });
+    console.error('send-test-push UNCAUGHT error:', error.message, error.stack);
+    // Return full error + stack trace in the response body for debugging
+    return Response.json({
+      success: false,
+      error: error.message,
+      stack: error.stack,
+    }, { status: 500 });
   }
 }

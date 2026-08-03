@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { Bell, BellRing, CheckCircle2, XCircle, Loader2, Send, FileWarning } from "lucide-react";
+import { Bell, BellRing, CheckCircle2, XCircle, Loader2, Send, FileWarning, ChevronLeft } from "lucide-react";
 
 // VAPID public key — safe to expose client-side.
 const VAPID_PUBLIC_KEY = "BIfBz9tdtBQxuTFg-NILMfrPAVcb-Z_HWMfRKJbaf0IvcT5W4K6SRIdEdDRWvQSCNWMKYHZGJXun7gzg2tGpavI";
@@ -17,6 +18,7 @@ function urlBase64ToUint8Array(base64String) {
 }
 
 export default function PushTest() {
+  const navigate = useNavigate();
   const [phase, setPhase] = useState("idle"); // idle | subscribing | subscribed | sending | sent | error
   const [error, setError] = useState("");
   const [logs, setLogs] = useState([]);
@@ -99,7 +101,11 @@ export default function PushTest() {
         log("✓ Push notification sent successfully!");
         setPhase("sent");
       } else {
-        throw new Error(res.data?.error || "Backend returned failure");
+        // Surface the full error from the backend, including stack trace if available
+        const fullError = res.data?.error || "Backend returned failure";
+        const stack = res.data?.stack ? `\n\nStack: ${res.data.stack}` : "";
+        const debug = res.data?.debug ? `\n\nDebug: ${JSON.stringify(res.data.debug)}` : "";
+        throw new Error(`${fullError}${debug}${stack}`);
       }
     } catch (e) {
       log(`✗ ${e.message}`);
@@ -111,7 +117,10 @@ export default function PushTest() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 p-5">
       <div className="max-w-md mx-auto">
-        <div className="flex items-center gap-2 mb-6">
+        <div className="flex items-center gap-3 mb-6">
+          <button onClick={() => navigate("/settings")} className="p-1 -ml-1 text-gray-500 hover:text-indigo-600 transition-colors">
+            <ChevronLeft size={24} />
+          </button>
           <BellRing size={24} className="text-indigo-600" />
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Push Notification Test</h1>
         </div>
