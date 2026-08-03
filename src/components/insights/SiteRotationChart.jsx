@@ -40,16 +40,19 @@ export default function SiteRotationChart({ shots, range }) {
 
   return (
     <div>
-      <div className="h-56">
+      <div className="h-56 site-rotation-chart">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={siteData} layout="vertical" margin={{ top: 4, right: 12, bottom: 4, left: 4 }}>
             <XAxis type="number" hide />
-            <YAxis type="category" dataKey="site" width={150} tick={{ fontSize: 10 }} stroke="#999" />
+            <YAxis type="category" dataKey="site" width={150} tick={{ fontSize: 10, fill: "#9CA3AF" }} stroke="#9CA3AF" />
             <Tooltip
               formatter={(v) => [`${v} shots`, "Uses"]}
-              contentStyle={{ background: "rgba(20,22,32,0.95)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, color: "#E8E9F0" }}
+              contentStyle={{ background: "rgba(20,22,32,0.95)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, color: "#E8E9F0", padding: "8px 12px" }}
+              itemStyle={{ color: "#E8E9F0", background: "transparent" }}
+              labelStyle={{ color: "#E8E9F0", background: "transparent" }}
+              cursor={{ fill: "rgba(255,255,255,0.05)" }}
             />
-            <Bar dataKey="count" radius={[0, 6, 6, 0]} barSize={18}>
+            <Bar dataKey="count" radius={[0, 6, 6, 0]} barSize={18} background={{ fill: "rgba(150,150,150,0.12)" }}>
               {siteData.map((_, i) => (
                 <Cell key={i} fill={SITE_COLORS[i % SITE_COLORS.length]} />
               ))}

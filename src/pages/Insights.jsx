@@ -407,7 +407,7 @@ export default function Insights() {
             {Object.keys(MED_RANGES).map((r) => (
               <button key={r} onClick={() => setMedRange(r)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                  medRange === r ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600" : "text-gray-400 dark:text-gray-500"
+                  medRange === r ? "bg-indigo-600 text-white" : "text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
                 }`}>{r}</button>
             ))}
           </div>
@@ -494,7 +494,7 @@ export default function Insights() {
             {Object.keys(MED_RANGES).map((r) => (
               <button key={r} onClick={() => setSiteRange(r)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                  siteRange === r ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600" : "text-gray-400 dark:text-gray-500"
+                  siteRange === r ? "bg-indigo-600 text-white" : "text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
                 }`}>{r}</button>
             ))}
           </div>
