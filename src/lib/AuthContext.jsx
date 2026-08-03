@@ -21,6 +21,7 @@ export const AuthProvider = ({ children }) => {
   const [isLoadingPublicSettings, setIsLoadingPublicSettings] = useState(true);
   const [authError, setAuthError] = useState(null);
   const [authChecked, setAuthChecked] = useState(false);
+  const [isNewUser, setIsNewUser] = useState(false);
   const [appPublicSettings, setAppPublicSettings] = useState(null); // Contains only { id, public_settings }
 
   useEffect(() => {
@@ -52,8 +53,11 @@ export const AuthProvider = ({ children }) => {
         
         // If we got the app public settings successfully, check if user is authenticated
         if (appParams.token) {
+          setIsNewUser(false);
           await checkUserAuth();
         } else {
+          // No stored token → brand-new user. Show onboarding (with sign-up).
+          setIsNewUser(true);
           setIsLoadingAuth(false);
           setIsAuthenticated(false);
           setAuthChecked(true);
@@ -160,6 +164,7 @@ export const AuthProvider = ({ children }) => {
       authError,
       appPublicSettings,
       authChecked,
+      isNewUser,
       logout,
       navigateToLogin,
       checkUserAuth,

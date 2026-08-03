@@ -48,6 +48,13 @@ function HomeOrOnboarding() {
   return onboardingCompleted ? <Home /> : <Navigate to="/onboarding" replace />;
 }
 
+// Unauthenticated entry: new users (no stored token) go to onboarding;
+// returning users (expired/invalid token or ambiguous check) go to login.
+function EntryRedirect() {
+  const { isNewUser } = useAuth();
+  return <Navigate to={isNewUser ? "/onboarding" : "/login"} replace />;
+}
+
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
 
@@ -77,8 +84,8 @@ const AuthenticatedApp = () => {
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
-      <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
-        <Route path="/onboarding" element={<Onboarding />} />
+      <Route path="/onboarding" element={<Onboarding />} />
+      <Route element={<ProtectedRoute unauthenticatedElement={<EntryRedirect />} />}>
         <Route element={<AppLayout />}>
           <Route path="/" element={<HomeOrOnboarding />} />
           <Route path="/shots" element={<Shots />} />

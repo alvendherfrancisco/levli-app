@@ -3,6 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { toDayKey, todayKey, parseShotDate } from "@/lib/dateUtils";
 import { convertWeight } from "@/lib/units";
 import { seedDemoDataIfNeeded } from "@/lib/seedDemoData";
+import { useAuth } from "@/lib/AuthContext";
 
 const AppStateContext = createContext(null);
 
@@ -15,6 +16,7 @@ const DEFAULT_PROFILE = {
 };
 
 export function AppStateProvider({ children }) {
+  const { isAuthenticated } = useAuth();
   const [shots, setShots] = useState([]);
   const [shotsLoading, setShotsLoading] = useState(true);
   const [dayMetrics, setDayMetrics] = useState({}); // key: day_key → record
@@ -37,8 +39,9 @@ export function AppStateProvider({ children }) {
     document.documentElement.classList.toggle("dark", darkMode);
   }, [darkMode]);
 
-  // ── Load all data on mount ─────────────────────────────────────────────────
+  // ── Load all data once authenticated ────────────────────────────────────────
   useEffect(() => {
+    if (!isAuthenticated) return;
     (async () => {
       await seedDemoDataIfNeeded();
       loadShots();
@@ -52,7 +55,7 @@ export function AppStateProvider({ children }) {
       loadStorageLogs();
       loadProxyAccess();
     })();
-  }, []);
+  }, [isAuthenticated]);
 
   const loadShots = async () => {
     setShotsLoading(true);
