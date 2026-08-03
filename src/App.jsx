@@ -31,6 +31,7 @@ import PrivacyPolicyPage from '@/pages/PrivacyPolicyPage';
 import TermsPage from '@/pages/TermsPage';
 import MyMedications from '@/pages/MyMedications';
 import InventoryPage from '@/pages/InventoryPage';
+import PushTest from '@/pages/PushTest';
 
 // Layout
 import AppLayout from '@/components/AppLayout';
@@ -96,6 +97,7 @@ const AuthenticatedApp = () => {
           <Route path="/journal" element={<Journal />} />
           <Route path="/profile" element={<Profile />} />
         </Route>
+        <Route path="/push-test" element={<PushTest />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/report" element={<ReportPage />} />
         <Route path="/privacy" element={<PrivacyPolicyPage />} />
