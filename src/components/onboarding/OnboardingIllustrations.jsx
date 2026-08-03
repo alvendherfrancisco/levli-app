@@ -1,28 +1,16 @@
 import React from "react";
 
 /**
- * Levli Onboarding Illustration System
- * ──────────────────────────────────────────────────────────────────────────
- * Style Guide:
- *   Canvas:      280×200 viewBox, responsive width, max 280px
- *   Palette:     Primary  indigo #6366F1 → teal #14B8A6
- *                Accent   orange #F97316 → coral #EC4899
- *                Sparkles amber #F59E0B, indigo #6366F1, teal #14B8A6
- *   Line weight:  2.5px features, 1.5px details, 3px mascot face
- *   Corners:     14-16px cards, 7-8px small elements, 12px chips
- *   Glow:        176×176 blurred blob, indigo→teal, 50% opacity
- *   Sparkles:    3 fixed — top-left amber, top-right indigo (1s delay),
- *                bottom-left teal (0.5s delay)
- *   Mascot:      Small droplet cameo (r≈12) in every mid-step illustration,
- *                acting as a guide character throughout the onboarding flow
- * ──────────────────────────────────────────────────────────────────────────
+ * Custom onboarding illustrations — soft gradient blobs + simple line art.
+ * Each illustration is a composed scene, not a screenshot of the app.
+ * Consistent 280×200 viewBox, responsive width.
  */
 
-function Scene({ children, className = "" }) {
+function Scene({ blobStyle, children, className = "" }) {
   return (
     <div className={`relative w-full max-w-[280px] mx-auto aspect-[7/5] ${className}`}>
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="w-44 h-44 rounded-full blur-3xl opacity-50" style={{ background: "linear-gradient(135deg, #818CF8, #5EEAD4)" }} />
+        <div className="w-44 h-44 rounded-full blur-3xl opacity-50" style={blobStyle} />
       </div>
       <svg viewBox="0 0 280 200" className="relative w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
         {children}
@@ -31,49 +19,10 @@ function Scene({ children, className = "" }) {
   );
 }
 
-// Standardized 3-sparkle pattern at fixed positions
-function Sparkles() {
-  return (
-    <>
-      <g className="animate-onb-sparkle"><path d="M50 50 L 53 57 L 60 60 L 53 63 L 50 70 L 47 63 L 40 60 L 47 57Z" fill="#F59E0B" /></g>
-      <g className="animate-onb-sparkle" style={{ animationDelay: "1s" }}><path d="M230 50 L 232 55 L 237 57 L 232 59 L 230 64 L 228 59 L 223 57 L 228 55Z" fill="#6366F1" /></g>
-      <g className="animate-onb-sparkle" style={{ animationDelay: "0.5s" }}><path d="M48 145 L 50 150 L 55 152 L 50 154 L 48 159 L 46 154 L 41 152 L 46 150Z" fill="#14B8A6" /></g>
-    </>
-  );
-}
-
-// Small droplet mascot cameo — guide character throughout onboarding
-function MascotCameo({ cx, cy, r = 12, gradId }) {
-  const top = cy - r * 1.4;
-  const sideR = r * 0.7;
-  const eyeR = Math.max(r * 0.12, 1.5);
-  const smileW = Math.max(r * 0.08, 1);
-  return (
-    <g>
-      <defs>
-        <linearGradient id={gradId} x1={cx} y1={top} x2={cx} y2={cy + r} gradientUnits="userSpaceOnUse">
-          <stop stopColor="#6366F1" /><stop offset="1" stopColor="#14B8A6" />
-        </linearGradient>
-      </defs>
-      <path
-        d={`M${cx} ${top} C ${cx} ${top}, ${cx - sideR} ${cy - r * 0.3}, ${cx - sideR} ${cy + r * 0.3} a${sideR} ${sideR} 0 0 0 ${sideR * 2} 0 C ${cx + sideR} ${cy - r * 0.3}, ${cx} ${top}, ${cx} ${top}Z`}
-        fill={`url(#${gradId})`}
-      />
-      <path
-        d={`M${cx} ${top + r * 0.35} C ${cx} ${top + r * 0.35}, ${cx - sideR * 0.6} ${cy - r * 0.1}, ${cx - sideR * 0.6} ${cy + r * 0.1} a${sideR * 0.6} ${sideR * 0.6} 0 0 0 ${sideR * 0.6} ${sideR * 0.6}`}
-        fill="white" fillOpacity="0.15"
-      />
-      <circle cx={cx - r * 0.2} cy={cy - r * 0.05} r={eyeR} fill="white" />
-      <circle cx={cx + r * 0.2} cy={cy - r * 0.05} r={eyeR} fill="white" />
-      <path d={`M${cx - r * 0.15} ${cy + r * 0.2} Q ${cx} ${cy + r * 0.35} ${cx + r * 0.15} ${cy + r * 0.2}`} stroke="white" strokeWidth={smileW} strokeLinecap="round" fill="none" />
-    </g>
-  );
-}
-
 // ── 1. Welcome — droplet mascot with heart ─────────────────────────────────
 export function WelcomeIllustration({ className }) {
   return (
-    <Scene className={className}>
+    <Scene className={className} blobStyle={{ background: "linear-gradient(135deg, #818CF8, #5EEAD4)" }}>
       <defs>
         <linearGradient id="welDrop" x1="80" y1="30" x2="200" y2="170" gradientUnits="userSpaceOnUse">
           <stop stopColor="#6366F1" /><stop offset="1" stopColor="#14B8A6" />
@@ -82,57 +31,66 @@ export function WelcomeIllustration({ className }) {
           <stop stopColor="#F97316" /><stop offset="1" stopColor="#EC4899" />
         </linearGradient>
       </defs>
+      {/* droplet mascot */}
       <path d="M140 40 C 140 40, 95 95, 95 135 a45 45 0 0 0 90 0 C 185 95, 140 40, 140 40Z" fill="url(#welDrop)" />
       <path d="M140 65 C 140 65, 112 105, 112 132 a28 28 0 0 0 28 28" fill="white" fillOpacity="0.15" />
+      {/* eyes */}
       <circle cx="126" cy="125" r="4" fill="white" />
       <circle cx="154" cy="125" r="4" fill="white" />
+      {/* smile */}
       <path d="M128 140 Q 140 150 152 140" stroke="white" strokeWidth="3" strokeLinecap="round" fill="none" />
+      {/* heart */}
       <path d="M210 50 c-4-5-13-2-13 4 c0 6 13 12 13 12 s13-6 13-12 c0-6-9-9-13-4Z" fill="url(#welHeart)" />
-      <Sparkles />
+      {/* sparkles */}
+      <g className="animate-onb-sparkle"><path d="M60 50 L 63 57 L 70 60 L 63 63 L 60 70 L 57 63 L 50 60 L 57 57Z" fill="#F59E0B" /></g>
+      <g className="animate-onb-sparkle" style={{ animationDelay: "1.2s" }}><path d="M235 145 L 237 150 L 242 152 L 237 154 L 235 159 L 233 154 L 228 152 L 233 150Z" fill="#6366F1" /></g>
+      <g className="animate-onb-sparkle" style={{ animationDelay: "0.6s" }}><path d="M50 140 L 52 145 L 57 147 L 52 149 L 50 154 L 48 149 L 43 147 L 48 145Z" fill="#14B8A6" /></g>
     </Scene>
   );
 }
 
-// ── 2. Empathy — calendar + heartbeat, mascot peeking ──────────────────────
+// ── 2. Empathy — calendar + heartbeat, warm wash ──────────────────────────
 export function EmpathyIllustration({ className }) {
   return (
-    <Scene className={className}>
+    <Scene className={className} blobStyle={{ background: "linear-gradient(135deg, #FDBA74, #FCA5A5)" }}>
       <defs>
         <linearGradient id="empCal" x1="70" y1="50" x2="190" y2="150" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#6366F1" /><stop offset="1" stopColor="#14B8A6" />
+          <stop stopColor="#F97316" /><stop offset="1" stopColor="#EC4899" />
         </linearGradient>
       </defs>
-      {/* mascot peeking from behind bottom-right of calendar */}
-      <MascotCameo cx={210} cy={160} r={12} gradId="empMascot" />
       {/* calendar card */}
       <rect x="75" y="55" width="130" height="100" rx="14" fill="white" stroke="#E5E7EB" strokeWidth="1.5" />
       <rect x="75" y="55" width="130" height="26" rx="14" fill="url(#empCal)" />
       <rect x="75" y="68" width="130" height="13" fill="url(#empCal)" />
+      {/* rings */}
       <line x1="100" y1="44" x2="100" y2="62" stroke="#9CA3AF" strokeWidth="3" strokeLinecap="round" />
       <line x1="180" y1="44" x2="180" y2="62" stroke="#9CA3AF" strokeWidth="3" strokeLinecap="round" />
+      {/* grid dots */}
       <circle cx="96" cy="100" r="3" fill="#E5E7EB" />
       <circle cx="116" cy="100" r="3" fill="#E5E7EB" />
       <circle cx="136" cy="100" r="3" fill="#E5E7EB" />
-      <circle cx="156" cy="100" r="3" fill="#6366F1" />
+      <circle cx="156" cy="100" r="3" fill="#F97316" />
       <circle cx="176" cy="100" r="3" fill="#E5E7EB" />
       <circle cx="96" cy="120" r="3" fill="#E5E7EB" />
       <circle cx="116" cy="120" r="3" fill="#E5E7EB" />
       <circle cx="136" cy="120" r="3" fill="#E5E7EB" />
       <circle cx="156" cy="120" r="3" fill="#E5E7EB" />
       <circle cx="176" cy="120" r="3" fill="#E5E7EB" />
+      {/* heartbeat line */}
       <path d="M85 140 L 115 140 L 123 122 L 132 155 L 140 128 L 148 140 L 195 140" stroke="#F97316" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-      <Sparkles />
+      {/* sparkles */}
+      <g className="animate-onb-sparkle"><path d="M55 60 L 57 65 L 62 67 L 57 69 L 55 74 L 53 69 L 48 67 L 53 65Z" fill="#EC4899" /></g>
     </Scene>
   );
 }
 
-// ── 3. Medication — pill capsules, mascot watching ─────────────────────────
+// ── 3. Medication — pill capsules ─────────────────────────────────────────
 export function MedicationIllustration({ className }) {
   return (
-    <Scene className={className}>
+    <Scene className={className} blobStyle={{ background: "linear-gradient(135deg, #5EEAD4, #818CF8)" }}>
       <defs>
         <linearGradient id="medP1" x1="60" y1="70" x2="140" y2="110" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#6366F1" /><stop offset="1" stopColor="#14B8A6" />
+          <stop stopColor="#14B8A6" /><stop offset="1" stopColor="#6366F1" />
         </linearGradient>
         <linearGradient id="medP2" x1="160" y1="60" x2="200" y2="140" gradientUnits="userSpaceOnUse">
           <stop stopColor="#F97316" /><stop offset="1" stopColor="#EC4899" />
@@ -148,17 +106,110 @@ export function MedicationIllustration({ className }) {
         <rect x="162" y="65" width="28" height="70" rx="14" fill="url(#medP2)" />
         <line x1="162" y1="98" x2="190" y2="98" stroke="white" strokeWidth="2" strokeOpacity="0.5" />
       </g>
-      {/* mascot watching from the right */}
-      <MascotCameo cx={225} cy={140} r={12} gradId="medMascot" />
-      <Sparkles />
+      {/* pen marker */}
+      <g transform="rotate(30 210 155)">
+        <rect x="198" y="145" width="30" height="10" rx="5" fill="#14B8A6" />
+        <rect x="224" y="146" width="8" height="8" rx="2" fill="#6366F1" />
+      </g>
+      {/* sparkles */}
+      <g className="animate-onb-sparkle"><path d="M50 55 L 52 60 L 57 62 L 52 64 L 50 69 L 48 64 L 43 62 L 48 60Z" fill="#F59E0B" /></g>
+      <g className="animate-onb-sparkle" style={{ animationDelay: "1s" }}><path d="M140 45 L 142 50 L 147 52 L 142 54 L 140 59 L 138 54 L 133 52 L 138 50Z" fill="#6366F1" /></g>
     </Scene>
   );
 }
 
-// ── 4. Sign-Up — profile/ID card, mascot peeking from top ──────────────────
+// ── 4. Schedule — syringe + day dots ──────────────────────────────────────
+export function ScheduleIllustration({ className }) {
+  return (
+    <Scene className={className} blobStyle={{ background: "linear-gradient(135deg, #5EEAD4, #93C5FD)" }}>
+      <defs>
+        <linearGradient id="schSyr" x1="60" y1="50" x2="160" y2="120" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#14B8A6" /><stop offset="1" stopColor="#3B82F6" />
+        </linearGradient>
+      </defs>
+      {/* syringe */}
+      <g transform="rotate(-25 120 90)">
+        <rect x="80" y="82" width="56" height="16" rx="4" fill="url(#schSyr)" />
+        <rect x="74" y="78" width="8" height="24" rx="2" fill="#14B8A6" />
+        <rect x="136" y="84" width="6" height="12" fill="#3B82F6" />
+        <rect x="142" y="87" width="18" height="6" fill="#93C5FD" />
+        <line x1="92" y1="82" x2="92" y2="98" stroke="white" strokeWidth="1" strokeOpacity="0.6" />
+        <line x1="104" y1="82" x2="104" y2="98" stroke="white" strokeWidth="1" strokeOpacity="0.6" />
+        <line x1="116" y1="82" x2="116" y2="98" stroke="white" strokeWidth="1" strokeOpacity="0.6" />
+      </g>
+      {/* day dots */}
+      <g>
+        {[0, 1, 2, 3, 4, 5, 6].map((i) => (
+          <circle key={i} cx={70 + i * 24} cy={160} r="10" fill={i === 3 ? "#6366F1" : "#E5E7EB"} />
+        ))}
+      </g>
+      {/* sparkle */}
+      <g className="animate-onb-sparkle"><path d="M210 45 L 212 50 L 217 52 L 212 54 L 210 59 L 208 54 L 203 52 L 208 50Z" fill="#14B8A6" /></g>
+    </Scene>
+  );
+}
+
+// ── 5. Tracking — heart / mood / scale cluster ────────────────────────────
+export function TrackingIllustration({ className }) {
+  return (
+    <Scene className={className} blobStyle={{ background: "linear-gradient(135deg, #C4B5FD, #FBCFE8)" }}>
+      <defs>
+        <linearGradient id="trkH" x1="75" y1="60" x2="115" y2="105" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#F97316" /><stop offset="1" stopColor="#EC4899" />
+        </linearGradient>
+        <linearGradient id="trkM" x1="135" y1="50" x2="175" y2="95" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#F59E0B" /><stop offset="1" stopColor="#F97316" />
+        </linearGradient>
+        <linearGradient id="trkS" x1="105" y1="110" x2="145" y2="155" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#8B5CF6" /><stop offset="1" stopColor="#6366F1" />
+        </linearGradient>
+      </defs>
+      {/* connecting lines */}
+      <path d="M100 80 L 150 70 M 125 100 L 125 80 M 120 105 L 105 120" stroke="#D1D5DB" strokeWidth="1.5" strokeDasharray="3 3" />
+      {/* heart */}
+      <path d="M95 100 C 95 100, 75 88, 75 72 a10 10 0 0 1 20 -2 a10 10 0 0 1 20 2 C 115 88, 95 100, 95 100Z" fill="url(#trkH)" />
+      {/* mood */}
+      <circle cx="155" cy="72" r="22" fill="url(#trkM)" />
+      <circle cx="149" cy="68" r="2" fill="white" />
+      <circle cx="161" cy="68" r="2" fill="white" />
+      <path d="M148 76 Q 155 82 162 76" stroke="white" strokeWidth="2" strokeLinecap="round" fill="none" />
+      {/* scale */}
+      <rect x="105" y="115" width="40" height="30" rx="7" fill="url(#trkS)" />
+      <circle cx="125" cy="128" r="6" fill="none" stroke="white" strokeWidth="1.5" strokeOpacity="0.5" />
+      <line x1="125" y1="128" x2="130" y2="125" stroke="white" strokeWidth="2" strokeLinecap="round" />
+      {/* sparkles */}
+      <g className="animate-onb-sparkle"><path d="M55 50 L 57 55 L 62 57 L 57 59 L 55 64 L 53 59 L 48 57 L 53 55Z" fill="#6366F1" /></g>
+      <g className="animate-onb-sparkle" style={{ animationDelay: "0.8s" }}><path d="M215 120 L 217 125 L 222 127 L 217 129 L 215 134 L 213 129 L 208 127 L 213 125Z" fill="#EC4899" /></g>
+    </Scene>
+  );
+}
+
+// ── 6. Privacy — friendly shield ───────────────────────────────────────────
+export function PrivacyIllustration({ className }) {
+  return (
+    <Scene className={className} blobStyle={{ background: "linear-gradient(135deg, #FED7AA, #FCA5A5)" }}>
+      <defs>
+        <linearGradient id="privSh" x1="90" y1="35" x2="190" y2="165" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#FB923C" /><stop offset="1" stopColor="#EF4444" />
+        </linearGradient>
+      </defs>
+      {/* shield */}
+      <path d="M140 38 L 195 58 V 100 C 195 130, 170 150, 140 165 C 110 150, 85 130, 85 100 V 58 Z" fill="url(#privSh)" />
+      <path d="M140 48 L 185 64 V 100 C 185 124, 165 140, 140 152 C 115 140, 95 124, 95 100 V 64 Z" fill="white" fillOpacity="0.1" />
+      {/* check */}
+      <path d="M118 100 L 132 114 L 162 82" stroke="white" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      {/* sparkles */}
+      <g className="animate-onb-sparkle"><path d="M60 50 L 63 57 L 70 60 L 63 63 L 60 70 L 57 63 L 50 60 L 57 57Z" fill="#F59E0B" /></g>
+      <g className="animate-onb-sparkle" style={{ animationDelay: "1s" }}><path d="M225 80 L 227 85 L 232 87 L 227 89 L 225 94 L 223 89 L 218 87 L 223 85Z" fill="#6366F1" /></g>
+      <g className="animate-onb-sparkle" style={{ animationDelay: "0.5s" }}><path d="M220 150 L 222 155 L 227 157 L 222 159 L 220 164 L 218 159 L 213 157 L 218 155Z" fill="#14B8A6" /></g>
+    </Scene>
+  );
+}
+
+// ── Sign-Up — profile / ID card being created ───────────────────────────────
 export function SignUpIllustration({ className }) {
   return (
-    <Scene className={className}>
+    <Scene className={className} blobStyle={{ background: "linear-gradient(135deg, #818CF8, #5EEAD4)" }}>
       <defs>
         <linearGradient id="sigCard" x1="70" y1="50" x2="200" y2="160" gradientUnits="userSpaceOnUse">
           <stop stopColor="#6366F1" /><stop offset="1" stopColor="#14B8A6" />
@@ -167,145 +218,35 @@ export function SignUpIllustration({ className }) {
           <stop stopColor="#F97316" /><stop offset="1" stopColor="#EC4899" />
         </linearGradient>
       </defs>
-      {/* mascot peeking from behind top-right of card */}
-      <MascotCameo cx={210} cy={45} r={10} gradId="sigMascot" />
       {/* profile card */}
       <rect x="72" y="52" width="136" height="104" rx="16" fill="white" stroke="#E5E7EB" strokeWidth="1.5" />
       <rect x="72" y="52" width="136" height="30" rx="16" fill="url(#sigCard)" />
       <rect x="72" y="68" width="136" height="14" fill="url(#sigCard)" />
+      {/* card header line */}
       <line x1="86" y1="64" x2="118" y2="64" stroke="white" strokeWidth="3" strokeLinecap="round" opacity="0.7" />
+      {/* avatar circle + person silhouette */}
       <circle cx="112" cy="108" r="22" fill="url(#sigAvatar)" />
       <circle cx="112" cy="101" r="8" fill="white" />
       <path d="M96 122 a16 16 0 0 1 32 0Z" fill="white" />
+      {/* detail lines (name / fields) */}
       <line x1="146" y1="98" x2="192" y2="98" stroke="#E5E7EB" strokeWidth="4" strokeLinecap="round" />
       <line x1="146" y1="112" x2="184" y2="112" stroke="#E5E7EB" strokeWidth="4" strokeLinecap="round" />
       <line x1="146" y1="126" x2="190" y2="126" stroke="#E5E7EB" strokeWidth="4" strokeLinecap="round" />
+      {/* small "+" new-account badge */}
       <circle cx="188" cy="150" r="14" fill="#F97316" />
       <path d="M182 150 H 194 M 188 144 V 156" stroke="white" strokeWidth="3" strokeLinecap="round" />
-      <Sparkles />
+      {/* sparkles */}
+      <g className="animate-onb-sparkle"><path d="M55 50 L 57 55 L 62 57 L 57 59 L 55 64 L 53 59 L 48 57 L 53 55Z" fill="#F59E0B" /></g>
+      <g className="animate-onb-sparkle" style={{ animationDelay: "1s" }}><path d="M225 60 L 227 65 L 232 67 L 227 69 L 225 74 L 223 69 L 218 67 L 223 65Z" fill="#6366F1" /></g>
+      <g className="animate-onb-sparkle" style={{ animationDelay: "0.5s" }}><path d="M50 150 L 52 155 L 57 157 L 52 159 L 50 164 L 48 159 L 43 157 L 48 155Z" fill="#14B8A6" /></g>
     </Scene>
   );
 }
 
-// ── 5. Verify Email — envelope with code, mascot watching ─────────────────
-export function VerifyEmailIllustration({ className }) {
-  return (
-    <Scene className={className}>
-      <defs>
-        <linearGradient id="verEnv" x1="80" y1="60" x2="200" y2="140" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#6366F1" /><stop offset="1" stopColor="#14B8A6" />
-        </linearGradient>
-      </defs>
-      {/* envelope body */}
-      <rect x="80" y="65" width="120" height="72" rx="12" fill="url(#verEnv)" />
-      {/* flap */}
-      <path d="M80 73 L 140 108 L 200 73" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.25" />
-      {/* code dots */}
-      <circle cx="120" cy="120" r="5" fill="white" opacity="0.8" />
-      <circle cx="140" cy="120" r="5" fill="white" opacity="0.8" />
-      <circle cx="160" cy="120" r="5" fill="white" opacity="0.8" />
-      {/* notification badge */}
-      <circle cx="195" cy="60" r="12" fill="#F97316" />
-      <circle cx="190" cy="60" r="2" fill="white" />
-      <circle cx="195" cy="60" r="2" fill="white" />
-      <circle cx="200" cy="60" r="2" fill="white" />
-      {/* mascot watching from the right */}
-      <MascotCameo cx={225} cy={135} r={12} gradId="verMascot" />
-      <Sparkles />
-    </Scene>
-  );
-}
-
-// ── 6. Privacy — shield with check, mascot peeking from left ───────────────
-export function PrivacyIllustration({ className }) {
-  return (
-    <Scene className={className}>
-      <defs>
-        <linearGradient id="privSh" x1="90" y1="35" x2="190" y2="165" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#6366F1" /><stop offset="1" stopColor="#14B8A6" />
-        </linearGradient>
-      </defs>
-      {/* mascot peeking from behind bottom-left of shield */}
-      <MascotCameo cx={72} cy={170} r={11} gradId="privMascot" />
-      {/* shield */}
-      <path d="M140 38 L 195 58 V 100 C 195 130, 170 150, 140 165 C 110 150, 85 130, 85 100 V 58 Z" fill="url(#privSh)" />
-      <path d="M140 48 L 185 64 V 100 C 185 124, 165 140, 140 152 C 115 140, 95 124, 95 100 V 64 Z" fill="white" fillOpacity="0.1" />
-      {/* check */}
-      <path d="M118 100 L 132 114 L 162 82" stroke="white" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-      <Sparkles />
-    </Scene>
-  );
-}
-
-// ── 7. Schedule — syringe + day dots, mascot watching ──────────────────────
-export function ScheduleIllustration({ className }) {
-  return (
-    <Scene className={className}>
-      <defs>
-        <linearGradient id="schSyr" x1="60" y1="50" x2="160" y2="120" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#6366F1" /><stop offset="1" stopColor="#14B8A6" />
-        </linearGradient>
-      </defs>
-      {/* syringe */}
-      <g transform="rotate(-25 120 90)">
-        <rect x="80" y="82" width="56" height="16" rx="4" fill="url(#schSyr)" />
-        <rect x="74" y="78" width="8" height="24" rx="2" fill="#6366F1" />
-        <rect x="136" y="84" width="6" height="12" fill="#14B8A6" />
-        <rect x="142" y="87" width="18" height="6" fill="#818CF8" />
-        <line x1="92" y1="82" x2="92" y2="98" stroke="white" strokeWidth="1" strokeOpacity="0.6" />
-        <line x1="104" y1="82" x2="104" y2="98" stroke="white" strokeWidth="1" strokeOpacity="0.6" />
-        <line x1="116" y1="82" x2="116" y2="98" stroke="white" strokeWidth="1" strokeOpacity="0.6" />
-      </g>
-      {/* day dots */}
-      {[0, 1, 2, 3, 4, 5, 6].map((i) => (
-        <circle key={i} cx={70 + i * 22} cy={160} r="9" fill={i === 3 ? "#6366F1" : "#E5E7EB"} />
-      ))}
-      {/* mascot watching from the right */}
-      <MascotCameo cx={238} cy={155} r={10} gradId="schMascot" />
-      <Sparkles />
-    </Scene>
-  );
-}
-
-// ── 8. Tracking — mascot surrounded by tracking chips ────────────────────
-export function TrackingIllustration({ className }) {
-  return (
-    <Scene className={className}>
-      <defs>
-        <linearGradient id="trkHeart" x1="120" y1="25" x2="160" y2="65" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#F97316" /><stop offset="1" stopColor="#EC4899" />
-        </linearGradient>
-        <linearGradient id="trkScale" x1="70" y1="130" x2="110" y2="170" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#6366F1" /><stop offset="1" stopColor="#14B8A6" />
-        </linearGradient>
-        <linearGradient id="trkSmile" x1="170" y1="130" x2="210" y2="170" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#F59E0B" /><stop offset="1" stopColor="#F97316" />
-        </linearGradient>
-      </defs>
-      {/* central mascot */}
-      <MascotCameo cx={140} cy={105} r={18} gradId="trkMascot" />
-      {/* heart chip (top) — mood/feelings */}
-      <circle cx="140" cy="48" r="20" fill="url(#trkHeart)" />
-      <path d="M140 42 c-4-5-10-2-10 4 c0 6 10 10 10 10 s10-4 10-10 c0-6-6-9-10-4Z" fill="white" />
-      {/* scale chip (bottom-left) — weight */}
-      <circle cx="90" cy="150" r="20" fill="url(#trkScale)" />
-      <path d="M78 152 a12 12 0 0 1 24 0" stroke="white" strokeWidth="2.5" strokeLinecap="round" fill="none" />
-      <line x1="90" y1="152" x2="96" y2="146" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
-      <circle cx="90" cy="152" r="2" fill="white" />
-      {/* smiley chip (bottom-right) — symptoms */}
-      <circle cx="190" cy="150" r="20" fill="url(#trkSmile)" />
-      <circle cx="184" cy="145" r="2" fill="white" />
-      <circle cx="196" cy="145" r="2" fill="white" />
-      <path d="M183 155 Q 190 161 197 155" stroke="white" strokeWidth="2.5" strokeLinecap="round" fill="none" />
-      <Sparkles />
-    </Scene>
-  );
-}
-
-// ── 9. Completion — mascot celebrating ───────────────────────────────────
+// ── 7. Completion — mascot celebrating ─────────────────────────────────────
 export function CompletionIllustration({ className }) {
   return (
-    <Scene className={className}>
+    <Scene className={className} blobStyle={{ background: "linear-gradient(135deg, #818CF8, #5EEAD4)" }}>
       <defs>
         <linearGradient id="compDrop" x1="90" y1="30" x2="190" y2="170" gradientUnits="userSpaceOnUse">
           <stop stopColor="#6366F1" /><stop offset="1" stopColor="#14B8A6" />
@@ -319,7 +260,7 @@ export function CompletionIllustration({ className }) {
       <path d="M148 122 Q 154 116 160 122" stroke="white" strokeWidth="3" strokeLinecap="round" fill="none" />
       {/* big smile */}
       <path d="M122 138 Q 140 152 158 138" stroke="white" strokeWidth="3" strokeLinecap="round" fill="none" />
-      {/* celebration confetti */}
+      {/* celebration sparkles / confetti */}
       <g className="animate-onb-sparkle"><circle cx="55" cy="55" r="5" fill="#F59E0B" /></g>
       <g className="animate-onb-sparkle" style={{ animationDelay: "0.4s" }}><circle cx="230" cy="65" r="4" fill="#EC4899" /></g>
       <g className="animate-onb-sparkle" style={{ animationDelay: "0.8s" }}><circle cx="240" cy="135" r="5" fill="#6366F1" /></g>

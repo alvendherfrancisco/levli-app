@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
-import { SignUpIllustration, VerifyEmailIllustration } from "@/components/onboarding/OnboardingIllustrations";
+import { SignUpIllustration } from "@/components/onboarding/OnboardingIllustrations";
 
 /**
  * Onboarding step 4 — account creation.
@@ -65,7 +65,7 @@ export default function SignUpStep({ persistState }) {
   if (showOtp) {
     return (
       <div className="flex flex-col flex-1">
-        <VerifyEmailIllustration />
+        <SignUpIllustration />
         <div className="text-center mt-3 mb-4">
           <h1 className="text-2xl sm:text-[28px] font-bold text-gray-800 mb-2 leading-tight px-2">
             Verify your email
