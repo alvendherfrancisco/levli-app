@@ -34,17 +34,15 @@ export default function OnboardingScreen({
       <div className="w-full max-w-lg mx-auto flex flex-col h-[100dvh] sm:h-[88vh] sm:rounded-3xl sm:shadow-xl sm:my-6 bg-white/70 backdrop-blur-md overflow-hidden relative z-10 border border-gray-100/80">
         {/* Header — back + segmented progress */}
         <div className="flex items-center gap-3 px-5 sm:px-6 pt-6 pb-2 flex-shrink-0">
-          <div className="w-9 h-9 flex-shrink-0">
-            {!isFirstStep && (
-              <button
-                onClick={onBack}
-                className="w-9 h-9 rounded-full border border-gray-200 bg-white flex items-center justify-center hover:bg-gray-50 active:scale-95 transition-all"
-                aria-label="Back"
-              >
-                <ChevronLeft size={18} className="text-gray-600" />
-              </button>
-            )}
-          </div>
+          {!isFirstStep && (
+            <button
+              onClick={onBack}
+              className="w-9 h-9 flex-shrink-0 rounded-full border border-gray-200 bg-white flex items-center justify-center hover:bg-gray-50 active:scale-95 transition-all"
+              aria-label="Back"
+            >
+              <ChevronLeft size={18} className="text-gray-600" />
+            </button>
+          )}
           <div className="flex-1 flex gap-1.5">
             {Array.from({ length: totalSteps }).map((_, i) => (
               <div
@@ -74,11 +72,11 @@ export default function OnboardingScreen({
             needs padding equal to footer height. Safe-area inset respected
             via max() so devices with a home indicator get extra space. */}
         {!hideFooter && (
-          <div className="px-6 sm:px-8 pt-4 flex-shrink-0" style={{ paddingBottom: 'max(2.25rem, env(safe-area-inset-bottom, 0px))' }}>
+          <div className="px-6 sm:px-8 pt-4 flex-shrink-0 flex flex-col items-center" style={{ paddingBottom: 'max(2.25rem, env(safe-area-inset-bottom, 0px))' }}>
             <button
               onClick={canContinue ? onContinue : undefined}
               disabled={!canContinue}
-              className={`w-full max-w-[320px] mx-auto py-4 rounded-full font-semibold text-base sm:text-lg transition-all duration-300 active:scale-95 ${
+              className={`w-full max-w-[400px] py-4 rounded-full font-semibold text-base sm:text-lg transition-all duration-300 active:scale-95 ${
                 canContinue
                   ? "bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-600/25"
                   : "bg-gray-200 text-gray-400 cursor-not-allowed"
@@ -89,7 +87,7 @@ export default function OnboardingScreen({
             {secondaryAction && (
               <button
                 onClick={secondaryAction.onClick}
-                className="w-full text-center text-gray-500 text-sm font-medium mt-5 hover:text-gray-700 transition-colors"
+                className="w-full max-w-[400px] text-center text-gray-500 text-sm font-medium mt-5 hover:text-gray-700 transition-colors"
               >
                 {secondaryAction.label}
               </button>
