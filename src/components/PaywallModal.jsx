@@ -124,7 +124,7 @@ export default function PaywallModal({ open, onClose }) {
 
         {/* Fine print */}
         <p className="text-[11px] text-gray-400 text-center mt-4 px-2">
-          No commitment, cancel anytime from your account settings. Payment is charged to your account via PayMongo.
+          No commitment, cancel anytime from your account settings. Payment is charged to your account via Stripe.
         </p>
 
         {/* Footer links */}
