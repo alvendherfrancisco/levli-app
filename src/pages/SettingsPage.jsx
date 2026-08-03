@@ -4,6 +4,7 @@ import { ChevronLeft, Moon, Lock, Mail, Bell, Database, FileText, MessageSquare,
 import { useAppState } from "@/lib/AppState";
 import { useAuth } from "@/lib/AuthContext";
 import { base44 } from "@/api/base44Client";
+import { subscribeToPush, unsubscribeFromPush } from "@/lib/pushSubscription";
 
 // Shared toggle — defined outside the component so React doesn't remount it
 // on every state change (which caused the two toggles to look inconsistent).
@@ -55,6 +56,7 @@ export default function SettingsPage() {
     logout();
   };
   const [notifEnabled, setNotifEnabled] = useState(profile?.notifications_enabled || false);
+  const [notifLoading, setNotifLoading] = useState(false);
   const [backupLoading, setBackupLoading] = useState(false);
   const [restoreLoading, setRestoreLoading] = useState(false);
 
@@ -92,10 +94,32 @@ export default function SettingsPage() {
   };
 
   const handleNotifications = async (val) => {
-    setNotifEnabled(val);
-    await setProfile({ ...profile, notifications_enabled: val });
-    if (val && "Notification" in window) {
-      Notification.requestPermission();
+    if (notifLoading) return;
+    if (val) {
+      // Turning ON: subscribe to push, send confirmation if new
+      setNotifLoading(true);
+      try {
+        const { subObj, isNew } = await subscribeToPush();
+        setNotifEnabled(true);
+        await setProfile({ ...profile, notifications_enabled: true });
+        if (isNew) {
+          try {
+            await base44.functions.invoke("send-confirmation-push", { subscription: subObj });
+          } catch (e) {
+            console.error("Confirmation push failed:", e);
+          }
+        }
+      } catch (e) {
+        setNotifEnabled(false);
+        alert(`Could not enable notifications: ${e.message}`);
+      } finally {
+        setNotifLoading(false);
+      }
+    } else {
+      // Turning OFF: silently unsubscribe, no notification
+      setNotifEnabled(false);
+      await setProfile({ ...profile, notifications_enabled: false });
+      try { await unsubscribeFromPush(); } catch (e) { console.error("Unsubscribe failed:", e); }
     }
   };
 
@@ -173,7 +197,11 @@ export default function SettingsPage() {
                   <span className="text-[11px] text-gray-400 dark:text-gray-500">Get a gentle reminder on the morning of your scheduled shot.</span>
                 </div>
               </div>
-              <Toggle value={notifEnabled} onChange={handleNotifications} />
+              {notifLoading ? (
+                <Loader2 size={20} className="animate-spin text-indigo-500 flex-shrink-0" />
+              ) : (
+                <Toggle value={notifEnabled} onChange={handleNotifications} />
+              )}
             </div>
           </div>
         </div>
