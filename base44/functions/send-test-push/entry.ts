@@ -23,7 +23,7 @@ export default async function(req) {
 
     if (!publicKey || !privateKey) {
       console.error('VAPID keys not configured');
-      return Response.json({ success: false, error: 'VAPID keys not configured' }, { status: 500 });
+      return Response.json({ success: false, error: 'VAPID keys not configured' });
     }
 
     // Log what we received for debugging
@@ -31,19 +31,20 @@ export default async function(req) {
     console.log('  endpoint:', subscription.endpoint);
     console.log('  keys.p256dh present:', !!subscription.keys?.p256dh, 'length:', subscription.keys?.p256dh?.length);
     console.log('  keys.auth present:', !!subscription.keys?.auth, 'length:', subscription.keys?.auth?.length);
-    console.log('  VAPID_PUBLIC_KEY present:', !!publicKey, 'length:', publicKey?.length);
-    console.log('  VAPID_PRIVATE_KEY present:', !!privateKey, 'length:', privateKey?.length);
+    console.log('  VAPID_PUBLIC_KEY present:', !!publicKey, 'length:', publicKey?.length, 'first8:', publicKey?.slice(0, 8), 'last8:', publicKey?.slice(-8));
+    console.log('  VAPID_PRIVATE_KEY present:', !!privateKey, 'length:', privateKey?.length, 'first8:', privateKey?.slice(0, 8), 'last8:', privateKey?.slice(-8));
     console.log('  VAPID_SUBJECT:', subject);
 
     const payload = JSON.stringify({ title, body: messageBody });
     const result = await sendWebPush(subscription, payload, publicKey, privateKey, subject);
 
+    // Always return 200 with success: false so the frontend SDK doesn't throw
+    // and can read the detailed step-labeled error from the response body.
     if (result.success) {
       console.log('Push sent, status:', result.statusCode);
       return Response.json({ success: true, statusCode: result.statusCode });
     } else {
       console.error('Push failed:', result.error);
-      // Return the full error text + status code so the client can see exactly which step failed
       return Response.json({
         success: false,
         error: result.error,
@@ -54,16 +55,19 @@ export default async function(req) {
           hasAuth: !!subscription.keys?.auth,
           vapidPublicKeyLength: publicKey?.length,
           vapidPrivateKeyLength: privateKey?.length,
+          vapidPublicKeyFirst8: publicKey?.slice(0, 8),
+          vapidPublicKeyLast8: publicKey?.slice(-8),
+          vapidPrivateKeyFirst8: privateKey?.slice(0, 8),
+          vapidPrivateKeyLast8: privateKey?.slice(-8),
         }
-      }, { status: 500 });
+      });
     }
   } catch (error) {
     console.error('send-test-push UNCAUGHT error:', error.message, error.stack);
-    // Return full error + stack trace in the response body for debugging
     return Response.json({
       success: false,
       error: error.message,
       stack: error.stack,
-    }, { status: 500 });
+    });
   }
 }
