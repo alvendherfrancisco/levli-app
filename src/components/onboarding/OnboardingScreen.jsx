@@ -15,6 +15,7 @@ export default function OnboardingScreen({
   ctaLabel,
   canContinue = true,
   secondaryAction,
+  hideFooterCta,
 }) {
   const isFirstStep = step === 0;
   const isLastStep = step === totalSteps - 1;
@@ -63,28 +64,30 @@ export default function OnboardingScreen({
           </div>
         </div>
 
-        {/* Footer — pill CTA + optional secondary */}
-        <div className="px-5 sm:px-6 pb-9 pt-4 flex-shrink-0">
-          <button
-            onClick={canContinue ? onContinue : undefined}
-            disabled={!canContinue}
-            className={`w-full py-4 rounded-full font-semibold text-base sm:text-lg transition-all duration-300 active:scale-95 ${
-              canContinue
-                ? "bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-600/25"
-                : "bg-gray-200 text-gray-400 cursor-not-allowed"
-            }`}
-          >
-            {ctaText}
-          </button>
-          {secondaryAction && (
+        {/* Footer — pill CTA + optional secondary (hidden for steps that manage their own actions) */}
+        {!hideFooterCta && (
+          <div className="px-5 sm:px-6 pb-9 pt-4 flex-shrink-0">
             <button
-              onClick={secondaryAction.onClick}
-              className="w-full text-center text-gray-500 text-sm font-medium mt-3 hover:text-gray-700 transition-colors"
+              onClick={canContinue ? onContinue : undefined}
+              disabled={!canContinue}
+              className={`w-full py-4 rounded-full font-semibold text-base sm:text-lg transition-all duration-300 active:scale-95 ${
+                canContinue
+                  ? "bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-600/25"
+                  : "bg-gray-200 text-gray-400 cursor-not-allowed"
+              }`}
             >
-              {secondaryAction.label}
+              {ctaText}
             </button>
-          )}
-        </div>
+            {secondaryAction && (
+              <button
+                onClick={secondaryAction.onClick}
+                className="w-full text-center text-gray-500 text-sm font-medium mt-3 hover:text-gray-700 transition-colors"
+              >
+                {secondaryAction.label}
+              </button>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
