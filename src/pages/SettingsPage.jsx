@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { ChevronLeft, Moon, Lock, Mail, Bell, Database, FileText, MessageSquare, ChevronRight, Download, Upload, Loader2, LogOut, UserPlus, X } from "lucide-react";
+import { ChevronLeft, Moon, Lock, Mail, Bell, Database, FileText, MessageSquare, ChevronRight, Download, Upload, Loader2, LogOut, UserPlus, X, Share } from "lucide-react";
 import { useAppState } from "@/lib/AppState";
 import { useAuth } from "@/lib/AuthContext";
 import { base44 } from "@/api/base44Client";
@@ -8,7 +8,8 @@ import { base44 } from "@/api/base44Client";
 export default function SettingsPage() {
   const navigate = useNavigate();
   const { darkMode, setDarkMode, profile, setProfile, shots, journalEntries, dayMetrics, resetState, proxyAccess, addProxyAccess, revokeProxyAccess } = useAppState();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
+  const isDeveloper = user?.email === "alvendherfrancisco01@gmail.com";
   const [proxyEmail, setProxyEmail] = useState("");
   const [proxyScope, setProxyScope] = useState("read");
   const [proxySaving, setProxySaving] = useState(false);
@@ -43,6 +44,19 @@ export default function SettingsPage() {
   const [notifEnabled, setNotifEnabled] = useState(profile?.notifications_enabled || false);
   const [backupLoading, setBackupLoading] = useState(false);
   const [restoreLoading, setRestoreLoading] = useState(false);
+
+  // iOS home-screen detection (push only works when installed on iOS)
+  const isIOS = typeof navigator !== "undefined" && /iPhone|iPad|iPod/.test(navigator.userAgent);
+  const isStandalone = typeof window !== "undefined" &&
+    (window.navigator?.standalone || window.matchMedia?.("(display-mode: standalone)")?.matches);
+  const [iosBannerDismissed, setIosBannerDismissed] = useState(
+    typeof localStorage !== "undefined" && localStorage.getItem("levli_ios_banner_dismissed") === "true"
+  );
+  const showIOSBanner = isIOS && !isStandalone && !iosBannerDismissed && notifEnabled;
+  const dismissIOSBanner = () => {
+    setIosBannerDismissed(true);
+    localStorage.setItem("levli_ios_banner_dismissed", "true");
+  };
 
   const Toggle = ({ value, onChange }) => (
     <button onClick={() => onChange(!value)}
@@ -150,13 +164,35 @@ export default function SettingsPage() {
                 <Bell size={18} className="text-gray-500 dark:text-gray-400" />
                 <div>
                   <span className="text-sm text-gray-700 dark:text-gray-300 block">Push Notifications</span>
-                  <span className="text-[11px] text-gray-400 dark:text-gray-500">Saves your permission; reminders are not active yet.</span>
+                  <span className="text-[11px] text-gray-400 dark:text-gray-500">Get a gentle reminder on the morning of your scheduled shot.</span>
                 </div>
               </div>
               <Toggle value={notifEnabled} onChange={handleNotifications} />
             </div>
           </div>
         </div>
+
+        {/* iOS Add to Home Screen banner */}
+        {showIOSBanner && (
+          <div className="px-4 mb-4">
+            <div className="bg-indigo-50 dark:bg-indigo-500/10 rounded-2xl p-4 border border-indigo-100 dark:border-indigo-500/20">
+              <div className="flex items-start gap-3">
+                <div className="w-9 h-9 rounded-lg bg-indigo-100 dark:bg-indigo-500/20 flex items-center justify-center flex-shrink-0">
+                  <Share size={18} className="text-indigo-600 dark:text-indigo-400" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-indigo-800 dark:text-indigo-300">Add Levli to your Home Screen</p>
+                  <p className="text-xs text-indigo-600 dark:text-indigo-400 mt-1 leading-relaxed">
+                    Push reminders only work on iPhone when Levli is installed to your home screen. Tap the Share button in Safari, then "Add to Home Screen".
+                  </p>
+                  <button onClick={dismissIOSBanner} className="text-xs text-indigo-500 dark:text-indigo-400 font-medium mt-2 underline">
+                    Got it
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* General */}
         <div className="px-4 mb-4">
@@ -165,7 +201,7 @@ export default function SettingsPage() {
             <MenuItem icon={backupLoading ? <Loader2 size={18} className="animate-spin text-gray-400" /> : <Download size={18} className="text-gray-500 dark:text-gray-400" />} label="Backup Data" onPress={handleBackup} />
             <MenuItem icon={restoreLoading ? <Loader2 size={18} className="animate-spin text-gray-400" /> : <Upload size={18} className="text-gray-500 dark:text-gray-400" />} label="Restore Data" onPress={handleRestore} />
             <MenuItem icon={<Mail size={18} className="text-gray-500 dark:text-gray-400" />} label="Contact Us" href="mailto:support@levli.app" />
-            <MenuItem icon={<Bell size={18} className="text-indigo-500" />} label="Push Notification Test" to="/push-test" />
+            {isDeveloper && <MenuItem icon={<Bell size={18} className="text-indigo-500" />} label="Push Notification Test" to="/push-test" />}
           </div>
         </div>
 

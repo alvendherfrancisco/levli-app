@@ -1,7 +1,10 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
+import { useAuth } from "@/lib/AuthContext";
 import { Bell, BellRing, CheckCircle2, XCircle, Loader2, Send, FileWarning, ChevronLeft } from "lucide-react";
+
+const DEVELOPER_EMAIL = "alvendherfrancisco01@gmail.com";
 
 // VAPID public key — safe to expose client-side.
 const VAPID_PUBLIC_KEY = "BIvggstIUyKg2SGxfM0LkRw5Onl5HysVhqG4ACz-VGW8wvOpZbGGDYxGi9BwKOKFKYYwno74LYQ1ELgCphcMteA";
@@ -18,8 +21,19 @@ function urlBase64ToUint8Array(base64String) {
 }
 
 export default function PushTest() {
+  const { user } = useAuth();
+  // Restrict to developer account only — guard before any hooks in the
+  // inner component so React's rules-of-hooks are never violated.
+  if (user?.email !== DEVELOPER_EMAIL) {
+    return <Navigate to="/settings" replace />;
+  }
+  return <PushTestInner />;
+}
+
+function PushTestInner() {
   const navigate = useNavigate();
-  const [phase, setPhase] = useState("idle"); // idle | subscribing | subscribed | sending | sent | error
+  const [phase, setPhase] = useState("idle");
+  // phase: idle | subscribing | subscribed | sending | sent | error
   const [error, setError] = useState("");
   const [logs, setLogs] = useState([]);
   const [subscription, setSubscription] = useState(null);
