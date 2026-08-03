@@ -90,7 +90,7 @@ export default function SignUpStep({ persistState }) {
         <button
           onClick={handleVerify}
           disabled={loading || otpCode.length < 6}
-          className="w-full max-w-[320px] mx-auto py-4 rounded-full font-semibold text-base bg-indigo-600 text-white shadow-lg shadow-indigo-600/25 disabled:opacity-60 transition-all active:scale-95"
+          className="w-full max-w-[280px] mx-auto py-4 rounded-full font-semibold text-base bg-indigo-600 text-white shadow-lg shadow-indigo-600/25 disabled:opacity-60 transition-all active:scale-95"
         >
           {loading ? (
             <span className="flex items-center justify-center gap-2">
@@ -153,7 +153,7 @@ export default function SignUpStep({ persistState }) {
         <button
           type="submit"
           disabled={loading}
-          className="w-full max-w-[320px] mx-auto py-4 rounded-full font-semibold text-base bg-indigo-600 text-white shadow-lg shadow-indigo-600/25 disabled:opacity-60 transition-all active:scale-95"
+          className="w-full max-w-[280px] mx-auto py-4 rounded-full font-semibold text-base bg-indigo-600 text-white shadow-lg shadow-indigo-600/25 disabled:opacity-60 transition-all active:scale-95"
         >
           {loading ? (
             <span className="flex items-center justify-center gap-2">
