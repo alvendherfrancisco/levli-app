@@ -122,7 +122,7 @@ export default function SignUpStep({ persistState }) {
       {error && (
         <p className="mb-3 text-sm text-red-500 text-center bg-red-50 rounded-xl px-3 py-2">{error}</p>
       )}
-      <form onSubmit={handleSubmit} className="space-y-3">
+      <form onSubmit={handleSubmit} className="space-y-3 flex flex-col items-center">
         <input
           type="email"
           placeholder="Email"
